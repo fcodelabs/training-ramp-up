@@ -1,4 +1,4 @@
-export const sampleProducts = [
+export const sampleStudents = [
   {
     ID: 1,
     Name: 'Chai',
@@ -7,6 +7,5 @@ export const sampleProducts = [
     MobileNo: '0771234567',
     DateOfBirth: new Date(1996, 8, 20),
     Age: 12,
-    Discontinued: false,
   },
 ];

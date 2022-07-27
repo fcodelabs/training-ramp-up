@@ -1,13 +1,12 @@
-import { Student } from "../interfaces/interfaces";
-import { sampleProducts } from "../components/sample-products";
+import { sampleStudents } from "../components/sample-students";
 
-let data = [...sampleProducts];
+let data = [...sampleStudents];
 
-const generateId = () => 1;
-;
+const generateId = (data: any[]) =>
+    data.reduce((acc, current) => Math.max(acc, current.ID), 0) + 1;
 
 export const insertItem = (item: any) => {
-    item.ID = generateId();
+    item.ID = generateId(data);
     item.inEdit = false;
     data.unshift(item);
     return data;

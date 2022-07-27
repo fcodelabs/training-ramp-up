@@ -37,13 +37,13 @@ const DataTable = () => {
   const add = (dataItem: Student) => {
     dataItem.inEdit = true;
 
-    const newData = insertItem(dataItem);
+    const newData = [...insertItem(dataItem)];
     setData(newData);
   };
 
   const update = (dataItem: Student) => {
     dataItem.inEdit = false;
-    const newData = updateItem(dataItem);
+    const newData = [...updateItem(dataItem)];
     setData(newData);
   };
 
@@ -60,7 +60,7 @@ const DataTable = () => {
       item.ID === originalItem?.ID ? originalItem : item
     );
 
-    // setData(newData);
+    setData(newData);
   };
 
   const enterEdit = (dataItem: Student) => {
@@ -82,7 +82,7 @@ const DataTable = () => {
   };
 
   const addNew = () => {
-    const newDataItem = { inEdit: true, Discontinued: false };
+    const newDataItem = { inEdit: true };
 
     setData([newDataItem, ...data]);
   };
