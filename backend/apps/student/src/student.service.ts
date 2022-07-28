@@ -11,11 +11,12 @@ export class StudentService {
     gender: string,
     address: string,
     mobileNo: string,
-    dateOfBirth: string,
+    dateOfBirth: Date,
     age: number,
+    inEdit: boolean
   ) {
     const studentId = uuidv4();
-    const newStudent = new Student(studentId, name, gender, address, mobileNo, dateOfBirth, age)
+    const newStudent = new Student(studentId, name, gender, address, mobileNo, dateOfBirth, age, inEdit)
     this.student.push(newStudent)
     return newStudent;
   }
@@ -29,7 +30,15 @@ export class StudentService {
 
   }
 
-  updateStudentService(studentId: string, name: string, gender: string, address: string, mobileNo: string, dateOfBirth: string, age: number) {
+  updateStudentService(
+    studentId: string,
+    name: string,
+    gender: string,
+    address: string,
+    mobileNo: string,
+    dateOfBirth: Date,
+    age: number,
+    inEdit: boolean) {
     const [student, index] = this.findStudent(studentId);
     const updatedStudent = { ...student };
     if (name) {

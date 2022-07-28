@@ -5,7 +5,8 @@ export class Student {
         public gender: string,
         public address: string,
         public mobileNo: string,
-        public dateOfBirth: string,
+        public dateOfBirth: Date,
         public age: number,
+        public inEdit: boolean,
     ) { }
 }

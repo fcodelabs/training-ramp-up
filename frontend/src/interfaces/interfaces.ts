@@ -1,12 +1,12 @@
 export interface Student {
-    ID?: number;
-    Name: string;
-    Gender: string;
-    Address: string;
-    MobileNo: string;
-    DateOfBirth: Date;
-    Age: number;
-    inEdit?: boolean;
+    id?: string;
+    name: string;
+    gender: string;
+    address: string;
+    mobileNo: string;
+    dateOfBirth: Date;
+    age: number;
+    inEdit: boolean;
 
 }
 
