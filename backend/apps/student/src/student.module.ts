@@ -22,7 +22,9 @@ import { Student } from './entities/student.entity';
     database: 'student',
     entities: [Student],
     synchronize: true, // only use dev environment
-  })
+  }),
+
+  TypeOrmModule.forFeature([Student])
   ],
   controllers: [],
   providers: [StudentService, StudentResolver],
