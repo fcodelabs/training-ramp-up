@@ -1,7 +1,9 @@
 import { Field, InputType, Int } from "@nestjs/graphql";
 
-@InputType() //use for mutation
-export class StudentCreateDto {
+@InputType()
+export class UpdateStudentDto {
+    @Field()
+    id: string
     @Field()
     name: string;
     @Field()
@@ -18,5 +20,6 @@ export class StudentCreateDto {
     age: number;
     @Field()
     isArchive: boolean;
+
 
 }
