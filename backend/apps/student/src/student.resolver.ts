@@ -8,7 +8,7 @@ import { StudentService } from "./student.service";
 export class StudentResolver {
     constructor(private studentService: StudentService) { }
 
-    @Query(() => [Student], { name: "getAllStudednts" })
+    @Query(() => [Student], { name: "getAllStudents" })
     findAll() {
         return this.studentService.findAll();
     }

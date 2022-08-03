@@ -12,6 +12,9 @@ import { Student } from './entities/student.entity';
   imports: [GraphQLModule.forRoot({
     autoSchemaFile: join(process.cwd(), 'apps/student/src/graphql-schema.gql'),
     driver: ApolloDriver,
+    cors: {
+      credentials: true,
+    },
   }),
   TypeOrmModule.forRoot({
     type: 'postgres',
