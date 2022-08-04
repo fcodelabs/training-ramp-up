@@ -2,6 +2,7 @@ import { Field, InputType, Int } from "@nestjs/graphql";
 
 @InputType() //use for mutation
 export class StudentCreateDto {
+
     @Field()
     name: string;
     @Field()

@@ -1,4 +1,4 @@
-import { useQuery } from '@apollo/client';
+import { useMutation, useQuery } from '@apollo/client';
 import {
   Grid,
   GridCellProps,
@@ -7,8 +7,13 @@ import {
   GridToolbar,
 } from '@progress/kendo-react-grid';
 import '@progress/kendo-theme-default/dist/all.css';
-import { useEffect, useRef, useState } from 'react';
-import { GET_ALL_STUDENTS_QUERY } from '../graphql/Queries.js';
+import { useEffect, useState } from 'react';
+import {
+  CREATE_STUDENT_QUERY,
+  GET_ALL_STUDENTS_QUERY,
+  DELETE_STUDENT_QUERY,
+  UPDATE_STUDENT_QUERY,
+} from '../graphql/Queries';
 import { Student } from '../interfaces/interfaces';
 import CircularIndeterminate from './CircularIndeterminate';
 import MyCommandCell from './MyCommandCell';
@@ -16,57 +21,77 @@ const editField: string = 'inEdit';
 
 const DataTable = () => {
   const [data, setData] = useState<any[]>([]);
-  const mount = useRef(false);
   const {
     loading,
     error,
     data: studentData,
+    refetch,
   } = useQuery(GET_ALL_STUDENTS_QUERY);
 
-  let fetchedStudents: Student[];
-  if (loading === false) {
-    fetchedStudents = studentData?.getAllStudents.map(
-      ({ isArchive, ...student }: { isArchive: boolean; student: Student }) =>
-        student
-    );
-  }
+  const [addStudent] = useMutation(CREATE_STUDENT_QUERY);
+  const [deleteStudent] = useMutation(DELETE_STUDENT_QUERY);
+  const [updateStudent] = useMutation(UPDATE_STUDENT_QUERY);
 
   useEffect(() => {
-    if (!loading && studentData) {
+    if (!loading && studentData && !error) {
+      const fetchedData = studentData?.getAllStudents.map(
+        ({ isArchive, ...student }: { isArchive: boolean; student: Student }) =>
+          student
+      );
+      const fetchedStudents: Student[] = fetchedData.map((obj: any) => {
+        let dateOfBirth = new Date(obj.dateOfBirth);
+        return { ...obj, dateOfBirth };
+      });
       setData(fetchedStudents);
     }
-  }, [loading, studentData]);
+
+    if (error) {
+      console.log(error);
+    }
+  }, [error, loading, studentData]);
 
   const remove = async (dataItem: Student) => {
-    /* await fetch(API_URL + dataItem.id, {
-      method: 'DELETE',
-    }); */
-    getItems();
+    deleteStudent({ variables: { id: dataItem.id } });
+    refetch();
   };
 
-  const add = async (dataItem: Student) => {
+  const add = (dataItem: Student) => {
     dataItem.inEdit = false;
-    /* await fetch(API_URL, {
-      method: 'POST',
-      body: JSON.stringify(dataItem),
-      headers: {
-        'Content-type': 'application/json',
+    dataItem.isArchive = false;
+
+    addStudent({
+      variables: {
+        name: dataItem.name,
+        gender: dataItem.gender,
+        address: dataItem.address,
+        dateOfBirth: new Date(dataItem.dateOfBirth),
+        mobileNo: dataItem.mobileNo,
+        age: dataItem.age,
+        inEdit: dataItem.inEdit,
+        isArchive: dataItem.isArchive,
       },
     });
-    getItems(); */
+
+    refetch();
   };
 
   const update = async (dataItem: Student) => {
     dataItem.inEdit = false;
-    /* await fetch(API_URL + dataItem.id, {
-      method: 'PATCH',
-      body: JSON.stringify(dataItem),
-      headers: {
-        'Content-type': 'application/json',
+    updateStudent({
+      variables: {
+        id: dataItem.id,
+        name: dataItem.name,
+        gender: dataItem.gender,
+        address: dataItem.address,
+        dateOfBirth: dataItem.dateOfBirth,
+        mobileNo: dataItem.mobileNo,
+        age: dataItem.age,
+        inEdit: dataItem.inEdit,
+        isArchive: false,
       },
     });
 
-    getItems(); */
+    refetch();
   };
 
   // Local state operations
@@ -119,21 +144,6 @@ const DataTable = () => {
       editField={editField}
     />
   );
-
-  const getItems = async () => {
-    let student: Student[] = [];
-
-    // const response = await fetch(API_URL);
-    // if (!response.ok) throw new Error('Something went wrong!');
-    // const data = await response.json();
-    // student = data.map((obj: any) => {
-    //   const dateOfBirth = new Date(obj.dateOfBirth);
-
-    //   return { ...obj, dateOfBirth };
-    // });
-
-    setData(student);
-  };
 
   return (
     <>
