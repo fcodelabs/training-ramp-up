@@ -1,6 +1,7 @@
 import * as React from 'react';
 import Grid from '@mui/material/Grid';
 import DataTable from './DataTable';
+import Dropzone from './Dropzone';
 
 interface IHomeProps {}
 
@@ -12,6 +13,7 @@ const HomePage = (props: IHomeProps) => {
       </Grid>
       <Grid item md={12} xs={12}>
         <DataTable />
+        <Dropzone />
       </Grid>
     </Grid>
   );
