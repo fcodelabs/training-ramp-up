@@ -7,11 +7,7 @@ export class Student {
   @Field()
   @PrimaryGeneratedColumn('uuid')
   id: string;
-
-  @Field()
-  @Column()
-  Student_id: number;
-
+  
   @Field()
   @Column()
   name: string;
@@ -28,11 +24,11 @@ export class Student {
   @Column()
   mobileNo: string;
 
-  @Field()
+  @Field(()=>Date)
   @Column()
-  DOB: string;
+  DOB: Date;
 
-  @Field()
+  @Field(()=>Int)
   @Column()
   age: number;
 

@@ -8,10 +8,15 @@ type Student {
   gender: String!
   address: String!
   mobileNo: String!
-  DOB: String!
-  age: Float!
+  DOB: DateTime!
+  age: Int!
   isArchive: Boolean!
 }
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
 
 type Query {
   getAllStudents: [Student!]!
@@ -28,7 +33,7 @@ input AddStudentDTO {
   gender: String!
   address: String!
   mobileNo: String!
-  DOB: String!
+  DOB: DateTime!
   age: Int!
   isArchive: Boolean!
 }
@@ -39,7 +44,7 @@ input UpdateStudentDTO {
   gender: String!
   address: String!
   mobileNo: String!
-  DOB: String!
-  age: Float!
+  DOB: DateTime!
+  age: Int!
   isArchive: Boolean!
 }

@@ -11,7 +11,7 @@ import { StudentModule } from './Student/student.module';
     StudentModule,
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
-      autoSchemaFile: join(process.cwd(), 'ramp-up-backend/apps/student-records/src/graphql-schema.gql'),
+      autoSchemaFile: join(process.cwd(), 'src/graphql-schema.gql'),
     }),
     TypeOrmModule.forRoot({
       type: 'postgres',

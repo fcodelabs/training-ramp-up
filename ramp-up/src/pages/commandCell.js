@@ -1,15 +1,16 @@
 import * as React from "react";
-import { addStudent } from "../Redux/StudentOperations";
-import { useDispatch } from "react-redux";
 
 
+import { useMutation } from "@apollo/client";
 
 export const Commands = props => {
     const {
         dataItem
     } = props;
     const inEdit = dataItem[props.editField];
-    const isNewItem = dataItem.Student_id === undefined;
+    const isNewItem = dataItem.id === undefined;
+    
+    
     
     return inEdit ? <td className="k-command-cell">
         <button className="k-button k-button-md k-rounded-md k-button-solid k-button-solid-base k-grid-save-command" onClick={() => isNewItem ? props.add(dataItem) : props.update(dataItem)}>

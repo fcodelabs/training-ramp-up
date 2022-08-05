@@ -5,9 +5,6 @@ export class UpdateStudentDTO {
   @Field()
   id: string;
   
-  @Field()  
-  Student_id: number;
-
   @Field()
   name: string;
 
@@ -20,10 +17,10 @@ export class UpdateStudentDTO {
   @Field()
   mobileNo: string;
 
-  @Field()
-  DOB: string;
+  @Field(()=>Date)
+  DOB: Date;
 
-  @Field()
+  @Field(()=>Int)
   age: number;
 
   @Field()

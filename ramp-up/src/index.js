@@ -3,7 +3,8 @@ import ReactDOM from "react-dom/client";
 import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
-import { ApolloProvider, ApolloClient, InMemoryCache } from "@apollo/client";
+import { ApolloProvider, ApolloClient, InMemoryCache ,HttpLink} from "@apollo/client";
+import { onError } from "apollo-link-error";
 
 const client = new ApolloClient({
   uri: "http://localhost:5000/graphql",

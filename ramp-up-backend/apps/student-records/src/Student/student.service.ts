@@ -30,7 +30,7 @@ export class StudentService {
     return this.studentRepository.save(std);
   }
   async removeStudent(id: string ) {
-        const std =await this.findOne(id);
+        let std =await this.findOne(id);
         std.isArchive = true;
       return this.studentRepository.save(std); 
   }

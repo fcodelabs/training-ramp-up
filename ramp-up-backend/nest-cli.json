@@ -26,6 +26,33 @@
       "compilerOptions": {
         "tsConfigPath": "apps/student-records/tsconfig.app.json"
       }
+    },
+    "file-uploader": {
+      "type": "application",
+      "root": "apps/file-uploader",
+      "entryFile": "main",
+      "sourceRoot": "apps/file-uploader/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/file-uploader/tsconfig.app.json"
+      }
+    },
+    "file-processor": {
+      "type": "application",
+      "root": "apps/file-processor",
+      "entryFile": "main",
+      "sourceRoot": "apps/file-processor/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/file-processor/tsconfig.app.json"
+      }
+    },
+    "notification": {
+      "type": "application",
+      "root": "apps/notification",
+      "entryFile": "main",
+      "sourceRoot": "apps/notification/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/notification/tsconfig.app.json"
+      }
     }
   }
 }
