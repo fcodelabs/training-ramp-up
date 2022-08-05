@@ -19,6 +19,7 @@ const CircularIndeterminate = () => {
         top: '20%',
         transform: 'translate(-50%, -50%)',
         zIndex: 100,
+        mb: 4,
       }}
     >
       <ThemeProvider theme={theme}>
