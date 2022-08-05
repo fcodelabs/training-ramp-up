@@ -1,4 +1,3 @@
-import * as React from 'react';
 import Box from '@mui/material/Box';
 import CircularProgress from '@mui/material/CircularProgress';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
@@ -17,9 +16,10 @@ const CircularIndeterminate = () => {
       sx={{
         position: 'absolute',
         left: '50%',
-        top: '50%',
+        top: '20%',
         transform: 'translate(-50%, -50%)',
         zIndex: 100,
+        mb: 4,
       }}
     >
       <ThemeProvider theme={theme}>

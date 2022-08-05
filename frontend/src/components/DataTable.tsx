@@ -10,8 +10,8 @@ import '@progress/kendo-theme-default/dist/all.css';
 import { useEffect, useState } from 'react';
 import {
   CREATE_STUDENT_QUERY,
-  GET_ALL_STUDENTS_QUERY,
   DELETE_STUDENT_QUERY,
+  GET_ALL_STUDENTS_QUERY,
   UPDATE_STUDENT_QUERY,
 } from '../graphql/Queries';
 import { Student } from '../interfaces/interfaces';
@@ -38,7 +38,7 @@ const DataTable = () => {
         ({ isArchive, ...student }: { isArchive: boolean; student: Student }) =>
           student
       );
-      const fetchedStudents: Student[] = fetchedData.map((obj: any) => {
+      const fetchedStudents: Student[] = fetchedData.map((obj: Student) => {
         let dateOfBirth = new Date(obj.dateOfBirth);
         return { ...obj, dateOfBirth };
       });

@@ -26,6 +26,15 @@
       "compilerOptions": {
         "tsConfigPath": "apps/student/tsconfig.app.json"
       }
+    },
+    "file-upload": {
+      "type": "application",
+      "root": "apps/file-upload",
+      "entryFile": "main",
+      "sourceRoot": "apps/file-upload/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/file-upload/tsconfig.app.json"
+      }
     }
   }
 }

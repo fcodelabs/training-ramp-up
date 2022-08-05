@@ -1,5 +1,3 @@
-import * as React from 'react';
-
 const MyCommandCell = (props: any) => {
   const { dataItem } = props;
   const inEdit = dataItem[props.editField];
@@ -21,7 +19,7 @@ const MyCommandCell = (props: any) => {
           isNewItem ? props.discard(dataItem) : props.cancel(dataItem)
         }
       >
-        {isNewItem ? 'Discard' : 'Cancel'}
+        {isNewItem ? 'Discard' : 'Cancels'}
       </button>
     </td>
   ) : (
