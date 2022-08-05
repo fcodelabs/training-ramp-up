@@ -1,6 +1,4 @@
-import { Grid } from '@mui/material';
-import { width } from '@mui/system';
-import * as React from 'react';
+import { Button, Grid } from '@mui/material';
 import { useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
 
@@ -57,6 +55,9 @@ const Dropzone = (props: IDropzoneProps) => {
             <p>Drag and drop some files here, or click to select files</p>
           </div>
         </div>
+        <Button sx={{ mt: 2, textAlign: 'center' }} variant='contained'>
+          upload
+        </Button>
       </Grid>
     </Grid>
   );
