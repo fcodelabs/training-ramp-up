@@ -1,2 +1,3 @@
 .vscode/launch.json
 backend/.prettierrc
+backend/apps/student/src/graphql-schema.gql
