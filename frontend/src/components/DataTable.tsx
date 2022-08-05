@@ -19,7 +19,12 @@ import CircularIndeterminate from './CircularIndeterminate';
 import MyCommandCell from './MyCommandCell';
 const editField: string = 'inEdit';
 
-const DataTable = () => {
+interface IDataTableProps {
+  setLoading: (loading: boolean) => void;
+}
+
+const DataTable = (props: IDataTableProps) => {
+  const { setLoading } = props;
   const [data, setData] = useState<any[]>([]);
   const {
     loading,
@@ -33,7 +38,7 @@ const DataTable = () => {
   const [updateStudent] = useMutation(UPDATE_STUDENT_QUERY);
 
   useEffect(() => {
-    if (!loading && studentData && !error) {
+    if (!loading && studentData) {
       const fetchedData = studentData?.getAllStudents.map(
         ({ isArchive, ...student }: { isArchive: boolean; student: Student }) =>
           student
@@ -43,6 +48,7 @@ const DataTable = () => {
         return { ...obj, dateOfBirth };
       });
       setData(fetchedStudents);
+      setLoading(loading);
     }
 
     if (error) {

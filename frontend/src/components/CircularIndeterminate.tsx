@@ -16,10 +16,9 @@ const CircularIndeterminate = () => {
       sx={{
         position: 'absolute',
         left: '50%',
-        top: '20%',
+        top: '50%',
         transform: 'translate(-50%, -50%)',
         zIndex: 100,
-        mb: 4,
       }}
     >
       <ThemeProvider theme={theme}>

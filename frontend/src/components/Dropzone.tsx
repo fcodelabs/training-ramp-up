@@ -2,9 +2,12 @@ import { Button, Grid } from '@mui/material';
 import { useCallback, useEffect, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 
-interface IDropzoneProps {}
+interface IDropzoneProps {
+  loading: boolean;
+}
 
 const Dropzone = (props: IDropzoneProps) => {
+  const { loading } = props;
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const { acceptedFiles, getRootProps, getInputProps, isDragActive } =
     useDropzone({
@@ -46,62 +49,64 @@ const Dropzone = (props: IDropzoneProps) => {
         alignItems: 'center',
       }}
     >
-      <Grid item md={4} sx={{ textAlign: 'center' }}>
-        <div
-          {...getRootProps()}
-          style={{
-            padding: '1px',
-            borderRadius: '8px',
-            border: '2px dashed',
-            backgroundColor: '#f2f2f1',
-            minHeight: '200px',
-          }}
-        >
-          <input {...getInputProps()} />
+      {!loading && (
+        <Grid item md={4} sx={{ textAlign: 'center' }}>
           <div
+            {...getRootProps()}
             style={{
-              textAlign: 'center',
+              padding: '1px',
+              borderRadius: '8px',
+              border: '2px dashed',
+              backgroundColor: '#f2f2f1',
+              minHeight: '200px',
             }}
           >
-            <svg
-              xmlns='http://www.w3.org/2000/svg'
-              className='w-3/12 p-2'
-              fill='none'
-              viewBox='0 0 24 24'
-              stroke='currentColor'
-              width={200}
-              height={240}
+            <input {...getInputProps()} />
+            <div
+              style={{
+                textAlign: 'center',
+              }}
             >
-              <path
-                strokeLinecap='round'
-                strokeLinejoin='round'
-                strokeWidth={2}
-                d='M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12'
-              />
-            </svg>
-            {selectedFiles.length === 0 ? (
-              <p>Drag and drop some files here, or click to select files</p>
-            ) : (
-              <ul
-                style={{
-                  listStyleType: 'none',
-                  textAlign: 'start',
-                }}
+              <svg
+                xmlns='http://www.w3.org/2000/svg'
+                className='w-3/12 p-2'
+                fill='none'
+                viewBox='0 0 24 24'
+                stroke='currentColor'
+                width={200}
+                height={240}
               >
-                {acceptedFileItems}
-              </ul>
-            )}
+                <path
+                  strokeLinecap='round'
+                  strokeLinejoin='round'
+                  strokeWidth={2}
+                  d='M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12'
+                />
+              </svg>
+              {selectedFiles.length === 0 ? (
+                <p>Drag and drop some files here, or click to select files</p>
+              ) : (
+                <ul
+                  style={{
+                    listStyleType: 'none',
+                    textAlign: 'start',
+                  }}
+                >
+                  {acceptedFileItems}
+                </ul>
+              )}
+            </div>
           </div>
-        </div>
-        <Button
-          disabled={acceptedFiles.length === 0}
-          sx={{ mt: 3 }}
-          variant='contained'
-          onClick={onUploadFileHandler}
-        >
-          upload
-        </Button>
-      </Grid>
+          <Button
+            disabled={acceptedFiles.length === 0}
+            sx={{ mt: 3 }}
+            variant='contained'
+            onClick={onUploadFileHandler}
+          >
+            upload
+          </Button>
+        </Grid>
+      )}
     </Grid>
   );
 };
