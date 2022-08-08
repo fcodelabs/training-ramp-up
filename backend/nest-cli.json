@@ -35,6 +35,15 @@
       "compilerOptions": {
         "tsConfigPath": "apps/file-upload/tsconfig.app.json"
       }
+    },
+    "file-processing": {
+      "type": "application",
+      "root": "apps/file-processing",
+      "entryFile": "main",
+      "sourceRoot": "apps/file-processing/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/file-processing/tsconfig.app.json"
+      }
     }
   }
 }

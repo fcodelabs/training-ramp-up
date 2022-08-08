@@ -1,19 +1,22 @@
+import { InjectQueue } from '@nestjs/bull';
 import { Controller, Post, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { Queue } from 'bull';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
 import { FileUploadService } from './file-upload.service';
 
 @Controller()
 export class FileUploadController {
-  constructor(private readonly fileUploadService: FileUploadService) { }
+  constructor(private fileUploadService: FileUploadService) { }
+
 
   // single file
   @Post('file')
   @UseInterceptors(FileInterceptor('file',
     {
       storage: diskStorage({
-        destination: "./apps/file-upload/src/uploads",
+        destination: "./uploads",
         filename: (req, file, callback) => {
           const name = file.originalname.toLowerCase().substring(0, file.originalname.indexOf('.')).split(' ').join('-');
           const ext = extname(file.originalname);
@@ -23,9 +26,8 @@ export class FileUploadController {
       })
     }))
   uploadFile(@UploadedFile() file: Express.Multer.File) {
-    return "file uploaded successfully!"
+    this.fileUploadService.uploadFile(file)
+    return file.filename;
   }
-
-  //array of files
 
 }

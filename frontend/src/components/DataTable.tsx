@@ -39,14 +39,12 @@ const DataTable = (props: IDataTableProps) => {
 
   useEffect(() => {
     if (!loading && studentData) {
-      const fetchedData = studentData?.getAllStudents.map(
-        ({ isArchive, ...student }: { isArchive: boolean; student: Student }) =>
-          student
+      const fetchedStudents: Student[] = studentData?.getAllStudents.map(
+        (obj: Student) => {
+          let dateOfBirth = new Date(obj.dateOfBirth);
+          return { ...obj, dateOfBirth };
+        }
       );
-      const fetchedStudents: Student[] = fetchedData.map((obj: Student) => {
-        let dateOfBirth = new Date(obj.dateOfBirth);
-        return { ...obj, dateOfBirth };
-      });
       setData(fetchedStudents);
       setLoading(loading);
     }
