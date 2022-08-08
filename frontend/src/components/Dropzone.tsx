@@ -1,5 +1,5 @@
 import { Button, Grid } from '@mui/material';
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 
 interface IDropzoneProps {
@@ -12,7 +12,7 @@ const Dropzone = (props: IDropzoneProps) => {
   const { acceptedFiles, getRootProps, getInputProps, isDragActive } =
     useDropzone({
       multiple: false,
-      accept: { 'text/csv': [], 'text/plain': [] },
+      accept: { '.csv, application/vnd.ms-excel, text/csv': [] },
     });
 
   useEffect(() => {
@@ -25,7 +25,6 @@ const Dropzone = (props: IDropzoneProps) => {
 
   const onUploadFileHandler = async () => {
     const formData = new FormData();
-    console.log(acceptedFiles.length);
     formData.append('file', selectedFiles[0]);
 
     const response = await fetch('http://localhost:5100/file', {
@@ -84,7 +83,15 @@ const Dropzone = (props: IDropzoneProps) => {
                 />
               </svg>
               {selectedFiles.length === 0 ? (
-                <p>Drag and drop some files here, or click to select files</p>
+                <>
+                  {isDragActive ? (
+                    <p>Drop files here</p>
+                  ) : (
+                    <p>
+                      Drag and drop some files here, or click to select files
+                    </p>
+                  )}
+                </>
               ) : (
                 <ul
                   style={{
@@ -97,14 +104,15 @@ const Dropzone = (props: IDropzoneProps) => {
               )}
             </div>
           </div>
-          <Button
-            disabled={acceptedFiles.length === 0}
-            sx={{ mt: 3 }}
-            variant='contained'
-            onClick={onUploadFileHandler}
-          >
-            upload
-          </Button>
+          {selectedFiles.length !== 0 && (
+            <Button
+              sx={{ mt: 3 }}
+              variant='contained'
+              onClick={onUploadFileHandler}
+            >
+              upload
+            </Button>
+          )}
         </Grid>
       )}
     </Grid>
