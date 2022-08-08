@@ -8,6 +8,7 @@ import {
 } from '@progress/kendo-react-grid';
 import '@progress/kendo-theme-default/dist/all.css';
 import { useEffect, useState } from 'react';
+import io, { Socket } from 'socket.io-client';
 import {
   CREATE_STUDENT_QUERY,
   DELETE_STUDENT_QUERY,
@@ -24,6 +25,7 @@ interface IDataTableProps {
 }
 
 const DataTable = (props: IDataTableProps) => {
+  const [socket, setSoket] = useState<Socket>();
   const { setLoading } = props;
   const [data, setData] = useState<any[]>([]);
   const {
@@ -36,6 +38,11 @@ const DataTable = (props: IDataTableProps) => {
   const [addStudent] = useMutation(CREATE_STUDENT_QUERY);
   const [deleteStudent] = useMutation(DELETE_STUDENT_QUERY);
   const [updateStudent] = useMutation(UPDATE_STUDENT_QUERY);
+
+  useEffect(() => {
+    const newSocket = io('http://localhost:8000/');
+    setSoket(newSocket);
+  }, []);
 
   useEffect(() => {
     if (!loading && studentData) {
@@ -54,8 +61,21 @@ const DataTable = (props: IDataTableProps) => {
     }
   }, [error, loading, studentData]);
 
+  useEffect(() => {
+    socket?.on('message_to_client', (message) => {
+      console.log(message);
+    });
+
+    return () => {
+      socket?.off('message_to_client', (message) => {
+        console.log(message);
+      });
+    };
+  }, [socket]);
+
   const remove = async (dataItem: Student) => {
     deleteStudent({ variables: { id: dataItem.id } });
+    socket?.emit('message_to_server', 'student removed!');
     refetch();
   };
 
@@ -75,8 +95,8 @@ const DataTable = (props: IDataTableProps) => {
         isArchive: dataItem.isArchive,
       },
     });
-
     refetch();
+    socket?.emit('message_to_server', 'student created!');
   };
 
   const update = async (dataItem: Student) => {
@@ -96,6 +116,7 @@ const DataTable = (props: IDataTableProps) => {
     });
 
     refetch();
+    socket?.emit('message_to_server', 'student updated!');
   };
 
   // Local state operations
