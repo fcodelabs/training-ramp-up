@@ -20,7 +20,7 @@ export const TablePage = () => {
 
   //Queries and Mutations
   const { data, refetch } = useQuery(STUDENT_GET_QUERY);
-  const [addingStudent, {  loading: loads, error: newError }] =
+  const [addingStudent, { loading: loads, error: newError }] =
     useMutation(STUDENT_ADD_MUTATION);
   const [
     updateStudent,
@@ -31,8 +31,8 @@ export const TablePage = () => {
 
   const [notification, setNotification] = useState([]);
 
-  const notificationListner = (recievingNotification) => {
-    setNotification([...notification, recievingNotification]);
+  const notificationListner =  (recievingNotification) => {
+     setNotification([...notification, recievingNotification]);
   };
 
   useEffect(() => {
@@ -41,7 +41,6 @@ export const TablePage = () => {
         (student) => student.isArchive === false
       );
       setStdData(studentsArray);
-      
 
       let stdNewData = studentsArray.map((student) => {
         let DOB = new Date(student.DOB);
@@ -49,20 +48,21 @@ export const TablePage = () => {
       });
 
       setStdData(stdNewData);
-      console.log(stdNewData);
+      
     }
-    
   }, [data]);
 
   useEffect(() => {
-    socket.on("updateStudent" , notificationListner);
-    socket.on("removeStudent" , notificationListner);
-    // return () =>{
-    //   socket.off("addStudent", notificationListner)
-    // }
+    socket.on("addStudent", notificationListner);
+    socket.on("updateStudent", notificationListner);
+    socket.on("removeStudent", notificationListner);
+    console.log(notification);
+    return () =>{
+      socket.off("addStudent", notificationListner)
+    }
   }, [notificationListner]);
 
-  console.log(stdData);
+  
 
   const commandCell = (props) => {
     return (
@@ -91,16 +91,16 @@ export const TablePage = () => {
         : student
     );
     setStdData(newData);
-    console.log(stdData);
+    
   };
 
-  const Add = (student) => {
+  const Add = async (student) => {
     student.inEdit = true;
     console.log(student.DOB);
     if (loads) return console.log("Submitting...");
     if (newError) return console.log(`Submission error! ${newError.message}`);
 
-    addingStudent({
+    await addingStudent({
       variables: {
         name: student.name,
         gender: student.gender,
@@ -112,37 +112,29 @@ export const TablePage = () => {
       },
     });
 
-    
-
     socket.emit("addStudent", "Student Added");
-    socket.on("addStudent", notificationListner);
+
     refetch();
-    //socket.on("addStudent" , notificationListner)
-    console.log(notification);
-    //const newData = insertStudent(student);
+    
   };
 
-  const Remove = (student) => {
+  const Remove = async (student) => {
     socket.emit("removeStudent", " Student Removed");
     console.log(notification);
     console.log(student.id);
-    removeStudent({
+    await removeStudent({
       variables: { id: student.id },
     });
-    
-    refetch();
-    
-  };
-  const update = (student) => {
-    
-    let index = stdData.findIndex(
-      (record) => record.id === student.id
-    );
-    console.log(index)
-    student = stdData[index];
-    console.log(student)
 
-    updateStudent({
+    refetch();
+  };
+  const update = async (student) => {
+    let index = stdData.findIndex((record) => record.id === student.id);
+    console.log(index);
+    student = stdData[index];
+    
+
+    await updateStudent({
       variables: {
         id: student.id,
         Student_id: 23,
@@ -158,23 +150,23 @@ export const TablePage = () => {
     student.inEdit = false;
     socket.emit("updateStudent", "Student Updated");
 
-    
-    refetch()
+    refetch();
   };
 
   const Discard = () => {
     const newData = [...stdData];
     newData.splice(0, 1);
     setStdData(newData);
-    
   };
   const cancel = (student) => {
-    const StudentoriginalData = data.getAllStudents.find((S) => S.id === student.id);
+    const StudentoriginalData = data.getAllStudents.find(
+      (S) => S.id === student.id
+    );
     const newData = stdData.map((Student) =>
       Student.id === StudentoriginalData.id ? StudentoriginalData : Student
     );
     setStdData(newData);
-    refetch()    
+    refetch();
   };
 
   const AddNewStudent = () => {

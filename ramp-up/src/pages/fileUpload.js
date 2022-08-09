@@ -14,6 +14,7 @@ export const FileUpload = () => {
   useEffect(() => {
 
     socket.on("fileUpload", notificationListner);
+    console.log(notification)
     
   }, [notificationListner]);
 
@@ -28,7 +29,7 @@ export const FileUpload = () => {
 
     socket.emit("fileUpload", "File Uploaded");
     
-    console.log(notification)
+    
     //uploading File via POST method
     try {
       fetch("http://localhost:4000/file?", {

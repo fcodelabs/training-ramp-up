@@ -4,7 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { FileUploaderModule } from 'apps/file-uploader/src/file-uploader.module';
 import { Student } from 'apps/student-records/src/Student/entities/student.entity';
 import { uploadProcessor } from './file-processor.consumer';
-import { FileProcessorService } from './file-processor.service';
+
 
 
 @Module({
@@ -13,7 +13,7 @@ import { FileProcessorService } from './file-processor.service';
     FileUploaderModule
     
   ],
-  providers: [FileProcessorService, uploadProcessor],
+  providers:[uploadProcessor],
   controllers: [],
 })
 export class ProcessModule {}

@@ -31,4 +31,8 @@ export class StudentData {
   @Field()
   @Column('integer')
   age: string;
+
+  @Field()
+  @Column('boolean')
+  isArchive: boolean;
 }
