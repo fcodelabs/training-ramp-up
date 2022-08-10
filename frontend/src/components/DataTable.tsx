@@ -18,6 +18,11 @@ import {
 import { Student } from '../interfaces/interfaces';
 import CircularIndeterminate from './CircularIndeterminate';
 import MyCommandCell from './MyCommandCell';
+import DropDownCell from './DropDownCell';
+import MobileInput from './MobileInput';
+import DatePickerInput from './DatePickerInput';
+import AgeInput from './AgeInput';
+
 const editField: string = 'inEdit';
 
 interface IDataTableProps {
@@ -83,12 +88,16 @@ const DataTable = (props: IDataTableProps) => {
     dataItem.inEdit = false;
     dataItem.isArchive = false;
 
+    if (dataItem.mobileNo.length < 10) {
+      console.log('mob');
+    }
+
     addStudent({
       variables: {
         name: dataItem.name,
         gender: dataItem.gender,
         address: dataItem.address,
-        dateOfBirth: new Date(dataItem.dateOfBirth),
+        dateOfBirth: dataItem.dateOfBirth,
         mobileNo: dataItem.mobileNo,
         age: dataItem.age,
         inEdit: dataItem.inEdit,
@@ -186,18 +195,16 @@ const DataTable = (props: IDataTableProps) => {
             </button>
           </GridToolbar>
           <GridColumn field='name' title='Name' width='200px' />
-          <GridColumn field='gender' title='Gender' />
+          <GridColumn field='gender' title='Gender' cell={DropDownCell} />
           <GridColumn field='address' title='Address' width='200px' />
-          <GridColumn field='mobileNo' title='MobileNo' />
+          <GridColumn field='mobileNo' title='MobileNo' cell={MobileInput} />
           <GridColumn
             field='dateOfBirth'
             title='Date Of Birth'
-            editor='date'
-            format='{0:d}'
+            cell={DatePickerInput}
             width='150px'
           />
-          <GridColumn field='age' title='Age' editor='numeric' />
-          {/* <GridColumn field='Discontinued' title='Discontinued' editor='boolean' /> */}
+          <GridColumn field='age' title='Age' cell={AgeInput} />
           <GridColumn cell={CommandCell} title='Commands' width='200px' />
         </Grid>
       )}
