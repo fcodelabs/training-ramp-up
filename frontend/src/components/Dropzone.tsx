@@ -1,12 +1,14 @@
 import { Button, Grid } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
+import { io } from 'socket.io-client';
 
 interface IDropzoneProps {
   loading: boolean;
 }
 
 const Dropzone = (props: IDropzoneProps) => {
+  const socket = io('http://localhost:8000/');
   const { loading } = props;
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const { acceptedFiles, getRootProps, getInputProps, isDragActive } =
@@ -36,6 +38,7 @@ const Dropzone = (props: IDropzoneProps) => {
       throw new Error('Something went wrong!. File upload not successful.');
     }
     setSelectedFiles([]);
+    socket.emit('message_to_server', 'student file uploaded!');
   };
 
   return (
