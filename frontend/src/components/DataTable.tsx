@@ -65,10 +65,13 @@ const DataTable = (props: IDataTableProps) => {
   }, [error, loading, studentData]);
 
   useEffect(() => {
+    let timeOut: NodeJS.Timeout;
     socket.on('message_to_client', (message) => {
       console.log(message);
       if (message === 'student file uploaded!') {
-        refetch();
+        timeOut = setTimeout(() => {
+          refetch();
+        }, 1000);
         setOpen(true);
         setMessage('student file uploaded successfully!');
       }
@@ -78,6 +81,7 @@ const DataTable = (props: IDataTableProps) => {
       socket.off('message_to_client', (message) => {
         console.log(message);
       });
+      clearTimeout(timeOut);
     };
   }, [socket]);
 
