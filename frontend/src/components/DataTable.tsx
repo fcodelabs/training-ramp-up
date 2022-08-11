@@ -22,7 +22,8 @@ import DatePickerInput from './DatePickerInput';
 import DropDownCell from './DropDownCell';
 import MobileInput from './MobileInput';
 import MyCommandCell from './MyCommandCell';
-
+import Snackbar from '@mui/material/Snackbar';
+import { Alert } from '@mui/material';
 const editField: string = 'inEdit';
 
 interface IDataTableProps {
@@ -33,6 +34,8 @@ const DataTable = (props: IDataTableProps) => {
   const { setLoading } = props;
   const socket = io('http://localhost:8000/');
   const [data, setData] = useState<any[]>([]);
+  const [open, setOpen] = useState(false);
+  const [message, setMessage] = useState('');
   const {
     loading,
     error,
@@ -66,6 +69,8 @@ const DataTable = (props: IDataTableProps) => {
       console.log(message);
       if (message === 'student file uploaded!') {
         refetch();
+        setOpen(true);
+        setMessage('student file uploaded successfully!');
       }
     });
 
@@ -80,6 +85,8 @@ const DataTable = (props: IDataTableProps) => {
     deleteStudent({ variables: { id: dataItem.id } });
     socket.emit('message_to_server', 'student removed!');
     refetch();
+    setOpen(true);
+    setMessage('student removed successfully!');
   };
 
   const add = (dataItem: Student) => {
@@ -100,6 +107,8 @@ const DataTable = (props: IDataTableProps) => {
     });
     refetch();
     socket.emit('message_to_server', 'student created!');
+    setOpen(true);
+    setMessage('student created successfully!');
   };
 
   const update = async (dataItem: Student) => {
@@ -120,6 +129,8 @@ const DataTable = (props: IDataTableProps) => {
 
     refetch();
     socket.emit('message_to_server', 'student updated!');
+    setOpen(true);
+    setMessage('student updated successfully!');
   };
 
   // Local state operations
@@ -173,34 +184,56 @@ const DataTable = (props: IDataTableProps) => {
     />
   );
 
+  const handleClose = (
+    event?: React.SyntheticEvent | Event,
+    reason?: string
+  ) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setOpen(false);
+  };
+
   return (
     <>
       {loading ? (
         <CircularIndeterminate />
       ) : (
-        <Grid data={data} onItemChange={itemChange} editField={editField}>
-          <GridToolbar>
-            <button
-              title='Add new'
-              className='k-button k-button-md k-rounded-md k-button-solID k-button-solID-primary'
-              onClick={addNew}
+        <>
+          <Grid data={data} onItemChange={itemChange} editField={editField}>
+            <GridToolbar>
+              <button
+                title='Add new'
+                className='k-button k-button-md k-rounded-md k-button-solID k-button-solID-primary'
+                onClick={addNew}
+              >
+                Add new
+              </button>
+            </GridToolbar>
+            <GridColumn field='name' title='Name' width='200px' />
+            <GridColumn field='gender' title='Gender' cell={DropDownCell} />
+            <GridColumn field='address' title='Address' width='200px' />
+            <GridColumn field='mobileNo' title='MobileNo' cell={MobileInput} />
+            <GridColumn
+              field='dateOfBirth'
+              title='Date Of Birth'
+              cell={DatePickerInput}
+              width='150px'
+            />
+            <GridColumn field='age' title='Age' cell={AgeInput} />
+            <GridColumn cell={CommandCell} title='Commands' width='200px' />
+          </Grid>
+          <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+            <Alert
+              onClose={handleClose}
+              severity='success'
+              sx={{ width: '100%' }}
             >
-              Add new
-            </button>
-          </GridToolbar>
-          <GridColumn field='name' title='Name' width='200px' />
-          <GridColumn field='gender' title='Gender' cell={DropDownCell} />
-          <GridColumn field='address' title='Address' width='200px' />
-          <GridColumn field='mobileNo' title='MobileNo' cell={MobileInput} />
-          <GridColumn
-            field='dateOfBirth'
-            title='Date Of Birth'
-            cell={DatePickerInput}
-            width='150px'
-          />
-          <GridColumn field='age' title='Age' cell={AgeInput} />
-          <GridColumn cell={CommandCell} title='Commands' width='200px' />
-        </Grid>
+              {message}
+            </Alert>
+          </Snackbar>
+        </>
       )}
     </>
   );
