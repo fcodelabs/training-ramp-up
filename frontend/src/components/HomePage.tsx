@@ -12,10 +12,8 @@ const HomePage = (props: IHomeProps) => {
       <Grid item md={12} sx={{ my: 4, textAlign: 'center' }}>
         <h2>Ramp up Project</h2>
       </Grid>
-      <Grid item md={12} xs={12}>
-        <DataTable setLoading={setLoading} />
-        <Dropzone loading={loading} />
-      </Grid>
+      <DataTable setLoading={setLoading} />
+      <Dropzone loading={loading} />
     </Grid>
   );
 };
