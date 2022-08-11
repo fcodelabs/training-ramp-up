@@ -8,7 +8,7 @@ import {
 } from '@progress/kendo-react-grid';
 import '@progress/kendo-theme-default/dist/all.css';
 import { useEffect, useState } from 'react';
-import io, { Socket } from 'socket.io-client';
+import io from 'socket.io-client';
 import {
   CREATE_STUDENT_QUERY,
   DELETE_STUDENT_QUERY,
@@ -16,12 +16,12 @@ import {
   UPDATE_STUDENT_QUERY,
 } from '../graphql/Queries';
 import { Student } from '../interfaces/interfaces';
+import AgeInput from './AgeInput';
 import CircularIndeterminate from './CircularIndeterminate';
-import MyCommandCell from './MyCommandCell';
+import DatePickerInput from './DatePickerInput';
 import DropDownCell from './DropDownCell';
 import MobileInput from './MobileInput';
-import DatePickerInput from './DatePickerInput';
-import AgeInput from './AgeInput';
+import MyCommandCell from './MyCommandCell';
 
 const editField: string = 'inEdit';
 
@@ -30,8 +30,8 @@ interface IDataTableProps {
 }
 
 const DataTable = (props: IDataTableProps) => {
-  const [socket, setSoket] = useState<Socket>();
   const { setLoading } = props;
+  const socket = io('http://localhost:8000/');
   const [data, setData] = useState<any[]>([]);
   const {
     loading,
@@ -43,11 +43,6 @@ const DataTable = (props: IDataTableProps) => {
   const [addStudent] = useMutation(CREATE_STUDENT_QUERY);
   const [deleteStudent] = useMutation(DELETE_STUDENT_QUERY);
   const [updateStudent] = useMutation(UPDATE_STUDENT_QUERY);
-
-  useEffect(() => {
-    const newSocket = io('http://localhost:8000/');
-    setSoket(newSocket);
-  }, []);
 
   useEffect(() => {
     if (!loading && studentData) {
@@ -67,12 +62,15 @@ const DataTable = (props: IDataTableProps) => {
   }, [error, loading, studentData]);
 
   useEffect(() => {
-    socket?.on('message_to_client', (message) => {
+    socket.on('message_to_client', (message) => {
       console.log(message);
+      if (message === 'student file uploaded!') {
+        refetch();
+      }
     });
 
     return () => {
-      socket?.off('message_to_client', (message) => {
+      socket.off('message_to_client', (message) => {
         console.log(message);
       });
     };
@@ -80,7 +78,7 @@ const DataTable = (props: IDataTableProps) => {
 
   const remove = async (dataItem: Student) => {
     deleteStudent({ variables: { id: dataItem.id } });
-    socket?.emit('message_to_server', 'student removed!');
+    socket.emit('message_to_server', 'student removed!');
     refetch();
   };
 
@@ -88,24 +86,20 @@ const DataTable = (props: IDataTableProps) => {
     dataItem.inEdit = false;
     dataItem.isArchive = false;
 
-    if (dataItem.mobileNo.length < 10) {
-      console.log('mob');
-    }
-
     addStudent({
       variables: {
         name: dataItem.name,
         gender: dataItem.gender,
         address: dataItem.address,
         dateOfBirth: dataItem.dateOfBirth,
-        mobileNo: dataItem.mobileNo,
+        mobileNo: dataItem.mobileNo.toString(),
         age: dataItem.age,
         inEdit: dataItem.inEdit,
         isArchive: dataItem.isArchive,
       },
     });
     refetch();
-    socket?.emit('message_to_server', 'student created!');
+    socket.emit('message_to_server', 'student created!');
   };
 
   const update = async (dataItem: Student) => {
@@ -116,8 +110,8 @@ const DataTable = (props: IDataTableProps) => {
         name: dataItem.name,
         gender: dataItem.gender,
         address: dataItem.address,
-        dateOfBirth: dataItem.dateOfBirth,
-        mobileNo: dataItem.mobileNo,
+        dateOfBirth: new Date(dataItem.dateOfBirth),
+        mobileNo: dataItem.mobileNo.toString(),
         age: dataItem.age,
         inEdit: dataItem.inEdit,
         isArchive: false,
@@ -125,7 +119,7 @@ const DataTable = (props: IDataTableProps) => {
     });
 
     refetch();
-    socket?.emit('message_to_server', 'student updated!');
+    socket.emit('message_to_server', 'student updated!');
   };
 
   // Local state operations
