@@ -26,9 +26,6 @@ const DatePickerInput = (props: GridCellProps) => {
     }
   };
 
-  const year = value.getFullYear();
-  const month = value.getMonth();
-  const date = value.getDate();
   const max = new Date();
 
   return (
@@ -36,7 +33,7 @@ const DatePickerInput = (props: GridCellProps) => {
       {dataItem.inEdit ? (
         <DatePicker max={max} value={value} onChange={handleOnChange} />
       ) : (
-        `${1 + month}/${date}/${year}`
+        dataValue.toLocaleDateString()
       )}
     </td>
   );
