@@ -28,14 +28,14 @@ const MobileInput = (props: GridCellProps) => {
             required
             spinners={false}
             max={9999999999}
-            value={parseInt(dataValue)}
+            value={parseInt(dataValue) || 0}
             format={''}
             onChange={handleOnChange}
             validationMessage={'should be 10 numbers'}
           />
         </>
       ) : (
-        dataValue
+        parseInt(dataValue)
       )}
     </td>
   );

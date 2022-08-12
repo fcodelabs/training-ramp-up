@@ -29,7 +29,7 @@ const AgeInput = (props: GridCellProps) => {
             required
             max={99}
             min={1}
-            value={parseInt(dataValue)}
+            value={parseInt(dataValue) || 0}
             format={''}
             onChange={handleOnChange}
             validationMessage={'should be 10 numbers'}
