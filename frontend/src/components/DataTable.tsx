@@ -86,18 +86,19 @@ const DataTable = (props: IDataTableProps) => {
   }, [socket]);
 
   const remove = async (dataItem: Student) => {
-    deleteStudent({ variables: { id: dataItem.id } });
+    await deleteStudent({ variables: { id: dataItem.id } });
     socket.emit('message_to_server', 'student removed!');
     refetch();
     setOpen(true);
     setMessage('student removed successfully!');
   };
 
-  const add = (dataItem: Student) => {
+  const add = async (dataItem: Student) => {
     dataItem.inEdit = false;
     dataItem.isArchive = false;
+    console.log(dataItem.dateOfBirth);
 
-    addStudent({
+    await addStudent({
       variables: {
         name: dataItem.name,
         gender: dataItem.gender,
@@ -117,7 +118,7 @@ const DataTable = (props: IDataTableProps) => {
 
   const update = async (dataItem: Student) => {
     dataItem.inEdit = false;
-    updateStudent({
+    await updateStudent({
       variables: {
         id: dataItem.id,
         name: dataItem.name,
@@ -138,7 +139,7 @@ const DataTable = (props: IDataTableProps) => {
   };
 
   // Local state operations
-  const discard = async () => {
+  const discard = () => {
     const newData = [...data];
     newData.splice(0, 1);
     setData(newData);
@@ -228,7 +229,7 @@ const DataTable = (props: IDataTableProps) => {
             <GridColumn field='age' title='Age' cell={AgeInput} />
             <GridColumn cell={CommandCell} title='Commands' width='200px' />
           </Grid>
-          <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+          <Snackbar open={open} autoHideDuration={3000} onClose={handleClose}>
             <Alert
               onClose={handleClose}
               severity='success'
