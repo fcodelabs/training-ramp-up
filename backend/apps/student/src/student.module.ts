@@ -10,7 +10,7 @@ import { Student } from './entities/student.entity';
 
 @Module({
   imports: [GraphQLModule.forRoot({
-    autoSchemaFile: join(process.cwd(), 'apps/student/src/graphql-schema.gql'),
+    autoSchemaFile: join(process.cwd(), 'apps/student/src/graphql-student-schema.gql'),
     driver: ApolloDriver,
     cors: {
       credentials: true,
