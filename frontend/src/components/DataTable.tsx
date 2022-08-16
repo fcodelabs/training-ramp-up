@@ -1,4 +1,6 @@
 import { useMutation, useQuery } from '@apollo/client';
+import { Alert } from '@mui/material';
+import Snackbar from '@mui/material/Snackbar';
 import {
   Grid,
   GridCellProps,
@@ -22,8 +24,7 @@ import DatePickerInput from './DatePickerInput';
 import DropDownCell from './DropDownCell';
 import MobileInput from './MobileInput';
 import MyCommandCell from './MyCommandCell';
-import Snackbar from '@mui/material/Snackbar';
-import { Alert } from '@mui/material';
+
 const editField: string = 'inEdit';
 
 interface IDataTableProps {

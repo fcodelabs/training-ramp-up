@@ -10,14 +10,36 @@ import {
   Typography,
 } from '@mui/material';
 import * as React from 'react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
 interface ISignupPageProps {}
 
-const SignupPage = (props: ISignupPageProps) => {
-  const [pageState, setPageState] = useState('Signup');
+const AuthPage = (props: ISignupPageProps) => {
+  const initialAccessToken = localStorage.getItem('accessToken');
+  const navigate = useNavigate();
+  const params = useParams();
+  const location = useLocation();
+  const [pageState, setPageState] = useState('Login');
+  const [urlState, setUrlState] = useState('');
   const [emailInput, setEmailInput] = useState('');
   const [passwordInput, setPasswordInput] = useState('');
+  const [accessToken, setAccessToken] = useState<string | null>('');
+  // const [refreshToken, setRefreshToken] = useState('');
+
+  useEffect(() => {
+    if (!initialAccessToken) {
+      setAccessToken(initialAccessToken);
+    }
+
+    if (location.pathname === '/auth/signup') {
+      setPageState('SignUp');
+      setUrlState('signup');
+    } else {
+      setUrlState('login');
+      setPageState('Login');
+    }
+  }, [location]);
 
   const emailHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     const email = event.target.value;
@@ -29,8 +51,31 @@ const SignupPage = (props: ISignupPageProps) => {
     setPasswordInput(password);
   };
 
-  const onSubmitHandler = () => {
-    console.log(emailInput, passwordInput);
+  const onSubmitHandler = async () => {
+    try {
+      const response = await fetch(`http://localhost:5400/${urlState}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: emailInput,
+          password: passwordInput,
+        }),
+      });
+      const responsedata = await response.json();
+
+      if (!responsedata.access_token) {
+        console.log(responsedata.message);
+      } else {
+        localStorage.setItem('accessToken', responsedata.access_token);
+        localStorage.setItem('refreshToken', responsedata.refresh_token);
+
+        if (localStorage.getItem('refreshToken')) navigate('/home');
+      }
+    } catch (error) {
+      console.log(error);
+    }
     setEmailInput('');
     setPasswordInput('');
   };
@@ -100,4 +145,4 @@ const SignupPage = (props: ISignupPageProps) => {
   );
 };
 
-export default SignupPage;
+export default AuthPage;
