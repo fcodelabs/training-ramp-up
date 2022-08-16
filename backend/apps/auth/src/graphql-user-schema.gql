@@ -1,0 +1,32 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type User {
+  id: String!
+  email: String!
+  password: String!
+  hashedRefreshToken: String
+}
+
+type Query {
+  getAllUsers: [User!]!
+  getUser(email: String!): [User!]!
+}
+
+type Mutation {
+  createUser(userCreateDto: UserCreateDto!): User!
+  updateUser(updateUserDto: UpdateUserDto!): User!
+}
+
+input UserCreateDto {
+  email: String!
+  password: String!
+}
+
+input UpdateUserDto {
+  id: String!
+  email: String!
+  password: String!
+  hashedRefreshToken: String
+}
