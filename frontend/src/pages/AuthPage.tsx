@@ -16,7 +16,7 @@ import { useLocation, useNavigate, useParams } from 'react-router-dom';
 interface ISignupPageProps {}
 
 const AuthPage = (props: ISignupPageProps) => {
-  const initialAccessToken = localStorage.getItem('accessToken');
+  let initialAccessToken;
   const navigate = useNavigate();
   const params = useParams();
   const location = useLocation();
@@ -28,10 +28,14 @@ const AuthPage = (props: ISignupPageProps) => {
   // const [refreshToken, setRefreshToken] = useState('');
 
   useEffect(() => {
+    initialAccessToken = localStorage.getItem('accessToken');
+
     if (!initialAccessToken) {
       setAccessToken(initialAccessToken);
     }
+  }, [initialAccessToken]);
 
+  useEffect(() => {
     if (location.pathname === '/auth/signup') {
       setPageState('SignUp');
       setUrlState('signup');
