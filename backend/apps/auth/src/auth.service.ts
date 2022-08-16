@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, ForbiddenException, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { ConfigService } from '@nestjs/config';
@@ -24,27 +24,49 @@ export class AuthService {
     return null;
   }
 
-  async signup(user: any) {
+  async signUp(user: any) {
+    //check if user exists
     const userExists = await this.userService.findOne(user.email);
 
-    if (userExists.length !== 0) {
-      throw new BadRequestException('User already exists');
-    }
+    if (userExists.length !== 0) throw new BadRequestException('User already exists');
 
-    const userObj = {
-      email: user.email,
-      password: user.password,
-    }
-    const newUser = await this.userService.create(userObj);
+    const newUser = await this.userService.create(user.email, user.password);
     const tokens = await this.getTokens(newUser.id, user.email);
-
-    const newUserObj = {
-      ...newUser,
-      hashedRefreshToken: tokens.refresh_token,
-    }
-
-    await this.userService.update(newUser.id, newUserObj);
+    await this.userService.update(newUser, tokens.refresh_token);
     return tokens;
+  }
+
+  async signIn(user: any) {
+    //check if user exists
+    const userExists = await this.userService.findOne(user.email);
+
+    if (userExists.length === 0) throw new BadRequestException('User does not exists');
+
+    const passwordMatches = bcrypt.compareSync(user.password, userExists[0].password);
+
+    if (!passwordMatches) throw new BadRequestException("Password is incorrect");
+
+    const tokens = await this.getTokens(user.id, user.email);
+    await this.userService.update(userExists[0], tokens.refresh_token);
+    return tokens;
+  }
+
+  async logOut(email: any) {
+    const user = await this.userService.findOne(email);
+    await this.userService.update(user[0], "")
+  }
+
+  async refreshToken(email: string, refreshToken: string) {
+    const user = await this.userService.findOne(email);
+
+    if (user.length === 0 && !user[0].hashedRefreshToken) throw new ForbiddenException('Access Denied');
+
+    if (refreshToken !== user[0].hashedRefreshToken) throw new ForbiddenException('Access Token Mismatched');
+
+    const tokens = await this.getTokens(user[0].id, user[0].email);
+    await this.userService.update(user[0], tokens.refresh_token);
+    return tokens;
+
   }
 
   async getTokens(id: string, email: string) {

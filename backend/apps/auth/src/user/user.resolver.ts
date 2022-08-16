@@ -8,24 +8,24 @@ import { UserService } from './user.service';
 export class UserResolver {
   constructor(private readonly userService: UserService) { }
 
-  @Mutation(() => User, { name: "createUser" })
-  create(@Args('userCreateDto') userCreateDto: UserCreateDto) {
-    return this.userService.create(userCreateDto);
-  }
+  // @Mutation(() => User, { name: "createUser" })
+  // create(@Args('userCreateDto') userCreateDto: UserCreateDto) {
+  //   return this.userService.create(userCreateDto);
+  // }
 
   @Query(() => [User], { name: "getAllUsers" })
   findAll() {
     return this.userService.findAll();
   }
 
-  @Query(() => [User], { name: "getUser" })
-  findOne(@Args('email') email: string) {
-    return this.userService.findOne(email);
-  }
+  // @Query(() => [User], { name: "getUser" })
+  // findOne(@Args('email') email: string) {
+  //   return this.userService.findOne(email);
+  // }
 
-  @Mutation(() => User, { name: "updateUser" })
-  update(@Args('updateUserDto') updateUserDto: UpdateUserDto) {
-    return this.userService.update(updateUserDto.id, updateUserDto);
-  }
+  // @Mutation(() => User, { name: "updateUser" })
+  // update(@Args('updateUserDto') updateUserDto: UpdateUserDto) {
+  //   return this.userService.update(updateUserDto.id, updateUserDto);
+  // }
 
 }
