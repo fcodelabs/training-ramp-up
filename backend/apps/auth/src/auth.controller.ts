@@ -19,7 +19,7 @@ export class AuthController {
     return this.authService.signIn(req.body);
   }
 
-  @UseGuards(AccessTokenGuard)
+  @UseGuards(RefreshTokenGuard)
   @Get('logout')
   async logOut(@Req() req: Request) {
     this.authService.logOut(req.user['email']);
