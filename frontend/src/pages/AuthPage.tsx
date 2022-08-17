@@ -11,7 +11,9 @@ import {
 } from '@mui/material';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { loggedActions } from '../store/loged-slice';
 
 interface ISignupPageProps {}
 
@@ -25,15 +27,16 @@ const AuthPage = (props: ISignupPageProps) => {
   const [emailInput, setEmailInput] = useState('');
   const [passwordInput, setPasswordInput] = useState('');
   const [accessToken, setAccessToken] = useState<string | null>('');
+  const dispatch = useDispatch();
   // const [refreshToken, setRefreshToken] = useState('');
 
-  useEffect(() => {
-    initialAccessToken = localStorage.getItem('accessToken');
+  // useEffect(() => {
+  //   initialAccessToken = localStorage.getItem('accessToken');
 
-    if (!initialAccessToken) {
-      setAccessToken(initialAccessToken);
-    }
-  }, [initialAccessToken]);
+  //   if (!initialAccessToken) {
+  //     setAccessToken(initialAccessToken);
+  //   }
+  // }, [initialAccessToken]);
 
   useEffect(() => {
     if (location.pathname === '/auth/signup') {
@@ -75,7 +78,10 @@ const AuthPage = (props: ISignupPageProps) => {
         localStorage.setItem('accessToken', responsedata.access_token);
         localStorage.setItem('refreshToken', responsedata.refresh_token);
 
-        if (localStorage.getItem('refreshToken')) navigate('/home');
+        if (localStorage.getItem('refreshToken')) {
+          navigate('/home');
+          dispatch(loggedActions.toggleState());
+        }
       }
     } catch (error) {
       console.log(error);

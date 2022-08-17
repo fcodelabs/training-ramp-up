@@ -6,8 +6,12 @@ import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../store';
+import { loggedActions } from '../store/loged-slice';
 
 const ButtonAppBar = () => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -26,6 +30,7 @@ const ButtonAppBar = () => {
     localStorage.removeItem('accessToken');
     localStorage.removeItem('refreshToken');
     navigate('/auth/login');
+    dispatch(loggedActions.toggleState());
   };
 
   const signUpHandler = () => {
