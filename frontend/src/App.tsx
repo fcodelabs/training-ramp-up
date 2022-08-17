@@ -27,9 +27,9 @@ function App() {
     <main>
       <ButtonAppBar />
       <Routes>
-        <Route path='/' element={<Navigate to='/auth/login' />} />
-        <Route path='/auth/login' element={<AuthPage />} />
-        <Route path='/auth/signup' element={<AuthPage />} />
+        <Route path='/' element={<Navigate to='/login' />} />
+        <Route path='/login' element={<AuthPage />} />
+        <Route path='/signup' element={<AuthPage />} />
         {loggedState && <Route path='/home' element={<HomePage />} />}
         <Route path='*' element={<Navigate to='/' />} />
       </Routes>

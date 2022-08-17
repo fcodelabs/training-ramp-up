@@ -27,15 +27,15 @@ const ButtonAppBar = () => {
     } catch (error) {}
     localStorage.removeItem('accessToken');
     localStorage.removeItem('refreshToken');
-    navigate('/auth/login');
+    navigate('/login');
     dispatch(loggedActions.toggleState(false));
   };
 
   const signUpHandler = () => {
-    navigate('/auth/signup');
+    navigate('/signup');
   };
   const loginHandler = () => {
-    navigate('/auth/login');
+    navigate('/login');
   };
 
   return (
@@ -52,7 +52,7 @@ const ButtonAppBar = () => {
           <Typography variant='h6' component='div' sx={{ flexGrow: 1 }}>
             Ramp up Project
           </Typography>
-          {location.pathname === '/auth/login' && (
+          {location.pathname === '/login' && (
             <Button color='inherit' onClick={signUpHandler}>
               Register
             </Button>
@@ -62,7 +62,7 @@ const ButtonAppBar = () => {
               Logout
             </Button>
           )}
-          {location.pathname === '/auth/signup' && (
+          {location.pathname === '/signup' && (
             <Button color='inherit' onClick={loginHandler}>
               Login
             </Button>

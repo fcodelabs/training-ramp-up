@@ -29,7 +29,7 @@ const AuthPage = (props: ISignupPageProps) => {
   const [passwordInput, setPasswordInput] = useState('');
 
   useEffect(() => {
-    if (location.pathname === '/auth/signup') {
+    if (location.pathname === '/signup') {
       setPageState('SignUp');
       setUrlState('signup');
     } else {
