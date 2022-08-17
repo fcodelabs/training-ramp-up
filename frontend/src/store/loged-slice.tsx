@@ -4,10 +4,15 @@ const logSlice = createSlice({
   name: 'logSlice',
   initialState: {
     isLoggedIn: false,
+    accessToken: '',
   },
   reducers: {
-    toggleState: (state: any) => {
-      state.isLoggedIn = !state.isLoggedIn;
+    toggleState: (state: any, action: any) => {
+      state.isLoggedIn = action.payload;
+    },
+
+    storeAccessToken: (state: any, action: any) => {
+      state.accessToken = action.payload;
     },
   },
 });

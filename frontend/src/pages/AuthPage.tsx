@@ -13,30 +13,20 @@ import * as React from 'react';
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { idText } from 'typescript';
 import { loggedActions } from '../store/loged-slice';
 
 interface ISignupPageProps {}
 
 const AuthPage = (props: ISignupPageProps) => {
-  let initialAccessToken;
   const navigate = useNavigate();
   const params = useParams();
+  const dispatch = useDispatch();
   const location = useLocation();
   const [pageState, setPageState] = useState('Login');
   const [urlState, setUrlState] = useState('');
   const [emailInput, setEmailInput] = useState('');
   const [passwordInput, setPasswordInput] = useState('');
-  const [accessToken, setAccessToken] = useState<string | null>('');
-  const dispatch = useDispatch();
-  // const [refreshToken, setRefreshToken] = useState('');
-
-  // useEffect(() => {
-  //   initialAccessToken = localStorage.getItem('accessToken');
-
-  //   if (!initialAccessToken) {
-  //     setAccessToken(initialAccessToken);
-  //   }
-  // }, [initialAccessToken]);
 
   useEffect(() => {
     if (location.pathname === '/auth/signup') {
@@ -59,35 +49,41 @@ const AuthPage = (props: ISignupPageProps) => {
   };
 
   const onSubmitHandler = async () => {
-    try {
-      const response = await fetch(`http://localhost:5400/${urlState}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email: emailInput,
-          password: passwordInput,
-        }),
-      });
-      const responsedata = await response.json();
+    const isEmailValid = /\S+@\S+\.\S+/.test(emailInput);
+    const isPasswordValid = passwordInput.length > 1;
 
-      if (!responsedata.access_token) {
-        console.log(responsedata.message);
-      } else {
-        localStorage.setItem('accessToken', responsedata.access_token);
-        localStorage.setItem('refreshToken', responsedata.refresh_token);
+    if (isEmailValid && isPasswordValid) {
+      try {
+        const response = await fetch(`http://localhost:5400/${urlState}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            email: emailInput,
+            password: passwordInput,
+          }),
+        });
+        const responsedata = await response.json();
 
-        if (localStorage.getItem('refreshToken')) {
+        if (responsedata.access_token) {
+          localStorage.setItem('refreshToken', responsedata.refresh_token);
+          dispatch(loggedActions.storeAccessToken(responsedata.access_token));
+          dispatch(loggedActions.toggleState(true));
           navigate('/home');
-          dispatch(loggedActions.toggleState());
+        } else {
+          console.log(responsedata.message);
         }
+      } catch (error) {
+        console.log(error);
       }
-    } catch (error) {
-      console.log(error);
+      setEmailInput('');
+      setPasswordInput('');
+    } else {
+      console.log('Email or Password Invalid');
+      setEmailInput('');
+      setPasswordInput('');
     }
-    setEmailInput('');
-    setPasswordInput('');
   };
   return (
     <Grid

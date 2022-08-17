@@ -11,12 +11,10 @@ import { RootState } from '../store';
 import { loggedActions } from '../store/loged-slice';
 
 const ButtonAppBar = () => {
+  const loggedState = useSelector((state: RootState) => state.log.isLoggedIn);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
-
-  const refreshToken = localStorage.getItem('refreshToken');
-  const accessToken = localStorage.getItem('accessToken');
 
   const logoutHandler = async () => {
     try {
@@ -30,7 +28,7 @@ const ButtonAppBar = () => {
     localStorage.removeItem('accessToken');
     localStorage.removeItem('refreshToken');
     navigate('/auth/login');
-    dispatch(loggedActions.toggleState());
+    dispatch(loggedActions.toggleState(false));
   };
 
   const signUpHandler = () => {
@@ -59,7 +57,7 @@ const ButtonAppBar = () => {
               Register
             </Button>
           )}
-          {accessToken && (
+          {loggedState && (
             <Button color='inherit' onClick={logoutHandler}>
               Logout
             </Button>
