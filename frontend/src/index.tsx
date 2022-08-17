@@ -28,7 +28,6 @@ root.render(
     <ApolloProvider client={client}>
       <BrowserRouter>
         <Provider store={store}>
-          {' '}
           <App />
         </Provider>
       </BrowserRouter>
