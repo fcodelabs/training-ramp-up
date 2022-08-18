@@ -12,16 +12,16 @@ function App() {
   const loggedState = useSelector((state: RootState) => state.log.isLoggedIn);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  let initialRefreshToken;
+  let initialAccessToken;
 
   useEffect(() => {
-    initialRefreshToken = localStorage.getItem('refreshToken');
+    initialAccessToken = localStorage.getItem('accessToken');
 
-    if (initialRefreshToken) {
+    if (initialAccessToken) {
       dispatch(loggedActions.toggleState(true));
       navigate('/home');
     }
-  }, [initialRefreshToken]);
+  }, [initialAccessToken]);
 
   return (
     <main>
