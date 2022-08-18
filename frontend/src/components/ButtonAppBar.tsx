@@ -20,13 +20,14 @@ const ButtonAppBar = () => {
     try {
       const response = await fetch('http://localhost:5400/logout', {
         method: 'GET',
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('refreshToken')}`,
-        },
+        credentials: 'include',
       });
-    } catch (error) {}
+      const responseData = await response.json();
+      console.log(responseData.successMsg);
+    } catch (error) {
+      console.log('error: ' + error);
+    }
     localStorage.removeItem('accessToken');
-    localStorage.removeItem('refreshToken');
     navigate('/login');
     dispatch(loggedActions.toggleState(false));
   };
