@@ -72,7 +72,7 @@ export class AuthController {
   ) {
     this.authService.logOut(req.user['email']);
     res.clearCookie("refresh-token");
-    return "successfully logout";
+    return { successMsg: "successfully logout" };
   }
 
   @UseGuards(RefreshTokenCookieGuard)
