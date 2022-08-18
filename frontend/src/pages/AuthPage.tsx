@@ -54,7 +54,7 @@ const AuthPage = (props: ISignupPageProps) => {
 
     if (isEmailValid && isPasswordValid) {
       try {
-        const response = await fetch(`http://localhost:5400/${urlState}`, {
+        /* const response = await fetch(`http://localhost:5400/${urlState}`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -69,6 +69,29 @@ const AuthPage = (props: ISignupPageProps) => {
         if (responsedata.access_token) {
           localStorage.setItem('refreshToken', responsedata.refresh_token);
           dispatch(loggedActions.storeAccessToken(responsedata.access_token));
+          dispatch(loggedActions.toggleState(true));
+          navigate('/home');
+        } else {
+          console.log(responsedata.message);
+        } */
+
+        // cookies method
+        const response = await fetch(`http://localhost:5400/${urlState}`, {
+          method: 'POST',
+          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          redirect: 'follow',
+          body: JSON.stringify({
+            email: emailInput,
+            password: passwordInput,
+          }),
+        });
+        const responsedata = await response.json();
+
+        if (responsedata.access_token) {
+          localStorage.setItem('accessToken', responsedata.access_token);
           dispatch(loggedActions.toggleState(true));
           navigate('/home');
         } else {
