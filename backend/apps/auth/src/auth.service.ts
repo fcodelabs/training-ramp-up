@@ -61,7 +61,7 @@ export class AuthService {
 
     if (user.length === 0 && !user[0].hashedRefreshToken) throw new ForbiddenException('Access Denied');
 
-    if (refreshToken !== user[0].hashedRefreshToken) throw new ForbiddenException('Access Token Mismatched');
+    if (refreshToken !== user[0].hashedRefreshToken) throw new ForbiddenException('Access Token Mismatched or Already logout');
 
     const tokens = await this.getTokens(user[0].id, user[0].email);
     await this.userService.update(user[0], tokens.refresh_token);
