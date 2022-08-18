@@ -66,8 +66,12 @@ export class AuthController {
 
   @UseGuards(RefreshTokenCookieGuard)
   @Get('logout')
-  async logOut(@Req() req: Request) {
+  async logOut(
+    @Req() req: Request,
+    @Res({ passthrough: true }) res: Response
+  ) {
     this.authService.logOut(req.user['email']);
+    res.clearCookie("refresh-token");
     return "successfully logout";
   }
 
