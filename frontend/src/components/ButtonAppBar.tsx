@@ -19,13 +19,12 @@ const ButtonAppBar = () => {
   const logoutHandler = async () => {
     try {
       const response = await fetch('http://localhost:5400/logout', {
-        method: 'GET',
         credentials: 'include',
       });
       const responseData = await response.json();
       console.log(responseData.successMsg);
     } catch (error) {
-      console.log('error: ' + error);
+      console.log(error);
     }
     localStorage.removeItem('accessToken');
     navigate('/login');
