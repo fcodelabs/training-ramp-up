@@ -82,7 +82,6 @@ const AuthPage = (props: ISignupPageProps) => {
           headers: {
             'Content-Type': 'application/json',
           },
-          redirect: 'follow',
           body: JSON.stringify({
             email: emailInput,
             password: passwordInput,
