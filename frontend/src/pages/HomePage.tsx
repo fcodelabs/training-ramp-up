@@ -18,7 +18,7 @@ const HomePage = () => {
       });
       console.log('res data: ', response.data);
     } catch (error: any) {
-      console.log('err: ', error.response.statusText);
+      console.log('err: ', error);
     }
   };
 
