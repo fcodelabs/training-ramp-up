@@ -8,16 +8,37 @@ import {
   InMemoryCache,
   ApolloProvider,
   gql,
+  createHttpLink,
 } from '@apollo/client';
 import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import store from './store';
+import { setContext } from '@apollo/client/link/context';
+
+// const client = new ApolloClient({
+//   uri: 'http://localhost:5000/graphql',
+//   cache: new InMemoryCache({
+//     addTypename: false,
+//   }),
+// });
+
+const httpLink = createHttpLink({
+  uri: 'http://localhost:5000/graphql',
+});
+
+const authLink = setContext((_, { headers }) => {
+  const accessToken = localStorage.getItem('accessToken');
+  return {
+    headers: {
+      ...headers,
+      authorization: accessToken ? `Bearer ${accessToken}` : '',
+    },
+  };
+});
 
 const client = new ApolloClient({
-  uri: 'http://localhost:5000/graphql',
-  cache: new InMemoryCache({
-    addTypename: false,
-  }),
+  link: authLink.concat(httpLink),
+  cache: new InMemoryCache(),
 });
 
 const root = ReactDOM.createRoot(
