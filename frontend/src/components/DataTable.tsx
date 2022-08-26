@@ -34,6 +34,7 @@ interface IDataTableProps {
 const DataTable = (props: IDataTableProps) => {
   const { setLoading } = props;
   const socket = io('http://localhost:8000/');
+  const fileSaveSocket = io('http://localhost:8100/');
   const [data, setData] = useState<any[]>([]);
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState('');
@@ -63,28 +64,19 @@ const DataTable = (props: IDataTableProps) => {
     if (error) {
       console.log(error);
     }
-  }, [error, loading, studentData]);
+  }, [error, loading, setLoading, studentData]);
 
   useEffect(() => {
-    let timeOut: NodeJS.Timeout;
+    fileSaveSocket.on('file_save_message', (message) => {
+      if (message) refetch();
+    });
     socket.on('message_to_client', (message) => {
-      console.log(message);
       if (message === 'student file uploaded!') {
-        timeOut = setTimeout(() => {
-          refetch();
-        }, 1000);
         setOpen(true);
         setMessage('student file uploaded successfully!');
       }
     });
-
-    return () => {
-      socket.off('message_to_client', (message) => {
-        console.log(message);
-      });
-      clearTimeout(timeOut);
-    };
-  }, [socket]);
+  }, [fileSaveSocket, refetch, socket]);
 
   const remove = async (dataItem: Student) => {
     await deleteStudent({ variables: { id: dataItem.id } });
