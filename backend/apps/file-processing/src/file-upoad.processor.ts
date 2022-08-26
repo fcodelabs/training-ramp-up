@@ -31,8 +31,8 @@ export class UploadProcessor {
           isArchive: jsonArray[i].isArchive,
         };
         const newStudentObj: Student = this.studentRepository.create(student);
-        await this.studentRepository.save(newStudentObj);
-        this.notificationGateway.handleMessage('file saved');
+        const response = await this.studentRepository.save(newStudentObj);
+        if (response) this.notificationGateway.handleMessage('file saved');
       }
     } catch (error) {
       // console.log(error);
