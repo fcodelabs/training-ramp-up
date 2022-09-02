@@ -12,12 +12,12 @@ function StudentPage() {
   const CommandCell = (props) => (
     <MyCommandCell
       {...props}
-      edit={enterEdit}
+      edit={startEdit}
       remove={deleteEntry}
       add={insertEntry}
-      discard={discard}
+      discard={discardEntry}
       update={updateEntry}
-      cancel={cancel}
+      cancel={cancelChanges}
       editField={editField}
     />
   );
@@ -49,14 +49,14 @@ function StudentPage() {
     setEntries(newEntries);
   };
 
-  const discard = () => {
+  const discardEntry = () => {
     const newEntries = [...entries];
     newEntries.splice(0, 1);
     setEntries(newEntries);
     setEditID(null);
   };
 
-  const cancel = (entry) => {
+  const cancelChanges = (entry) => {
     const index = entries.findIndex((e) => e.ID === entry.ID);
     const newEntries = entries;
     newEntries[index] = updatingEntry;
@@ -65,7 +65,7 @@ function StudentPage() {
     setUpdatingEntry(null);
   };
 
-  const enterEdit = (entry) => {
+  const startEdit = (entry) => {
     const newEntries = entries.map((e) => {
       if (e.ID === entry.ID) {
         setEditID(e.ID);
@@ -78,7 +78,7 @@ function StudentPage() {
     setEntries(newEntries);
   };
 
-  const itemChange = (event) => {
+  const fieldChange = (event) => {
     const inEditID = event.dataItem.ID;
     const field = event.field || "";
     const newEntry = entries.map((entry) =>
@@ -87,7 +87,7 @@ function StudentPage() {
     setEntries(newEntry);
   };
 
-  const addRecord = () => {
+  const addEntry = () => {
     const newEntry = {
       ID: entries.length + 1,
       new: true,
@@ -103,10 +103,10 @@ function StudentPage() {
         inEdit: entry.ID === editID,
       }))}
       editField={editField}
-      onItemChange={itemChange}
+      onItemChange={fieldChange}
     >
       <GridToolbar>
-        <Button onClick={addRecord}>Add New</Button>
+        <Button onClick={addEntry}>Add New</Button>
       </GridToolbar>
       <GridColumn field="ID" editable={false} />
       <GridColumn field="Name" />
