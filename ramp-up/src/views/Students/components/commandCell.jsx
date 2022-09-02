@@ -30,13 +30,7 @@ export const MyCommandCell = (props) => {
       >
         Edit
       </Button>
-      <Button
-        onClick={() =>
-          confirm("Confirm deleting: " + dataItem.ID) && props.remove(dataItem)
-        }
-      >
-        Remove
-      </Button>
+      <Button onClick={() => props.remove(dataItem)}>Remove</Button>
     </td>
   );
 };
