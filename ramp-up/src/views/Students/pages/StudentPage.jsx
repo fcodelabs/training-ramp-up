@@ -45,7 +45,7 @@ function StudentPage() {
   const deleteEntry = (entry) => {
     let index = entries.findIndex((e) => e.ID === entry.ID);
     const newEntries = [...entries];
-    newEntries.splice(index);
+    newEntries.splice(index, 1);
     setEntries(newEntries);
   };
 
