@@ -1,16 +1,34 @@
 /* eslint-disable react/prop-types */
 import { Button } from "@progress/kendo-react-buttons";
+import * as yup from "yup";
+
+const entrySchema = yup.object().shape({
+  Name: yup.string().required(),
+  Gender: yup.string().required(),
+  Address: yup.string().required(),
+  Number: yup.number().required(),
+  Birthday: yup.date().required(),
+  Age: yup.number().required().positive().integer(),
+});
 
 export const MyCommandCell = (props) => {
   const { dataItem } = props;
   const inEdit = dataItem[props.editField];
   const isNewEntry = dataItem.new;
+
   return inEdit ? (
     <td className="k-command-cell">
       <Button
-        onClick={() =>
-          isNewEntry ? props.add(dataItem) : props.update(dataItem)
-        }
+        onClick={() => {
+          entrySchema
+            .validate(dataItem, { abortEarly: false })
+            .then(() => {
+              isNewEntry ? props.add(dataItem) : props.update(dataItem);
+            })
+            .catch(() => {
+              window.alert("Invalid data");
+            });
+        }}
       >
         {isNewEntry ? "Add" : "Update"}
       </Button>

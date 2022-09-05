@@ -2,6 +2,7 @@ import { Grid, GridColumn, GridToolbar } from "@progress/kendo-react-grid";
 import { Button } from "@progress/kendo-react-buttons";
 import { useState } from "react";
 import { MyCommandCell } from "../components/commandCell";
+import { Upload } from "@progress/kendo-react-upload";
 
 function StudentPage() {
   const [entries, setEntries] = useState([]);
@@ -97,26 +98,43 @@ function StudentPage() {
   };
 
   return (
-    <Grid
-      data={entries.map((entry) => ({
-        ...entry,
-        inEdit: entry.ID === editID,
-      }))}
-      editField={editField}
-      onItemChange={fieldChange}
+    <div
+      style={{
+        display: "grid",
+        height: "100vh",
+        alignContent: "space-between",
+      }}
     >
-      <GridToolbar>
-        <Button onClick={addEntry}>Add New</Button>
-      </GridToolbar>
-      <GridColumn field="ID" editable={false} />
-      <GridColumn field="Name" />
-      <GridColumn field="Gender" />
-      <GridColumn field="Address" />
-      <GridColumn field="Number" title="Mobile No" />
-      <GridColumn field="Birthday" title="Date of Birth" />
-      <GridColumn field="Age" />
-      <GridColumn field="command" cell={CommandCell} />
-    </Grid>
+      <Grid
+        data={entries.map((entry) => ({
+          ...entry,
+          inEdit: entry.ID === editID,
+        }))}
+        editField={editField}
+        onItemChange={fieldChange}
+      >
+        <GridToolbar>
+          <Button onClick={addEntry}>Add New</Button>
+        </GridToolbar>
+        <GridColumn field="ID" editable={false} />
+        <GridColumn field="Name" />
+        <GridColumn field="Gender" />
+        <GridColumn field="Address" />
+        <GridColumn field="Number" title="Mobile No" />
+        <GridColumn field="Birthday" title="Date of Birth" />
+        <GridColumn field="Age" />
+        <GridColumn field="command" cell={CommandCell} />
+      </Grid>
+      <Upload
+        batch={false}
+        multiple={true}
+        defaultFiles={[]}
+        withCredentials={false}
+        restrictions={{
+          allowedExtensions: [".xlsx"],
+        }}
+      />
+    </div>
   );
 }
 
