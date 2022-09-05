@@ -1,4 +1,4 @@
-export const sampleProducts = [
+export const sampleData = [
   {
     ID: 1,
     Name: "Redhood",

@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Grid,
   GridColumn as Column,
@@ -10,8 +10,8 @@ const editField = "inEdit";
 import { Upload } from "@progress/kendo-react-upload";
 
 const DataTable = () => {
-  const [data, setData] = React.useState([]);
-  React.useEffect(() => {
+  const [data, setData] = useState([]);
+  useEffect(() => {
     let newItems = getItems();
     setData(newItems);
   }, []);

@@ -1,5 +1,5 @@
-import { sampleProducts } from "./sample-products";
-let data = [...sampleProducts];
+import { sampleData } from "./sample-products";
+let data = [...sampleData];
 
 const generateId = (data) =>
   data.reduce((acc, current) => Math.max(acc, current.ID), 0) + 1;
