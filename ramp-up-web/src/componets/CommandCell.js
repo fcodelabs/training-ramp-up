@@ -1,5 +1,5 @@
 import * as React from "react";
-export const MyCommandCell = (props) => {
+export const Command = (props) => {
   const { dataItem } = props;
   const inEdit = dataItem[props.editField];
   const isNewItem = dataItem.ID === undefined;
@@ -7,17 +7,25 @@ export const MyCommandCell = (props) => {
     <td className="k-command-cell">
       <button
         className="k-button k-button-md k-rounded-md k-button-solid k-button-solid-base k-grid-save-command"
-        onClick={() =>
-          isNewItem ? props.add(dataItem) : props.update(dataItem)
-        }
+        onClick={() => {
+          if (isNewItem) {
+            props.add(dataItem);
+          } else {
+            props.update(dataItem);
+          }
+        }}
       >
         {isNewItem ? "Add" : "Update"}
       </button>
       <button
         className="k-button k-button-md k-rounded-md k-button-solid k-button-solid-base k-grid-cancel-command"
-        onClick={() =>
-          isNewItem ? props.discard(dataItem) : props.cancel(dataItem)
-        }
+        onClick={() => {
+          if (isNewItem) {
+            props.discard(dataItem);
+          } else {
+            props.cancel(dataItem);
+          }
+        }}
       >
         {isNewItem ? "Discard" : "Cancel"}
       </button>

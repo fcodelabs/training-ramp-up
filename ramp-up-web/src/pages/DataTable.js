@@ -4,13 +4,19 @@ import {
   GridColumn as Column,
   GridToolbar,
 } from "@progress/kendo-react-grid";
-import { MyCommandCell } from "./myCommandCell";
-import { insertItem, getItems, updateItem, deleteItem } from "./services";
+import { Command } from "../componets/CommandCell";
+import {
+  insertItem,
+  getItems,
+  updateItem,
+  deleteItem,
+} from "../utils/services";
 const editField = "inEdit";
 import { Upload } from "@progress/kendo-react-upload";
 
 const DataTable = () => {
   const [data, setData] = useState([]);
+
   useEffect(() => {
     let newItems = getItems();
     setData(newItems);
@@ -69,11 +75,12 @@ const DataTable = () => {
       inEdit: true,
       Discontinued: false,
     };
+
     setData([newDataItem, ...data]);
   };
 
   const CommandCell = (props) => (
-    <MyCommandCell
+    <Command
       {...props}
       edit={enterEdit}
       remove={remove}
@@ -104,22 +111,27 @@ const DataTable = () => {
             Add new
           </button>
         </GridToolbar>
-        <Column field="ID" title="Id" width="50px" editable={false} />
+        <Column field="ID" title="ID" width="50px" editable={false} />
         <Column field="Name" title="Name" width="200px" />
         <Column field="Gender" title="Gender" width="100px" />
         <Column field="Address" title="Address" width="300px" />
-        <Column field="MobileNo" title="Mobile No" width="150px" />
+        <Column
+          field="MobileNo"
+          title="Mobile No"
+          width="150px"
+          type="number"
+        />
 
         <Column
           field="Birth"
           title="First Ordered"
-          editor="date"
           format="{0:d}"
+          editor="date"
           width="150px"
         />
-        <Column field="Age" title="Age" width="100px" />
+        <Column field="Age" title="Age" width="100px" editable={false} />
 
-        <Column cell={CommandCell} width="200px" />
+        <Column cell={CommandCell} width="200px" title="commond" />
       </Grid>
       <Upload
         restrictions={{
