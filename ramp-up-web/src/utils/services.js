@@ -1,6 +1,4 @@
-import { sampleStudent } from "./sample-student";
-
-let data = [...sampleStudent];
+let data = [];
 
 const generateId = (data) =>
   data.reduce((acc, current) => Math.max(acc, current.StudentID), 0) + 1;
@@ -8,7 +6,21 @@ const generateId = (data) =>
 export const insertStudent = (item) => {
   item.StudentID = generateId(data);
   item.inEdit = false;
-  data.unshift(item);
+
+  if (
+    item.StudentName == null ||
+    item.Gender == null ||
+    item.ContactNumber == null ||
+    item.Address == null
+  ) {
+    alert("Incorrect Validation");
+  } else {
+    data.unshift(item);
+    console.log(item.Gender);
+    //const year = new Date().getFullYear();
+    //const userYear = new Date(item.Birth).getFullYear();
+    item.Age = new Date().getFullYear() - new Date(item.Birth).getFullYear();
+  }
   return data;
 };
 

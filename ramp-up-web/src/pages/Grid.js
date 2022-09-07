@@ -4,13 +4,13 @@ import {
   GridColumn as Column,
   GridToolbar,
 } from "@progress/kendo-react-grid";
-import { MyCommandCell } from "./myCommandCell";
+import { MyCommandCell } from "../components/MyCommandCell";
 import {
   insertStudent,
   getStudents,
   updateStudent,
   deleteStudent,
-} from "./services";
+} from "../utils/services";
 import { Upload } from "@progress/kendo-react-upload";
 const editField = "inEdit";
 
@@ -22,7 +22,7 @@ const GridUI = () => {
   }, []);
 
   const remove = (dataItem) => {
-    const newData = deleteStudent(dataItem);
+    const newData = [...deleteStudent(dataItem)];
     setData(newData);
   };
   const add = (dataItem) => {
@@ -130,7 +130,7 @@ const GridUI = () => {
         title="Date of Birth"
         width="200px"
       />
-      <Column field="Age" title="Age" editor="numeric" width="130px" />
+      <Column field="Age" title="Age" width="130px" editable={false} />
 
       <Column cell={CommandCell} width="180px" />
     </Grid>
