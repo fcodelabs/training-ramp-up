@@ -4,9 +4,16 @@ import {
   GridColumn as Column,
   GridToolbar,
 } from "@progress/kendo-react-grid";
-import { MyCommandCell } from "./myCommandCell";
-import { insertItem, getItems, updateItem, deleteItem } from "./services";
+import { MyCommandCell } from "../Components/MyCommandCell";
+import {
+  insertItem,
+  getItems,
+  updateItem,
+  deleteItem,
+} from "../Utils/services";
 import { Upload } from "@progress/kendo-react-upload";
+// import { DropDownList } from "@progress/kendo-react-dropdowns";
+
 const editField = "inEdit";
 
 const Main = () => {
@@ -17,7 +24,7 @@ const Main = () => {
   }, []); // modify the data in the store, db etc
 
   const remove = (dataItem) => {
-    const newData = deleteItem(dataItem);
+    const newData = [...deleteItem(dataItem)];
     setData(newData);
   };
 
@@ -40,11 +47,9 @@ const Main = () => {
   };
 
   const cancel = (dataItem) => {
-    const originalItem = getItems().find(
-      (p) => p.StudentID === dataItem.StudentID
-    );
+    const originalItem = getItems().find((p) => p.ID === dataItem.ID);
     const newData = data.map((item) =>
-      item.StudentID === originalItem.StudentID ? originalItem : item
+      item.ID === originalItem.ID ? originalItem : item
     );
     setData(newData);
   };
@@ -52,14 +57,14 @@ const Main = () => {
   const enterEdit = (dataItem) => {
     setData(
       data.map((item) =>
-        item.StudentID === dataItem.StudentID ? { ...item, inEdit: true } : item
+        item.ID === dataItem.ID ? { ...item, inEdit: true } : item
       )
     );
   };
 
   const itemChange = (event) => {
     const newData = data.map((item) =>
-      item.StudentID === event.dataItem.StudentID
+      item.ID === event.dataItem.ID
         ? { ...item, [event.field || ""]: event.value }
         : item
     );
@@ -85,9 +90,17 @@ const Main = () => {
       cancel={cancel}
       editField={editField}
     />
+
+    // const gender = ["Male", "Female", "Other"];
   );
 
   return (
+    // <div>
+    //       <div>Gender</div>
+    //       <DropDownList style={{
+    //       width: '300px'
+    //     }} data={gender} />
+    //     </div>
     <Grid
       style={{
         height: "1000px",
@@ -104,6 +117,7 @@ const Main = () => {
         >
           Add new
         </button>
+
         <Upload
           restrictions={{
             allowedExtensions: [".csv", ".xlsx"],
@@ -117,11 +131,17 @@ const Main = () => {
           }
         />
       </GridToolbar>
-      <Column field="StudentID" title="ID" width="50px" editable={false} />
+      <Column field="ID" title="ID" width="50px" editable={false} />
       <Column field="StudentName" title="Student Name" width="200px" />
-      <Column field="Gender" title="Gender" width="150px" />
+      <Column
+        field="Gender"
+        title="Gender"
+        width="150px"
+        // <DropDownList style={{
+        // width: '300px'}} data={gender}
+      />
       <Column field="Address" title="Address" width="200px" />
-      <Column field="Mobile No" title="Mobile No" width="120px" />
+      <Column field="MobileNo" title="Mobile No" width="120px" />
       <Column
         field="DOB"
         title="Date of Birth"
@@ -129,10 +149,19 @@ const Main = () => {
         format="{0:d}"
         width="150px"
       />
-      <Column field="Age" title="Age" width="120px" editor="numeric" />
-      <Column cell={CommandCell} width="200px" />
+      {/* <Column field="Age" title="Age" width="120px" editor="numeric" /> */}
+      <Column field="Age" title="Age" width="150px" editable={false} />
+      <Column cell={CommandCell} title="Command" width="200px" />
     </Grid>
   );
 };
 
 export default Main;
+
+// const gender = ["Male", "Female", "Other"];
+//   return <div>
+//       <div>Gender</div>
+//       <DropDownList style={{
+//       width: '300px'
+//     }} data={gender} />
+//     </div>;
