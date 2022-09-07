@@ -11,6 +11,7 @@ import {
   updateItem,
   deleteItem,
 } from "../utils/services";
+import { DropDownList } from "@progress/kendo-react-dropdowns";
 const editField = "inEdit";
 import { Upload } from "@progress/kendo-react-upload";
 
@@ -23,7 +24,7 @@ const DataTable = () => {
   }, []);
 
   const remove = (dataItem) => {
-    const newData = deleteItem(dataItem);
+    const newData = [...deleteItem(dataItem)];
     setData(newData);
   };
 
@@ -92,6 +93,8 @@ const DataTable = () => {
     />
   );
 
+  const GenderField = ["Male", "Female"];
+
   return (
     <div>
       <Grid
@@ -113,18 +116,23 @@ const DataTable = () => {
         </GridToolbar>
         <Column field="ID" title="ID" width="50px" editable={false} />
         <Column field="Name" title="Name" width="200px" />
-        <Column field="Gender" title="Gender" width="100px" />
+        <Column
+          field="Gender"
+          title="Gender"
+          width="100px"
+          editor={<DropDownList data={GenderField} defaultValue="Gender" />}
+        />
         <Column field="Address" title="Address" width="300px" />
         <Column
           field="MobileNo"
           title="Mobile No"
           width="150px"
-          type="number"
+          editor="numeric"
         />
 
         <Column
           field="Birth"
-          title="First Ordered"
+          title="Date of Birth"
           format="{0:d}"
           editor="date"
           width="150px"
