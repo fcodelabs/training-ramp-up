@@ -6,9 +6,12 @@ const entrySchema = yup.object().shape({
   Name: yup.string().required(),
   Gender: yup.string().required(),
   Address: yup.string().required(),
-  Number: yup.number().required(),
-  Birthday: yup.date().required(),
-  Age: yup.number().required().positive().integer(),
+  Number: yup
+    .string()
+    .required()
+    .matches(/^[0-9]{10}$/),
+  Birthday: yup.string().required(),
+  Age: yup.string().required(),
 });
 
 export const MyCommandCell = (props) => {
@@ -19,6 +22,11 @@ export const MyCommandCell = (props) => {
   return inEdit ? (
     <td className="k-command-cell">
       <Button
+        style={
+          isNewEntry
+            ? { marginTop: "10px", marginBottom: "12px", marginLeft: "8px" }
+            : {}
+        }
         onClick={() => {
           entrySchema
             .validate(dataItem, { abortEarly: false })
@@ -33,6 +41,7 @@ export const MyCommandCell = (props) => {
         {isNewEntry ? "Add" : "Update"}
       </Button>
       <Button
+        style={isNewEntry ? { marginBottom: "10px" } : {}}
         onClick={() =>
           isNewEntry ? props.discard(dataItem) : props.cancel(dataItem)
         }
