@@ -17,8 +17,6 @@ export const insertStudent = (item) => {
   } else {
     data.unshift(item);
     console.log(item.Gender);
-    //const year = new Date().getFullYear();
-    //const userYear = new Date(item.Birth).getFullYear();
     item.Age = new Date().getFullYear() - new Date(item.Birth).getFullYear();
   }
   return data;
