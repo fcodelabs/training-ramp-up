@@ -3,15 +3,25 @@ import { Grid, GridColumn, GridToolbar } from "@progress/kendo-react-grid";
 import { Button } from "@progress/kendo-react-buttons";
 import { DropDownList } from "@progress/kendo-react-dropdowns";
 import { DatePicker } from "@progress/kendo-react-dateinputs";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { MyCommandCell } from "../components/CommandCell";
 import { Upload } from "@progress/kendo-react-upload";
+import { editField } from "../constants";
+import {
+  getStudents,
+  addStudent,
+  updateStudent,
+  deleteStudent,
+} from "../services/api";
 
 function StudentPage() {
   const [entries, setEntries] = useState([]);
   const [editID, setEditID] = useState(null);
   const [updatingEntry, setUpdatingEntry] = useState(null);
-  const editField = "inEdit";
+
+  const getEntries = () => getStudents().then((res) => setEntries(res));
+
+  useEffect(() => getEntries, []);
 
   const birthdayChange = (value, dataItem) => {
     const today = new Date();
@@ -127,28 +137,37 @@ function StudentPage() {
     entry.inEdit = true;
     entry.inEdit = false;
     entry.new = false;
-    let index = entries.findIndex((e) => e.ID === entry.ID);
-    const newEntries = entries;
-    newEntries[index] = entry;
-    setEntries(newEntries);
+    // let index = entries.findIndex((e) => e.ID === entry.ID);
+    // const newEntries = entries;
+    // newEntries[index] = entry;
+    // setEntries(newEntries);
     setEditID(null);
     setUpdatingEntry(null);
+    addStudent(entry)
+      .then(() => getEntries())
+      .catch((e) => console.log(e));
   };
 
   const updateEntry = (entry) => {
-    let index = entries.findIndex((e) => e.ID === entry.ID);
-    const newEntries = entries;
-    newEntries[index] = entry;
-    setEntries(newEntries);
+    // let index = entries.findIndex((e) => e.ID === entry.ID);
+    // const newEntries = entries;
+    // newEntries[index] = entry;
+    // setEntries(newEntries);
     setEditID(null);
     setUpdatingEntry(null);
+    updateStudent(entry)
+      .then(() => getEntries())
+      .catch((e) => console.log(e));
   };
 
   const deleteEntry = (entry) => {
-    let index = entries.findIndex((e) => e.ID === entry.ID);
-    const newEntries = [...entries];
-    newEntries.splice(index, 1);
-    setEntries(newEntries);
+    // let index = entries.findIndex((e) => e.ID === entry.ID);
+    // const newEntries = [...entries];
+    // newEntries.splice(index, 1);
+    // setEntries(newEntries);
+    deleteStudent(entry.ID)
+      .then(() => getEntries())
+      .catch((e) => console.log(e));
   };
 
   const discardEntry = () => {
@@ -196,7 +215,7 @@ function StudentPage() {
     const date = new Date().toLocaleDateString("en-GB");
     if (updatingEntry === null) {
       const newEntry = {
-        ID: entries.length + 1,
+        ID: (entries.length + 1).toString(),
         Birthday: date,
         new: true,
       };
