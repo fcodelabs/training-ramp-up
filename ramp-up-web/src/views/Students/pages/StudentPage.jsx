@@ -137,10 +137,6 @@ function StudentPage() {
     entry.inEdit = true;
     entry.inEdit = false;
     entry.new = false;
-    // let index = entries.findIndex((e) => e.ID === entry.ID);
-    // const newEntries = entries;
-    // newEntries[index] = entry;
-    // setEntries(newEntries);
     setEditID(null);
     setUpdatingEntry(null);
     addStudent(entry)
@@ -149,10 +145,6 @@ function StudentPage() {
   };
 
   const updateEntry = (entry) => {
-    // let index = entries.findIndex((e) => e.ID === entry.ID);
-    // const newEntries = entries;
-    // newEntries[index] = entry;
-    // setEntries(newEntries);
     setEditID(null);
     setUpdatingEntry(null);
     updateStudent(entry)
@@ -161,10 +153,6 @@ function StudentPage() {
   };
 
   const deleteEntry = (entry) => {
-    // let index = entries.findIndex((e) => e.ID === entry.ID);
-    // const newEntries = [...entries];
-    // newEntries.splice(index, 1);
-    // setEntries(newEntries);
     deleteStudent(entry.ID)
       .then(() => getEntries())
       .catch((e) => console.log(e));
