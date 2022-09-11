@@ -1,6 +1,6 @@
 import 'reflect-metadata';
 import { DataSource } from 'typeorm';
-import { User } from './entity/User';
+import { Student } from '../entity/Student';
 
 export const AppDataSource = new DataSource({
   type: 'postgres',
@@ -11,7 +11,7 @@ export const AppDataSource = new DataSource({
   database: 'rampup',
   synchronize: true,
   logging: false,
-  entities: [User],
+  entities: [Student],
   migrations: [],
   subscribers: [],
 });
