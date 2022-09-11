@@ -13,11 +13,32 @@ import {
   updateStudent,
   deleteStudent,
 } from "../services/api";
+import io from "socket.io-client";
+
+const socket = io.connect("http://localhost:5000");
 
 function StudentPage() {
   const [entries, setEntries] = useState([]);
   const [editID, setEditID] = useState(null);
   const [updatingEntry, setUpdatingEntry] = useState(null);
+
+  useEffect(() => {
+    socket.on("student_received", (data) => {
+      alert(data);
+      window.location.reload(false);
+    });
+    socket.on("student_updated", (data) => {
+      alert(data);
+      window.location.reload(false);
+    });
+    socket.on("student_deleted", (data) => {
+      alert(data);
+      window.location.reload(false);
+    });
+    return () => {
+      socket.off();
+    };
+  }, [socket]);
 
   const getEntries = () =>
     getStudents().then((res) => {
@@ -145,7 +166,10 @@ function StudentPage() {
     setEditID(null);
     setUpdatingEntry(null);
     addStudent(entry)
-      .then(() => getEntries())
+      .then(() => {
+        socket.emit("student_added", `New student ${entry.ID} was added`);
+        getEntries();
+      })
       .catch((e) => console.log(e));
   };
 
@@ -155,13 +179,19 @@ function StudentPage() {
     delete entry.inEdit;
     delete entry.new;
     updateStudent(entry)
-      .then(() => getEntries())
+      .then(() => {
+        socket.emit("student_edit", `Student ${entry.ID} was updated`);
+        getEntries();
+      })
       .catch((e) => console.log(e));
   };
 
   const deleteEntry = (entry) => {
     deleteStudent(entry.ID)
-      .then(() => getEntries())
+      .then(() => {
+        socket.emit("student_remove", `Student ${entry.ID} was deleted`);
+        getEntries();
+      })
       .catch((e) => console.log(e));
   };
 
