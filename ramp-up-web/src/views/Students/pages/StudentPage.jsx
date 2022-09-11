@@ -23,7 +23,8 @@ function StudentPage() {
     getStudents().then((res) => {
       res.inEdit = false;
       res.new = false;
-      setEntries(res);
+      const sortedEntries = res.sort((a, b) => parseInt(a.ID) - parseInt(b.ID));
+      setEntries(sortedEntries);
     });
 
   useEffect(() => getEntries, []);
