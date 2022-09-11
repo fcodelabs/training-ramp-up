@@ -19,7 +19,12 @@ function StudentPage() {
   const [editID, setEditID] = useState(null);
   const [updatingEntry, setUpdatingEntry] = useState(null);
 
-  const getEntries = () => getStudents().then((res) => setEntries(res));
+  const getEntries = () =>
+    getStudents().then((res) => {
+      res.inEdit = false;
+      res.new = false;
+      setEntries(res);
+    });
 
   useEffect(() => getEntries, []);
 
@@ -134,9 +139,8 @@ function StudentPage() {
   );
 
   const insertEntry = (entry) => {
-    entry.inEdit = true;
-    entry.inEdit = false;
-    entry.new = false;
+    delete entry.inEdit;
+    delete entry.new;
     setEditID(null);
     setUpdatingEntry(null);
     addStudent(entry)
@@ -147,6 +151,8 @@ function StudentPage() {
   const updateEntry = (entry) => {
     setEditID(null);
     setUpdatingEntry(null);
+    delete entry.inEdit;
+    delete entry.new;
     updateStudent(entry)
       .then(() => getEntries())
       .catch((e) => console.log(e));

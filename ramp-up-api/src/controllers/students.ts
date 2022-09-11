@@ -1,49 +1,46 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+import { AppDataSource } from "../data-source";
+import { Student } from "../entity/Student";
+import { Request, Response } from "express";
 
-interface Student {
-  ID: string;
-  Name: string;
-  Gender: string;
-  Address: string;
-  Number: string;
-  Birthday: string;
-  Age: string;
-}
-
-let students: Student[] = [];
-
-export const getStudents = (req: any, res: any) => {
+export const getStudents = async (req: Request, res: Response) => {
+  const students = await AppDataSource.manager.find(Student);
   res.send(students);
 };
 
-export const addStudent = (req: any, res: any) => {
-  const ID = (students.length + 1).toString();
-  const student = { ID, ...req.body };
+export const addStudent = async (req: Request, res: Response) => {
+  const { ID, Name, Gender, Address, Number, Birthday, Age } = req.body;
+  const newStudent = new Student();
+  newStudent.ID = ID;
+  newStudent.Name = Name;
+  newStudent.Gender = Gender;
+  newStudent.Address = Address;
+  newStudent.Number = Number;
+  newStudent.Birthday = Birthday;
+  newStudent.Age = Age;
 
-  students.push(student);
+  await AppDataSource.manager.save(newStudent);
 
-  res.send(`Student with the id ${ID} added to database`);
+  res.send(`Student added to database`);
 };
 
-export const deleteStudent = (req: any, res: any) => {
+export const deleteStudent = async (req: Request, res: Response) => {
   const { ID } = req.params;
-  students = students.filter((students) => students.ID !== ID);
+  await AppDataSource.manager.delete(Student, { ID: ID });
   res.send(`Student with the id ${ID} deleted from database`);
 };
 
-export const updateStudent = (req: any, res: any) => {
+export const updateStudent = async (req: Request, res: Response) => {
   const { ID } = req.params;
   const { Name, Gender, Address, Number, Birthday, Age } = req.body;
-  const student = students.find((students) => students.ID === ID);
-
-  if (student) {
-    if (Name) student.Name = Name;
-    if (Gender) student.Gender = Gender;
-    if (Address) student.Address = Address;
-    if (Number) student.Number = Number;
-    if (Birthday) student.Birthday = Birthday;
-    if (Age) student.Age = Age;
-  }
+  const newStudent = new Student();
+  newStudent.ID = ID;
+  newStudent.Name = Name;
+  newStudent.Gender = Gender;
+  newStudent.Address = Address;
+  newStudent.Number = Number;
+  newStudent.Birthday = Birthday;
+  newStudent.Age = Age;
+  await AppDataSource.manager.update(Student, { ID: ID }, newStudent);
 
   res.send(`Student with the id ${ID} has been updated`);
 };
