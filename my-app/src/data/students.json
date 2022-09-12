@@ -1,65 +1,56 @@
 [
   {
-    "id":42,
+    "id":1,
     "name":"Shane",
     "gender":"male",
     "address":"Homagama",
     "mobile-No":"0112748768",
-    "date of birth":"Mon Sep 16 1996",
+    "dob":"Mon Sep 16 1996",
     "age":"25"
   },
   {
-    "id":43,
+    "id":2,
     "name":"Ishara",
     "gender":"male",
     "address":"Homagama",
     "mobile-No":"0116748768",
-    "date of birth":"Mon Sep 17 1996",
+    "dob":"Mon Sep 17 1996",
     "age":"24"
   },
   {
-    "id":44,
+    "id":3,
     "name":"Ishara",
     "gender":"male",
     "address":"Kottawa",
     "mobile-No":"0126748767",
-    "date of birth":"Mon Aug 17 1996",
+    "dob":"Mon Aug 17 1996",
     "age":"24"
   },
   {
-    "id":45,
+    "id":4,
     "name":"Jay",
     "gender":"male",
     "address":"Kottawa",
     "mobile-No":"0126746777",
-    "date of birth":"Mon Mar 17 1996",
-    "age":"27"
-  },
-  {
-    "id":46,
-    "name":"Jay",
-    "gender":"male",
-    "address":"Moratuwa",
-    "mobile-No":"1126645777",
-    "date of birth":"Mon Apr 17 1996",
+    "dob":"Mon Mar 17 1996",
     "age":"27"
   },
   {
     "id":5,
     "name":"Jay",
     "gender":"male",
-    "address":"Dehiwala",
-    "mobile-No":"1126641797",
-    "date of birth":"Mon Dec 17 1996",
+    "address":"Moratuwa",
+    "mobile-No":"1126645777",
+    "dob":"Mon Apr 17 1996",
     "age":"27"
   },
   {
     "id":6,
     "name":"Jay",
     "gender":"male",
-    "address":"Kotuwa",
-    "mobile-No":"1116641597",
-    "date of birth":"Mon Oct 17 2000",
+    "address":"Dehiwala",
+    "mobile-No":"1126641797",
+    "dob":"Mon Dec 17 1996",
     "age":"27"
   },
   {
@@ -67,8 +58,17 @@
     "name":"Jay",
     "gender":"male",
     "address":"Kotuwa",
+    "mobile-No":"1116641597",
+    "dob":"Mon Oct 17 2000",
+    "age":"27"
+  },
+  {
+    "id":8,
+    "name":"Jay",
+    "gender":"male",
+    "address":"Kotuwa",
     "mobile-No":"1216641598",
-    "date of birth":"Mon Dec 17 2001",
+    "dob":"Mon Dec 17 2001",
     "age":"20"
   }
 ]
