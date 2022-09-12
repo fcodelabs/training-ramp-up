@@ -1,25 +1,41 @@
-import logo from "./logo.svg";
-import "./App.css";
+import React from "react";
+import "@progress/kendo-theme-material/dist/all.css";
+import { Grid, GridColumn } from "@progress/kendo-react-grid";
+import { process } from "@progress/kendo-data-query";
 
-function App() {
+import { bikeStations } from "./data/bike-stations";
+
+const BooleanCell = (props) => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    <td>{props.dataItem[props.field] ? '✅' : '❌'}</td>
+  )
 }
 
-export default App;
+export default function App() {
+
+  const [dataState, setDataState] = React.useState({ skip: 0, take: 10 })
+  const [result, setResult] = React.useState(process(bikeStations, dataState));
+
+  const onDataStateChange = (event) => {
+    setDataState(event.dataState);
+    setResult(process(bikeStations, event.dataState));
+  }
+
+  return (
+    <Grid
+      data={result}
+      filterable={true}
+      onDataStateChange={onDataStateChange}
+      pageable={true}
+      total={bikeStations.length}
+      {...dataState}
+    >
+      <GridColumn field="station_id" title="ID" />
+      <GridColumn field="num_bikes_available" title="Bikes Available" />
+      <GridColumn field="num_bikes_disabled" title="Bikes Disabled" />
+      <GridColumn field="num_docks_available" title="Docks Available" />
+      <GridColumn field="is_charging_station" title="Charging Station" cell={BooleanCell} />
+      <GridColumn field="zone" title="Zone" />
+    </Grid>
+  );
+}
