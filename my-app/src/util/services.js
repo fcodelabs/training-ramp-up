@@ -21,3 +21,15 @@ export const insertItem = item =>{
 export const getItems =()=>{
     return studentData
 }
+
+export const updateItem = item =>{
+    let idx = studentData.findIndex(record => record.id === item.id);
+    studentData[idx]=item;
+    return studentData;
+}
+
+export const deleteItem = (item,data) =>{
+    let idxr = data.findIndex(record =>record.id === item.id);
+    let newData = data.filter((_,idx)=>idx!==idxr);
+    return newData;
+}

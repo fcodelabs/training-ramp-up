@@ -18,10 +18,10 @@ export default function MyCommandCell(props){
             :
         (
             <td className="k-command-cell">
-                <button style={{background:"#ef4444",color:"#fff"}} className="k-button k-button-md k-rounded-md">
+                <button style={{background:"#ef4444",color:"#fff"}} className="k-button k-button-md k-rounded-md" onClick={()=>props.edit(dataItem)}>
                     Edit
-                    </button>
-                <button className="k-button k-button-md k-rounded-md">
+                </button>
+                <button className="k-button k-button-md k-rounded-md" onClick ={()=>props.remove(dataItem)}>
                     Remove
                 </button>
             </td>
