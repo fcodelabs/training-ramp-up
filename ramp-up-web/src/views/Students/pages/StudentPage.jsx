@@ -25,15 +25,15 @@ function StudentPage() {
   useEffect(() => {
     socket.on("student_received", (data) => {
       alert(data);
-      window.location.reload(false);
+      getEntries();
     });
     socket.on("student_updated", (data) => {
       alert(data);
-      window.location.reload(false);
+      getEntries();
     });
     socket.on("student_deleted", (data) => {
       alert(data);
-      window.location.reload(false);
+      getEntries();
     });
     return () => {
       socket.off();
