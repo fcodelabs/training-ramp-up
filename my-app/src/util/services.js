@@ -1,5 +1,5 @@
 //import dummy data
-import studentData from "../data/students.json";
+import studentData from "../data/students.js";
 
 const generateId = data => data.reduce((acc, current) => Math.max(acc, current.id), 0) + 1;
 const calcAge =(dateString)=>{

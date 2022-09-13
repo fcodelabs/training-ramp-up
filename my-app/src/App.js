@@ -38,7 +38,6 @@ export default function App() {
       return;
     }
     dataItem.inEdit = true;
-    console.log(dataItem.dob);
     const newData = insertItem(dataItem);
     setData(newData);
   }
@@ -51,12 +50,13 @@ export default function App() {
 
   //edit/delete a record
   const enterEdit =(dataItem)=>{
-    setData(data.map(item=>item.id === dataItem.id? {...item,inEdit:true}:item));
+    const isoDate = new Date(dataItem.dob)
+    setData(data.map(item=>item.id === dataItem.id? {...item,dob:isoDate,inEdit:true}:item));
   }
   
   const cancel = dataItem=>{
     const originalItem =getItems().find(item=>item.id === dataItem.id);
-    const newData = data.map(item=>item.id ===originalItem.id?originalItem:item);
+    const newData = data.map(item=>item.id === originalItem.id?originalItem:item);
     setData(newData);
   }
 
