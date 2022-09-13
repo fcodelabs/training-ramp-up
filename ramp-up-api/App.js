@@ -30,9 +30,46 @@ const students = [
 	},
 ];
 
-//Get all students
-router.get("/", (req, res) => {
-	res.json(students);
-});
 
+//Add new student
+ValidateStudent = (student) => {
+	const message = "";
+	if (!student.ID) {
+		message = "Student id is not found";
+	}
+	if (!student.StudentName) {
+		message = "Student Name is not found";
+	}
+
+	if (!student.Gender) {
+		message = "Student gender is not found";
+	}
+
+	if (!student.Address) {
+		message = "Student Address is not found";
+	}
+
+	if (!student.MobileNo) {
+		message = "Student MobileNo is is not found";
+	}
+
+	if (!student.DOB) {
+		message = "Student date of birth is not found";
+	}
+
+	return message;
+};
+
+router.post("/", (req, res) => {
+	const student = req.body;
+	const isValid = ValidateStudent(student);
+	if (isValid == "") {
+		students.push(student);
+		console.log(students);
+		res.status(201).send(students);
+	} else {
+		res.statusMessage = isValid;
+		res.sendStatus(404);
+	}
+});
 
