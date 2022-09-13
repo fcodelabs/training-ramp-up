@@ -1,17 +1,17 @@
-const express = require("express");
-const app = express();
-const bodyParser = require("body-parser");
+let express = require("express");
+let app = express();
+let bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-const port = process.env.port || 8000;
-const router = express.Router();
+let port = process.env.port || 8000;
+let router = express.Router();
 app.use("/api/student", router);
 
 app.listen(port, () => {
 	console.log(`Node.js application running on port : ${port}`);
 });
 
-const students = [
+let students = [
 	{
 		ID: 1,
 		StudentName: "Elizabeth",
@@ -32,7 +32,7 @@ const students = [
 
 
 ValidateStudent = (student) => {
-	const message = "";
+	let message = "";
 	if (!student.ID) {
 		message = "Student id is not found";
 	}
@@ -59,27 +59,19 @@ ValidateStudent = (student) => {
 	return message;
 };
 
-//Update the student detail
-router.put("/:Id", (req, res) => {
-	const id = req.params.Id;
-	const student = req.body;
-	const currentStudent = students.filter((x) => x.ID == id)[0];
+//Delete student
+router.delete("/:Id", (req, res) => {
+	let id = req.params.Id;
+	let currentStudent = students.filter((x) => x.ID == id)[0];
 	if (currentStudent) {
-		const isValid = ValidateStudent(student);
-		if (isValid == "") {
-			currentStudent.StudentName = student.StudentName;
-			currentStudent.Gender = student.Gender;
-			currentStudent.Address = student.Address;
-			currentStudent.MobileNo = student.MobileNo;
-			currentStudent.DOB = student.DOB;
-			res.status(200).send(students);
-		} else {
-			res.statusMessage = isValid;
-			res.sendStatus(404);
-		}
+		students = students.filter((x) => x.ID!== id);
+		console.log(students);
+		res.statusMessage = "Student deleted sucessfully.";
+		res.sendStatus(200);
 	} else {
 		res.statusMessage = "Student does not exist";
 		res.sendStatus(404);
 	}
 });
+
 
