@@ -31,7 +31,6 @@ const students = [
 ];
 
 
-//Add new student
 ValidateStudent = (student) => {
 	const message = "";
 	if (!student.ID) {
@@ -60,15 +59,26 @@ ValidateStudent = (student) => {
 	return message;
 };
 
-router.post("/", (req, res) => {
+//Update the student detail
+router.put("/:Id", (req, res) => {
+	const id = req.params.Id;
 	const student = req.body;
-	const isValid = ValidateStudent(student);
-	if (isValid == "") {
-		students.push(student);
-		console.log(students);
-		res.status(201).send(students);
+	const currentStudent = students.filter((x) => x.ID == id)[0];
+	if (currentStudent) {
+		const isValid = ValidateStudent(student);
+		if (isValid == "") {
+			currentStudent.StudentName = student.StudentName;
+			currentStudent.Gender = student.Gender;
+			currentStudent.Address = student.Address;
+			currentStudent.MobileNo = student.MobileNo;
+			currentStudent.DOB = student.DOB;
+			res.status(200).send(students);
+		} else {
+			res.statusMessage = isValid;
+			res.sendStatus(404);
+		}
 	} else {
-		res.statusMessage = isValid;
+		res.statusMessage = "Student does not exist";
 		res.sendStatus(404);
 	}
 });
