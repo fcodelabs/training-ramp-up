@@ -21,30 +21,57 @@ function StudentPage() {
   const [entries, setEntries] = useState([]);
   const [editID, setEditID] = useState(null);
   const [updatingEntry, setUpdatingEntry] = useState(null);
+  const [changingEntry, setChangingEntry] = useState(null);
 
   useEffect(() => {
     socket.on("student_received", (data) => {
       alert(data);
-      getEntries();
+      getEntries(true);
     });
     socket.on("student_updated", (data) => {
-      alert(data);
-      getEntries();
+      alert(data[0]);
+      getEntries(true, data[1]);
     });
     socket.on("student_deleted", (data) => {
-      alert(data);
-      getEntries();
+      alert(data[0]);
+      getEntries(true, data[1]);
     });
     return () => {
       socket.off();
     };
   }, [socket]);
 
-  const getEntries = () =>
+  const getEntries = (notify, id) =>
     getStudents().then((res) => {
-      res.inEdit = false;
-      res.new = false;
-      const sortedEntries = res.sort((a, b) => parseInt(a.ID) - parseInt(b.ID));
+      let sortedEntries = res.sort((a, b) => parseInt(a.ID) - parseInt(b.ID));
+      setChangingEntry((changingEntry) => {
+        if (notify && changingEntry !== null) {
+          if (id === undefined) {
+            if (changingEntry.new) {
+              const highestID = parseInt(
+                sortedEntries[sortedEntries.length - 1].ID
+              );
+              const newID = (highestID + 1).toString();
+              changingEntry.ID = newID;
+              sortedEntries.unshift(changingEntry);
+              setEditID(changingEntry.ID);
+              setUpdatingEntry(changingEntry);
+            }
+            return changingEntry;
+          } else if (id === changingEntry.ID) {
+            setEditID(null);
+            setUpdatingEntry(null);
+            return null;
+          } else {
+            if (changingEntry.new) {
+              sortedEntries.unshift(changingEntry);
+            }
+            return changingEntry;
+          }
+        } else {
+          return changingEntry;
+        }
+      });
       setEntries(sortedEntries);
     });
 
@@ -165,6 +192,7 @@ function StudentPage() {
     delete entry.new;
     setEditID(null);
     setUpdatingEntry(null);
+    setChangingEntry(null);
     addStudent(entry)
       .then(() => {
         socket.emit("student_added", `New student ${entry.ID} was added`);
@@ -176,11 +204,15 @@ function StudentPage() {
   const updateEntry = (entry) => {
     setEditID(null);
     setUpdatingEntry(null);
+    setChangingEntry(null);
     delete entry.inEdit;
     delete entry.new;
     updateStudent(entry)
       .then(() => {
-        socket.emit("student_edit", `Student ${entry.ID} was updated`);
+        socket.emit("student_edit", [
+          `Student ${entry.ID} was deleted`,
+          entry.ID,
+        ]);
         getEntries();
       })
       .catch((e) => console.log(e));
@@ -189,7 +221,10 @@ function StudentPage() {
   const deleteEntry = (entry) => {
     deleteStudent(entry.ID)
       .then(() => {
-        socket.emit("student_remove", `Student ${entry.ID} was deleted`);
+        socket.emit("student_remove", [
+          `Student ${entry.ID} was deleted`,
+          entry.ID,
+        ]);
         getEntries();
       })
       .catch((e) => console.log(e));
@@ -201,6 +236,7 @@ function StudentPage() {
     setEntries(newEntries);
     setEditID(null);
     setUpdatingEntry(null);
+    setChangingEntry(null);
   };
 
   const cancelChanges = (entry) => {
@@ -210,6 +246,7 @@ function StudentPage() {
     setEntries(newEntries);
     setEditID(null);
     setUpdatingEntry(null);
+    setChangingEntry(null);
   };
 
   const startEdit = (entry) => {
@@ -218,6 +255,7 @@ function StudentPage() {
         if (e.ID === entry.ID) {
           setEditID(e.ID);
           setUpdatingEntry(entry);
+          setChangingEntry(entry);
           return { ...e, inEdit: true };
         } else {
           return e;
@@ -230,23 +268,29 @@ function StudentPage() {
   const fieldChange = (event) => {
     const inEditID = event.dataItem.ID;
     const field = event.field || "";
-    const newEntry = entries.map((entry) =>
+    const newEntries = entries.map((entry) =>
       entry.ID === inEditID ? { ...entry, [field]: event.value } : entry
     );
-    setEntries(newEntry);
+    const changingEntry = newEntries.find((e) => e.ID === inEditID);
+    setEntries(newEntries);
+    setChangingEntry(changingEntry);
   };
 
   const addEntry = () => {
     const date = new Date().toLocaleDateString("en-GB");
     if (updatingEntry === null) {
       const newEntry = {
-        ID: (entries.length + 1).toString(),
+        ID:
+          entries.length !== 0
+            ? (parseInt(entries[entries.length - 1].ID) + 1).toString()
+            : "1",
         Birthday: date,
         new: true,
       };
       setEntries([newEntry, ...entries]);
       setEditID(newEntry.ID);
       setUpdatingEntry(newEntry);
+      setChangingEntry(newEntry);
     }
   };
 
