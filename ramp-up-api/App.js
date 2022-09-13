@@ -28,8 +28,32 @@ let students = [
 		MobileNo: 0115260325,
 		DOB: "1996/11/04"
 	},
+
+	{
+		ID: 3,
+		StudentName: "Trudy",
+		Gender: "Female",
+		Address: "Gampaha",
+		MobileNo: 077260325,
+		DOB: "2001/08/15"
+	},
 ];
 
+//Get all students
+router.get("/", (req, res) => {
+	res.json(students);
+});
+
+//Get students by their id
+router.get("/:Id", (req, res) => {
+	let id = parseInt(req.params.Id);
+	let currentStudent = students.filter((x) => x.ID == id)[0];
+	if (currentStudent) {
+		res.json(currentStudent);
+	} else {
+		res.sendStatus(404);
+	}
+});
 
 ValidateStudent = (student) => {
 	let message = "";
@@ -58,6 +82,45 @@ ValidateStudent = (student) => {
 
 	return message;
 };
+
+//Add new student
+router.post("/", (req, res) => {
+	let student = req.body;
+	let isValid = ValidateStudent(student);
+	if (isValid == "") {
+		students.push(student);
+		console.log(students);
+		res.status(201).send(students);
+	} else {
+		res.statusMessage = isValid;
+		res.sendStatus(404);
+	}
+});
+
+
+//Update the student detail
+router.put("/:Id", (req, res) => {
+	let id = req.params.Id;
+	let student = req.body;
+	let currentStudent = students.filter((x) => x.ID == id)[0];
+	if (currentStudent) {
+		let isValid = ValidateStudent(student);
+		if (isValid == "") {
+			currentStudent.StudentName = student.StudentName;
+			currentStudent.Gender = student.Gender;
+			currentStudent.Address = student.Address;
+			currentStudent.MobileNo = student.MobileNo;
+			currentStudent.DOB = student.DOB;
+			res.status(200).send(students);
+		} else {
+			res.statusMessage = isValid;
+			res.sendStatus(404);
+		}
+	} else {
+		res.statusMessage = "Student does not exist";
+		res.sendStatus(404);
+	}
+});
 
 //Delete student
 router.delete("/:Id", (req, res) => {
