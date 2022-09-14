@@ -1,7 +1,16 @@
-import { Student } from "../util/temp-data";
+import { Student } from "../models/Student";
+import AppDataSource from "../util/db";
 
-export function deleteStudent(id:number,dummy_data:Student[]){
-    let index = dummy_data.findIndex((student)=>student.id===id);
-    let deletedStudent = dummy_data.splice(index,1);
-    return deletedStudent;
+export async function deleteStudent(id:number){
+    try{
+        const studentRepository = AppDataSource.getRepository(Student);
+        const studentToRemove = await studentRepository.findOneBy({id});
+        if(!studentToRemove){
+            return {message:"Student doesn't exist !"};
+        }
+        await studentRepository.remove(studentToRemove);
+        return {message:"Student removed successfully !"}
+    }catch(error){
+        return {error}
+    }
 }

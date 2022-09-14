@@ -1,19 +1,17 @@
 import "reflect-metadata"
 import { DataSource } from "typeorm"
-import { Student } from "../models/studentModel"
+import { Student } from "../models/Student"
 
-export const AppDataSource = new DataSource({
+const AppDataSource = new DataSource({
     type: "postgres",
     host: "localhost",
     port: 5432,
     username: "postgres",
     password: "postgress",
-    database: "student-manager",
+    database: "postgres",
     entities: [Student],
     synchronize: true,
     logging: false,
 })
 
-// to initialize initial connection with the database, register all entities
-// and "synchronize" database schema, call "initialize()" method of a newly created database
-// once in your application bootstrap
+export default AppDataSource;

@@ -1,11 +1,33 @@
-import { Student,StudentData } from "../util/temp-data";
+import { Student } from "../models/Student";
+import AppDataSource from "../util/db"
 
-//generate new id
-const generateId = (data:Student[]) => data.reduce((acc, current) => Math.max(acc, current.id), 0) + 1;
-
-export function addStudent(data:StudentData,dummy_data:Student[]):{}{
-    const id:number = generateId(dummy_data)
-    const newStudent:Student = {id,...data} 
-    dummy_data.push(newStudent);
-    return newStudent;
+const calcAge =(date:Date)=>{
+    let today = new Date();
+    let age = today.getFullYear() - date.getFullYear();
+    return age;
 }
+
+export async function addStudent(data:any){
+    try{
+        const dob = new Date(data.dob)
+        const age = calcAge(dob)
+        const student = new Student()
+        student.name=data.name;
+        student.gender = data.gender;
+        student.address= data.address;
+        student.dob = dob;
+        student.mobileNo= data.mobileNo;
+        student.age  = age;
+        
+        const studentRepository = AppDataSource.getRepository(Student);
+        
+        const newStudent = await studentRepository.save(student);
+        if(!newStudent){
+            return {message:"Faild to add student !"};
+        }
+        return {message:"Student added successfully !",data:newStudent};
+    }catch(error){
+        return {error}
+    }
+}
+
