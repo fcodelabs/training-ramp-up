@@ -21,6 +21,7 @@ function StudentPage() {
   const [entries, setEntries] = useState([]);
   const [editID, setEditID] = useState(null);
   const [updatingEntry, setUpdatingEntry] = useState(null);
+  // eslint-disable-next-line no-unused-vars
   const [changingEntry, setChangingEntry] = useState(null);
 
   useEffect(() => {
@@ -210,7 +211,7 @@ function StudentPage() {
     updateStudent(entry)
       .then(() => {
         socket.emit("student_edit", [
-          `Student ${entry.ID} was deleted`,
+          `Student ${entry.ID} was updated`,
           entry.ID,
         ]);
         getEntries();
