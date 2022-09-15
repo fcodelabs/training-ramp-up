@@ -14,30 +14,108 @@ import {
 import { DropDownList } from "@progress/kendo-react-dropdowns";
 const editField = "inEdit";
 import { Upload } from "@progress/kendo-react-upload";
+//import axios from "axios";
+//import axios from "axios";
+import io from "socket.io-client";
+const socket = io.connect("http://localhost:8000");
 
 const DataTable = () => {
   const [data, setData] = useState([]);
 
+  // useEffect(async () => {
+  //   let newItems = await getItems();
+  //   console.log("newItem", newItems);
+  //   setData(newItems);
+  // }, []);
+
+  // useEffect(() => {
+  //   async function fetchData() {
+  //     let newItems = await getItems();
+  //     //console.log("newItem", newItems);
+  //     //console.log("newData", data);
+  //     setData(newItems);
+  //   }
+  //   fetchData();
+  // }, [getItems]);
+
   useEffect(() => {
-    let newItems = getItems();
-    setData(newItems);
+    getItems().then(({ data }) => setData(data));
   }, []);
 
+  useEffect(() => {
+    socket.on("refetch_data", () => {
+      getItems()
+        .then(({ data }) => setData(data.students))
+        .catch(() =>
+          alert(
+            "Failed to retrieve data, please try refreshing the page or try again another time",
+          ),
+        );
+    });
+    socket.on("student_received", (data) => {
+      alert(data);
+      console.log("SocketMSG", data);
+      window.location.reload(false);
+    });
+    socket.on("student_deleted", (data) => {
+      alert(data);
+      window.location.reload(false);
+    });
+  }, [socket]);
+  // useEffect(() => {
+  //   axios.get("http://localhost:8000").then((res) => {
+  //     //console.log("DAta", res.data);
+  //     //data = res.data;
+  //     setData(res.data);
+  //     //data.push(data);
+  //     //setData(res.data);
+  //     //data = value;
+  //     console.log("data", data);
+  //   });
+  // });
+
   const remove = (dataItem) => {
-    const newData = [...deleteItem(dataItem)];
-    setData(newData);
+    deleteItem(dataItem).then(() => {
+      getItems().then((data) => {
+        setData(data);
+      });
+      socket.emit("student_remove", `Student ${dataItem.ID} was delete`);
+      getItems();
+    });
+    //const newData = [...deleteItem(dataItem)];
+    //setData(newData);
+    //getItems();
   };
 
   const add = (dataItem) => {
+    console.log("ID data", dataItem);
     dataItem.inEdit = true;
-    const newData = insertItem(dataItem);
-    setData(newData);
+    socket.emit("student_added", `New student was added`);
+    insertItem(dataItem).then((res) => {
+      console.log("data", res.data);
+      const newData = { ...res.data };
+
+      const oldStudents = data;
+      oldStudents.pop(newData);
+      //data.push(newData);
+      setData([newData, ...oldStudents]);
+
+      //socket.emit("student_data_change");
+    });
+
+    // const newData = insertItem(dataItem);
+    // data.push(newData);
+    // socket.emit("student_received");
+    // getItems();
   };
 
   const update = (dataItem) => {
-    dataItem.inEdit = false;
-    const newData = updateItem(dataItem);
-    setData(newData);
+    updateItem(dataItem).then(() => {
+      console.log("Updated");
+    });
+    // dataItem.inEdit = false;
+    // const newData = updateItem(dataItem);
+    // setData(newData);
   };
 
   const discard = () => {

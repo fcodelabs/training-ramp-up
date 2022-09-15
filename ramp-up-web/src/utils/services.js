@@ -1,5 +1,9 @@
-import { sampleData } from "../SampleData";
-let data = [...sampleData];
+//import { sampleData } from "../SampleData";
+//let data = [...sampleData];
+import axios from "axios";
+//import useState from "react";
+
+let data = [];
 
 const generateId = (data) =>
   data.reduce(
@@ -7,38 +11,40 @@ const generateId = (data) =>
     0,
   ) + 1;
 
-export const insertItem = (item) => {
+export const insertItem = async (item) => {
   item.ID = generateId(data);
   item.inEdit = false;
 
   if (
-    item.Name == null ||
-    item.Gender == null ||
-    item.Birth == null ||
-    item.MobileNo == null ||
-    item.Address == null
+    !item.Name ||
+    !item.Gender ||
+    !item.Birth ||
+    !item.MobileNo ||
+    !item.Address
   ) {
     alert("Incorrect Validation");
   } else {
     data.unshift(item);
-    console.log(item.Gender);
-    const year = new Date().getFullYear();
-    const userYear = new Date(item.Birth).getFullYear();
-    console.log("age", year - userYear);
-    item.Age = year - userYear;
+    item.Age = new Date().getFullYear() - new Date(item.Birth).getFullYear();
+    console.log("Age", typeof item.Age);
+    const resdata = await axios.post("http://localhost:8000", item);
+    return resdata;
   }
-  return data;
 };
-export const getItems = () => {
-  return data;
-};
-export const updateItem = (item) => {
-  let index = data.findIndex((record) => record.ID === item.ID);
-  data[index] = item;
-  return data;
+export const updateItem = async (item) => {
+  await axios.put(`http://localhost:8000/${item.ID}`, item);
 };
 export const deleteItem = (item) => {
-  let index = data.findIndex((record) => record.ID === item.ID);
-  data.splice(index, 1);
-  return data;
+  const res = axios.delete(`http://localhost:8000/${item.ID}`);
+
+  return res;
+};
+export const getItems = async () => {
+  try {
+    const res = await axios.get("http://localhost:8000");
+
+    return res;
+  } catch (e) {
+    console.log(Error, e);
+  }
 };

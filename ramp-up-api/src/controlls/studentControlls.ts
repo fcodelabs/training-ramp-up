@@ -7,7 +7,7 @@ export const getStudent = async (req, res) => {
 
 export const findStudent = async (req, res) => {
   const student = await Student.findOne({
-    where: { id: parseInt(req.params.studentId) },
+    where: { ID: parseInt(req.params.studentId) },
   });
   return res.send(student);
 };
@@ -35,7 +35,7 @@ export const deleteStudent = async (req, res) => {
 
 export const updateStudent = async (req, res) => {
   const student = await Student.findOne({
-    where: { id: parseInt(req.params.studentId) },
+    where: { ID: parseInt(req.params.studentId) },
   });
   Student.merge(student, req.body);
   const result = await Student.save(student);
