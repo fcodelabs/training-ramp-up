@@ -20,7 +20,7 @@ function getStudents() {
         try {
             const studentRepository = db_1.default.getRepository(Student_1.Student);
             const allStudents = yield studentRepository.find();
-            return allStudents;
+            return { students: allStudents };
         }
         catch (error) {
             return { error };

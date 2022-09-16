@@ -5,7 +5,7 @@ export async function getStudents(){
     try{
         const studentRepository = AppDataSource.getRepository(Student);
         const allStudents = await studentRepository.find();
-        return allStudents;
+        return {students:allStudents}
     }catch(error){
         return {error}
     }

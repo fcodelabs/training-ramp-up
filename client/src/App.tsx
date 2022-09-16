@@ -58,7 +58,7 @@ export default function App() {
   useEffect(() => {
     socket.on('refetch_data', () => {
       getStudents()
-        .then(({ data }) => setStudentData(data.students))
+        .then(({ data }) => {setStudentData(data.students);})
         .catch(()=>alert('Failed to retrieve data, please try refreshing the page or try again another time'));
     });
   }, [socket]);
@@ -92,6 +92,7 @@ export default function App() {
         oldStudents.pop();
         setStudentData([newStudent, ...oldStudents]);
         socket.emit('student_data_change');
+        alert("Student Added Successfully !");
       })
       .catch(()=>alert("Failed to add student, please check your details and try again Thank you!"));
   };
@@ -131,6 +132,7 @@ export default function App() {
       getStudents().then(({ data }) => {
         setStudentData(data.students);
         socket.emit('student_data_change');
+        alert("Student Changed Successfully !");
       });
     }).catch(()=>alert("Failed to update student, check your details and try again Thank you !"));
   };
@@ -143,6 +145,7 @@ export default function App() {
         getStudents().then(({ data }) => {
           setStudentData(data.students)
           socket.emit('student_data_change');
+          alert("Student Deleted Successfully !");
         });
       }).catch(()=>alert("Failed to delete the student, please try again!"));
     }

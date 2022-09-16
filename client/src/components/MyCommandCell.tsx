@@ -1,5 +1,4 @@
 export default function MyCommandCell(props:any){
-    console.log('command cell props',props)
     const {dataItem} = props;
     const inEdit = dataItem[props.editField]
     const isNewItem = dataItem.id === undefined;
