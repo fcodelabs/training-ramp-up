@@ -15,6 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const services_1 = require("../services");
 const router = express_1.default.Router();
+//Get all student data
 router.get("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield (0, services_1.getStudents)();
     if (result.error) {
@@ -23,6 +24,7 @@ router.get("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     }
     res.status(200).send({ message: "Student data recieved!", students: result });
 }));
+//Add Student
 router.post("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const data = req.body;
     const result = yield (0, services_1.addStudent)(data);
@@ -32,6 +34,7 @@ router.post("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     }
     res.status(200).send({ message: result.message, student: result.data });
 }));
+//Update/Edit Student
 router.put("/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const id = parseInt(req.params.id);
     const data = req.body;
@@ -42,6 +45,7 @@ router.put("/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     }
     res.status(200).send({ message: result.message, updatedStudent: result.data });
 }));
+//Delete Student
 router.delete("/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     let id = parseInt(req.params.id);
     const result = yield (0, services_1.deleteStudent)(id);

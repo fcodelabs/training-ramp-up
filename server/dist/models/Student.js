@@ -17,7 +17,7 @@ var Gender;
     Gender["Male"] = "Male";
     Gender["Other"] = "Other";
 })(Gender || (Gender = {}));
-let Student = class Student extends typeorm_1.BaseEntity {
+let Student = class Student {
 };
 __decorate([
     (0, typeorm_1.PrimaryGeneratedColumn)(),

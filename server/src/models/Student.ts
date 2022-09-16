@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn,BaseEntity } from "typeorm"
+import { Entity, Column, PrimaryGeneratedColumn } from "typeorm"
 
 enum Gender{
     Female="Female",
@@ -7,7 +7,7 @@ enum Gender{
 }
 
 @Entity("student")
-export class Student extends BaseEntity {
+export class Student {
     @PrimaryGeneratedColumn()
     id: number
 

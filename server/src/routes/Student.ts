@@ -2,7 +2,7 @@ import express,{Response,Request,Router} from "express";
 import {addStudent,updateStudent,deleteStudent,getStudents} from "../services";
 const router:Router=express.Router();
 
-
+//Get all student data
 router.get("/",async (req:Request,res:Response)=>{
     const result:any= await getStudents();
     if(result.error){
@@ -12,6 +12,7 @@ router.get("/",async (req:Request,res:Response)=>{
     res.status(200).send({message:"Student data recieved!",students:result});
 })
 
+//Add Student
 router.post("/",async (req:Request,res:Response)=>{
     const data = req.body;
     const result = await addStudent(data);
@@ -22,6 +23,7 @@ router.post("/",async (req:Request,res:Response)=>{
     res.status(200).send({message:result.message,student:result.data});
 })
 
+//Update/Edit Student
 router.put("/:id",async (req:Request,res:Response)=>{
     const id = parseInt(req.params.id);
     const data = req.body;
@@ -33,6 +35,7 @@ router.put("/:id",async (req:Request,res:Response)=>{
     res.status(200).send({message:result.message,updatedStudent:result.data});
 })
 
+//Delete Student
 router.delete("/:id",async (req:Request,res:Response)=>{
     let id:number = parseInt(req.params.id);
     const result = await deleteStudent(id);

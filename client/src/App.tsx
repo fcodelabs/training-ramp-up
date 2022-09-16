@@ -1,4 +1,6 @@
 import React,{ useEffect, useState } from 'react';
+
+//import socket.io for client integration
 import { io } from 'socket.io-client';
 //importing material theme
 import '@progress/kendo-theme-material/dist/all.css';
@@ -6,6 +8,7 @@ import '@progress/kendo-theme-material/dist/all.css';
 import { Grid, GridColumn, GridToolbar } from '@progress/kendo-react-grid';
 //import action buttons cell
 import MyCommandCell from './components/MyCommandCell';
+//import custom date cell
 import DateCell from './components/DateCell';
 //importing actions
 import { addStudent, getStudents, deleteStudent, updateStudent } from './services';
@@ -13,12 +16,38 @@ import { addStudent, getStudents, deleteStudent, updateStudent } from './service
 //import types
 import { Student } from './interfaces';
 
-const socket = io('http://localhost:8000');
+//change mode for edit and add students
 const editField = 'inEdit';
+
+//initiate socket.io server
+const socket = io('http://localhost:8000');
+
+//validate inputs
+const validateInputs= (dataItem:Student):boolean=>{
+  if (
+    dataItem.name === '' 
+      || 
+    dataItem.address === '' 
+      || 
+    dataItem.mobileNo === undefined 
+      || 
+    dataItem.gender === '' 
+      || 
+    dataItem.dob === '' 
+      || 
+    dataItem.mobileNo < 0 
+      || 
+    dataItem.mobileNo.toString().length !== 9
+    ) {
+    return false;
+  }
+  return true;
+}
 
 export default function App() {
   const [studentData, setStudentData] = useState<Student[]>([]);
-
+  
+  //get data on page load 
   useEffect(() => {
     getStudents()
       .then(({ data }) => setStudentData(data.students))
@@ -34,7 +63,7 @@ export default function App() {
     });
   }, [socket]);
 
-  // add new record
+  // add new student to state
   const addNewItem = () => {
     const newDataItem = {
       name: '',
@@ -48,25 +77,13 @@ export default function App() {
     setStudentData([...studentData, newDataItem]);
   };
 
+  // add new student do database
   const add = (dataItem: Student) => {
-    if (
-        dataItem.name === '' 
-          || 
-        dataItem.address === '' 
-          || 
-        dataItem.mobileNo === undefined 
-          || 
-        dataItem.gender === '' 
-          || 
-        dataItem.dob === '' 
-          || 
-        dataItem.mobileNo<0 
-          || 
-        dataItem.mobileNo > 999999999
-        ) {
+    const validity = validateInputs(dataItem);
+    if(!validity){
       alert('Please fill in all the fields correctly to add a record !');
       return;
-    }
+    } 
     dataItem.inEdit = true;
     addStudent(dataItem)
       .then(({ data }) => {
@@ -79,18 +96,20 @@ export default function App() {
       .catch(()=>alert("Failed to add student, please check your details and try again Thank you!"));
   };
 
+  //stop adding a new student
   const discard = () => {
     const newData = [...studentData];
     newData.pop();
     setStudentData(newData);
   };
 
-  //edit/delete a record
+  //initiate student for edit mode
   const enterEdit = (dataItem: Student) => {
     const isoDate = new Date(dataItem.dob);
     setStudentData(studentData.map((item) => (item.id === dataItem.id ? { ...item, dob: isoDate, inEdit: true } : item)));
   };
 
+  //cancel editing student
   const cancel = (dataItem: Student) => {
     getStudents().then(({ data }) => {
       const originalStudent = data.students.find((item: Student) => item.id === dataItem.id);
@@ -99,25 +118,14 @@ export default function App() {
     });
   };
 
+  
+  //push updates to database
   const update = (dataItem: Student) => {
-    if (
-      dataItem.name === '' 
-        || 
-      dataItem.address === '' 
-        || 
-      dataItem.mobileNo === undefined 
-        || 
-      dataItem.gender === '' 
-        || 
-      dataItem.dob === '' 
-        || 
-      dataItem.mobileNo<0 
-        || 
-      dataItem.mobileNo > 999999999
-      ) {
+    const validity = validateInputs(dataItem);
+    if(!validity){
       alert('Please fill in all the fields correctly to add a record !');
       return;
-    }
+    } 
     dataItem.inEdit = false;
     updateStudent(dataItem).then(() => {
       getStudents().then(({ data }) => {
@@ -127,13 +135,17 @@ export default function App() {
     }).catch(()=>alert("Failed to update student, check your details and try again Thank you !"));
   };
 
+  //delete student from database
   const remove = (dataItem: Student) => {
-    deleteStudent(dataItem.id).then(() => {
-      getStudents().then(({ data }) => {
-        setStudentData(data.students)
-        socket.emit('student_data_change');
-      });
-    }).catch(()=>alert("Failed to delete the student, please try again!"));
+    if(confirm("Are you sure you want to remove this student ?")){
+
+      deleteStudent(dataItem.id).then(() => {
+        getStudents().then(({ data }) => {
+          setStudentData(data.students)
+          socket.emit('student_data_change');
+        });
+      }).catch(()=>alert("Failed to delete the student, please try again!"));
+    }
   };
   // //common
   const itemChange = (e: any) => {
@@ -141,6 +153,7 @@ export default function App() {
     setStudentData(newData);
   };
 
+  //custom cell for commands column
   const commandCell = (props: any) => (
     <MyCommandCell {...props} editField={editField} edit={enterEdit} add={add} discard={discard} cancel={cancel} update={update} remove={remove} />
   );

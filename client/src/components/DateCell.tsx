@@ -2,6 +2,7 @@ import React from "react"
 import { DatePicker } from '@progress/kendo-react-dateinputs';
 
 export default function DateCell(props:any){
+    console.log('date cell props',props);
     return props.dataItem.inEdit?(<td>
         <DatePicker
           width="100%"
