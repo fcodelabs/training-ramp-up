@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 //import socket.io for client integration
 import { io } from 'socket.io-client';
+//importing material theme
+import '@progress/kendo-theme-material/dist/all.css';
 // import kendo table components
 import { Grid, GridColumn, GridToolbar } from '@progress/kendo-react-grid';
 //import action buttons cell
@@ -136,6 +138,7 @@ export default function Dashboard(){
 
   //delete student from database
   const remove = (dataItem: Student) => {
+
       deleteStudent(dataItem.id).then(() => {
         getStudents().then(({ data }) => {
           setStudentData(data.students)
