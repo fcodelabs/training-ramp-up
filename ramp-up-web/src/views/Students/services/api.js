@@ -17,7 +17,7 @@ export const addStudent = (student) =>
       "Content-Type": "application/json",
     },
     body: JSON.stringify(student),
-  }).then((result) => result);
+  }).then((result) => result.text());
 
 export const updateStudent = (student) =>
   fetch(`${URL}/${student.ID}`, {
@@ -26,7 +26,7 @@ export const updateStudent = (student) =>
       "Content-Type": "application/json",
     },
     body: JSON.stringify(student),
-  }).then((result) => result);
+  }).then((result) => result.text());
 
 export const deleteStudent = (ID) =>
   fetch(`${URL}/${ID}`, {
@@ -34,4 +34,4 @@ export const deleteStudent = (ID) =>
     headers: {
       "Content-Type": "application/json",
     },
-  }).then((result) => result);
+  }).then((result) => result.text());

@@ -1,9 +1,9 @@
-import { Entity, Column, PrimaryColumn } from "typeorm";
+import { Entity, Column, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class Student {
-  @PrimaryColumn()
-  ID: string;
+  @PrimaryGeneratedColumn()
+  ID: number;
 
   @Column()
   Name: string;
@@ -14,8 +14,8 @@ export class Student {
   @Column()
   Address: string;
 
-  @Column()
-  Number: string;
+  @Column({ type: "bigint" })
+  Number: number;
 
   @Column()
   Birthday: string;

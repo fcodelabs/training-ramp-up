@@ -19,7 +19,6 @@ const socket = io.connect("http://localhost:5000");
 
 function StudentPage() {
   const [entries, setEntries] = useState([]);
-  const [editID, setEditID] = useState(null);
   const [updatingEntry, setUpdatingEntry] = useState(null);
   // eslint-disable-next-line no-unused-vars
   const [changingEntry, setChangingEntry] = useState(null);
@@ -49,18 +48,11 @@ function StudentPage() {
         if (notify && changingEntry !== null) {
           if (id === undefined) {
             if (changingEntry.new) {
-              const highestID = parseInt(
-                sortedEntries[sortedEntries.length - 1].ID
-              );
-              const newID = (highestID + 1).toString();
-              changingEntry.ID = newID;
               sortedEntries.unshift(changingEntry);
-              setEditID(changingEntry.ID);
               setUpdatingEntry(changingEntry);
             }
             return changingEntry;
           } else if (id === changingEntry.ID) {
-            setEditID(null);
             setUpdatingEntry(null);
             return null;
           } else {
@@ -131,7 +123,7 @@ function StudentPage() {
           format="dd/MM/yyyy"
           defaultValue={getBirthday(dataItem.Birthday)}
           max={new Date()}
-          disabled={!(editID !== null && dataItem.ID === editID)}
+          disabled={!dataItem.inEdit}
           onChange={(e) => {
             if (
               e.value !== null &&
@@ -164,7 +156,7 @@ function StudentPage() {
       <td>
         <DropDownList
           data={["Male", "Female"]}
-          disabled={!(editID !== null && dataItem.ID === editID)}
+          disabled={!dataItem.inEdit}
           defaultValue={getGender(dataItem)}
           onChange={(e) => {
             const gender = e.value;
@@ -191,42 +183,37 @@ function StudentPage() {
   const insertEntry = (entry) => {
     delete entry.inEdit;
     delete entry.new;
-    setEditID(null);
     setUpdatingEntry(null);
     setChangingEntry(null);
     addStudent(entry)
-      .then(() => {
-        socket.emit("student_added", `New student ${entry.ID} was added`);
+      .then((response) => {
+        socket.emit("student_added", response);
         getEntries();
+        alert(response);
       })
       .catch((e) => console.log(e));
   };
 
   const updateEntry = (entry) => {
-    setEditID(null);
     setUpdatingEntry(null);
     setChangingEntry(null);
     delete entry.inEdit;
     delete entry.new;
     updateStudent(entry)
-      .then(() => {
-        socket.emit("student_edit", [
-          `Student ${entry.ID} was updated`,
-          entry.ID,
-        ]);
+      .then((response) => {
+        socket.emit("student_edit", [response, entry.ID]);
         getEntries();
+        alert(response);
       })
       .catch((e) => console.log(e));
   };
 
   const deleteEntry = (entry) => {
     deleteStudent(entry.ID)
-      .then(() => {
-        socket.emit("student_remove", [
-          `Student ${entry.ID} was deleted`,
-          entry.ID,
-        ]);
+      .then((response) => {
+        socket.emit("student_remove", [response, entry.ID]);
         getEntries();
+        alert(response);
       })
       .catch((e) => console.log(e));
   };
@@ -235,7 +222,6 @@ function StudentPage() {
     const newEntries = [...entries];
     newEntries.splice(0, 1);
     setEntries(newEntries);
-    setEditID(null);
     setUpdatingEntry(null);
     setChangingEntry(null);
   };
@@ -245,7 +231,6 @@ function StudentPage() {
     const newEntries = entries;
     newEntries[index] = updatingEntry;
     setEntries(newEntries);
-    setEditID(null);
     setUpdatingEntry(null);
     setChangingEntry(null);
   };
@@ -254,7 +239,6 @@ function StudentPage() {
     if (updatingEntry === null) {
       const newEntries = entries.map((e) => {
         if (e.ID === entry.ID) {
-          setEditID(e.ID);
           setUpdatingEntry(entry);
           setChangingEntry(entry);
           return { ...e, inEdit: true };
@@ -281,15 +265,11 @@ function StudentPage() {
     const date = new Date().toLocaleDateString("en-GB");
     if (updatingEntry === null) {
       const newEntry = {
-        ID:
-          entries.length !== 0
-            ? (parseInt(entries[entries.length - 1].ID) + 1).toString()
-            : "1",
         Birthday: date,
         new: true,
+        inEdit: true,
       };
       setEntries([newEntry, ...entries]);
-      setEditID(newEntry.ID);
       setUpdatingEntry(newEntry);
       setChangingEntry(newEntry);
     }
@@ -303,14 +283,7 @@ function StudentPage() {
         alignContent: "space-between",
       }}
     >
-      <Grid
-        data={entries.map((entry) => ({
-          ...entry,
-          inEdit: entry.ID === editID,
-        }))}
-        editField={editField}
-        onItemChange={fieldChange}
-      >
+      <Grid data={entries} editField={editField} onItemChange={fieldChange}>
         <GridToolbar>
           <Button onClick={addEntry}>Add New</Button>
         </GridToolbar>
