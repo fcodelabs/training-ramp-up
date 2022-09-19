@@ -1,3 +1,5 @@
+import { Students } from "../API/agent";
+
 let data = [];
 
 const generateId = (data) =>
@@ -17,18 +19,28 @@ export const insertItem = (item) => {
     data.unshift(item);
     item.Age = new Date().getFullYear() - new Date(item.DOB).getFullYear();
   }
-  return data;
+
+  const studentDetails = {
+    StudentName: item.StudentName,
+    Gender: item.Gender,
+    Address: item.Address,
+    MobileNo: item.MobileNo,
+    DOB: item.DOB,
+    Age: item.Age,
+  };
+
+  Students.create(studentDetails);
 };
-export const getItems = () => {
-  return data;
+
+export const getItems = async () => {
+  const res = await Students.list();
+  console.log("Res data", res);
+  return res;
 };
-export const updateItem = (item) => {
-  let index = data.findIndex((record) => record.ID === item.ID);
-  data[index] = item;
-  return data;
+export const updateItem = async (item) => {
+  console.log("UpdateData", item);
+  await Students.update(item, item.ID);
 };
-export const deleteItem = (item) => {
-  let index = data.findIndex((record) => record.ID === item.ID);
-  data.splice(index, 1);
-  return data;
+export const deleteItem = async (item) => {
+  await Students.delete(item.ID);
 };

@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Grid,
   GridColumn as Column,
@@ -13,36 +13,84 @@ import {
 } from "../Utils/services";
 import { Upload } from "@progress/kendo-react-upload";
 // import { DropDownList } from "@progress/kendo-react-dropdowns";
+// import { Server } from "socket.io";
+import { io } from "socket.io-client";
 
+const socket = io("http://localhost:8080");
 const editField = "inEdit";
 
 const Main = () => {
-  const [data, setData] = React.useState([]);
-  React.useEffect(() => {
-    let newItems = getItems();
-    setData(newItems);
-  }, []); // modify the data in the store, db etc
+  const [data, setData] = useState([]);
+
+  const fetchItems = async () => {
+    const res = await getItems();
+    const formattedData = res.map((e) => ({
+      inEdit: false,
+      Discontinued: false,
+      ...e,
+    }));
+    setData(formattedData);
+  };
+  useEffect(() => {
+    fetchItems();
+  }, []);
+
+  useEffect(() => {
+    socket.on("student_received", (data) => {
+      alert(data);
+      fetchItems();
+    });
+    socket.on("student_deleted", (data) => {
+      alert(data);
+      fetchItems();
+    });
+  }, [socket]);
 
   const remove = (dataItem) => {
-    const newData = [...deleteItem(dataItem)];
-    setData(newData);
+    try {
+      deleteItem(dataItem);
+      socket.emit("student_removed", `Student was deleted`);
+      alert("Student was deleted");
+      fetchItems();
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const add = (dataItem) => {
     dataItem.inEdit = true;
-    const newData = insertItem(dataItem);
-    setData(newData);
+    try {
+      insertItem(dataItem);
+      socket.emit("student_added", `Student was added `);
+      alert("Student was added");
+      fetchItems();
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const update = (dataItem) => {
-    dataItem.inEdit = false;
-    const newData = updateItem(dataItem);
-    setData(newData);
-  }; // Local state operations
+    // dataItem.inEdit = false;
 
+    try {
+      updateItem(dataItem);
+
+      // updateItem(dataItem).then((res) => {
+      //   console.log("res dara", res.data);
+
+      // });
+
+      socket.emit("student_added", `Student was changed`);
+      alert("Student was updated");
+      fetchItems();
+    } catch (error) {
+      console.log(error);
+    }
+  };
   const discard = () => {
     const newData = [...data];
     newData.splice(0, 1);
+
     setData(newData);
   };
 
@@ -57,7 +105,9 @@ const Main = () => {
   const enterEdit = (dataItem) => {
     setData(
       data.map((item) =>
-        item.ID === dataItem.ID ? { ...item, inEdit: true } : item
+        item.ID === dataItem.ID
+          ? { ...item, DOB: new Date(item.DOB), inEdit: true }
+          : item
       )
     );
   };
@@ -72,11 +122,16 @@ const Main = () => {
   };
 
   const addNew = () => {
-    const newDataItem = {
-      inEdit: true,
-      Discontinued: false,
-    };
-    setData([newDataItem, ...data]);
+    try {
+      socket.emit("student_added");
+      const newDataItem = {
+        inEdit: true,
+        Discontinued: false,
+      };
+      setData([newDataItem, ...data]);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const CommandCell = (props) => (
@@ -90,17 +145,9 @@ const Main = () => {
       cancel={cancel}
       editField={editField}
     />
-
-    // const gender = ["Male", "Female", "Other"];
   );
 
   return (
-    // <div>
-    //       <div>Gender</div>
-    //       <DropDownList style={{
-    //       width: '300px'
-    //     }} data={gender} />
-    //     </div>
     <Grid
       style={{
         height: "1000px",
@@ -133,23 +180,18 @@ const Main = () => {
       </GridToolbar>
       <Column field="ID" title="ID" width="50px" editable={false} />
       <Column field="StudentName" title="Student Name" width="200px" />
-      <Column
-        field="Gender"
-        title="Gender"
-        width="150px"
-        // <DropDownList style={{
-        // width: '300px'}} data={gender}
-      />
+      <Column field="Gender" title="Gender" width="120px" />
+      {/* <DropDownList Gender={["Female", "Male", "Other"]}/> */}
       <Column field="Address" title="Address" width="200px" />
-      <Column field="MobileNo" title="Mobile No" width="120px" />
+      <Column field="MobileNo" title="Mobile No" width="150px" />
       <Column
         field="DOB"
         title="Date of Birth"
         editor="date"
         format="{0:d}"
-        width="150px"
+        width="175px"
       />
-      {/* <Column field="Age" title="Age" width="120px" editor="numeric" /> */}
+
       <Column field="Age" title="Age" width="150px" editable={false} />
       <Column cell={CommandCell} title="Command" width="200px" />
     </Grid>
@@ -157,11 +199,3 @@ const Main = () => {
 };
 
 export default Main;
-
-// const gender = ["Male", "Female", "Other"];
-//   return <div>
-//       <div>Gender</div>
-//       <DropDownList style={{
-//       width: '300px'
-//     }} data={gender} />
-//     </div>;

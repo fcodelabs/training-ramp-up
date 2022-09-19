@@ -7,13 +7,14 @@ export const getStudent = async (req: Request, res: Response) => {
 };
 
 export const postStudent = async (req: Request, res: Response) => {
-  const { StudentName, Gender, Address, MobileNo, DOB } = req.body;
+  const { StudentName, Gender, Address, MobileNo, DOB, Age } = req.body;
   const student = Student.create({
     StudentName: StudentName,
     Gender: Gender,
     Address: Address,
     MobileNo: MobileNo,
     DOB: DOB,
+    Age: Age,
   });
   await student.save();
   res.json(student);
@@ -21,14 +22,14 @@ export const postStudent = async (req: Request, res: Response) => {
 };
 
 export const deleteStudent = async (req: Request, res: Response) => {
-  const { studentId } = req.params;
-  const response = await Student.delete(studentId);
+  const { id } = req.params;
+  const response = await Student.delete(id);
   return res.json(response);
 };
 
 export const updateStudent = async (req: Request, res: Response) => {
   const student = await Student.findOne({
-    where: { ID: parseInt(req.params.studentId) },
+    where: { ID: parseInt(req.params.id) },
   });
   Student.merge(student, req.body);
   const result = await Student.save({ ...student });

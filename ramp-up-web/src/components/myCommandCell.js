@@ -2,7 +2,7 @@ import * as React from "react";
 export const MyCommandCell = (props) => {
   const { dataItem } = props;
   const inEdit = dataItem[props.editField];
-  const isNewItem = dataItem.StudentID === undefined;
+  const isNewItem = dataItem.ID === undefined;
   return inEdit ? (
     <td className="k-command-cell">
       <button

@@ -5,18 +5,37 @@ import express from "express";
 import * as BodyParser from "body-parser";
 import cors from "cors";
 import studentRoute from "./routes/studentRoute";
+import { Server } from "socket.io";
+import http from "http";
+
+const app = express();
+const server = http.createServer(app);
+app.use(cors());
+app.use(BodyParser.json());
+app.use(BodyParser.urlencoded({ extended: false }));
+app.use(express.json());
+app.use(studentRoute);
+
+const io = new Server(server, {
+  cors: {
+    origin: "http://localhost:3000",
+    methods: ["GET", "POST", "PUT", "DELETE"],
+  },
+});
 
 AppDataSource.initialize()
-  .then(async () => {
-    const app = express();
-    app.use(express.json());
-    app.use(studentRoute);
-    app.use(cors());
-    app.use(BodyParser.json());
-    app.listen(8080, () => console.log("App is running at port 8080."));
-
-    console.log(
-      "Here you can setup and run express / fastify / any other framework."
-    );
-  })
+  .then(() => console.log("Server started !"))
   .catch((error) => console.log(error));
+
+io.on("connection", (socket) => {
+  console.log(`User Connect:${socket.id}`);
+
+  socket.on("student_added", (data) => {
+    socket.broadcast.emit("student_received", data);
+  });
+  socket.on("student_removed", (data) => {
+    socket.broadcast.emit("student_deleted", data);
+  });
+});
+
+server.listen(8080, () => console.log("App is running at port 8080."));
