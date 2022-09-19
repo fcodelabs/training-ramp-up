@@ -4,57 +4,29 @@ import {
   GridColumn as Column,
   GridToolbar,
 } from "@progress/kendo-react-grid";
-import { Command } from "../componets/CommandCell";
+import { Command } from "../component/CommandCell";
 import {
   insertItem,
   getItems,
   updateItem,
   deleteItem,
 } from "../utils/services";
-import { DropDownList } from "@progress/kendo-react-dropdowns";
 const editField = "inEdit";
 import { Upload } from "@progress/kendo-react-upload";
-//import axios from "axios";
-//import axios from "axios";
+
 import io from "socket.io-client";
 const socket = io.connect("http://localhost:8000");
 
 const DataTable = () => {
   const [data, setData] = useState([]);
 
-  // useEffect(async () => {
-  //   let newItems = await getItems();
-  //   console.log("newItem", newItems);
-  //   setData(newItems);
-  // }, []);
-
-  // useEffect(() => {
-  //   async function fetchData() {
-  //     let newItems = await getItems();
-  //     //console.log("newItem", newItems);
-  //     //console.log("newData", data);
-  //     setData(newItems);
-  //   }
-  //   fetchData();
-  // }, [getItems]);
-
   useEffect(() => {
     getItems().then(({ data }) => setData(data));
   }, []);
 
   useEffect(() => {
-    socket.on("refetch_data", () => {
-      getItems()
-        .then(({ data }) => setData(data.students))
-        .catch(() =>
-          alert(
-            "Failed to retrieve data, please try refreshing the page or try again another time",
-          ),
-        );
-    });
     socket.on("student_received", (data) => {
       alert(data);
-      console.log("SocketMSG", data);
       window.location.reload(false);
     });
     socket.on("student_deleted", (data) => {
@@ -62,60 +34,40 @@ const DataTable = () => {
       window.location.reload(false);
     });
   }, [socket]);
-  // useEffect(() => {
-  //   axios.get("http://localhost:8000").then((res) => {
-  //     //console.log("DAta", res.data);
-  //     //data = res.data;
-  //     setData(res.data);
-  //     //data.push(data);
-  //     //setData(res.data);
-  //     //data = value;
-  //     console.log("data", data);
-  //   });
-  // });
 
   const remove = (dataItem) => {
     deleteItem(dataItem).then(() => {
       getItems().then((data) => {
         setData(data);
       });
-      socket.emit("student_remove", `Student ${dataItem.ID} was delete`);
+      socket.emit("student_remove", `Student was delete`);
+      alert("Student was delete");
       getItems();
     });
-    //const newData = [...deleteItem(dataItem)];
-    //setData(newData);
-    //getItems();
   };
 
   const add = (dataItem) => {
-    console.log("ID data", dataItem);
+    console.log("id data", dataItem);
     dataItem.inEdit = true;
     socket.emit("student_added", `New student was added`);
+
     insertItem(dataItem).then((res) => {
       console.log("data", res.data);
-      const newData = { ...res.data };
 
-      const oldStudents = data;
-      oldStudents.pop(newData);
-      //data.push(newData);
-      setData([newData, ...oldStudents]);
-
-      //socket.emit("student_data_change");
+      window.location.reload(false);
+      alert("Student was Added");
     });
-
-    // const newData = insertItem(dataItem);
-    // data.push(newData);
-    // socket.emit("student_received");
-    // getItems();
   };
 
   const update = (dataItem) => {
-    updateItem(dataItem).then(() => {
-      console.log("Updated");
+    dataItem.inEdit = false;
+    socket.emit("student_added", `Student Changed`);
+    updateItem(dataItem).then((res) => {
+      console.log("res dara", res.data);
+
+      window.location.reload(false);
+      alert("Student was Updated");
     });
-    // dataItem.inEdit = false;
-    // const newData = updateItem(dataItem);
-    // setData(newData);
   };
 
   const discard = () => {
@@ -125,9 +77,9 @@ const DataTable = () => {
   };
 
   const cancel = (dataItem) => {
-    const originalItem = getItems().find((p) => p.ID === dataItem.ID);
+    const originalItem = getItems().find((p) => p.id === dataItem.id);
     const newData = data.map((item) =>
-      item.ID === originalItem.ID ? originalItem : item,
+      item.id === originalItem.id ? originalItem : item,
     );
     setData(newData);
   };
@@ -135,14 +87,16 @@ const DataTable = () => {
   const enterEdit = (dataItem) => {
     setData(
       data.map((item) =>
-        item.ID === dataItem.ID ? { ...item, inEdit: true } : item,
+        item.id === dataItem.id
+          ? { ...item, birth: new Date(item.birth), inEdit: true }
+          : item,
       ),
     );
   };
 
   const itemChange = (event) => {
     const newData = data.map((item) =>
-      item.ID === event.dataItem.ID
+      item.id === event.dataItem.id
         ? { ...item, [event.field || ""]: event.value }
         : item,
     );
@@ -171,8 +125,6 @@ const DataTable = () => {
     />
   );
 
-  const GenderField = ["Male", "Female"];
-
   return (
     <div>
       <Grid
@@ -192,30 +144,25 @@ const DataTable = () => {
             Add new
           </button>
         </GridToolbar>
-        <Column field="ID" title="ID" width="50px" editable={false} />
-        <Column field="Name" title="Name" width="200px" />
+        <Column field="id" title="ID" width="50px" editable={false} />
+        <Column field="name" title="Name" width="200px" />
+        <Column field="gender" title="Gender(Male/Female)" width="170px" />
+        <Column field="address" title="Address" width="300px" />
         <Column
-          field="Gender"
-          title="Gender"
-          width="100px"
-          editor={<DropDownList data={GenderField} defaultValue="Gender" />}
-        />
-        <Column field="Address" title="Address" width="300px" />
-        <Column
-          field="MobileNo"
+          field="mobileNo"
           title="Mobile No"
           width="150px"
           editor="numeric"
         />
 
         <Column
-          field="Birth"
+          field="birth"
           title="Date of Birth"
           format="{0:d}"
           editor="date"
           width="150px"
         />
-        <Column field="Age" title="Age" width="100px" editable={false} />
+        <Column field="age" title="Age" width="100px" editable={false} />
 
         <Column cell={CommandCell} width="200px" title="commond" />
       </Grid>

@@ -2,7 +2,7 @@ import * as React from "react";
 export const Command = (props) => {
   const { dataItem } = props;
   const inEdit = dataItem[props.editField];
-  const isNewItem = dataItem.ID === undefined;
+  const isNewItem = dataItem.id === undefined;
   return inEdit ? (
     <td className="k-command-cell">
       <button
@@ -34,7 +34,9 @@ export const Command = (props) => {
     <td className="k-command-cell">
       <button
         className="k-button k-button-md k-rounded-md k-button-solid k-button-solid-primary k-grid-edit-command"
-        onClick={() => props.edit(dataItem)}
+        onClick={() => {
+          props.edit(dataItem);
+        }}
       >
         Edit
       </button>

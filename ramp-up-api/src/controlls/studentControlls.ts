@@ -7,20 +7,20 @@ export const getStudent = async (req, res) => {
 
 export const findStudent = async (req, res) => {
   const student = await Student.findOne({
-    where: { ID: parseInt(req.params.studentId) },
+    where: { id: parseInt(req.params.studentId) },
   });
   return res.send(student);
 };
 
 export const postStudent = async (req, res) => {
-  const { Name, Gender, Address, MobileNo, Birth, Age } = req.body;
+  const { name, gender, address, mobileNo, birth, age } = req.body;
   const student = Student.create({
-    Name: Name,
-    Gender: Gender,
-    Address: Address,
-    MobileNo: MobileNo,
-    Birth: Birth,
-    Age: Age,
+    name: name,
+    gender: gender,
+    address: address,
+    mobileNo: mobileNo,
+    birth: birth,
+    age: age,
   });
   await student.save();
   res.json(student);
@@ -35,7 +35,7 @@ export const deleteStudent = async (req, res) => {
 
 export const updateStudent = async (req, res) => {
   const student = await Student.findOne({
-    where: { ID: parseInt(req.params.studentId) },
+    where: { id: parseInt(req.params.studentId) },
   });
   Student.merge(student, req.body);
   const result = await Student.save(student);

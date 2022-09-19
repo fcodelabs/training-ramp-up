@@ -1,48 +1,55 @@
-//import { sampleData } from "../SampleData";
-//let data = [...sampleData];
 import axios from "axios";
-//import useState from "react";
 
 let data = [];
 
-const generateId = (data) =>
+const generateid = (data) =>
   data.reduce(
-    (previousValue, currentValue) => Math.max(previousValue, currentValue.ID),
+    (previousValue, currentValue) => Math.max(previousValue, currentValue.id),
     0,
   ) + 1;
 
 export const insertItem = async (item) => {
-  item.ID = generateId(data);
+  item.id = generateid(data);
   item.inEdit = false;
 
   if (
-    !item.Name ||
-    !item.Gender ||
-    !item.Birth ||
-    !item.MobileNo ||
-    !item.Address
+    !item.name ||
+    !item.gender ||
+    !item.birth ||
+    !item.mobileNo ||
+    !item.address
   ) {
     alert("Incorrect Validation");
   } else {
     data.unshift(item);
-    item.Age = new Date().getFullYear() - new Date(item.Birth).getFullYear();
-    console.log("Age", typeof item.Age);
+    item.age = new Date().getFullYear() - new Date(item.birth).getFullYear();
+    console.log("Age", typeof item.age);
     const resdata = await axios.post("http://localhost:8000", item);
     return resdata;
   }
 };
 export const updateItem = async (item) => {
-  await axios.put(`http://localhost:8000/${item.ID}`, item);
+  if (
+    !item.name ||
+    !item.gender ||
+    !item.birth ||
+    !item.mobileNo ||
+    !item.address
+  ) {
+    alert("Incorrect Validation");
+  } else {
+    const res = await axios.put(`http://localhost:8000/${item.id}`, item);
+    return res;
+  }
 };
 export const deleteItem = (item) => {
-  const res = axios.delete(`http://localhost:8000/${item.ID}`);
+  const res = axios.delete(`http://localhost:8000/${item.id}`);
 
   return res;
 };
 export const getItems = async () => {
   try {
     const res = await axios.get("http://localhost:8000");
-
     return res;
   } catch (e) {
     console.log(Error, e);

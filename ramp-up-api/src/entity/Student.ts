@@ -9,23 +9,23 @@ import {
 @Entity()
 export class Student extends BaseEntity {
   @PrimaryGeneratedColumn()
-  ID: number;
+  id: number;
 
   @Column()
-  Name: string;
+  name: string;
 
   @Column()
-  Gender: string;
+  gender: string;
 
   @Column()
-  Address: string;
+  address: string;
 
   @Column()
-  MobileNo: string;
+  mobileNo: string;
 
   @Column({ type: 'date', nullable: true })
-  Birth: string;
+  birth: Date;
 
   @Column()
-  Age: string;
+  age: string;
 }

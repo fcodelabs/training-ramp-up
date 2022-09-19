@@ -1,25 +1,14 @@
 import { AppDataSource } from './utill/data-source';
 import express from 'express';
-import studentsRoutes from './routes/studentsRoutes';
+import studentsRoutes from './route/studentsRoutes';
 import http from 'http';
 import 'reflect-metadata';
 const app = express();
 const cors = require('cors');
-//const http = require('http');
+
 const { Server } = require('socket.io');
 const server = http.createServer(app);
 app.use(cors());
-// app.use(cors());
-// const io = new Server(server, {
-//   cors: {
-//     origin: 'http://localhost:3000',
-//     method: ['GET', 'POST'],
-//   },
-// });
-
-// io.on('connection', (socket) => {
-//   console.log(`User Connect:${socket.id}`);
-// });
 
 AppDataSource.initialize()
   .then(async () => {
@@ -30,18 +19,12 @@ AppDataSource.initialize()
     const io = new Server(server, {
       cors: {
         origin: 'http://localhost:3000',
-        method: ['GET', 'POST'],
+        method: ['GET', 'POST', 'PUT', 'DELETE'],
       },
     });
 
     io.on('connection', (socket) => {
       console.log(`User Connect:${socket.id}`);
-      socket.on('student_data_change', () => {
-        console.log('👁 data has been altered !');
-        socket.broadcast.emit('refetch_data', () => {
-          console.log('💿 refetching data...');
-        });
-      });
 
       socket.on('student_added', (data) => {
         socket.broadcast.emit('student_received', data);
