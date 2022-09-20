@@ -16,12 +16,10 @@ import { addStudent, getStudents, deleteStudent, updateStudent, signoutUser } fr
 import { useNavigate } from "react-router-dom";
 //import types
 import { Student, User } from '../../interfaces';
-
+import Cookies from 'universal-cookie';
 //change mode for edit and add students
 const editField = 'inEdit';
-
-//initiate socket.io server
-// const socket = io('http://localhost:8000');
+const cookies = new Cookies();
 
 //validate inputs
 const validateInputs= (dataItem:Student):boolean=>{
@@ -51,7 +49,11 @@ export default function Dashboard(){
   let navigate = useNavigate();
   //get data on page load 
   useEffect(() => {
-    getStudents().then(({data})=>setStudentData(data.students)).catch((error)=>console.log(error));
+    getStudents().then(({data})=>setStudentData(data.students)).catch((error)=>{navigate("/")});
+    const userCookieData = cookies.get('userData');
+    if(userCookieData){
+      setUserData({name:userCookieData.name,email: userCookieData.email, role: userCookieData.role});
+    }
   }, []);
   
   //refresh on data change
@@ -106,7 +108,6 @@ export default function Dashboard(){
         const oldStudents = studentData;
         oldStudents.pop();
         setStudentData([newStudent, ...oldStudents]);
-        // socket.emit('student_data_change');
         alert("Student Added Successfully !");
       })
       .catch(()=>alert("Failed to add student, please check your details and try again Thank you!"));
@@ -147,7 +148,6 @@ export default function Dashboard(){
       updateStudent(dataItem).then(() => {
         getStudents().then(({ data }) => {
           setStudentData(data.students);
-          // socket.emit('student_data_change');
           alert("Student Changed Successfully !");
         });
       }).catch(()=>alert("Failed to update student, check your details and try again Thank you !"));
@@ -158,7 +158,6 @@ export default function Dashboard(){
         deleteStudent(dataItem.id).then(() => {
           getStudents().then(({ data }) => {
             setStudentData(data.students)
-            // socket.emit('student_data_change');
             alert("Student Deleted Successfully !");
           });
         }).catch(()=>alert("Failed to delete the student, please try again!"));

@@ -3,20 +3,18 @@ import { Entity, Column, PrimaryGeneratedColumn } from "typeorm"
 
 @Entity("session")
 export class Session {
-    @PrimaryGeneratedColumn()
-    id: number
+    @PrimaryGeneratedColumn("uuid")
+    id: string
     
     @Column({
-        default:true
+        default:false
     })
     valid: boolean
 
     @Column()
     name: string
     
-    @Column({
-        unique:true
-    })
+    @Column()
     email: string
 
 }

@@ -4,10 +4,22 @@ import { signinUser, signoutUser, signupUser} from "../services";
 export async function registerUser( req: Request , res: Response ){
     const result = await signupUser(req.body);
     if(result.error){
-        res.status(400).json({message:"Failed to add student!",error:result.error});
+        res.status(400).json({message:"Signup Failed",error:result.error});
         return;
     }
-    res.status(200).json({message:"Student has been added successfully!",user:result.data});
+    res.cookie('accessToken',result.accessToken,{
+        maxAge:300000,
+        httpOnly:true,
+    });
+    res.cookie('refreshToken',result.refreshToken,{
+        maxAge:3.154e10,
+        httpOnly:true,
+    });
+    res.cookie('userData',result.userData,{
+        maxAge:300000,
+    });
+    console.log();
+    return res.status(200).send({message:result.message})
 }
 
 export async function loginUser( req: Request , res: Response ){
@@ -17,18 +29,20 @@ export async function loginUser( req: Request , res: Response ){
         return ;
     }
     res.cookie('accessToken',result.accessToken,{
-        maxAge:3.154e10,
+        maxAge:300000,
         httpOnly:true,
     });
     res.cookie('refreshToken',result.refreshToken,{
         maxAge:3.154e10,
         httpOnly:true,
     });
-    return res.status(200).send({message:result.message, session:result.session})
+    res.cookie('userData',result.userData,{
+        maxAge:300000,
+    })
+    return res.status(200).send({message:result.message});
 }
 
 export async function logoutUser(req: Request, res: Response){
-    
     const result = await signoutUser(req.body);
     if(result.error){
         res.status(400).json({message:"Login Failed!",error:result.error});
@@ -43,5 +57,13 @@ export async function logoutUser(req: Request, res: Response){
         maxAge:0,
         httpOnly:true
     });
+
+    res.cookie("userData","",{
+        maxAge:0,
+    });
     return res.status(200).send({message:"Successfully logged out!",session:result.session});
+}
+
+export async function loginStatus(req: Request, res: Response){
+    return res.send(req.user);
 }

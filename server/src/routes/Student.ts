@@ -13,10 +13,10 @@ export const studentRouter:Router=express.Router();
 studentRouter.get("/",UserAuthGuard,studentController.getAll)
 
 //Add Student
-studentRouter.post("/",UserAuthGuard,studentController.addOne)
+studentRouter.post("/",UserAuthGuard,AdminAuthGuard,studentController.addOne)
 
 //Update/Edit Student
-studentRouter.put("/:id",UserAuthGuard,studentController.updateOne)
+studentRouter.put("/:id",UserAuthGuard,AdminAuthGuard,studentController.updateOne)
 
 //Delete Student
-studentRouter.delete("/:id",UserAuthGuard,studentController.deleteOne)
+studentRouter.delete("/:id",UserAuthGuard,AdminAuthGuard,studentController.deleteOne)

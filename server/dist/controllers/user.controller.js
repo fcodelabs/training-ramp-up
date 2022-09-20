@@ -9,16 +9,28 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.logoutUser = exports.loginUser = exports.registerUser = void 0;
+exports.loginStatus = exports.logoutUser = exports.loginUser = exports.registerUser = void 0;
 const services_1 = require("../services");
 function registerUser(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         const result = yield (0, services_1.signupUser)(req.body);
         if (result.error) {
-            res.status(400).json({ message: "Failed to add student!", error: result.error });
+            res.status(400).json({ message: "Signup Failed", error: result.error });
             return;
         }
-        res.status(200).json({ message: "Student has been added successfully!", user: result.data });
+        res.cookie('accessToken', result.accessToken, {
+            maxAge: 300000,
+            httpOnly: true,
+        });
+        res.cookie('refreshToken', result.refreshToken, {
+            maxAge: 3.154e10,
+            httpOnly: true,
+        });
+        res.cookie('userData', result.userData, {
+            maxAge: 300000,
+        });
+        console.log();
+        return res.status(200).send({ message: result.message });
     });
 }
 exports.registerUser = registerUser;
@@ -30,14 +42,17 @@ function loginUser(req, res) {
             return;
         }
         res.cookie('accessToken', result.accessToken, {
-            maxAge: 3.154e10,
+            maxAge: 300000,
             httpOnly: true,
         });
         res.cookie('refreshToken', result.refreshToken, {
             maxAge: 3.154e10,
             httpOnly: true,
         });
-        return res.status(200).send({ message: result.message, session: result.session });
+        res.cookie('userData', result.userData, {
+            maxAge: 300000,
+        });
+        return res.status(200).send({ message: result.message });
     });
 }
 exports.loginUser = loginUser;
@@ -56,7 +71,16 @@ function logoutUser(req, res) {
             maxAge: 0,
             httpOnly: true
         });
+        res.cookie("userData", "", {
+            maxAge: 0,
+        });
         return res.status(200).send({ message: "Successfully logged out!", session: result.session });
     });
 }
 exports.logoutUser = logoutUser;
+function loginStatus(req, res) {
+    return __awaiter(this, void 0, void 0, function* () {
+        return res.send(req.user);
+    });
+}
+exports.loginStatus = loginStatus;

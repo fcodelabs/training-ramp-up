@@ -51,6 +51,7 @@ const models_1 = require("../models");
 const db_1 = __importDefault(require("../util/db"));
 const argon = __importStar(require("argon2"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+const config_1 = require("../util/config");
 function signupUser(data) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
@@ -60,12 +61,18 @@ function signupUser(data) {
             user.email = data.email;
             user.password = hash;
             const userRepository = db_1.default.getRepository(models_1.User);
+            const sessionRepository = db_1.default.getRepository(models_1.Session);
             const newUser = yield userRepository.save(user);
             if (!newUser) {
                 return { message: "Faild to register user !" };
             }
-            const { password } = newUser, rest = __rest(newUser, ["password"]);
-            return { message: "User registered successfully !", data: rest };
+            const { password, id } = newUser, rest = __rest(newUser, ["password", "id"]);
+            const newSession = yield sessionRepository.save({ email: rest.email, name: rest.name, valid: true });
+            const tokenData = Object.assign({ userId: id, sessionId: newSession.id }, rest);
+            const accessToken = jsonwebtoken_1.default.sign(tokenData, config_1.config.jwt_secret, { expiresIn: '5s' });
+            const refreshToken = jsonwebtoken_1.default.sign(tokenData, config_1.config.jwt_secret, { expiresIn: '1y' });
+            const userData = { sessionId: newSession.id, email: newSession.email, name: newSession.name, role: user.role };
+            return { message: "Sign Up Successfull!", userData, refreshToken, accessToken };
         }
         catch (error) {
             return { error };
@@ -78,7 +85,6 @@ function signinUser(data) {
         try {
             const userRepository = db_1.default.getRepository(models_1.User);
             const sessionRepository = db_1.default.getRepository(models_1.Session);
-            console.log(data);
             const user = yield userRepository.findOneBy({ email: data.email });
             if (!user) {
                 return { message: "User not found!" };
@@ -87,12 +93,13 @@ function signinUser(data) {
             if (!pwMatches) {
                 return { message: "Incorrect Credentials!" };
             }
-            const { password } = user, rest = __rest(user, ["password"]);
-            const accessToken = jsonwebtoken_1.default.sign(rest, "NavyPenguinMariachi", { expiresIn: '5s' });
-            const refreshToken = jsonwebtoken_1.default.sign(rest, "NavyPenguinMariachi", { expiresIn: '1y' });
-            const newSession = yield sessionRepository.save({ email: rest.email, name: rest.name });
-            const userData = { email: newSession.email, name: newSession.name, role: user.role };
-            return { message: "Login Successfull!", session: userData, refreshToken, accessToken };
+            const { password, id } = user, rest = __rest(user, ["password", "id"]);
+            const newSession = yield sessionRepository.save({ email: rest.email, name: rest.name, valid: true });
+            const tokenData = Object.assign({ userId: id, sessionId: newSession.id }, rest);
+            const accessToken = jsonwebtoken_1.default.sign(tokenData, config_1.config.jwt_secret, { expiresIn: '5s' });
+            const refreshToken = jsonwebtoken_1.default.sign(tokenData, config_1.config.jwt_secret, { expiresIn: '1y' });
+            const userData = { sessionId: newSession.id, email: newSession.email, name: newSession.name, role: user.role };
+            return { message: "Login Successfull!", userData, refreshToken, accessToken };
         }
         catch (error) {
             return { error };
@@ -104,8 +111,11 @@ function signoutUser(data) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const sessionRepository = db_1.default.getRepository(models_1.Session);
-            const session = sessionRepository.findOneBy({ email: data.email });
-            const invalidSession = sessionRepository.save(Object.assign(Object.assign({}, session), { valid: false }));
+            const session = yield sessionRepository.findOneBy({ email: data.email });
+            if (!session) {
+                return { message: "Student doesn't exist !" };
+            }
+            const invalidSession = yield sessionRepository.remove(session);
             return { session: invalidSession };
         }
         catch (error) {

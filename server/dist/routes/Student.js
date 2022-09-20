@@ -32,12 +32,13 @@ const studentController = __importStar(require("../controllers/student.controlle
 // import passport from 'passport';
 //guards
 const user_auth_guard_1 = require("../middleware/user.auth.guard");
+const admin_auth_guard_1 = require("../middleware/admin.auth.guard");
 exports.studentRouter = express_1.default.Router();
 //Get all student data
 exports.studentRouter.get("/", user_auth_guard_1.UserAuthGuard, studentController.getAll);
 //Add Student
-exports.studentRouter.post("/", user_auth_guard_1.UserAuthGuard, studentController.addOne);
+exports.studentRouter.post("/", user_auth_guard_1.UserAuthGuard, admin_auth_guard_1.AdminAuthGuard, studentController.addOne);
 //Update/Edit Student
-exports.studentRouter.put("/:id", user_auth_guard_1.UserAuthGuard, studentController.updateOne);
+exports.studentRouter.put("/:id", user_auth_guard_1.UserAuthGuard, admin_auth_guard_1.AdminAuthGuard, studentController.updateOne);
 //Delete Student
-exports.studentRouter.delete("/:id", user_auth_guard_1.UserAuthGuard, studentController.deleteOne);
+exports.studentRouter.delete("/:id", user_auth_guard_1.UserAuthGuard, admin_auth_guard_1.AdminAuthGuard, studentController.deleteOne);

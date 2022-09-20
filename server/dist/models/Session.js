@@ -14,12 +14,12 @@ const typeorm_1 = require("typeorm");
 let Session = class Session {
 };
 __decorate([
-    (0, typeorm_1.PrimaryGeneratedColumn)(),
-    __metadata("design:type", Number)
+    (0, typeorm_1.PrimaryGeneratedColumn)("uuid"),
+    __metadata("design:type", String)
 ], Session.prototype, "id", void 0);
 __decorate([
     (0, typeorm_1.Column)({
-        default: true
+        default: false
     }),
     __metadata("design:type", Boolean)
 ], Session.prototype, "valid", void 0);
@@ -28,9 +28,7 @@ __decorate([
     __metadata("design:type", String)
 ], Session.prototype, "name", void 0);
 __decorate([
-    (0, typeorm_1.Column)({
-        unique: true
-    }),
+    (0, typeorm_1.Column)(),
     __metadata("design:type", String)
 ], Session.prototype, "email", void 0);
 Session = __decorate([

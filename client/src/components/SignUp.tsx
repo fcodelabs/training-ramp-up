@@ -24,7 +24,7 @@ export default function SignUp() {
         password: data.get('password'),
     }
     if(validateData(user)){
-      signupUser(user).then(()=>navigate("/dashboard")).catch(()=>alert("Student registration failed!"));
+      signupUser(user).then((data)=>navigate('/dashboard')).catch(()=>alert("Student registration failed!"));
       return;
     };
     alert("invalid data");

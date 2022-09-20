@@ -5,7 +5,6 @@ export function UserAuthGuard(req: Request, res: Response, next: NextFunction) {
     if (!req.user) {
       return res.status(403).send("Unauthorized!");
     }
-    
     return next();
   }
   
