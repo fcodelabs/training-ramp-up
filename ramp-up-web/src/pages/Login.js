@@ -7,7 +7,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-
+import DataTable from "./DataTable";
 import React from "react";
 
 function Login() {
@@ -41,61 +41,67 @@ function Login() {
     setSuccess(true);
   };
   return (
-    <Grid>
-      <Paper elevation={10} style={paperStyle}>
-        <Grid align="center">
-          <Avatar>{/* <FaceIcon /> */}</Avatar>
-          <h2>Sign In</h2>
-        </Grid>
-        <form onSubmit={handleSubmit}>
-          <TextField
-            id="username"
-            ref={userRef}
-            value={user}
-            autoComplete="off"
-            label="User Name"
-            placeholder="Enter User Name"
-            fullWidth
-            required
-            style={mrstyle}
-            variant="standard"
-            onChange={(e) => setUser(e.target.value)}
-          ></TextField>
-          <TextField
-            id="password"
-            label="Password"
-            placeholder="Enter Password"
-            type="password"
-            fullWidth
-            required
-            style={mrstyle}
-            value={pwd}
-            variant="standard"
-            onChange={(e) => setPwd(e.target.value)}
-          ></TextField>
-          <Button
-            type="submit"
-            color="primary"
-            variant="contained"
-            fullWidth
-            style={mrstyle}
-          >
-            Sign in
-          </Button>
-        </form>
+    <>
+      {success ? (
+        <DataTable />
+      ) : (
+        <Grid>
+          <Paper elevation={10} style={paperStyle}>
+            <Grid align="center">
+              <Avatar>{/* <FaceIcon /> */}</Avatar>
+              <h2>Sign In</h2>
+            </Grid>
+            <form onSubmit={handleSubmit}>
+              <TextField
+                id="username"
+                ref={userRef}
+                value={user}
+                autoComplete="off"
+                label="User Name"
+                placeholder="Enter User Name"
+                fullWidth
+                required
+                style={mrstyle}
+                variant="standard"
+                onChange={(e) => setUser(e.target.value)}
+              ></TextField>
+              <TextField
+                id="password"
+                label="Password"
+                placeholder="Enter Password"
+                type="password"
+                fullWidth
+                required
+                style={mrstyle}
+                value={pwd}
+                variant="standard"
+                onChange={(e) => setPwd(e.target.value)}
+              ></TextField>
+              <Button
+                type="submit"
+                color="primary"
+                variant="contained"
+                fullWidth
+                style={mrstyle}
+              >
+                Sign in
+              </Button>
+            </form>
 
-        <Typography>
-          <p>
-            {" "}
-            Need an Account?
-            <br />
-            <span>
-              <a href="/sign">Sign Up</a>
-            </span>
-          </p>
-        </Typography>
-      </Paper>
-    </Grid>
+            <Typography>
+              <p>
+                {" "}
+                Need an Account?
+                <br />
+                <span>
+                  <a href="/sign">Sign Up</a>
+                </span>
+              </p>
+            </Typography>
+          </Paper>
+        </Grid>
+      )}
+    </>
   );
 }
 
