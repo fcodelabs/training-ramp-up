@@ -1,19 +1,22 @@
-import express,{Response,Request,Router} from "express";
+import express,{Router} from "express";
 import * as studentController from "../controllers/student.controller";
+// import passport from 'passport';
+
+//guards
+import { UserAuthGuard } from "../middleware/user.auth.guard";
+import { AdminAuthGuard } from "../middleware/admin.auth.guard";
 
 
-const router:Router=express.Router();
+export const studentRouter:Router=express.Router();
 
 //Get all student data
-router.get("/",studentController.getAll)
+studentRouter.get("/",UserAuthGuard,studentController.getAll)
 
 //Add Student
-router.post("/",studentController.addOne)
+studentRouter.post("/",UserAuthGuard,studentController.addOne)
 
 //Update/Edit Student
-router.put("/:id",studentController.updateOne)
+studentRouter.put("/:id",UserAuthGuard,studentController.updateOne)
 
 //Delete Student
-router.delete("/:id",studentController.deleteOne)
-
-export default router
+studentRouter.delete("/:id",UserAuthGuard,studentController.deleteOne)

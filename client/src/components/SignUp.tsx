@@ -1,47 +1,34 @@
-import {useState} from 'react';
-
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
-import MenuItem from '@mui/material/MenuItem';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
-import InputLabel from '@mui/material/InputLabel';
-import FormControl from '@mui/material/FormControl';
+import { useNavigate } from "react-router-dom";
+import { signupUser } from '../services';
 
+const validateData=({name,email,password}: any)=>{
+  if(!name||!email||!password){
+    return false;
+  }
+  return true;
+}
 
 export default function SignUp() {
-  const [gender, setGender] = useState('');
-  
-  const validateData=({name,email,password,gender,dob,address,mobileNo}: any)=>{
-    if(!name||!email||!password||!gender||!dob||!address||!mobileNo){
-      return false;
-    }
-    return true;
-  }
-  const handleGenderChange = (event: SelectChangeEvent) => {
-    setGender(event.target.value as string);
-  };
-
+  let navigate = useNavigate();
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    const student = {
+    const user = {
         name: data.get('name'),
         email: data.get('email'),
         password: data.get('password'),
-        gender: data.get('gender'),
-        dob: data.get('dob'),
-        address: data.get('address'),
-        mobileNo: data.get('mobileNo'),
     }
-  if(validateData(student)){
-    alert("valid data");
-    return;
+    if(validateData(user)){
+      signupUser(user).then(()=>navigate("/dashboard")).catch(()=>alert("Student registration failed!"));
+      return;
+    };
+    alert("invalid data");
   };
-  alert("invalid data");
-};
 
   return (
       <Container component="main" maxWidth="xs">
@@ -84,56 +71,11 @@ export default function SignUp() {
                 id="password"
                 autoComplete="current-password"
                 />
-              <FormControl fullWidth margin='normal'>
-                <InputLabel id="gender">Gender</InputLabel>
-                <Select
-                  labelId="gender"
-                  id="gender"
-                  name="gender"
-                  fullWidth
-                  value={gender}
-                  label="Gender"
-                  onChange={handleGenderChange}
-                >
-                  <MenuItem value="Male">Male</MenuItem>
-                  <MenuItem value="Female">Female</MenuItem>
-                  <MenuItem value="Other">Other</MenuItem>
-                </Select>
-              </FormControl>
-              <TextField
-                margin="normal"
-                required
-                fullWidth
-                id="address"
-                label="Address"
-                name="address"
-              />
-              <TextField
-                type="number"
-                margin="normal"
-                required
-                fullWidth
-                id="mobileNo"
-                label="Mobile Number"
-                name="mobileNo"
-              />
-              <TextField
-                id="dob"
-                label="Date of Birth"
-                name="dob"
-                type="date"
-                fullWidth
-                margin="normal"
-                required
-                InputLabelProps={{
-                  shrink: true,
-                }}
-              />
               <Button
                 type="submit"
                 fullWidth
                 variant="contained"
-                sx={{ mt: 3, mb: 2 }}
+                sx={{ mt: 3, mb: 2 ,py:2}}
               >
                 Sign Up
               </Button>

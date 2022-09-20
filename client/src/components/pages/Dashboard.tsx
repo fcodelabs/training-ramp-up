@@ -1,6 +1,8 @@
+import './dashboard.css';
+import { Button, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
 //import socket.io for client integration
-import { io } from 'socket.io-client';
+// import { io } from 'socket.io-client';
 //importing material theme
 import '@progress/kendo-theme-material/dist/all.css';
 // import kendo table components
@@ -10,16 +12,16 @@ import MyCommandCell from '../MyCommandCell';
 //import custom date cell
 import DateCell from '../DateCell';
 //importing actions
-import { addStudent, getStudents, deleteStudent, updateStudent } from '../../services';
-
+import { addStudent, getStudents, deleteStudent, updateStudent, signoutUser } from '../../services';
+import { useNavigate } from "react-router-dom";
 //import types
-import { Student } from '../../interfaces';
+import { Student, User } from '../../interfaces';
 
 //change mode for edit and add students
 const editField = 'inEdit';
 
 //initiate socket.io server
-const socket = io('http://localhost:8000');
+// const socket = io('http://localhost:8000');
 
 //validate inputs
 const validateInputs= (dataItem:Student):boolean=>{
@@ -44,23 +46,37 @@ const validateInputs= (dataItem:Student):boolean=>{
 }
 
 export default function Dashboard(){
-    const [studentData, setStudentData] = useState<Student[]>([]);
-  
+  const [studentData, setStudentData] = useState<Student[]>([]);
+  const [userData,setUserData] = useState<User>({name:'',email:'',role:'GUEST'});
+  let navigate = useNavigate();
   //get data on page load 
   useEffect(() => {
-    getStudents()
-      .then(({ data }) => setStudentData(data.students))
-      .catch(()=>alert('Failed to retrieve data, please try refreshing the page or try again another time'));
+    getStudents().then(({data})=>setStudentData(data.students)).catch((error)=>console.log(error));
   }, []);
-
+  
   //refresh on data change
-  useEffect(() => {
-    socket.on('refetch_data', () => {
-      getStudents()
-        .then(({ data }) => {setStudentData(data.students);})
-        .catch(()=>alert('Failed to retrieve data, please try refreshing the page or try again another time'));
-    });
-  }, [socket]);
+  // useEffect(() => {
+  //   const token = localStorage.getItem('access_token');
+  //   if(token){
+  //     socket.on('refetch_data', () => {
+  //       getStudents(token)
+  //       .then(({ data }) => {setStudentData(data.students);})
+  //       .catch((error)=>{
+  //         if(error.response.status===401){
+  //           localStorage.removeItem('access_token');
+  //           navigate("/");
+  //           return;
+  //         }
+  //       });
+  //     });
+  //   }
+  //   return ()=>{socket.off('refetch_data');}
+  // }, [navigate]);
+
+  //logOut user
+  const handleLogOut = () => {
+    signoutUser(userData.email).then(()=>navigate('/')).catch((error)=>console.log(error));
+  }
 
   // add new student to state
   const addNewItem = () => {
@@ -90,62 +106,62 @@ export default function Dashboard(){
         const oldStudents = studentData;
         oldStudents.pop();
         setStudentData([newStudent, ...oldStudents]);
-        socket.emit('student_data_change');
+        // socket.emit('student_data_change');
         alert("Student Added Successfully !");
       })
       .catch(()=>alert("Failed to add student, please check your details and try again Thank you!"));
-  };
-
+    };
+    
   //stop adding a new student
   const discard = () => {
-    const newData = [...studentData];
-    newData.pop();
-    setStudentData(newData);
+      const newData = [...studentData];
+      newData.pop();
+      setStudentData(newData);
   };
 
   //initiate student for edit mode
   const enterEdit = (dataItem: Student) => {
-    const isoDate = new Date(dataItem.dob);
+      const isoDate = new Date(dataItem.dob);
     setStudentData(studentData.map((item) => (item.id === dataItem.id ? { ...item, dob: isoDate, inEdit: true } : item)));
   };
-
+  
   //cancel editing student
   const cancel = (dataItem: Student) => {
-    getStudents().then(({ data }) => {
-      const originalStudent = data.students.find((item: Student) => item.id === dataItem.id);
-      const newData = studentData.map((item) => (item.id === originalStudent.id ? originalStudent : item));
-      setStudentData(newData);
-    });
+      getStudents().then(({ data }) => {
+        const originalStudent = data.students.find((item: Student) => item.id === dataItem.id);
+        const newData = studentData.map((item) => (item.id === originalStudent.id ? originalStudent : item));
+        setStudentData(newData);
+      });
   };
 
   
   //push updates to database
   const update = (dataItem: Student) => {
-    const validity = validateInputs(dataItem);
-    if(!validity){
-      alert('Please fill in all the fields correctly to add a record !');
-      return;
-    } 
-    dataItem.inEdit = false;
-    updateStudent(dataItem).then(() => {
-      getStudents().then(({ data }) => {
-        setStudentData(data.students);
-        socket.emit('student_data_change');
-        alert("Student Changed Successfully !");
-      });
-    }).catch(()=>alert("Failed to update student, check your details and try again Thank you !"));
+
+      const validity = validateInputs(dataItem);
+      if(!validity){
+        alert('Please fill in all the fields correctly to add a record !');
+        return;
+      } 
+      dataItem.inEdit = false;
+      updateStudent(dataItem).then(() => {
+        getStudents().then(({ data }) => {
+          setStudentData(data.students);
+          // socket.emit('student_data_change');
+          alert("Student Changed Successfully !");
+        });
+      }).catch(()=>alert("Failed to update student, check your details and try again Thank you !"));
   };
 
   //delete student from database
   const remove = (dataItem: Student) => {
-
-      deleteStudent(dataItem.id).then(() => {
-        getStudents().then(({ data }) => {
-          setStudentData(data.students)
-          socket.emit('student_data_change');
-          alert("Student Deleted Successfully !");
-        });
-      }).catch(()=>alert("Failed to delete the student, please try again!"));
+        deleteStudent(dataItem.id).then(() => {
+          getStudents().then(({ data }) => {
+            setStudentData(data.students)
+            // socket.emit('student_data_change');
+            alert("Student Deleted Successfully !");
+          });
+        }).catch(()=>alert("Failed to delete the student, please try again!"));
   };
   // //common
   const itemChange = (e: any) => {
@@ -155,31 +171,48 @@ export default function Dashboard(){
 
   //custom cell for commands column
   const commandCell = (props: any) => (
-    <MyCommandCell {...props} editField={editField} edit={enterEdit} add={add} discard={discard} cancel={cancel} update={update} remove={remove} />
+    <MyCommandCell  {...props} editField={editField} role={userData.role} edit={enterEdit} add={add} discard={discard} cancel={cancel} update={update} remove={remove} />
   );
 
   return (
-    <Grid data={studentData} editField={editField} onItemChange={itemChange}>
-      <GridToolbar>
-        <div>
-          <button
-            title="Add new"
-            className="k-button k-button-md k-rounded-md "
-            style={{ background: '#e2e8f0', color: '#000', border: 'none' }}
-            onClick={addNewItem}
-          >
-            Add new
-          </button>
+    <div className='dashboard'>
+      <div className="content">
+        <div className="user_header">
+          <div className="user_title">
+            <Typography variant="h4" style={{color:'#ef4444',fontWeight:'bold'}}>Welcome : {userData.name}</Typography>
+            <Typography variant="subtitle2" style={{color:'#a9a9a9'}}>Email : {userData.email}</Typography>
+            <Typography variant="subtitle2" style={{color:'#a9a9a9'}}>Role : {userData.role}</Typography>
+          </div>
+          <div>
+            <Button onClick={handleLogOut} variant="contained" sx={{width:"fit"}}>Log Out</Button>
+          </div>
         </div>
-      </GridToolbar>
-      <GridColumn field="id" title="ID" editable={false} />
-      <GridColumn field="name" title="Name" editor="text" />
-      <GridColumn field="gender" title="Gender" editor="text" />
-      <GridColumn field="address" title="Address" editor="text" />
-      <GridColumn field="mobileNo" title="Mobile-No" editor="numeric" />
-      <GridColumn field="dob" title="Date of Birth" editor="date" format="{0:d}" cell={DateCell} />
-      <GridColumn field="age" title="Age" editor="numeric" editable={false} />
-      <GridColumn cell={commandCell} title="command" />
-    </Grid>
+        <div className="data_grid">
+          <Grid data={studentData} editField={editField} onItemChange={itemChange}>
+            <GridToolbar>
+              <div>
+                <button
+                  title="Add new"
+                  className="k-button k-button-md k-rounded-md "
+                  style={{ background: '#e2e8f0', color: '#000', border: 'none' }}
+                  onClick={addNewItem}
+                  disabled = {userData.role==="ADMIN"?false:true}
+                >
+                  Add new
+                </button>
+              </div>
+            </GridToolbar>
+            <GridColumn field="id" title="ID" editable={false} />
+            <GridColumn field="name" title="Name" editor="text" />
+            <GridColumn field="gender" title="Gender" editor="text" />
+            <GridColumn field="address" title="Address" editor="text" />
+            <GridColumn field="mobileNo" title="Mobile-No" editor="numeric" />
+            <GridColumn field="dob" title="Date of Birth" editor="date" format="{0:d}" cell={DateCell} />
+            <GridColumn field="age" title="Age" editor="numeric" editable={false} />
+            <GridColumn cell={commandCell} title="command" />
+          </Grid>
+        </div>
+      </div>
+    </div>
   );
 }

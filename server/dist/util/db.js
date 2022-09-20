@@ -5,7 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 require("reflect-metadata");
 const typeorm_1 = require("typeorm");
-const Student_1 = require("../models/Student");
+const models_1 = require("../models");
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
 const password = process.env.DB_PASSWORD;
@@ -19,7 +19,7 @@ const AppDataSource = new typeorm_1.DataSource({
     username,
     password,
     database,
-    entities: [Student_1.Student],
+    entities: [models_1.Student, models_1.User, models_1.Session],
     synchronize: true,
     logging: false,
 });

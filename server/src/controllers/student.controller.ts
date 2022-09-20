@@ -13,7 +13,8 @@ export async function getAll(req: Request,res: Response){
 export async function addOne( req: Request , res: Response ){
     const result = await addStudent(req.body);
     if(result.error){
-        return {message:"Failed to add student!",error:result.error};
+        res.status(400).json({message:"Failed to add student!",error:result.error});
+        return;
     }
    res.status(200).json({message:"Student has been added successfully!",student:result.data});
 }

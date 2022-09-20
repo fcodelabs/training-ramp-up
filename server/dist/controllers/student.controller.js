@@ -26,7 +26,8 @@ function addOne(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         const result = yield (0, services_1.addStudent)(req.body);
         if (result.error) {
-            return { message: "Failed to add student!", error: result.error };
+            res.status(400).json({ message: "Failed to add student!", error: result.error });
+            return;
         }
         res.status(200).json({ message: "Student has been added successfully!", student: result.data });
     });

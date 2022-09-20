@@ -3,18 +3,31 @@ import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
+import { useNavigate } from "react-router-dom";
+import { signinUser } from '../services';
+
+const validateData=({email,password}: any)=>{
+  if(!email||!password){
+    return false;
+  }
+  return true;
+}
 
 export default function SignIn() {
+  let navigate = useNavigate();
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
-      name: data.get('name'),
+    const user = {
       email: data.get('email'),
       password: data.get('password'),
-    });
+    }
+    if(validateData(user)){
+      signinUser(user).then((data)=>{navigate("/dashboard")}).catch(()=>alert("Student login failed!"));
+      return;
+    };
+    alert("invalid data");
   };
-
   return (
       <Container component="main" maxWidth="xs">
         <Box
@@ -53,7 +66,7 @@ export default function SignIn() {
               type="submit"
               fullWidth
               variant="contained"
-              sx={{ mt: 3, mb: 2 }}
+              sx={{ mt: 3, mb: 2 , py:2}}
             >
               Sign In
             </Button>

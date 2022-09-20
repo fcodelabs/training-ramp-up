@@ -26,15 +26,18 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.studentRouter = void 0;
 const express_1 = __importDefault(require("express"));
 const studentController = __importStar(require("../controllers/student.controller"));
-const router = express_1.default.Router();
+// import passport from 'passport';
+//guards
+const user_auth_guard_1 = require("../middleware/user.auth.guard");
+exports.studentRouter = express_1.default.Router();
 //Get all student data
-router.get("/", studentController.getAll);
+exports.studentRouter.get("/", user_auth_guard_1.UserAuthGuard, studentController.getAll);
 //Add Student
-router.post("/", studentController.addOne);
+exports.studentRouter.post("/", user_auth_guard_1.UserAuthGuard, studentController.addOne);
 //Update/Edit Student
-router.put("/:id", studentController.updateOne);
+exports.studentRouter.put("/:id", user_auth_guard_1.UserAuthGuard, studentController.updateOne);
 //Delete Student
-router.delete("/:id", studentController.deleteOne);
-exports.default = router;
+exports.studentRouter.delete("/:id", user_auth_guard_1.UserAuthGuard, studentController.deleteOne);
