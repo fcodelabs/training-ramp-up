@@ -1,28 +1,44 @@
 import { AppDataSource } from './utilis/data-source';
-// import { Student } from './entity/Student';
+const http = require('http');
+import 'reflect-metadata';
+const cors = require('cors');
 import * as express from 'express';
-import { createStudentRouter } from './routes/create_routes';
-import { deleteClientRouter } from './routes/delete_routes';
-import {
-  fetchAllStudentRouter,
-  fetchStudentRouter,
-} from './routes/fetch_routes';
-import { putStudentRouter } from './routes/put_routes';
-
+import student_routes from './routes/student_routes';
+const { Server } = require('socket.io');
 const app = express();
+const server = http.createServer(app);
+app.use(cors());
 
 AppDataSource.initialize()
   .then(async () => {
     console.log('Database Connection Succes !!');
 
     app.use(express.json());
-    app.use(createStudentRouter);
-    app.use(deleteClientRouter);
-    app.use(fetchStudentRouter);
-    app.use(fetchAllStudentRouter);
-    app.use(putStudentRouter);
+    app.use(student_routes);
+    const io = new Server(server, {
+      cors: {
+        origin: 'http://localhost:3000',
+        method: ['GET', 'POST'],
+      },
+    });
+    io.on('connection', (socket) => {
+      console.log(`User Connect:${socket.id}`);
+      socket.on('student_data_change', () => {
+        console.log('data has been altered !');
+        socket.broadcast.emit('refetch_data', () => {
+          console.log('refetching data...');
+        });
+      });
 
-    app.listen(8000, () => {
+      socket.on('student_added', (data) => {
+        socket.broadcast.emit('student_received', data);
+      });
+      socket.on('student_remove', (data) => {
+        socket.broadcast.emit('student_deleted', data);
+      });
+    });
+
+    server.listen(8000, () => {
       console.log('Now running on port 8000');
     });
   })

@@ -1,39 +1,50 @@
+import axios from "axios";
+
 let data = [];
 
-const generateId = (data) =>
-  data.reduce((acc, current) => Math.max(acc, current.StudentID), 0) + 1;
+const generateid = (data) =>
+  data.reduce(
+    (previousValue, currentValue) => Math.max(previousValue, currentValue.id),
+    0
+  ) + 1;
 
-export const insertStudent = (item) => {
-  item.StudentID = generateId(data);
+export const insertStudent = async (item) => {
+  item.id = generateid(data);
   item.inEdit = false;
 
   if (
-    item.StudentName == null ||
-    item.Gender == null ||
-    item.ContactNumber == null ||
-    item.Address == null
+    !item.name ||
+    !item.gender ||
+    !item.date ||
+    !item.mobile_number ||
+    !item.address
   ) {
     alert("Incorrect Validation");
   } else {
+    console.log("Checking Date", typeof item.date);
     data.unshift(item);
-    console.log(item.Gender);
-    item.Age = new Date().getFullYear() - new Date(item.Birth).getFullYear();
+    item.age = new Date().getFullYear() - new Date(item.date).getFullYear();
+    console.log("Age", typeof item.age);
+    const resdata = await axios.post("http://localhost:8000/api", item);
+
+    return resdata;
   }
-  return data;
 };
-
-export const getStudents = () => {
-  return data;
+export const updateStudent = async (item) => {
+  console.log("Update URL Working");
+  await axios.put(`http://localhost:8000/api/${item.id}`, item);
 };
-
-export const updateStudent = (item) => {
-  let index = data.findIndex((record) => record.StudentID === item.StudentID);
-  data[index] = item;
-  return data;
-};
-
 export const deleteStudent = (item) => {
-  let index = data.findIndex((record) => record.StudentID === item.StudentID);
-  data.splice(index, 1);
-  return data;
+  const res = axios.delete(`http://localhost:8000/api/${item.id}`);
+
+  return res;
+};
+export const getStudents = async () => {
+  try {
+    const res = await axios.get("http://localhost:8000/api");
+
+    return res;
+  } catch (e) {
+    console.log(Error, e);
+  }
 };

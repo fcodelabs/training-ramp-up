@@ -1,66 +1,104 @@
-import * as React from "react";
+import React, { useEffect, useState } from "react";
+
 import {
   Grid,
   GridColumn as Column,
   GridToolbar,
 } from "@progress/kendo-react-grid";
+//import { DropDownList } from "@progress/kendo-react-dropdowns";
 import { MyCommandCell } from "../components/MyCommandCell";
 import {
   insertStudent,
   getStudents,
-  updateStudent,
+  //updateStudent,
   deleteStudent,
 } from "../utils/services";
 import { Upload } from "@progress/kendo-react-upload";
 const editField = "inEdit";
+import io from "socket.io-client";
+const socket = io.connect("http://localhost:8000");
 
 const GridUI = () => {
-  const [data, setData] = React.useState([]);
-  React.useEffect(() => {
-    let newItems = getStudents();
-    setData(newItems);
+  const [data, setData] = useState([]);
+  useEffect(() => {
+    getStudents().then(({ data }) => setData(data));
   }, []);
 
+  useEffect(() => {
+    socket.on("refetch_data", () => {
+      getStudents()
+        .then(({ data }) => setData(data.students))
+        .catch(() =>
+          alert(
+            "Failed to retrieve data, please try refreshing the page or try again another time"
+          )
+        );
+    });
+    socket.on("student_received", (data) => {
+      alert(data);
+      console.log("SocketMSG", data);
+      window.location.reload(false);
+    });
+    socket.on("student_deleted", (data) => {
+      alert(data);
+      window.location.reload(false);
+    });
+  }, [socket]);
+
   const remove = (dataItem) => {
-    const newData = [...deleteStudent(dataItem)];
-    setData(newData);
+    deleteStudent(dataItem).then(() => {
+      getStudents().then((data) => {
+        setData(data);
+      });
+      socket.emit("student_remove", `Student ${dataItem.id} was delete`);
+      getStudents();
+    });
   };
   const add = (dataItem) => {
+    console.log("ID data", dataItem);
     dataItem.inEdit = true;
-    const newData = insertStudent(dataItem);
-    setData(newData);
+    socket.emit("student_added", `New student was added`);
+    insertStudent(dataItem).then((res) => {
+      console.log("data", res.data);
+      console.log("data birthday", res.data.date);
+      const newData = { ...res.data };
+
+      const oldStudents = data;
+      oldStudents.pop(newData);
+      setData([newData, ...oldStudents]);
+    });
   };
   const update = (dataItem) => {
-    dataItem.inEdit = false;
-    const newData = updateStudent(dataItem);
-    setData(newData);
+    console.log("Data items ", dataItem);
   };
 
   const discard = () => {
+    console.log("Checking Dalin Aranga5");
     const newData = [...data];
     newData.splice(0, 1);
     setData(newData);
   };
   const cancel = (dataItem) => {
-    const originalItem = getStudents().find(
-      (p) => p.StudentID === dataItem.StudentID
-    );
+    const originalItem = getStudents().find((p) => p.id === dataItem.id);
     const newData = data.map((item) =>
-      item.StudentID === originalItem.StudentID ? originalItem : item
+      item.id === originalItem.id ? originalItem : item
     );
     setData(newData);
   };
 
   const enterEdit = (dataItem) => {
-    setData(
-      data.map((item) =>
-        item.StudentID === dataItem.StudentID ? { ...item, inEdit: true } : item
-      )
+    console.log("Enter Edit", dataItem);
+    const newData = data.map((item) =>
+      item.id === dataItem.id
+        ? { ...item, date: new Date(item.date), inEdit: true }
+        : item
     );
+
+    setData(newData);
   };
   const itemChange = (event) => {
     const newData = data.map((item) =>
-      item.StudentID === event.dataItem.StudentID
+      item.id === event.dataItem.id
         ? { ...item, [event.field || ""]: event.value }
         : item
     );
@@ -86,7 +124,7 @@ const GridUI = () => {
       editField={editField}
     />
   );
-
+  //const GenderField = ["Male", "Female"];
   return (
     <Grid
       style={{
@@ -117,20 +155,26 @@ const GridUI = () => {
           }
         />
       </GridToolbar>
-      <Column field="StudentID" title="ID" width="80px" editable={false} />
-      <Column field="StudentName" title="Name" width="200px" />
-      <Column field="Gender" editor="dropdown" title="Gender" width="200px" />
 
-      <Column field="Address" title="Address" width="200px" />
-      <Column field="ContactNumber" title="Mobile Number" width="180px" />
+      <Column field="id" title="ID" width="80px" editable={false} />
+      <Column field="name" title="Name" width="200px" />
+      <Column field="gender" title="Gender" width="200px" editor="text" />
+
+      <Column field="address" title="Address" width="200px" />
+      <Column
+        field="mobile_number"
+        title="Mobile Number"
+        editor="text"
+        width="180px"
+      />
       <Column
         editor="date"
         format="{0:d}"
-        field="Birth"
+        field="date"
         title="Date of Birth"
         width="200px"
       />
-      <Column field="Age" title="Age" width="130px" editable={false} />
+      <Column field="age" title="Age" width="130px" editable={false} />
 
       <Column cell={CommandCell} width="180px" />
     </Grid>

@@ -23,4 +23,7 @@ export class Student extends BaseEntity {
 
   @Column()
   age: number;
+
+  @Column({ type: 'date', nullable: true })
+  date: string;
 }

@@ -3,9 +3,8 @@ export const MyCommandCell = (props) => {
   const { dataItem } = props;
   const inEdit = dataItem[props.editField];
   const isNewItem = dataItem.StudentID === undefined;
-
   return inEdit ? (
-    <div>
+    <td>
       <button
         className="k-button k-button-md k-rounded-md k-button-solid k-button-solid-base k-grid-save-command"
         onClick={() =>
@@ -23,9 +22,9 @@ export const MyCommandCell = (props) => {
       >
         {isNewItem ? "Discard" : "Cancel"}
       </button>
-    </div>
+    </td>
   ) : (
-    <div>
+    <td>
       <button
         className="k-button k-button-md k-rounded-md k-button-solid k-button-solid-primary k-grid-edit-command"
         onClick={() => props.edit(dataItem)}
@@ -34,13 +33,10 @@ export const MyCommandCell = (props) => {
       </button>
       <button
         className="k-button k-button-md k-rounded-md k-button-solid k-button-solid-base k-grid-remove-command"
-        onClick={() =>
-          window.confirm("Confirm deleting: " + dataItem.StudentName) &&
-          props.remove(dataItem)
-        }
+        onClick={() => props.remove(dataItem)}
       >
         Remove
       </button>
-    </div>
+    </td>
   );
 };
