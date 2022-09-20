@@ -1,0 +1,15 @@
+#AddBtn {
+  border-color: rgba(0, 0, 0, 0.08);
+  color: #424242;
+  background-color: #f5f5f5;
+  background-image: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.02));
+}
+#AddBtn:focus {
+  box-shadow: 0 0 0 2px rgb(0 0 0 / 8%);
+}
+#AddBtn:hover {
+  background-color: #ebebeb;
+}
+#AddBtn:active {
+  background-color: #d8d8d8;
+}
