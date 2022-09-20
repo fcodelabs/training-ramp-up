@@ -107,13 +107,13 @@ function signinUser(data) {
     });
 }
 exports.signinUser = signinUser;
-function signoutUser(data) {
+function signoutUser(sessionId) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const sessionRepository = db_1.default.getRepository(models_1.Session);
-            const session = yield sessionRepository.findOneBy({ email: data.email });
+            const session = yield sessionRepository.findOneBy({ id: sessionId });
             if (!session) {
-                return { message: "Student doesn't exist !" };
+                return { error: "Session doesn't exist!" };
             }
             const invalidSession = yield sessionRepository.remove(session);
             return { session: invalidSession };

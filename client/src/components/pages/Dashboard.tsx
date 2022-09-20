@@ -45,14 +45,14 @@ const validateInputs= (dataItem:Student):boolean=>{
 
 export default function Dashboard(){
   const [studentData, setStudentData] = useState<Student[]>([]);
-  const [userData,setUserData] = useState<User>({name:'',email:'',role:'GUEST'});
+  const [userData,setUserData] = useState<User>({sessionId:'',name:'',email:'',role:'GUEST'});
   let navigate = useNavigate();
   //get data on page load 
   useEffect(() => {
     getStudents().then(({data})=>setStudentData(data.students)).catch((error)=>{navigate("/")});
     const userCookieData = cookies.get('userData');
     if(userCookieData){
-      setUserData({name:userCookieData.name,email: userCookieData.email, role: userCookieData.role});
+      setUserData({sessionId:userCookieData.sessionId ,name:userCookieData.name,email: userCookieData.email, role: userCookieData.role});
     }
   }, []);
   
@@ -77,7 +77,7 @@ export default function Dashboard(){
 
   //logOut user
   const handleLogOut = () => {
-    signoutUser(userData.email).then(()=>navigate('/')).catch((error)=>console.log(error));
+    signoutUser(userData.sessionId).then(()=>navigate('/')).catch((error)=>console.log(error));
   }
 
   // add new student to state

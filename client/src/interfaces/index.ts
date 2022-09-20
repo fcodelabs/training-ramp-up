@@ -3,6 +3,6 @@ export interface Student {
 }
 
 export interface User {
-        name:string,role:string,email:string
+        sessionId:string,name:string,role:string,email:string
 }
 

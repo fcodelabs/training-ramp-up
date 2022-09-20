@@ -3,8 +3,9 @@ import AppDataSource from "../util/db";
 import * as argon from 'argon2';
 import jwt from 'jsonwebtoken';
 import { config } from "../util/config";
+import { SignUpDataInputType, LogInDataInputType } from "../interfaces";
 
-export async function signupUser(data:any){
+export async function signupUser(data:SignUpDataInputType){
     try{
         const hash = await argon.hash(data.password);
         const user = new User()
@@ -31,7 +32,7 @@ export async function signupUser(data:any){
     }
 }
 
-export async function signinUser(data:any){
+export async function signinUser(data:LogInDataInputType){
     try{
         const userRepository = AppDataSource.getRepository(User);
         const sessionRepository = AppDataSource.getRepository(Session);
@@ -57,12 +58,12 @@ export async function signinUser(data:any){
     }
 }
 
-export async function signoutUser(data:any){
+export async function signoutUser(sessionId:string){
     try{
         const sessionRepository = AppDataSource.getRepository(Session);
-        const session = await sessionRepository.findOneBy({email:data.email});
+        const session = await sessionRepository.findOneBy({id:sessionId});
         if(!session){
-            return {message:"Student doesn't exist !"};
+            return {error:"Session doesn't exist!"};
         }
         const invalidSession = await sessionRepository.remove(session);
         return {session:invalidSession}

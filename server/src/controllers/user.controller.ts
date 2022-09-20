@@ -43,9 +43,10 @@ export async function loginUser( req: Request , res: Response ){
 }
 
 export async function logoutUser(req: Request, res: Response){
-    const result = await signoutUser(req.body);
+    let sessionId:string = req.params.sessionId;
+    const result = await signoutUser(sessionId);
     if(result.error){
-        res.status(400).json({message:"Login Failed!",error:result.error});
+        res.status(400).json({message:"Log out Failed!",error:result.error});
         return;
     }
     res.cookie("accessToken","",{
@@ -61,7 +62,7 @@ export async function logoutUser(req: Request, res: Response){
     res.cookie("userData","",{
         maxAge:0,
     });
-    return res.status(200).send({message:"Successfully logged out!",session:result.session});
+    return res.status(200).send({message:"Successfully logged out!"});
 }
 
 export async function loginStatus(req: Request, res: Response){

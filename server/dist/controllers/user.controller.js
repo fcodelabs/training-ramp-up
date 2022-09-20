@@ -58,9 +58,10 @@ function loginUser(req, res) {
 exports.loginUser = loginUser;
 function logoutUser(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
-        const result = yield (0, services_1.signoutUser)(req.body);
+        let sessionId = req.params.sessionId;
+        const result = yield (0, services_1.signoutUser)(sessionId);
         if (result.error) {
-            res.status(400).json({ message: "Login Failed!", error: result.error });
+            res.status(400).json({ message: "Log out Failed!", error: result.error });
             return;
         }
         res.cookie("accessToken", "", {
@@ -74,7 +75,7 @@ function logoutUser(req, res) {
         res.cookie("userData", "", {
             maxAge: 0,
         });
-        return res.status(200).send({ message: "Successfully logged out!", session: result.session });
+        return res.status(200).send({ message: "Successfully logged out!" });
     });
 }
 exports.logoutUser = logoutUser;

@@ -1,7 +1,7 @@
 import axios from "axios";
 
-export function signoutUser(email:string){
-    const res = axios.delete("http://localhost:8000/user/logout",{ data: { email } });
+export function signoutUser(sessionId:string){
+    const res = axios.delete(`http://localhost:8000/user/logout/${sessionId}`);
     return res;
 }
 

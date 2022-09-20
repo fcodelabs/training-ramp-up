@@ -3,9 +3,8 @@ import * as studentController from "../controllers/student.controller";
 // import passport from 'passport';
 
 //guards
-import { UserAuthGuard } from "../middleware/user.auth.guard";
-import { AdminAuthGuard } from "../middleware/admin.auth.guard";
-
+import { UserAuthGuard, AdminAuthGuard, ValidateInputsGuard } from "../middleware";
+import { studentDataValidator } from "../interfaces";
 
 export const studentRouter:Router=express.Router();
 
@@ -13,10 +12,10 @@ export const studentRouter:Router=express.Router();
 studentRouter.get("/",UserAuthGuard,studentController.getAll)
 
 //Add Student
-studentRouter.post("/",UserAuthGuard,AdminAuthGuard,studentController.addOne)
+studentRouter.post("/",UserAuthGuard,AdminAuthGuard,ValidateInputsGuard(studentDataValidator),studentController.addOne)
 
 //Update/Edit Student
-studentRouter.put("/:id",UserAuthGuard,AdminAuthGuard,studentController.updateOne)
+studentRouter.put("/:id",UserAuthGuard,AdminAuthGuard,ValidateInputsGuard(studentDataValidator),studentController.updateOne)
 
 //Delete Student
 studentRouter.delete("/:id",UserAuthGuard,AdminAuthGuard,studentController.deleteOne)

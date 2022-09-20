@@ -1,5 +1,6 @@
 import { Student } from "../models/Student";
 import AppDataSource from "../util/db"
+import { StudentDataType } from "../interfaces";
 
 const calcAge =(date:Date)=>{
     let today = new Date();
@@ -7,7 +8,7 @@ const calcAge =(date:Date)=>{
     return age;
 }
 
-export async function addStudent(data:any){
+export async function addStudent(data:StudentDataType){
     try{
         const dob = new Date(data.dob)
         const age = calcAge(dob)
@@ -58,7 +59,7 @@ export async function getStudents(){
 }
 
 
-export async function updateStudent(id:number,data:any){
+export async function updateStudent(id:number,data:StudentDataType){
    try{
 
       const studentRepository = AppDataSource.getRepository(Student);
