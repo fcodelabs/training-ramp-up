@@ -1,13 +1,20 @@
 import "./App.css";
-import DataTable from "./pages/DataTable";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+
+import Login from "./pages/Login";
+import SignUp from "./pages/SignUp";
 //const baseURL = "http://localhost:8000";
 //import { useEffect } from "react";
 
 function App() {
   return (
-    <div className="App">
-      <DataTable />
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Login />} />
+        <Route path="sign" element={<SignUp />} />
+        {/* <DataTable /> */}
+      </Routes>
+    </BrowserRouter>
   );
 }
 
