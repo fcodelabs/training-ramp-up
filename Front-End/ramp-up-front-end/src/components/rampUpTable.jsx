@@ -9,7 +9,12 @@ import {
 } from "@progress/kendo-react-grid";
 //import { StudentData } from "../data/studentDetails";
 import CommandCell from "./commandCell";
-import { insertStudent, getStudent, updateStudent } from "../data/services";
+import {
+  insertStudent,
+  getStudent,
+  updateStudent,
+  deleteStudent,
+} from "../data/services";
 import { useState, useEffect } from "react";
 const editField = "inEdit";
 
@@ -30,6 +35,11 @@ function RampUpTable() {
   const update = (dataItem) => {
     dataItem.inEdit = false;
     const newData = updateStudent(dataItem);
+    setData(newData);
+  };
+
+  const remove = (dataItem) => {
+    const newData = [...deleteStudent(dataItem)];
     setData(newData);
   };
 
@@ -66,6 +76,14 @@ function RampUpTable() {
     setData([newDataItem, ...data]);
   };
 
+  const enterEdit = (dataItem) => {
+    setData(
+      data.map((item) =>
+        item.studentID === dataItem.studentID ? { ...item, inEdit: true } : item
+      )
+    );
+  };
+
   const commands = (props) => (
     <CommandCell
       {...props}
@@ -73,7 +91,9 @@ function RampUpTable() {
       discard={discard}
       editField={editField}
       update={update}
+      remove={remove}
       cancel={cancel}
+      edit={enterEdit}
     />
   );
   return (
@@ -112,7 +132,7 @@ function RampUpTable() {
         format="{0:d}"
         width="150px"
       />
-      <Column field="studentAge" title="Age" width="150px" editor="numeric" />
+      <Column field="studentAge" title="Age" width="150px" editable={false} />
       <Column field="discontinued" title="Discontinued" editor="boolean" />
       <Column cell={commands} title="Command" width="193px" />
     </Grid>
