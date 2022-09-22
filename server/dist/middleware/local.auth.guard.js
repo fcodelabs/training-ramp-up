@@ -81,7 +81,7 @@ function LocalAuthGuard(req, res, next) {
         }
         const { iat, exp, userId } = refresh, rest = __rest(refresh, ["iat", "exp", "userId"]);
         const tokenData = Object.assign({ userId }, rest);
-        const newAccessToken = jsonwebtoken_1.default.sign(tokenData, config_1.config.jwt_secret, { expiresIn: '5s' });
+        const newAccessToken = jsonwebtoken_1.default.sign(tokenData, config_1.config.jwt_secret, { expiresIn: '5m' });
         res.cookie('userData', rest, {
             maxAge: 300000,
         });

@@ -69,7 +69,7 @@ function signupUser(data) {
             const { password, id } = newUser, rest = __rest(newUser, ["password", "id"]);
             const newSession = yield sessionRepository.save({ email: rest.email, name: rest.name, valid: true });
             const tokenData = Object.assign({ userId: id, sessionId: newSession.id }, rest);
-            const accessToken = jsonwebtoken_1.default.sign(tokenData, config_1.config.jwt_secret, { expiresIn: '5s' });
+            const accessToken = jsonwebtoken_1.default.sign(tokenData, config_1.config.jwt_secret, { expiresIn: '5m' });
             const refreshToken = jsonwebtoken_1.default.sign(tokenData, config_1.config.jwt_secret, { expiresIn: '1y' });
             const userData = { sessionId: newSession.id, email: newSession.email, name: newSession.name, role: user.role };
             return { message: "Sign Up Successfull!", userData, refreshToken, accessToken };
@@ -96,7 +96,7 @@ function signinUser(data) {
             const { password, id } = user, rest = __rest(user, ["password", "id"]);
             const newSession = yield sessionRepository.save({ email: rest.email, name: rest.name, valid: true });
             const tokenData = Object.assign({ userId: id, sessionId: newSession.id }, rest);
-            const accessToken = jsonwebtoken_1.default.sign(tokenData, config_1.config.jwt_secret, { expiresIn: '5s' });
+            const accessToken = jsonwebtoken_1.default.sign(tokenData, config_1.config.jwt_secret, { expiresIn: '5m' });
             const refreshToken = jsonwebtoken_1.default.sign(tokenData, config_1.config.jwt_secret, { expiresIn: '1y' });
             const userData = { sessionId: newSession.id, email: newSession.email, name: newSession.name, role: user.role };
             return { message: "Login Successfull!", userData, refreshToken, accessToken };

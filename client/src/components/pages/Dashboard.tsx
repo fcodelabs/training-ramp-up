@@ -6,40 +6,19 @@ import { Grid, GridColumn, GridToolbar } from '@progress/kendo-react-grid';
 import MyCommandCell from '../MyCommandCell';
 import DateCell from '../DateCell';
 import { useNavigate } from "react-router-dom";
-import { Student, User } from '../../interfaces';
+import { UserDataType,StudentDataType, Gender, Role } from '../../interfaces';
 import { useSelector, useDispatch } from 'react-redux';
 import { logOutUser, getStudents, createStudent, deleteStudent, updateStudent, checkUser } from '../../state/slices';
 import type { RootState } from '../../state/store';
 
 const editField = 'inEdit';
 
-const validateInputs= (dataItem:Student):boolean=>{
-  if (
-    dataItem.name === '' 
-      || 
-    dataItem.address === '' 
-      || 
-    dataItem.mobileNo === undefined 
-      || 
-    dataItem.gender === '' 
-      || 
-    dataItem.dob === '' 
-      || 
-    dataItem.mobileNo < 0 
-      || 
-    dataItem.mobileNo.toString().length !== 9
-    ) {
-    return false;
-  }
-  return true;
-}
-
 export default function Dashboard(){
-  const user:User|null = useSelector((state: RootState)=>state.user);
-  const students:Student[] = useSelector((state: RootState)=>state.student);
+  const user:UserDataType|null = useSelector((state: RootState)=>state.user);
+  const students:StudentDataType[] = useSelector((state: RootState)=>state.student);
   const dispatch = useDispatch()
-  const [studentData, setStudentData] = useState<Student[]>([]);
-  const [userData,setUserData] = useState<User>({sessionId:'',name:'',email:'',role:'GUEST'});
+  const [studentData, setStudentData] = useState<StudentDataType[]>([]);
+  const [userData,setUserData] = useState<UserDataType>({sessionId:'',name:'',email:'',role:Role.guest});
   const navigate = useNavigate();
 
   useEffect(()=>{
@@ -61,7 +40,7 @@ export default function Dashboard(){
     dispatch(getStudents());
   },[]);
 
-  //refresh on data change
+  //socket io integration
   // useEffect(() => {
   //   const token = localStorage.getItem('access_token');
   //   if(token){
@@ -86,24 +65,19 @@ export default function Dashboard(){
   }
 
   const addNewItem = () => {
-    const newDataItem = {
-      name: '',
-      age: 0,
-      gender: '',
-      address: '',
-      mobileNo: 0,
-      dob: '',
+    const newDataItem: StudentDataType= {
+      name:'',
+      address:'',
+      age:0,
+      mobileNo:0,
+      gender:Gender.Male,
+      dob:new Date(0),
       inEdit: true,
     };
     setStudentData([...studentData, newDataItem]);
   };
 
-  const add = (dataItem: Student) => {
-    const validity = validateInputs(dataItem);
-    if(!validity){
-      alert('Please fill in all the fields correctly to add a record !');
-      return;
-    } 
+  const add = (dataItem: StudentDataType) => {
     dispatch(createStudent({...dataItem}));
     };
     
@@ -113,27 +87,21 @@ export default function Dashboard(){
       setStudentData(newData);
   };
 
-  const enterEdit = (dataItem: Student) => {
-      const isoDate = new Date(dataItem.dob);
-    setStudentData(studentData.map((item) => (item.id === dataItem.id ? { ...item, dob: isoDate, inEdit: true } : item)));
+  const enterEdit = (dataItem: StudentDataType) => {
+    setStudentData(studentData.map((item) => (item.id === dataItem.id ? { ...item, inEdit: true } : item)));
   };
   
-  const cancel = (dataItem: Student) => {
+  const cancel = (dataItem: StudentDataType) => {
       setStudentData(students);
   };
 
   
-  const update = (dataItem: Student) => {
+  const update = (dataItem: StudentDataType) => {
 
-      const validity = validateInputs(dataItem);
-      if(!validity){
-        alert('Please fill in all the fields correctly to add a record !');
-        return;
-      } 
-      dispatch(updateStudent({dataItem}));
+      dispatch(updateStudent({...dataItem}));
   };
 
-  const remove = (dataItem: Student) => {
+  const remove = (dataItem: StudentDataType) => {
     dispatch(deleteStudent({id:dataItem.id}))
   };
 

@@ -17,3 +17,19 @@ export const loginInputDataValidator = z.object({
 });
 
 export type LogInDataInputType =z.infer<typeof loginInputDataValidator>;
+
+
+//user Session Type
+export enum Role{
+        guest="GUEST",
+        admin="ADMIN",
+}
+
+export const userDataValidator = z.object({
+        sessionId:z.string().min(1),
+        name:z.string().min(1),
+        email:z.string().email().min(1),
+        role:z.nativeEnum(Role)
+});
+
+export type UserDataType =z.infer<typeof userDataValidator>;

@@ -23,7 +23,7 @@ export async function signupUser(data:SignUpDataInputType){
         const {password,id,...rest} = newUser;
         const newSession = await sessionRepository.save({email:rest.email,name:rest.name,valid:true});
         const tokenData = {userId:id,sessionId:newSession.id,...rest};
-        const accessToken =  jwt.sign(tokenData,config.jwt_secret,{expiresIn:'5s'});
+        const accessToken =  jwt.sign(tokenData,config.jwt_secret,{expiresIn:'5m'});
         const refreshToken =  jwt.sign(tokenData,config.jwt_secret,{expiresIn:'1y'});
         const userData = {sessionId:newSession.id,email:newSession.email,name:newSession.name,role:user.role};
         return {message:"Sign Up Successfull!",userData,refreshToken,accessToken};
@@ -48,7 +48,7 @@ export async function signinUser(data:LogInDataInputType){
         const {password,id,...rest} = user;
         const newSession = await sessionRepository.save({email:rest.email,name:rest.name,valid:true});
         const tokenData = {userId:id,sessionId:newSession.id,...rest};
-        const accessToken =  jwt.sign(tokenData,config.jwt_secret,{expiresIn:'5s'});
+        const accessToken =  jwt.sign(tokenData,config.jwt_secret,{expiresIn:'5m'});
         const refreshToken =  jwt.sign(tokenData,config.jwt_secret,{expiresIn:'1y'});
         const userData = {sessionId:newSession.id,email:newSession.email,name:newSession.name,role:user.role};
         

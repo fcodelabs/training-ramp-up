@@ -1,6 +1,6 @@
 import { createSlice, current } from '@reduxjs/toolkit'
-import { Student } from '../../interfaces';
-const initialState:Student[]=[];
+import { StudentDataType } from '../../interfaces';
+const initialState:StudentDataType[]=[];
 
 export const studentSlice = createSlice({
   name: 'student',

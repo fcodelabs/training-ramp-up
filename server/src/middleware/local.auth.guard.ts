@@ -61,7 +61,7 @@ export async function LocalAuthGuard(req: Request, res: Response, next: NextFunc
     
     const {iat,exp,userId,...rest} = refresh;
     const tokenData  = {userId,...rest};
-    const newAccessToken = jwt.sign(tokenData,config.jwt_secret,{expiresIn:'5s'});
+    const newAccessToken = jwt.sign(tokenData,config.jwt_secret,{expiresIn:'5m'});
     
     res.cookie('userData',rest,{
         maxAge:300000,
