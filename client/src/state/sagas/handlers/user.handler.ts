@@ -13,7 +13,7 @@ export function* handleGetUserStatus(): any{
             yield put(setUser({res,task:"GET_USER"}));
         }
     }catch(err){
-        console.log(err);
+        alert(err);
     }
 }
 
@@ -25,7 +25,7 @@ export function* handleLogInUser({payload}:any):any{
             yield put(setUser({res,task:"LOGIN_USER"}));
         }
     }catch(err){
-        console.log(err);
+        alert(err);
     }
 }
 
@@ -36,7 +36,7 @@ export function* handleLogOutUser({payload}:any):any{
             yield put(setUser({res,task:"LOGOUT_USER"}));
         }
     }catch(err){
-        console.log(err);
+       alert(err);
     }
 }
 
@@ -49,6 +49,6 @@ export function* handleSignUpUser({payload}:any):any{
             yield put(setUser({res,task:"SIGNUP_USER"}));
         }
     }catch(err){
-        console.log(err);
+       alert(err);
     }
 }

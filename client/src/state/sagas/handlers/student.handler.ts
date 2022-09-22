@@ -1,7 +1,7 @@
 import { addStudent, deleteStudent ,updateStudent, getStudents } from '../requests';
 import { call,put } from "redux-saga/effects";
 import { setStudents } from '../../slices';
-import { StudentDataType } from '../../../interfaces';
+
 export function* handleGetStudents():any{
     try{
         let res= yield call(getStudents);
@@ -9,7 +9,7 @@ export function* handleGetStudents():any{
             yield put(setStudents({res,do:"GET_STUDENTS"}));
         }
     }catch(err){
-        console.log(err);
+        alert(err);
     }
 }
 
@@ -18,7 +18,7 @@ export function* handleAddStudent({payload}:any):any{
         const res = yield call(addStudent,payload);
         yield put(setStudents({res,do:"ADD_STUDENT"}));
     }catch(err){
-        console.log(err);
+        alert(err);
     }
 }
 
@@ -27,7 +27,7 @@ export function* handleDeleteStudent({payload}:any):any{
         const res = yield call(deleteStudent,payload);
         yield put(setStudents({res,do:"REMOVE_STUDENT"}));
     }catch(err){
-        console.log(err);
+        alert(err);
     }
 }
 
@@ -36,6 +36,6 @@ export function* handleUpdateStudent({payload}:any):any{
         const res = yield call(updateStudent,payload);
         yield put(setStudents({res,do:"UPDATE_STUDENT"}));
     }catch(err){
-        console.log(err);
+        alert(err);
     }
 }

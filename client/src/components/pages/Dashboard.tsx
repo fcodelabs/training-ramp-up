@@ -88,7 +88,8 @@ export default function Dashboard(){
   };
 
   const enterEdit = (dataItem: StudentDataType) => {
-    setStudentData(studentData.map((item) => (item.id === dataItem.id ? { ...item, inEdit: true } : item)));
+    const dob = new Date(dataItem.dob);
+    setStudentData(studentData.map((item) => (item.id === dataItem.id ? { ...item,dob,inEdit: true } : item)));
   };
   
   const cancel = (dataItem: StudentDataType) => {
