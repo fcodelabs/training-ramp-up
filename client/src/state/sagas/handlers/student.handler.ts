@@ -9,7 +9,7 @@ export function* handleGetStudents():any{
             yield put(setStudents({res,do:"GET_STUDENTS"}));
         }
     }catch(err){
-        alert(err);
+        console.log(err);
     }
 }
 

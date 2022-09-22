@@ -13,7 +13,7 @@ export function* handleGetUserStatus(): any{
             yield put(setUser({res,task:"GET_USER"}));
         }
     }catch(err){
-        alert(err);
+        console.log(err);
     }
 }
 
