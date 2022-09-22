@@ -48,13 +48,14 @@ function updateOne(req, res) {
 exports.updateOne = updateOne;
 function deleteOne(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
-        let id = parseInt(req.params.id);
+        const id = parseInt(req.params.id);
+        console.log(id);
         const result = yield (0, services_1.deleteStudent)(id);
         if (result.error) {
             res.status(400).json({ message: "Error occured while deleting the student!", error: result.error });
             return;
         }
-        res.status(200).json({ message: "Successfully deleted the student" });
+        res.status(200).json({ message: "Successfully deleted the student", id });
     });
 }
 exports.deleteOne = deleteOne;

@@ -39,11 +39,11 @@ export async function signinUser(data:LogInDataInputType){
         const user = await userRepository.findOneBy({email:data.email});
         
         if(!user){
-            return {message:"User not found!"};
+            return {error:"User not found!"};
         }
         const pwMatches = await argon.verify(user.password,data.password);
         if(!pwMatches){
-            return {message:"Incorrect Credentials!"};
+            return {error:"Incorrect Credentials!"};
         }
         const {password,id,...rest} = user;
         const newSession = await sessionRepository.save({email:rest.email,name:rest.name,valid:true});

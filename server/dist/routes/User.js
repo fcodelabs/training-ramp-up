@@ -16,4 +16,4 @@ exports.userRouter.post("/login", (0, middleware_1.ValidateInputsGuard)(interfac
 //Check user status
 exports.userRouter.get("/status", middleware_1.UserAuthGuard, controllers_1.loginStatus);
 //Log out user
-exports.userRouter.delete("/logout/:sessionId", controllers_1.logoutUser);
+exports.userRouter.delete("/logout/:sessionId", middleware_1.UserAuthGuard, controllers_1.logoutUser);

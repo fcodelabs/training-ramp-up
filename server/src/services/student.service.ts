@@ -19,12 +19,10 @@ export async function addStudent(data:StudentDataType){
         student.dob = dob;
         student.mobileNo= data.mobileNo;
         student.age  = age;
-        
         const studentRepository = AppDataSource.getRepository(Student);
-        
         const newStudent = await studentRepository.save(student);
         if(!newStudent){
-            return {message:"Faild to add student !"};
+            return {error:"Faild to add student !"};
         }
         return {message:"Student added successfully !",data:newStudent};
     }catch(error){
@@ -38,7 +36,7 @@ export async function deleteStudent(id:number){
         const studentRepository = AppDataSource.getRepository(Student);
         const studentToRemove = await studentRepository.findOneBy({id});
         if(!studentToRemove){
-            return {message:"Student doesn't exist !"};
+            return {error:"Student doesn't exist !"};
         }
         await studentRepository.remove(studentToRemove);
         return {message:"Student removed successfully !"}

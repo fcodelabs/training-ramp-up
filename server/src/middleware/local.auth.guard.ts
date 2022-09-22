@@ -22,7 +22,7 @@ export async function LocalAuthGuard(req: Request, res: Response, next: NextFunc
     if(payload){
         console.log("proceeding with the existing access token!");
         req.user = payload;
-        const {iat,exp,id,...rest} = payload 
+        const {iat,exp,userId,...rest} = payload 
         res.cookie('userData',rest,{
             maxAge:300000,
         })

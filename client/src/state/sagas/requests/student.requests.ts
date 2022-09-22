@@ -1,29 +1,28 @@
 import axios from "axios";
-import { Student } from "../interfaces";
+import { Student } from "../../../interfaces";
 
-export async function getStudents(){
+export  function getStudents(){
     const res = axios.get("http://localhost:8000/student",{
         withCredentials: true,
       });
     return res;
 }
 
-export async function deleteStudent(id:number|undefined){
+export  function deleteStudent({id}:any){
     const res = axios.delete(`http://localhost:8000/student/${id}`,{
         withCredentials: true,
       });
     return res;
 }
 
-export async function addStudent(data:Student){
-   
-    const res = await axios.post("http://localhost:8000/student",data,{
+export  function addStudent(data:Student){
+    const res = axios.post("http://localhost:8000/student",data,{
         withCredentials: true,
       });
     return res;
 }  
 
-export async function updateStudent(data:Student){
+export  function updateStudent(data:Student){
     const res = axios.put(`http://localhost:8000/student/${data.id}`,data,{
         withCredentials: true,
       });

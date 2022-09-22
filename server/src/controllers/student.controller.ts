@@ -20,7 +20,7 @@ export async function addOne( req: Request , res: Response ){
 }
 
 export async function updateOne(req: Request , res: Response){
-    const id = parseInt(req.params.id);
+    const id:number = parseInt(req.params.id);
     const data = req.body;
     const result = await updateStudent(id,data);
     if(result.error){
@@ -31,11 +31,12 @@ export async function updateOne(req: Request , res: Response){
 }
 
 export async function deleteOne(req: Request, res: Response){
-    let id:number = parseInt(req.params.id);
+    const id:number = parseInt(req.params.id);
+    console.log(id)
     const result = await deleteStudent(id);
     if(result.error){
         res.status(400).json({message:"Error occured while deleting the student!",error:result.error})
         return;
     }
-    res.status(200).json({message:"Successfully deleted the student"});
+    res.status(200).json({message:"Successfully deleted the student",id});
 }

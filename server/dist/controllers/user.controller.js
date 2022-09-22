@@ -81,7 +81,7 @@ function logoutUser(req, res) {
 exports.logoutUser = logoutUser;
 function loginStatus(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
-        return res.send(req.user);
+        return res.status(200).send(req.user);
     });
 }
 exports.loginStatus = loginStatus;

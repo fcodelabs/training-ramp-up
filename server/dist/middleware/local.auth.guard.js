@@ -46,7 +46,7 @@ function LocalAuthGuard(req, res, next) {
         if (payload) {
             console.log("proceeding with the existing access token!");
             req.user = payload;
-            const { iat, exp, id } = payload, rest = __rest(payload, ["iat", "exp", "id"]);
+            const { iat, exp, userId } = payload, rest = __rest(payload, ["iat", "exp", "userId"]);
             res.cookie('userData', rest, {
                 maxAge: 300000,
             });

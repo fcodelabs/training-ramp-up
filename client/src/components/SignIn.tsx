@@ -3,31 +3,26 @@ import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
-import { useNavigate } from "react-router-dom";
-import { signinUser } from '../services';
-
-const validateData=({email,password}: any)=>{
-  if(!email||!password){
-    return false;
-  }
-  return true;
-}
+import { useDispatch } from 'react-redux';
+import { logInUser } from '../state/slices';
+import {zodResolver} from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { LogInDataInputType, loginInputDataValidator } from "../interfaces";
 
 export default function SignIn() {
-  let navigate = useNavigate();
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    const user = {
-      email: data.get('email'),
-      password: data.get('password'),
-    }
-    if(validateData(user)){
-      signinUser(user).then((data)=>{navigate("/dashboard")}).catch(()=>alert("Student login failed!"));
-      return;
-    };
-    alert("invalid data");
+  const dispatch = useDispatch()
+  const {
+    register,
+    handleSubmit,
+    formState: { errors }
+  } = useForm<LogInDataInputType>({
+    resolver:zodResolver(loginInputDataValidator),
+  });
+
+  const onSubmit = (data:LogInDataInputType)=>{
+    dispatch(logInUser({...data}));
   };
+ 
   return (
       <Container component="main" maxWidth="xs">
         <Box
@@ -41,26 +36,26 @@ export default function SignIn() {
           <Typography component="h1" variant="h5">
             Sign in
           </Typography>
-          <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+          <form onSubmit={handleSubmit(onSubmit)}>
             <TextField
               margin="normal"
-              required
               fullWidth
-              id="email"
-              label="Email Address"
-              name="email"
+              label="Email"
               autoComplete="email"
               autoFocus
+              {...register("email",{required:"Required Field"})}
+              error = {!!errors?.email}
+              helperText={errors?.email ? errors.email.message:null}
             />
             <TextField
               margin="normal"
-              required
               fullWidth
-              name="password"
               label="Password"
               type="password"
-              id="password"
               autoComplete="current-password"
+              {...register("password",{required:"Required Field"})}
+              error = {!!errors?.password}
+              helperText={errors?.password ? errors.password.message:null}
             />
             <Button
               type="submit"
@@ -70,7 +65,7 @@ export default function SignIn() {
             >
               Sign In
             </Button>
-          </Box>
+          </form>
         </Box>
       </Container>
   );

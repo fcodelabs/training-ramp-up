@@ -66,5 +66,5 @@ export async function logoutUser(req: Request, res: Response){
 }
 
 export async function loginStatus(req: Request, res: Response){
-    return res.send(req.user);
+    return res.status(200).send(req.user);
 }

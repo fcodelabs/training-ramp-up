@@ -1,27 +1,18 @@
 import './dashboard.css';
 import { Button, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
-//import socket.io for client integration
-// import { io } from 'socket.io-client';
-//importing material theme
 import '@progress/kendo-theme-material/dist/all.css';
-// import kendo table components
 import { Grid, GridColumn, GridToolbar } from '@progress/kendo-react-grid';
-//import action buttons cell
 import MyCommandCell from '../MyCommandCell';
-//import custom date cell
 import DateCell from '../DateCell';
-//importing actions
-import { addStudent, getStudents, deleteStudent, updateStudent, signoutUser } from '../../services';
 import { useNavigate } from "react-router-dom";
-//import types
 import { Student, User } from '../../interfaces';
-import Cookies from 'universal-cookie';
-//change mode for edit and add students
-const editField = 'inEdit';
-const cookies = new Cookies();
+import { useSelector, useDispatch } from 'react-redux';
+import { logOutUser, getStudents, createStudent, deleteStudent, updateStudent, checkUser } from '../../state/slices';
+import type { RootState } from '../../state/store';
 
-//validate inputs
+const editField = 'inEdit';
+
 const validateInputs= (dataItem:Student):boolean=>{
   if (
     dataItem.name === '' 
@@ -44,18 +35,32 @@ const validateInputs= (dataItem:Student):boolean=>{
 }
 
 export default function Dashboard(){
+  const user:User|null = useSelector((state: RootState)=>state.user);
+  const students:Student[] = useSelector((state: RootState)=>state.student);
+  const dispatch = useDispatch()
   const [studentData, setStudentData] = useState<Student[]>([]);
   const [userData,setUserData] = useState<User>({sessionId:'',name:'',email:'',role:'GUEST'});
-  let navigate = useNavigate();
-  //get data on page load 
-  useEffect(() => {
-    getStudents().then(({data})=>setStudentData(data.students)).catch((error)=>{navigate("/")});
-    const userCookieData = cookies.get('userData');
-    if(userCookieData){
-      setUserData({sessionId:userCookieData.sessionId ,name:userCookieData.name,email: userCookieData.email, role: userCookieData.role});
+  const navigate = useNavigate();
+
+  useEffect(()=>{
+    if(!user){
+        navigate("/");
+        return;
     }
-  }, []);
-  
+    setUserData(user);
+  },[user]);
+
+  useEffect(()=>{
+    if(students){
+      setStudentData(students);
+    }
+  },[students]);
+
+  useEffect(()=>{
+    dispatch(checkUser());
+    dispatch(getStudents());
+  },[]);
+
   //refresh on data change
   // useEffect(() => {
   //   const token = localStorage.getItem('access_token');
@@ -77,10 +82,9 @@ export default function Dashboard(){
 
   //logOut user
   const handleLogOut = () => {
-    signoutUser(userData.sessionId).then(()=>navigate('/')).catch((error)=>console.log(error));
+    dispatch(logOutUser({sessionId:userData.sessionId}));
   }
 
-  // add new student to state
   const addNewItem = () => {
     const newDataItem = {
       name: '',
@@ -94,49 +98,31 @@ export default function Dashboard(){
     setStudentData([...studentData, newDataItem]);
   };
 
-  // add new student do database
   const add = (dataItem: Student) => {
     const validity = validateInputs(dataItem);
     if(!validity){
       alert('Please fill in all the fields correctly to add a record !');
       return;
     } 
-    dataItem.inEdit = true;
-    addStudent(dataItem)
-      .then(({ data }) => {
-        const newStudent = { ...data.student };
-        const oldStudents = studentData;
-        oldStudents.pop();
-        setStudentData([newStudent, ...oldStudents]);
-        alert("Student Added Successfully !");
-      })
-      .catch(()=>alert("Failed to add student, please check your details and try again Thank you!"));
+    dispatch(createStudent({...dataItem}));
     };
     
-  //stop adding a new student
   const discard = () => {
       const newData = [...studentData];
       newData.pop();
       setStudentData(newData);
   };
 
-  //initiate student for edit mode
   const enterEdit = (dataItem: Student) => {
       const isoDate = new Date(dataItem.dob);
     setStudentData(studentData.map((item) => (item.id === dataItem.id ? { ...item, dob: isoDate, inEdit: true } : item)));
   };
   
-  //cancel editing student
   const cancel = (dataItem: Student) => {
-      getStudents().then(({ data }) => {
-        const originalStudent = data.students.find((item: Student) => item.id === dataItem.id);
-        const newData = studentData.map((item) => (item.id === originalStudent.id ? originalStudent : item));
-        setStudentData(newData);
-      });
+      setStudentData(students);
   };
 
   
-  //push updates to database
   const update = (dataItem: Student) => {
 
       const validity = validateInputs(dataItem);
@@ -144,31 +130,19 @@ export default function Dashboard(){
         alert('Please fill in all the fields correctly to add a record !');
         return;
       } 
-      dataItem.inEdit = false;
-      updateStudent(dataItem).then(() => {
-        getStudents().then(({ data }) => {
-          setStudentData(data.students);
-          alert("Student Changed Successfully !");
-        });
-      }).catch(()=>alert("Failed to update student, check your details and try again Thank you !"));
+      dispatch(updateStudent({dataItem}));
   };
 
-  //delete student from database
   const remove = (dataItem: Student) => {
-        deleteStudent(dataItem.id).then(() => {
-          getStudents().then(({ data }) => {
-            setStudentData(data.students)
-            alert("Student Deleted Successfully !");
-          });
-        }).catch(()=>alert("Failed to delete the student, please try again!"));
+    dispatch(deleteStudent({id:dataItem.id}))
   };
-  // //common
+
   const itemChange = (e: any) => {
     const newData = studentData.map((item) => (item.id === e.dataItem.id ? { ...item, [e.field]: e.value } : item));
     setStudentData(newData);
   };
 
-  //custom cell for commands column
+
   const commandCell = (props: any) => (
     <MyCommandCell  {...props} editField={editField} role={userData.role} edit={enterEdit} add={add} discard={discard} cancel={cancel} update={update} remove={remove} />
   );

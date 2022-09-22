@@ -87,11 +87,11 @@ function signinUser(data) {
             const sessionRepository = db_1.default.getRepository(models_1.Session);
             const user = yield userRepository.findOneBy({ email: data.email });
             if (!user) {
-                return { message: "User not found!" };
+                return { error: "User not found!" };
             }
             const pwMatches = yield argon.verify(user.password, data.password);
             if (!pwMatches) {
-                return { message: "Incorrect Credentials!" };
+                return { error: "Incorrect Credentials!" };
             }
             const { password, id } = user, rest = __rest(user, ["password", "id"]);
             const newSession = yield sessionRepository.save({ email: rest.email, name: rest.name, valid: true });

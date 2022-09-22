@@ -35,7 +35,7 @@ function addStudent(data) {
             const studentRepository = db_1.default.getRepository(Student_1.Student);
             const newStudent = yield studentRepository.save(student);
             if (!newStudent) {
-                return { message: "Faild to add student !" };
+                return { error: "Faild to add student !" };
             }
             return { message: "Student added successfully !", data: newStudent };
         }
@@ -51,7 +51,7 @@ function deleteStudent(id) {
             const studentRepository = db_1.default.getRepository(Student_1.Student);
             const studentToRemove = yield studentRepository.findOneBy({ id });
             if (!studentToRemove) {
-                return { message: "Student doesn't exist !" };
+                return { error: "Student doesn't exist !" };
             }
             yield studentRepository.remove(studentToRemove);
             return { message: "Student removed successfully !" };

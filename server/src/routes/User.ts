@@ -16,5 +16,5 @@ userRouter.post("/login",ValidateInputsGuard(loginInputDataValidator),loginUser)
 userRouter.get("/status",UserAuthGuard,loginStatus);
 
 //Log out user
-userRouter.delete("/logout/:sessionId",logoutUser);
+userRouter.delete("/logout/:sessionId",UserAuthGuard,logoutUser);
 

@@ -1,4 +1,3 @@
-import React from "react"
 import { DatePicker } from '@progress/kendo-react-dateinputs';
 
 export default function DateCell(props:any){

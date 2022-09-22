@@ -3,33 +3,27 @@ import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
-import { useNavigate } from "react-router-dom";
-import { signupUser } from '../services';
-
-const validateData=({name,email,password}: any)=>{
-  if(!name||!email||!password){
-    return false;
-  }
-  return true;
-}
+import { useDispatch } from 'react-redux';
+import { signUpUser } from '../state/slices';
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { SignUpDataInputType, signupInputDataValidator } from "../interfaces";
 
 export default function SignUp() {
-  let navigate = useNavigate();
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    const user = {
-        name: data.get('name'),
-        email: data.get('email'),
-        password: data.get('password'),
-    }
-    if(validateData(user)){
-      signupUser(user).then((data)=>navigate('/dashboard')).catch(()=>alert("Student registration failed!"));
-      return;
-    };
-    alert("invalid data");
-  };
 
+  const dispatch = useDispatch();
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors }
+  } = useForm<SignUpDataInputType>({
+    resolver:zodResolver(signupInputDataValidator),
+  });
+
+  const onSubmit = (data:SignUpDataInputType)=>{
+    dispatch(signUpUser({...data}));
+  };
   return (
       <Container component="main" maxWidth="xs">
           <Box
@@ -42,35 +36,35 @@ export default function SignUp() {
             <Typography component="h1" variant="h5">
               Sign Up
             </Typography>
-            <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+            <form onSubmit={handleSubmit(onSubmit)}>
               <TextField
                 margin="normal"
-                required
                 fullWidth
-                id="name"
                 label="Name"
-                name="name"
                 autoFocus
+                {...register("name",{required:"Required Field"})}
+                error = {!!errors?.name}
+                helperText={errors?.name ? errors.name.message:null}
               />
               <TextField
                 margin="normal"
-                required
                 fullWidth
-                id="email"
-                label="Email Address"
-                name="email"
+                label="Email"
                 autoComplete="email"
+                {...register("email",{required:"Required Field"})}
+                error = {!!errors?.email}
+                helperText={errors?.email ? errors.email.message:null}
               />
               <TextField
                 margin="normal"
-                required
                 fullWidth
-                name="password"
                 label="Password"
                 type="password"
-                id="password"
                 autoComplete="current-password"
-                />
+                {...register("password",{required:"Required Field"})}
+                error = {!!errors?.password}
+                helperText={errors?.password ? errors.password.message:null}
+              />
               <Button
                 type="submit"
                 fullWidth
@@ -79,7 +73,7 @@ export default function SignUp() {
               >
                 Sign Up
               </Button>
-            </Box>
+            </form>
           </Box>
       </Container>
   );
