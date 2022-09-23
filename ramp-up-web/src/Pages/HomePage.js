@@ -12,14 +12,12 @@ import {
   deleteItem,
 } from "../Utils/services";
 import { Upload } from "@progress/kendo-react-upload";
-// import { DropDownList } from "@progress/kendo-react-dropdowns";
-// import { Server } from "socket.io";
 import { io } from "socket.io-client";
 
 const socket = io("http://localhost:8080");
 const editField = "inEdit";
 
-const Main = () => {
+const HomePage = () => {
   const [data, setData] = useState([]);
 
   const fetchItems = async () => {
@@ -198,4 +196,4 @@ const Main = () => {
   );
 };
 
-export default Main;
+export default HomePage;
