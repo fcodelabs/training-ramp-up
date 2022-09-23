@@ -15,10 +15,13 @@ function getAll(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         const result = yield (0, services_1.getStudents)();
         if (result.error) {
-            res.status(400).json({ message: "Failed to retrieve student data!", error: result.error });
+            res.status(400);
+            res.json({ message: "Request Failed", error: result.error });
             return;
         }
-        res.status(200).json({ message: "Successfully retrieved data!", students: result.students });
+        res.status(200);
+        res.json({ message: "Successfully retrieved data!", students: result.students });
+        return;
     });
 }
 exports.getAll = getAll;
@@ -26,10 +29,13 @@ function addOne(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         const result = yield (0, services_1.addStudent)(req.body);
         if (result.error) {
-            res.status(400).json({ message: "Failed to add student!", error: result.error });
+            res.status(400);
+            res.json({ message: "Request Failed", error: result.error });
             return;
         }
-        res.status(200).json({ message: "Student has been added successfully!", student: result.data });
+        res.status(200);
+        res.json({ message: "Student has been added successfully!", student: result.data });
+        return;
     });
 }
 exports.addOne = addOne;
@@ -39,23 +45,28 @@ function updateOne(req, res) {
         const data = req.body;
         const result = yield (0, services_1.updateStudent)(id, data);
         if (result.error) {
-            res.status(400).json({ message: "Error occured updating the student!", error: result.error });
+            res.status(400);
+            res.json({ message: "Request Failed", error: result.error });
             return;
         }
-        res.status(200).json({ message: "Successfully updated the student", updatedStudent: result.data });
+        res.status(200);
+        res.json({ message: "Successfully updated the student", updatedStudent: result.data });
+        return;
     });
 }
 exports.updateOne = updateOne;
 function deleteOne(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         const id = parseInt(req.params.id);
-        console.log(id);
         const result = yield (0, services_1.deleteStudent)(id);
         if (result.error) {
-            res.status(400).json({ message: "Error occured while deleting the student!", error: result.error });
+            res.status(400);
+            res.json({ message: "Request Failed", error: result.error });
             return;
         }
-        res.status(200).json({ message: "Successfully deleted the student", id });
+        res.status(200);
+        res.json({ message: "Successfully deleted the student", id });
+        return;
     });
 }
 exports.deleteOne = deleteOne;

@@ -46,12 +46,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.signoutUser = exports.signinUser = exports.signupUser = void 0;
+exports.signoutUser = exports.signinUser = exports.signupUser = exports.sessionRepository = exports.userRepository = void 0;
 const models_1 = require("../models");
 const db_1 = __importDefault(require("../util/db"));
 const argon = __importStar(require("argon2"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const config_1 = require("../util/config");
+exports.userRepository = db_1.default.getRepository(models_1.User);
+exports.sessionRepository = db_1.default.getRepository(models_1.Session);
 function signupUser(data) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
@@ -60,18 +62,16 @@ function signupUser(data) {
             user.name = data.name;
             user.email = data.email;
             user.password = hash;
-            const userRepository = db_1.default.getRepository(models_1.User);
-            const sessionRepository = db_1.default.getRepository(models_1.Session);
-            const newUser = yield userRepository.save(user);
+            const newUser = yield exports.userRepository.save(user);
             if (!newUser) {
-                return { message: "Faild to register user !" };
+                return { error: "Failed to create user entity!" };
             }
             const { password, id } = newUser, rest = __rest(newUser, ["password", "id"]);
-            const newSession = yield sessionRepository.save({ email: rest.email, name: rest.name, valid: true });
+            const newSession = yield exports.sessionRepository.save({ email: rest.email, name: rest.name, valid: true });
             const tokenData = Object.assign({ userId: id, sessionId: newSession.id }, rest);
             const accessToken = jsonwebtoken_1.default.sign(tokenData, config_1.config.jwt_secret, { expiresIn: '5m' });
             const refreshToken = jsonwebtoken_1.default.sign(tokenData, config_1.config.jwt_secret, { expiresIn: '1y' });
-            const userData = { sessionId: newSession.id, email: newSession.email, name: newSession.name, role: user.role };
+            const userData = { sessionId: newSession.id, email: newSession.email, name: newSession.name, role: newUser.role };
             return { message: "Sign Up Successfull!", userData, refreshToken, accessToken };
         }
         catch (error) {
@@ -83,9 +83,7 @@ exports.signupUser = signupUser;
 function signinUser(data) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const userRepository = db_1.default.getRepository(models_1.User);
-            const sessionRepository = db_1.default.getRepository(models_1.Session);
-            const user = yield userRepository.findOneBy({ email: data.email });
+            const user = yield exports.userRepository.findOneBy({ email: data.email });
             if (!user) {
                 return { error: "User not found!" };
             }
@@ -94,7 +92,7 @@ function signinUser(data) {
                 return { error: "Incorrect Credentials!" };
             }
             const { password, id } = user, rest = __rest(user, ["password", "id"]);
-            const newSession = yield sessionRepository.save({ email: rest.email, name: rest.name, valid: true });
+            const newSession = yield exports.sessionRepository.save({ email: rest.email, name: rest.name, valid: true });
             const tokenData = Object.assign({ userId: id, sessionId: newSession.id }, rest);
             const accessToken = jsonwebtoken_1.default.sign(tokenData, config_1.config.jwt_secret, { expiresIn: '5m' });
             const refreshToken = jsonwebtoken_1.default.sign(tokenData, config_1.config.jwt_secret, { expiresIn: '1y' });
@@ -102,7 +100,7 @@ function signinUser(data) {
             return { message: "Login Successfull!", userData, refreshToken, accessToken };
         }
         catch (error) {
-            return { error };
+            return { error: "Login failed" };
         }
     });
 }
@@ -110,16 +108,15 @@ exports.signinUser = signinUser;
 function signoutUser(sessionId) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const sessionRepository = db_1.default.getRepository(models_1.Session);
-            const session = yield sessionRepository.findOneBy({ id: sessionId });
+            const session = yield exports.sessionRepository.findOneBy({ id: sessionId });
             if (!session) {
                 return { error: "Session doesn't exist!" };
             }
-            const invalidSession = yield sessionRepository.remove(session);
-            return { session: invalidSession };
+            const invalidSession = yield exports.sessionRepository.remove(session);
+            return { message: "Successfully logged out!" };
         }
         catch (error) {
-            return { error };
+            return { error: "Failed to log out!" };
         }
     });
 }

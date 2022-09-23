@@ -9,14 +9,14 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Student = void 0;
+exports.Student = exports.Gender = void 0;
 const typeorm_1 = require("typeorm");
 var Gender;
 (function (Gender) {
     Gender["Female"] = "Female";
     Gender["Male"] = "Male";
     Gender["Other"] = "Other";
-})(Gender || (Gender = {}));
+})(Gender = exports.Gender || (exports.Gender = {}));
 let Student = class Student {
 };
 __decorate([

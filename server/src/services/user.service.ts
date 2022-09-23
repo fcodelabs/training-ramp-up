@@ -63,7 +63,7 @@ export async function signoutUser(sessionId:string){
         if(!session){
             return {error:"Session doesn't exist!"};
         }
-        const invalidSession = await sessionRepository.remove(session);
+        const invalidSession = await sessionRepository.save({...session,valid:false});
         return {message:"Successfully logged out!"}
     }catch(error){
         return {error:"Failed to log out!"}

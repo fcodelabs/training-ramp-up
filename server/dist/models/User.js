@@ -9,13 +9,13 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.User = void 0;
+exports.User = exports.Role = void 0;
 const typeorm_1 = require("typeorm");
 var Role;
 (function (Role) {
     Role["guest"] = "GUEST";
     Role["admin"] = "ADMIN";
-})(Role || (Role = {}));
+})(Role = exports.Role || (exports.Role = {}));
 let User = class User {
 };
 __decorate([

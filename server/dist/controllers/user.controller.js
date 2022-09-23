@@ -15,7 +15,8 @@ function registerUser(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         const result = yield (0, services_1.signupUser)(req.body);
         if (result.error) {
-            res.status(400).json({ message: "Signup Failed", error: result.error });
+            res.status(400);
+            res.send({ message: "Signup Failed!", error: result.error });
             return;
         }
         res.cookie('accessToken', result.accessToken, {
@@ -29,8 +30,9 @@ function registerUser(req, res) {
         res.cookie('userData', result.userData, {
             maxAge: 300000,
         });
-        console.log();
-        return res.status(200).send({ message: result.message });
+        res.status(200);
+        res.send({ message: result.message });
+        return;
     });
 }
 exports.registerUser = registerUser;
@@ -38,7 +40,8 @@ function loginUser(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         const result = yield (0, services_1.signinUser)(req.body);
         if (result.error) {
-            res.status(400).json({ message: "Login Failed!", error: result.error });
+            res.status(400);
+            res.send({ message: "Login Failed!", error: result.error });
             return;
         }
         res.cookie('accessToken', result.accessToken, {
@@ -52,7 +55,9 @@ function loginUser(req, res) {
         res.cookie('userData', result.userData, {
             maxAge: 300000,
         });
-        return res.status(200).send({ message: result.message });
+        res.status(200);
+        res.send({ message: result.message });
+        return;
     });
 }
 exports.loginUser = loginUser;
@@ -61,7 +66,8 @@ function logoutUser(req, res) {
         let sessionId = req.params.sessionId;
         const result = yield (0, services_1.signoutUser)(sessionId);
         if (result.error) {
-            res.status(400).json({ message: "Log out Failed!", error: result.error });
+            res.status(400);
+            res.send({ message: "Log out Failed!", error: result.error });
             return;
         }
         res.cookie("accessToken", "", {
@@ -75,13 +81,22 @@ function logoutUser(req, res) {
         res.cookie("userData", "", {
             maxAge: 0,
         });
-        return res.status(200).send({ message: "Successfully logged out!" });
+        res.status(200);
+        res.send({ message: result.message });
+        return;
     });
 }
 exports.logoutUser = logoutUser;
 function loginStatus(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
-        return res.status(200).send(req.user);
+        if (!req.user) {
+            res.status(400);
+            res.send({ message: "Unauthorized", error: "User currently not logged in!" });
+            return;
+        }
+        res.status(200);
+        res.send(req.user);
+        return;
     });
 }
 exports.loginStatus = loginStatus;
