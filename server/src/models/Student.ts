@@ -1,6 +1,6 @@
 import { Entity, Column, PrimaryGeneratedColumn } from "typeorm"
 
-enum Gender{
+export enum Gender{
     Female="Female",
     Male="Male",
     Other="Other"
