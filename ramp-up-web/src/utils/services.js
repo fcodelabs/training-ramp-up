@@ -1,7 +1,27 @@
 import axios from "axios";
-
+import { useState } from "react";
+//const tokenvalue = localStorage.getItem("token");
+//User Service
 let data = [];
+//require("dotenv").config();
+//const bcrypt = require("bcrypt");
+// const saltRounds = 10;
+// var config = {
+//   method: "get",
+//   url: "http://localhost:8000",
+//   headers: {
+//     Authorization: `bearer ${localStorage.getItem("token")}`,
+//     //"Content-Type": "application/json",
+//   },
+// };
 
+// const [userdetails, setUserDetails] = useState("");
+
+const config = {
+  headers: { Authorization: `bearer ${localStorage.getItem("token")}` },
+};
+
+//Student Servide
 const generateid = (data) =>
   data.reduce(
     (previousValue, currentValue) => Math.max(previousValue, currentValue.id),
@@ -23,11 +43,12 @@ export const insertItem = async (item) => {
   } else {
     data.unshift(item);
     item.age = new Date().getFullYear() - new Date(item.birth).getFullYear();
-    console.log("Age", typeof item.age);
+    //console.log("Age", typeof item.age);
     const resdata = await axios.post("http://localhost:8000", item);
     return resdata;
   }
 };
+
 export const updateItem = async (item) => {
   if (
     !item.name ||
@@ -49,9 +70,72 @@ export const deleteItem = (item) => {
 };
 export const getItems = async () => {
   try {
-    const res = await axios.get("http://localhost:8000");
+    const res = await axios.get("http://localhost:8000", config);
     return res;
   } catch (e) {
     console.log(Error, e);
   }
+};
+
+//User Servise
+
+export const insertUser = async (name, email, password) => {
+  const config = {
+    headers: { "Content-Type": "application/json" },
+  };
+  // const body = JSON.stringify({ name, email, password });
+  const body = { name, email, password };
+  try {
+    const res = await axios.post("http://localhost:8000/signin", body, config);
+    console.log("Res", res);
+    localStorage.setItem("token", res.data.accessToken);
+    console.log("token_value", localStorage.getItem("token"));
+
+    return res.data.accessToken;
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+export const getUser = async () => {
+  try {
+    const res = await axios.get("http://localhost:8000/${}", config);
+    return res;
+  } catch (e) {
+    console.log(Error, e);
+  }
+};
+
+export const findUser = async (user, pwd) => {
+  console.log("User Details", user, pwd);
+  try {
+    const res = await axios(
+      {
+        method: "get",
+        url: "http://localhost:8000/signin",
+        params: { email: user, password: pwd },
+        // config,
+      },
+      config,
+      // `http://localhost:8000/signin/${user}/${pwd}`,
+      // config,
+    );
+    // const salt = bcrypt.genSaltSync(saltRounds);
+    // const hash = bcrypt.hashSync(pwd, salt);
+    // console.log("Password", hash);
+    //setUserDetails(res.data.accessToken);
+    console.log("token", res);
+    if (!res) {
+      alert("User not here");
+    }
+    localStorage.setItem("token", res.data.accessToken);
+
+    return res;
+  } catch (e) {
+    console.log(Error, e);
+  }
+};
+
+export const signout = () => {
+  //localStorage.removeItem(user);
 };

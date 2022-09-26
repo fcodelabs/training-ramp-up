@@ -4,7 +4,11 @@ import {
   GridColumn as Column,
   GridToolbar,
 } from "@progress/kendo-react-grid";
-import { Command } from "../component/CommandCell";
+import { Command } from "../components/CommandCell";
+import { useNavigate } from "react-router-dom";
+
+import { useSelector, useDispatch } from "react-redux";
+
 import {
   insertItem,
   getItems,
@@ -16,14 +20,23 @@ import { Upload } from "@progress/kendo-react-upload";
 
 import io from "socket.io-client";
 const socket = io.connect("http://localhost:8000");
-
+import studentSlice from "./studentSlice";
 const DataTable = () => {
   const [data, setData] = useState([]);
+  let navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  //const select = useSelector();
+  //const token = select(loginSlice.reducer.tokenList);
 
   useEffect(() => {
     getItems().then(({ data }) => setData(data));
   }, []);
 
+  const token = useSelector((state) => state.token);
+  //const name = useSelector((state) => state.token);
+  console.log("DataTabelToken", token.token);
+  //console.log("DataTabelName", loginUser.name);
   useEffect(() => {
     socket.on("student_received", (data) => {
       alert(data);
@@ -49,11 +62,13 @@ const DataTable = () => {
   const add = (dataItem) => {
     console.log("id data", dataItem);
     dataItem.inEdit = true;
+    const date = new Date(dataItem.birth);
+    console.log(date);
+    // dispatch(studentSlice.actions.saveStudent(dataItem));
     socket.emit("student_added", `New student was added`);
 
     insertItem(dataItem).then((res) => {
       console.log("data", res.data);
-
       window.location.reload(false);
       alert("Student was Added");
     });
@@ -125,6 +140,11 @@ const DataTable = () => {
     />
   );
 
+  const logOut = () => {
+    localStorage.removeItem("token", token);
+    navigate("/");
+  };
+
   return (
     <div>
       <Grid
@@ -136,12 +156,19 @@ const DataTable = () => {
         editField={editField}
       >
         <GridToolbar>
+          <h1>{token.name}</h1>
           <button
             title="Add new"
             className="k-button k-button-md k-rounded-md k-button-solid k-button-solid-primary"
             onClick={addNew}
           >
             Add new
+          </button>
+          <button
+            className="k-button k-button-md k-rounded-md k-button-solid k-button-solid-primary"
+            onClick={logOut}
+          >
+            LogOut
           </button>
         </GridToolbar>
         <Column field="id" title="ID" width="50px" editable={false} />

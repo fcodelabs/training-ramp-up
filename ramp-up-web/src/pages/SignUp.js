@@ -1,16 +1,25 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Avatar, Button, Grid, Paper, TextField } from "@mui/material";
-
+import { insertUser } from "../utils/services";
 import React from "react";
-import DataTable from "./DataTable";
+//import DataTable from "./DataTable";
+import { useNavigate } from "react-router-dom";
 
 function SignUp() {
+  let navigate = useNavigate();
   const userRef = useRef();
 
   const [user, setUser] = useState("");
-  const [pwd, setPwd] = useState("");
-  const [success, setSuccess] = useState(false);
+  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("");
+  //const [data, setData] = useState();
 
+  const [success, setSuccess] = useState(false);
+  useEffect(() => {
+    if (success) {
+      console.log("Success signUp");
+    }
+  }, [success]);
   const paperStyle = {
     padding: 20,
     height: "70vh",
@@ -23,15 +32,23 @@ function SignUp() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(user, pwd);
-    setUser("");
-    setPwd("");
-    setSuccess(true);
+    //console.log(user, pwd, email);
+    const usertoken = await insertUser(user, email, password);
+    if (usertoken) {
+      setUser("");
+      setPassword("");
+      setSuccess(true);
+    } else {
+      alert("Token is not here");
+    }
+    console.log("user", usertoken);
+    //console.log(data);
   };
   return (
     <>
       {success ? (
-        <DataTable />
+        // <DataTable />
+        navigate("/")
       ) : (
         <Grid>
           <Paper elevation={10} style={paperStyle}>
@@ -41,7 +58,7 @@ function SignUp() {
             </Grid>
             <form onSubmit={handleSubmit}>
               <TextField
-                id="username"
+                id="user"
                 ref={userRef}
                 value={user}
                 autoComplete="off"
@@ -54,6 +71,18 @@ function SignUp() {
                 onChange={(e) => setUser(e.target.value)}
               ></TextField>
               <TextField
+                id="email"
+                value={email}
+                autoComplete="off"
+                label="Email"
+                placeholder="Enter Email"
+                fullWidth
+                required
+                style={mrstyle}
+                variant="standard"
+                onChange={(e) => setEmail(e.target.value)}
+              ></TextField>
+              <TextField
                 id="password"
                 label="Password"
                 placeholder="Enter Password"
@@ -61,9 +90,9 @@ function SignUp() {
                 fullWidth
                 required
                 style={mrstyle}
-                value={pwd}
+                value={password}
                 variant="standard"
-                onChange={(e) => setPwd(e.target.value)}
+                onChange={(e) => setPassword(e.target.value)}
               ></TextField>
               <Button
                 type="submit"

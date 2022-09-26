@@ -7,15 +7,20 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import DataTable from "./DataTable";
+//import DataTable from "./DataTable";
 import React from "react";
-
+import { useNavigate } from "react-router-dom";
+import { findUser } from "../utils/services";
+import loginSlice from "./loginSlice";
+import { useDispatch } from "react-redux";
+import { userSlice } from "../state/userSlice";
 function Login() {
   const userRef = useRef();
-
+  let navigate = useNavigate();
+  const dispatch = useDispatch();
   const [user, setUser] = useState("");
   const [pwd, setPwd] = useState("");
-
+  //const [token, setToken] = useState("");
   const [errMsg, setErrMsg] = useState("");
   const [success, setSuccess] = useState(false);
 
@@ -35,16 +40,36 @@ function Login() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(user, pwd);
-    setUser("");
-    setPwd("");
-    setSuccess(true);
+    console.log("user", user);
+    // dispatch(userSlice.actions.logInUser(user, pwd));
+
+    const res = await findUser(user, pwd);
+    if (!res.data) {
+      alert("Can you check Email or Password");
+      setSuccess(false);
+    } else {
+      console.log("ress", res.data.user.name);
+
+      setUser("");
+      setPwd("");
+      const token = res.data.accessToken;
+      const name = res.data.user.name;
+      dispatch(loginSlice.actions.saveToken({ token: token, name: name }));
+
+      setSuccess(true);
+    }
   };
   return (
     <>
       {success ? (
-        <DataTable />
+        // <DataTable />
+
+        navigate("/datatable")
       ) : (
+        // <Navigate to={"/datatable"} state={{ token }}></Navigate>
+        // <div>
+        //   <h1>User is here</h1>
+        // </div>
         <Grid>
           <Paper elevation={10} style={paperStyle}>
             <Grid align="center">

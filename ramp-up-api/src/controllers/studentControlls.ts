@@ -23,8 +23,8 @@ export const postStudent = async (req, res) => {
     age: age,
   });
   await student.save();
-  res.json(student);
-  return res.status(200);
+  return res.json(student);
+  //return res.status(200);
 };
 
 export const deleteStudent = async (req, res) => {
