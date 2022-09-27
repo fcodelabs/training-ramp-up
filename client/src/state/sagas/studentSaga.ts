@@ -26,7 +26,7 @@ function addStudent(data:StudentDataType){
     return res;
 }  
 
-export function* handleAddStudent({payload}:any):any{
+export function* handleAddStudent({payload}:{payload:StudentDataType}){
     try{
         const {data}: AxiosResponse  = yield call(addStudent,payload);
         yield put(sliceActions.setNewStudent(data.student));
@@ -43,7 +43,7 @@ function updateStudent(data:StudentDataType){
     return res;
 }
 
-export function* handleUpdateStudent({payload}:any):any{
+export function* handleUpdateStudent({payload}:{payload:StudentDataType}){
     try{
         const {data}: AxiosResponse  = yield call(updateStudent,payload);
         delete data.updatedStudent.inEdit;
@@ -54,16 +54,16 @@ export function* handleUpdateStudent({payload}:any):any{
 }
 
 
-export  function deleteStudent({id}:any){
+export function deleteStudent(id:number){
     const res = axios.delete(`http://localhost:8000/student/${id}`,{
         withCredentials: true,
       });
     return res;
 }
 
-export function* handleDeleteStudent({payload}:any):any{
+export function* handleDeleteStudent({payload}:{payload:{id:number}}){
     try{
-        const {data}:AxiosResponse = yield call(deleteStudent,payload);
+        const {data}: AxiosResponse  = yield call(deleteStudent,payload.id);
         yield put(sliceActions.setRemainingStudents(data.id));
     }catch(err){
         alert(err);

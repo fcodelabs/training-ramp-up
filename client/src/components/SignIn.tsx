@@ -34,7 +34,7 @@ export default function SignIn() {
           }}
         >
           <Typography component="h1" variant="h5">
-            Sign in
+            Sign Up
           </Typography>
           <form onSubmit={handleSubmit(onSubmit)}>
             <TextField
@@ -63,7 +63,7 @@ export default function SignIn() {
               variant="contained"
               sx={{ mt: 3, mb: 2 , py:2}}
             >
-              Sign In
+              Sign Up
             </Button>
           </form>
         </Box>

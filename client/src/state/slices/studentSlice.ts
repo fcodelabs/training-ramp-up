@@ -12,8 +12,8 @@ export const studentSlice = createSlice({
       let currentStudents = current(state).filter((student)=>student.id!==payload.id);
       return [...currentStudents,payload];
     },
-    setRemainingStudents:(state,{payload:removedStudentId}:PayloadAction<number>)=>{
-      let currentStudents = current(state).filter((student)=>student.id!==removedStudentId);
+    setRemainingStudents:(state,{payload:removedId}:PayloadAction<number>)=>{
+      let currentStudents = current(state).filter((student)=>student.id!==removedId);
       return currentStudents;
     },
     //call actions
@@ -25,6 +25,15 @@ export const studentSlice = createSlice({
 });
 
 // Action creators are generated for each case reducer function
-export const { deleteStudent,updateStudent,createStudent,initStudents,getStudents,setNewStudent,setUpdatedStudent,setRemainingStudents } = studentSlice.actions;
+export const { 
+  deleteStudent,
+  updateStudent,
+  createStudent,
+  initStudents,
+  getStudents,
+  setNewStudent,
+  setUpdatedStudent,
+  setRemainingStudents
+ } = studentSlice.actions;
 
 export const studentReducer =  studentSlice.reducer;

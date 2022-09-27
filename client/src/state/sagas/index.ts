@@ -24,7 +24,7 @@ import {
     handleDeleteStudent, 
 } from './studentSaga'
 
-export function* rootSaga(){
+export default function* rootSaga(){
     
     yield takeEvery(checkUser,handleGetUserStatus);
     yield takeEvery(logOutUser,handleLogOutUser);

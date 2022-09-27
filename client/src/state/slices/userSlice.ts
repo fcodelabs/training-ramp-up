@@ -1,4 +1,5 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { PayloadAction,createSlice } from '@reduxjs/toolkit';
+import { UserDataType } from '../../interfaces';
 
 const initialState = null
 
@@ -6,20 +7,10 @@ export const userSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {
-    setUser:(state,action)=>{
-      switch(action.payload.task){
-        case "GET_USER":
-          return action.payload.res;
-        case "LOGIN_USER":
-          return action.payload.res;
-        case "LOGOUT_USER":
-          return initialState;
-        case "SIGNUP_USER":
-          return action.payload.res;
-        default:
-          return initialState;
-      }
-    },
+    //set actions
+    setUser:(state,{payload})=>payload,
+    unsetUser:()=>initialState,
+    //call actions
     checkUser(){},
     logOutUser(state,action){},
     signUpUser(state,action){},
@@ -28,6 +19,6 @@ export const userSlice = createSlice({
 });
 
 // Action creators are generated for each case reducer function
-export const { setUser,logOutUser,signUpUser,logInUser,checkUser } = userSlice.actions;
+export const { setUser,logOutUser,signUpUser,logInUser,checkUser,unsetUser } = userSlice.actions;
 
 export const userReducer =  userSlice.reducer;

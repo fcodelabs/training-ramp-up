@@ -5,10 +5,10 @@ export default function MyCommandCell(props:any){
     return inEdit ? 
         (
             <td className="k-command-cell">
-                <button style={{background:'#ef4444',color:'#fff'}} disabled={role==="ADMIN"?false:true}  className="k-button k-button-md k-rounded-md" onClick={()=>isNewItem?props.add(dataItem):props.update(dataItem)}>
+                <button style={{background:'#ef4444',color:'#fff',padding:"5px 15px", border:"1px solid #ef4444",borderRadius:"5px", fontWeight:"bold", margin:"2px", textTransform:"uppercase"}} disabled={role==="ADMIN"?false:true} onClick={()=>isNewItem?props.add(dataItem):props.update(dataItem)}>
                     {isNewItem ? 'Add' : 'Update'}
                 </button>
-                <button className="k-button k-button-md k-rounded-md" disabled={role==="ADMIN"?false:true} onClick={()=>isNewItem ? props.discard():props.cancel(dataItem)}>
+                <button style={{background:'#ffffff',padding:"5px 15px", border:"1px solid black",borderRadius:"5px", fontWeight:"bold", margin:"2px",textTransform:"uppercase"}} disabled={role==="ADMIN"?false:true} onClick={()=>isNewItem ? props.discard():props.cancel(dataItem)}>
                     {isNewItem ? 'Discard' : 'Cancel'}
                 </button>
             </td>
@@ -16,12 +16,14 @@ export default function MyCommandCell(props:any){
             :
         (
             <td className="k-command-cell">
-                <button style={{background:'#ef4444',color:'#fff'}} disabled={role==="ADMIN"?false:true}  className="k-button k-button-md k-rounded-md" onClick={()=>props.edit(dataItem)}>
-                    Edit
-                </button>
-                <button className="k-button k-button-md k-rounded-md" disabled={role==="ADMIN"?false:true} onClick ={()=>props.remove(dataItem)}>
-                    Remove
-                </button>
+                <div className="">
+                    <button style={{background:'#ef4444',color:'#fff',padding:"5px 15px", border:"1px solid #ef4444",borderRadius:"5px", fontWeight:"bold", margin:"2px",textTransform:"uppercase"}} disabled={role==="ADMIN"?false:true} onClick={()=>props.edit(dataItem)}>
+                        Edit
+                    </button>
+                    <button style={{background:'#ffffff',padding:"5px 15px", border:"1px solid black",borderRadius:"5px", fontWeight:"bold", margin:"2px",textTransform:"uppercase"}} disabled={role==="ADMIN"?false:true} onClick ={()=>props.remove(dataItem)}>
+                        Remove
+                    </button>
+                </div>
             </td>
         )
 }

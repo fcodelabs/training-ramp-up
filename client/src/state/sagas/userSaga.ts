@@ -1,22 +1,23 @@
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
 import { call,put } from "redux-saga/effects";
-import { setUser } from '../slices';
+import { setUser,unsetUser } from '../slices';
 import Cookies from 'universal-cookie';
+import { LogInDataInputType, SignUpDataInputType } from "../../interfaces";
 
 const cookies = new Cookies();
 
-function signoutUser({sessionId}:any){
+function signoutUser(sessionId:string){
     const res = axios.delete(`http://localhost:8000/user/logout/${sessionId}`,{
         withCredentials: true,
       });
     return res;
 }
 
-export function* handleLogOutUser({payload}:any):any{
+export function* handleLogOutUser({payload}:{payload:{sessionId:string}}){
     try{
-        let res = yield call(signoutUser,payload);
-        if(res.status === 200){
-            yield put(setUser({res,task:"LOGOUT_USER"}));
+        let data: AxiosResponse = yield call(signoutUser,payload.sessionId);
+        if(data.status === 200){
+            yield put(unsetUser);
         }
     }catch(err){
        alert(err);
@@ -31,11 +32,11 @@ function signinUser(data:any){
     return res;
 }
 
-export function* handleLogInUser({payload}:any):any{
+export function* handleLogInUser({payload}:{payload:LogInDataInputType}){
     try{
-        let res = yield call(signinUser,payload);
-        res = cookies.get('userData');
-        yield put(setUser({res,task:"LOGIN_USER"}));
+        let data: AxiosResponse = yield call(signinUser,payload);
+        data = cookies.get('userData');
+        yield put(setUser(data));
     }catch(err){
         alert(err);
     }
@@ -49,12 +50,12 @@ function signupUser(data: any){
     return res;
 }
 
-export function* handleSignUpUser({payload}:any):any{
+export function* handleSignUpUser({payload}:{payload:SignUpDataInputType}){
     try{
-        let res = yield call(signupUser,payload);
-        if(res.status === 200){
-            res = cookies.get('userData');
-            yield put(setUser({res,task:"SIGNUP_USER"}));
+        let data: AxiosResponse = yield call(signupUser,payload);
+        if(data.status === 200){
+            data = cookies.get('userData');
+            yield put(setUser(data));
         }
     }catch(err){
        alert(err);
@@ -70,12 +71,12 @@ function signinStatus(){
     return res;
 }
 
-export function* handleGetUserStatus():any{
+export function* handleGetUserStatus(){
     try{
-        let res = yield call(signinStatus);
-        if(res.status===200){
-            res = cookies.get('userData');
-            yield put(setUser({res,task:"GET_USER"}));
+        let data: AxiosResponse = yield call(signinStatus);
+        if(data.status===200){
+            data = cookies.get('userData');
+            yield put(setUser(data));
         }
     }catch(err){
         console.log(err);
