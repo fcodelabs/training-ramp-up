@@ -9,7 +9,6 @@ const generateid = (data) =>
   ) + 1;
 
 export const insertStudent = async (item) => {
-  console.log(" 10.33 insert", item.dataItem);
   item.id = generateid(data);
   item.inEdit = false;
 
@@ -22,11 +21,9 @@ export const insertStudent = async (item) => {
   ) {
     alert("Incorrect Validation");
   } else {
-    console.log("Checking Date", typeof item.dataItem.date);
     data.unshift(item.dataItem);
     item.dataItem.age =
       new Date().getFullYear() - new Date(item.dataItem.date).getFullYear();
-    console.log("Age", typeof item.age);
     const resdata = await axios.post(
       "http://localhost:8000/api",
       item.dataItem
@@ -47,7 +44,6 @@ export const deleteStudent = (item) => {
 export const getStudents = async () => {
   try {
     const res = await axios.get("http://localhost:8000/api");
-    //dispatch(studentSlice.actions.savePost(res));
     return res;
   } catch (e) {
     console.log(Error, e);

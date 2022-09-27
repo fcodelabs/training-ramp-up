@@ -3,7 +3,6 @@ export const MyCommandCell = (props) => {
   const { dataItem } = props;
   const inEdit = dataItem[props.editField];
   const isNewItem = dataItem.id === undefined;
-  console.log("props daaatsas", dataItem);
   return inEdit ? (
     <td>
       <button
@@ -12,7 +11,6 @@ export const MyCommandCell = (props) => {
           isNewItem ? props.add(dataItem) : props.update(dataItem)
         }
       >
-        {console.log("Check Button", isNewItem)}
         {isNewItem ? "Add" : "Update"}
       </button>
 

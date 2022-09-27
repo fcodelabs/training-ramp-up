@@ -15,9 +15,6 @@ import { makeStyles } from "@material-ui/core/styles";
 import { findUser } from "../utils/userService";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-// import { useEffect } from "react";
-// import { useDispatch } from "react-redux";
-// import userSlice from "../features/userSlice";
 const MadeWithLove = () => (
   <Typography variant="body2" color="textSecondary" align="center"></Typography>
 );
@@ -43,7 +40,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.secondary.main,
   },
   form: {
-    width: "100%", // Fix IE 11 issue.
+    width: "100%",
     marginTop: theme.spacing(1),
   },
   submit: {
@@ -59,20 +56,14 @@ const Signin = () => {
   const [password, setPassword] = useState("");
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Email and psw", email, password);
     const res = await findUser(email, password);
     if (res) {
       setEmail("");
       setPassword("");
       setSuccessLog(true);
     }
-
-    console.log("RES", res);
   };
-  // const dispatch = useDispatch();
-  // useEffect(() => {
-  //   dispatch(userSlice.actions.getStudents());
-  // }, []);
+
   return (
     <>
       {successLog ? (

@@ -2,7 +2,6 @@ import studentSlice from "../features/studentSlice";
 import userSlice from "../features/userSlice";
 import { all, takeEvery, put, call } from "redux-saga/effects";
 import {
-  // generateid,
   insertStudent,
   updateStudent,
   deleteStudent,
@@ -10,7 +9,7 @@ import {
 } from "../utils/services";
 import { findUser } from "../utils/userService";
 
-function* WatchGetStudent() {
+function* watchGetStudent() {
   try {
     const response = yield call(getStudents);
     yield put(studentSlice.actions.saveStudents(response));
@@ -26,7 +25,6 @@ function* watchAddStudent({ payload: payload }) {
   }
 }
 function* watchUpdateStudent({ payload: payload }) {
-  console.log("Update Data ", payload);
   try {
     yield call(updateStudent, payload);
   } catch (error) {
@@ -46,7 +44,7 @@ function* watchGetUser({ payload: payload }) {
 }
 
 export function* postSagas() {
-  yield takeEvery(studentSlice.actions.getStudents, WatchGetStudent);
+  yield takeEvery(studentSlice.actions.getStudents, watchGetStudent);
   yield takeEvery(studentSlice.actions.createStudent, watchAddStudent);
   yield takeEvery(studentSlice.actions.updateStudent, watchUpdateStudent);
   yield takeEvery(studentSlice.actions.deleteStudent, watchDeleteStudent);
@@ -54,7 +52,6 @@ export function* postSagas() {
   yield takeEvery(userSlice.actions.getUsers, watchGetUser);
 }
 
-//done
 export default function* rootSaga() {
   yield all([...postSagas()]);
 }

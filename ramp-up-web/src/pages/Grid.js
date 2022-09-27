@@ -6,15 +6,9 @@ import {
   GridColumn as Column,
   GridToolbar,
 } from "@progress/kendo-react-grid";
-//import { DropDownList } from "@progress/kendo-react-dropdowns";
 import { MyCommandCell } from "../components/MyCommandCell";
 import { useNavigate } from "react-router-dom";
-import {
-  //insertStudent,
-  getStudents,
-  //updateStudent,
-  //deleteStudent,
-} from "../utils/services";
+import { getStudents } from "../utils/services";
 import { Upload } from "@progress/kendo-react-upload";
 const editField = "inEdit";
 import studentSlice from "../features/studentSlice";
@@ -24,7 +18,6 @@ const socket = io.connect("http://localhost:8000");
 const GridUI = () => {
   let navigate = useNavigate();
   const dispatch = useDispatch();
-  // eslint-disable-next-line no-unused-vars
   const [data, setData] = useState([]);
 
   useEffect(() => {
@@ -49,7 +42,6 @@ const GridUI = () => {
     });
     socket.on("student_received", (data) => {
       alert(data);
-      console.log("SocketMSG", data);
       window.location.reload(false);
     });
     socket.on("student_deleted", (data) => {
@@ -61,38 +53,17 @@ const GridUI = () => {
   const remove = (dataItem) => {
     dispatch(studentSlice.actions.deleteStudent(dataItem));
     window.location.reload(false);
-    // deleteStudent(dataItem).then(() => {
-    //   getStudents().then((data) => {
-    //     setData(data);
-    //   });
-    //   socket.emit("student_remove", `Student ${dataItem.id} was delete`);
-    //   getStudents();
-    // });
   };
   const add = (dataItem) => {
-    console.log(" Add Data Item", dataItem);
     dataItem.inEdit = true;
     dispatch(studentSlice.actions.createStudent({ dataItem }));
     window.location.reload(false);
-    // console.log("ID data", dataItem);
-    // dataItem.inEdit = true;
-    // socket.emit("student_added", `New student was added`);
-    // insertStudent(dataItem).then((res) => {
-    //   console.log("data", res.data);
-    //   console.log("data birthday", res.data.date);
-    //   const newData = { ...res.data };
-
-    //   const oldStudents = data;
-    //   oldStudents.pop(newData);
-    //   setData([newData, ...oldStudents]);
-    // });
   };
   const update = (dataItem) => {
     dataItem.s;
     dataItem.inEdit = false;
-    console.log("Update Data Item", dataItem);
     dispatch(studentSlice.actions.updateStudent(dataItem));
-    // window.location.reload(false);
+    window.location.reload(false);
   };
 
   const discard = () => {
@@ -109,14 +80,11 @@ const GridUI = () => {
   };
 
   const enterEdit = (dataItem) => {
-    console.log("Data Edit", data);
-    console.log("Data Edit data item", dataItem);
     const newData = data.map((item) =>
       item.id === dataItem.id
         ? { ...item, date: new Date(item.date), inEdit: true }
         : item
     );
-    console.log("Edit Button", newData);
 
     setData(newData);
   };
@@ -153,7 +121,7 @@ const GridUI = () => {
   const logout = () => {
     navigate("/");
   };
-  //const GenderField = ["Male", "Female"];
+
   return (
     <Grid
       style={{
