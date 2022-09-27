@@ -20,7 +20,7 @@ import { Upload } from "@progress/kendo-react-upload";
 
 import io from "socket.io-client";
 const socket = io.connect("http://localhost:8000");
-import studentSlice from "./studentSlice";
+import studentSlice from "./slice/studentSlice";
 const DataTable = () => {
   const [data, setData] = useState([]);
   let navigate = useNavigate();
@@ -31,7 +31,11 @@ const DataTable = () => {
 
   useEffect(() => {
     getItems().then(({ data }) => setData(data));
+    //dispatch(studentSlice.action.getStudent());
   }, []);
+  console.log("STUDENTDATA", data);
+  const student = useSelector((state) => state.student);
+  console.log("Student", student);
 
   const token = useSelector((state) => state.token);
   //const name = useSelector((state) => state.token);
@@ -76,13 +80,14 @@ const DataTable = () => {
 
   const update = (dataItem) => {
     dataItem.inEdit = false;
-    socket.emit("student_added", `Student Changed`);
-    updateItem(dataItem).then((res) => {
-      console.log("res dara", res.data);
+    console.log("Upadate Dataitem", dataItem);
+    //socket.emit("student_added", `Student Changed`);
+    // updateItem(dataItem).then((res) => {
+    //   console.log("res dara", res.data);
 
-      window.location.reload(false);
-      alert("Student was Updated");
-    });
+    //   window.location.reload(false);
+    //   alert("Student was Updated");
+    // });
   };
 
   const discard = () => {

@@ -11,9 +11,9 @@ import {
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { findUser } from "../utils/services";
-import loginSlice from "./loginSlice";
+import loginSlice from "./slice/loginSlice";
 import { useDispatch } from "react-redux";
-import { userSlice } from "../state/userSlice";
+import { userSlice } from "./slice/userSlice";
 function Login() {
   const userRef = useRef();
   let navigate = useNavigate();
@@ -41,23 +41,30 @@ function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log("user", user);
-    // dispatch(userSlice.actions.logInUser(user, pwd));
-
-    const res = await findUser(user, pwd);
-    if (!res.data) {
-      alert("Can you check Email or Password");
-      setSuccess(false);
-    } else {
-      console.log("ress", res.data.user.name);
-
-      setUser("");
-      setPwd("");
-      const token = res.data.accessToken;
-      const name = res.data.user.name;
-      dispatch(loginSlice.actions.saveToken({ token: token, name: name }));
-
+    const res = dispatch(
+      userSlice.actions.logInUser({ user: user, password: pwd }),
+      console.log("Dispatch test"),
+    );
+    console.log("User Value", res);
+    if (res) {
       setSuccess(true);
     }
+
+    // const res = await findUser(user, pwd);
+    // if (!res.data) {
+    //   alert("Can you check Email or Password");
+    //   setSuccess(false);
+    // } else {
+    //   console.log("ress", res.data.user.name);
+
+    //   setUser("");
+    //   setPwd("");
+    //   const token = res.data.accessToken;
+    //   const name = res.data.user.name;
+    //   dispatch(loginSlice.actions.saveToken({ token: token, name: name }));
+
+    //   setSuccess(true);
+    // }
   };
   return (
     <>

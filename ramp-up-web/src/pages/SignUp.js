@@ -4,11 +4,13 @@ import { insertUser } from "../utils/services";
 import React from "react";
 //import DataTable from "./DataTable";
 import { useNavigate } from "react-router-dom";
-
+import { ValidatorForm, TextValidator } from "react-material-ui-form-validator";
+import { useDispatch } from "react-redux";
+import userSlice from "./slice/userSlice";
 function SignUp() {
   let navigate = useNavigate();
   const userRef = useRef();
-
+  const dispatch = useDispatch();
   const [user, setUser] = useState("");
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
@@ -32,16 +34,28 @@ function SignUp() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    //console.log(user, pwd, email);
-    const usertoken = await insertUser(user, email, password);
-    if (usertoken) {
-      setUser("");
-      setPassword("");
+    console.log(user, password, email);
+    const res = dispatch(
+      userSlice.actions.registerUser({
+        user: user,
+        password: password,
+        email: email,
+      }),
+    );
+    console.log("Register res", res);
+    if (res) {
       setSuccess(true);
-    } else {
-      alert("Token is not here");
     }
-    console.log("user", usertoken);
+
+    // const usertoken = await insertUser(user, email, password);
+    // if (usertoken) {
+    //   setUser("");
+    //   setPassword("");
+    //   setSuccess(true);
+    // } else {
+    //   alert("Token is not here");
+    // }
+    // console.log("user", usertoken);
     //console.log(data);
   };
   return (
@@ -54,9 +68,9 @@ function SignUp() {
           <Paper elevation={10} style={paperStyle}>
             <Grid align="center">
               <Avatar>{/* <FaceIcon /> */}</Avatar>
-              <h2>Sign Up</h2>
+              <h2>Register</h2>
             </Grid>
-            <form onSubmit={handleSubmit}>
+            <ValidatorForm onSubmit={handleSubmit}>
               <TextField
                 id="user"
                 ref={userRef}
@@ -70,18 +84,21 @@ function SignUp() {
                 variant="standard"
                 onChange={(e) => setUser(e.target.value)}
               ></TextField>
-              <TextField
-                id="email"
-                value={email}
-                autoComplete="off"
+
+              <TextValidator
+                // ref={emailRef}
                 label="Email"
-                placeholder="Enter Email"
-                fullWidth
+                // onBlur={handleBlur}
                 required
-                style={mrstyle}
-                variant="standard"
                 onChange={(e) => setEmail(e.target.value)}
-              ></TextField>
+                name="email"
+                value={email}
+                fullWidth
+                variant="standard"
+                validators={["required", "isEmail"]}
+                errorMessages={["this field is required", "email is not valid"]}
+              />
+
               <TextField
                 id="password"
                 label="Password"
@@ -101,9 +118,9 @@ function SignUp() {
                 fullWidth
                 style={mrstyle}
               >
-                Sign Up
+                Register
               </Button>
-            </form>
+            </ValidatorForm>
           </Paper>
         </Grid>
       )}

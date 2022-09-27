@@ -9,7 +9,6 @@ import {
 } from '../controllers/studentControlls';
 
 router.get('/', getStudent);
-
 router.post('/', postStudent);
 router.get('/:studentId', findStudent);
 router.delete('/:studentId', deleteStudent);

@@ -79,12 +79,17 @@ export const getItems = async () => {
 
 //User Servise
 
-export const insertUser = async (name, email, password) => {
+export const insertUser = async (userRes) => {
   const config = {
     headers: { "Content-Type": "application/json" },
   };
+  console.log("NameInsert", userRes.payload.user);
   // const body = JSON.stringify({ name, email, password });
-  const body = { name, email, password };
+  const body = {
+    name: userRes.payload.user,
+    email: userRes.payload.email,
+    password: userRes.payload.password,
+  };
   try {
     const res = await axios.post("http://localhost:8000/signin", body, config);
     console.log("Res", res);
@@ -106,14 +111,14 @@ export const getUser = async () => {
   }
 };
 
-export const findUser = async (user, pwd) => {
-  console.log("User Details", user, pwd);
+export const findUser = async (user) => {
+  console.log("User Details", user.user);
   try {
     const res = await axios(
       {
         method: "get",
         url: "http://localhost:8000/signin",
-        params: { email: user, password: pwd },
+        params: { email: user.user, password: user.password },
         // config,
       },
       config,

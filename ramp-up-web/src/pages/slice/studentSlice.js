@@ -3,18 +3,14 @@ import { createSlice } from "@reduxjs/toolkit";
 const studentSlice = createSlice({
   name: "student",
   initialState: {
-    id: "",
-    name: "",
-    gender: "",
-    address: "",
-    mobileNo: "",
-    birth: "",
-    age: "",
+    student: [],
   },
 
   reducers: {
     saveStudent(state, action) {
       console.log("payload", action.payload);
+      state.student = action.payload;
+
       //   state.id = action.payload.id;
       //   state.name = action.payload.name;
       //   state.gender = action.payload.gender;
@@ -27,6 +23,10 @@ const studentSlice = createSlice({
       console.log("SliceToken", state.name);
       //   console.log("SliceName", state.token.name);
     },
+    createStudent() {},
+    deleteStudent() {},
+    updateStudent() {},
+    getStudents() {},
   },
 });
 
