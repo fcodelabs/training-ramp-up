@@ -1,4 +1,5 @@
 import * as React from "react";
+import "../utils/commandCell.css";
 
 function CommandCell(prop) {
   const { dataItem } = prop;
@@ -8,6 +9,7 @@ function CommandCell(prop) {
     <td className="k-command-cell">
       <button
         className="k-button k-button-md k-rounded-md k-button-solid k-button-solid-base k-grid-save-command"
+        id="addBtn"
         onClick={() => (isNewItem ? prop.add(dataItem) : prop.update(dataItem))}
       >
         {isNewItem ? "Add" : "Update"}
@@ -25,6 +27,7 @@ function CommandCell(prop) {
     <td className="k-command-cell">
       <button
         className="k-button k-button-md k-rounded-md k-button-solid k-button-solid-primary k-grid-edit-command"
+        id="editBtn"
         onClick={() => prop.edit(dataItem)}
       >
         Edit

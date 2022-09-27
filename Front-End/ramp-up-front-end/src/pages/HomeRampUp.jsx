@@ -1,7 +1,7 @@
 //import React from "react";
 import "../utils/homeRampUp.css";
 import CssBaseline from "@mui/material/CssBaseline";
-import RampUpTable from "../components/rampUpTable";
+import RampUpTable from "../components/RampUpTable";
 
 function HomeRampUp() {
   return (

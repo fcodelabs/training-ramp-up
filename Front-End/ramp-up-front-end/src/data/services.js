@@ -7,16 +7,11 @@ const generateId = (data) =>
   data.reduce((acc, current) => Math.max(acc, current.studentID), 0) + 1;
 
 export const insertStudent = (student) => {
-  const age = current.getFullYear() - student.studentDOB.getFullYear();
-
   if (!student.studentName) {
     alert("Name Required");
   } else if (!student.studentGender) {
     alert("Gender Required");
-  } else if (
-    student.studentGender !== "Male" &&
-    student.studentGender !== "Female"
-  ) {
+  } else if (student.studentGender === "") {
     alert("Gender is wrong");
   } else if (!student.studentAddress) {
     alert("Address Required");
@@ -26,13 +21,16 @@ export const insertStudent = (student) => {
     isNaN(student.studentMobile)
   ) {
     alert("Please Enter Valid Mobile No");
-  } else if (age <= 0) {
-    alert("Please Enter Correct Date of Birth");
   } else {
     student.studentID = generateId(data);
+    const age = current.getFullYear() - student.studentDOB.getFullYear();
     student.studentAge = age;
-    student.inEdit = false;
-    data.unshift(student);
+    if (age <= 0) {
+      alert("Please Enter Correct Date of Birth");
+    } else {
+      student.inEdit = false;
+      data.unshift(student);
+    }
   }
   return data;
 };
@@ -48,10 +46,7 @@ export const updateStudent = (student) => {
 
   if (student.studentName === "") {
     alert("Name cannot be Null");
-  } else if (
-    student.studentGender !== "Male" &&
-    student.studentGender !== "Female"
-  ) {
+  } else if (student.studentGender === "") {
     alert("Gender is Wrong");
   } else if (student.studentAddress === "") {
     alert("Address cannot be Null");

@@ -8,7 +8,8 @@ import {
   GridToolbar,
 } from "@progress/kendo-react-grid";
 //import { StudentData } from "../data/studentDetails";
-import CommandCell from "./commandCell";
+import DropDownCell from "./DropDownCell";
+import CommandCell from "./CommandCell";
 import {
   insertStudent,
   getStudent,
@@ -22,7 +23,7 @@ function RampUpTable() {
   const [data, setData] = useState([]);
 
   useEffect(() => {
-    let newItems = getStudent();
+    const newItems = getStudent();
     setData(newItems);
   }, []);
 
@@ -117,7 +118,12 @@ function RampUpTable() {
       </GridToolbar>
       <Column field="studentID" title="Id" width="150px" editable={false} />
       <Column field="studentName" title="Name" width="200px" />
-      <Column field="studentGender" title="Gender" width="150px" />
+      <Column
+        field="studentGender"
+        title="Gender"
+        width="150px"
+        cell={DropDownCell}
+      />
       <Column field="studentAddress" title="Address" width="200px" />
       <Column
         field="studentMobile"
@@ -133,7 +139,6 @@ function RampUpTable() {
         width="150px"
       />
       <Column field="studentAge" title="Age" width="150px" editable={false} />
-      <Column field="discontinued" title="Discontinued" editor="boolean" />
       <Column cell={commands} title="Command" width="193px" />
     </Grid>
   );
