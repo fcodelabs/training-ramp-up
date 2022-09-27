@@ -4,7 +4,7 @@ import {
   postStudent,
   deleteStudent,
   updateStudent,
-} from "../services/student.service";
+} from "../controllers/student.controller";
 
 import cors from "cors";
 import * as BodyParser from "body-parser";
