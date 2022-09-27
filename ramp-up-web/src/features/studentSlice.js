@@ -12,7 +12,7 @@ const studentSlice = createSlice({
     },
     createStudent() {},
     deleteStudent() {},
-    updateStudent(state, action) {},
+    updateStudent() {},
     getStudents() {},
   },
 });

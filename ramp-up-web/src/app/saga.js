@@ -7,7 +7,7 @@ import {
   deleteStudent,
   getStudents,
 } from "../utils/services";
-import { findUser } from "../utils/userService";
+import { findUser, insertUser } from "../utils/userService";
 
 function* watchGetStudent() {
   try {
@@ -38,7 +38,14 @@ function* watchDeleteStudent({ payload: payload }) {
     console.log(error);
   }
 }
-function* watchGetUser({ payload: payload }) {
+function* watchAddUser({ payload: payload }) {
+  try {
+    yield call(insertUser, payload);
+  } catch (error) {
+    console.log(error);
+  }
+}
+function* watchLogUser({ payload: payload }) {
   const response = yield call(findUser, payload);
   yield put(userSlice.actions.saveUser(response));
 }
@@ -49,7 +56,8 @@ export function* postSagas() {
   yield takeEvery(studentSlice.actions.updateStudent, watchUpdateStudent);
   yield takeEvery(studentSlice.actions.deleteStudent, watchDeleteStudent);
 
-  yield takeEvery(userSlice.actions.getUsers, watchGetUser);
+  yield takeEvery(userSlice.actions.addUser, watchAddUser);
+  yield takeEvery(userSlice.actions.logUser, watchLogUser);
 }
 
 export default function* rootSaga() {

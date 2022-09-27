@@ -7,11 +7,8 @@ const userSlice = createSlice({
     users: [],
   },
   reducers: {
-    saveUser(state, action) {
-      state.students = action.payload;
-    },
-
-    getUsers() {},
+    addUser() {},
+    logUser() {},
   },
 });
 
