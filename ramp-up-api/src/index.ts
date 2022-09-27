@@ -4,6 +4,7 @@ import 'reflect-metadata';
 const cors = require('cors');
 import * as express from 'express';
 import student_routes from './routes/student_routes';
+import user_routes from './routes/user_routes';
 const { Server } = require('socket.io');
 const app = express();
 const server = http.createServer(app);
@@ -15,6 +16,7 @@ AppDataSource.initialize()
 
     app.use(express.json());
     app.use(student_routes);
+    app.use(user_routes);
     const io = new Server(server, {
       cors: {
         origin: 'http://localhost:3000',

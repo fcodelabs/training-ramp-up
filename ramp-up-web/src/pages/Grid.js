@@ -7,6 +7,7 @@ import {
 } from "@progress/kendo-react-grid";
 //import { DropDownList } from "@progress/kendo-react-dropdowns";
 import { MyCommandCell } from "../components/MyCommandCell";
+import { useNavigate } from "react-router-dom";
 import {
   insertStudent,
   getStudents,
@@ -19,6 +20,7 @@ import io from "socket.io-client";
 const socket = io.connect("http://localhost:8000");
 
 const GridUI = () => {
+  let navigate = useNavigate();
   const [data, setData] = useState([]);
   useEffect(() => {
     getStudents().then(({ data }) => setData(data));
@@ -124,6 +126,9 @@ const GridUI = () => {
       editField={editField}
     />
   );
+  const logout = () => {
+    navigate("/");
+  };
   //const GenderField = ["Male", "Female"];
   return (
     <Grid
@@ -141,6 +146,12 @@ const GridUI = () => {
           onClick={addNew}
         >
           Add new
+        </button>
+        <button
+          className="k-button k-button-md k-rounded-md k-button-solid k-button-solid-primary"
+          onClick={logout}
+        >
+          Logout
         </button>
         <Upload
           restrictions={{
