@@ -60,7 +60,7 @@ function signupUser(data) {
             const hash = yield argon.hash(data.password);
             const user = new models_1.User();
             user.name = data.name;
-            user.email = data.email;
+            user.email = data.email.toLowerCase();
             user.password = hash;
             const newUser = yield exports.userRepository.save(user);
             if (!newUser) {
@@ -83,7 +83,7 @@ exports.signupUser = signupUser;
 function signinUser(data) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const user = yield exports.userRepository.findOneBy({ email: data.email });
+            const user = yield exports.userRepository.findOneBy({ email: data.email.toLowerCase() });
             if (!user) {
                 return { error: "User not found!" };
             }
@@ -112,7 +112,7 @@ function signoutUser(sessionId) {
             if (!session) {
                 return { error: "Session doesn't exist!" };
             }
-            const invalidSession = yield exports.sessionRepository.remove(session);
+            const invalidSession = yield exports.sessionRepository.save(Object.assign(Object.assign({}, session), { valid: false }));
             return { message: "Successfully logged out!" };
         }
         catch (error) {

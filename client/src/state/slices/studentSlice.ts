@@ -1,47 +1,30 @@
-import { createSlice, current } from '@reduxjs/toolkit'
-import { StudentDataType } from '../../interfaces';
-const initialState:StudentDataType[]=[];
+import { PayloadAction, createSlice ,current} from "@reduxjs/toolkit";
+import { StudentDataType } from "../../interfaces";
 
 export const studentSlice = createSlice({
   name: 'student',
-  initialState,
+  initialState: [] as Array<StudentDataType>,
   reducers: {
-    setStudents:(state,action)=>{
-      switch(action.payload.do){
-        case "GET_STUDENTS":
-          return action.payload.res.data.students;
-        case "ADD_STUDENT":
-          return [...state,action.payload.res.data.student];
-        case "REMOVE_STUDENT":
-          const id = action.payload.res.data.id;
-          const newStudents = current(state).filter((student)=>student.id!==id); 
-          return newStudents;
-        case "UPDATE_STUDENT":
-          const updatedStudent = action.payload.res.data.updatedStudent;
-          const updatedStudents = current(state).map((student)=>{
-            const newStudent = student.id!==updatedStudent.id?student:updatedStudent
-            const configStudent = {
-              id:newStudent.id,
-              age:newStudent.age,
-              address:newStudent.address,
-              gender:newStudent.gender,
-              mobileNo:newStudent.mobileNo,
-              name:newStudent.name,
-              dob: new Date(newStudent.dob)
-            }
-            return configStudent;
-          });
-          return updatedStudents;
-      }
+    //set actions
+    initStudents:(state,{payload}:PayloadAction<Array<StudentDataType>>)=>payload,
+    setNewStudent:(state,{payload}:PayloadAction<StudentDataType>)=>[...state,payload],
+    setUpdatedStudent:(state,{payload}:PayloadAction<StudentDataType>)=>{
+      let currentStudents = current(state).filter((student)=>student.id!==payload.id);
+      return [...currentStudents,payload];
     },
+    setRemainingStudents:(state,{payload:removedStudentId}:PayloadAction<number>)=>{
+      let currentStudents = current(state).filter((student)=>student.id!==removedStudentId);
+      return currentStudents;
+    },
+    //call actions
+    getStudents(){},
     createStudent(state,action){},
     deleteStudent(state,action){},
     updateStudent(state,action){},
-    getStudents(){},
-  },
+    }
 });
 
 // Action creators are generated for each case reducer function
-export const { setStudents,createStudent,deleteStudent,updateStudent,getStudents } = studentSlice.actions;
+export const { deleteStudent,updateStudent,createStudent,initStudents,getStudents,setNewStudent,setUpdatedStudent,setRemainingStudents } = studentSlice.actions;
 
 export const studentReducer =  studentSlice.reducer;

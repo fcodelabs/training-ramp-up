@@ -13,7 +13,7 @@ export async function signupUser(data:SignUpDataInputType){
         const hash = await argon.hash(data.password);
         const user = new User()
         user.name=data.name;
-        user.email = data.email;
+        user.email = data.email.toLowerCase();
         user.password = hash;
         
         const newUser = await userRepository.save(user);
@@ -35,7 +35,7 @@ export async function signupUser(data:SignUpDataInputType){
 
 export async function signinUser(data:LogInDataInputType){
     try{
-        const user = await userRepository.findOneBy({email:data.email});
+        const user = await userRepository.findOneBy({email:data.email.toLowerCase()});
         
         if(!user){
             return {error:"User not found!"};

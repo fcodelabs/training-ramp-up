@@ -58,9 +58,7 @@ function LocalAuthGuard(req, res, next) {
             });
             return next();
         }
-        if (expired) {
-            console.log("access token expired proceeding to refresh token!");
-        }
+        console.log("access token expired proceeding to refresh token!");
         //expired but valid access token
         const { payload: refresh } = expired && refreshToken ? (0, jwt_1.verifyJWT)(refreshToken) : { payload: null };
         if (!refresh) {
@@ -84,8 +82,8 @@ function LocalAuthGuard(req, res, next) {
         }
         console.log("refresh token valid proceeding to check session!");
         const session = yield sessionRepository.findOneBy({ id: refresh.sessionId });
-        if (!session) {
-            console.log("session is not available, deleting cookies and navigating to log in page!");
+        if (!session || !session.valid) {
+            console.log("session is not valid, deleting cookies and navigating to log in page!");
             res.cookie('userData', '', {
                 maxAge: 0,
             });

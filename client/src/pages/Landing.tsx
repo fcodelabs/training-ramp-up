@@ -1,14 +1,14 @@
 import  { useEffect, useState } from 'react';
 import { Link } from '@mui/material';
 import { useSelector, useDispatch } from 'react-redux';
-import { checkUser } from '../../state/slices';
+import { checkUser } from '../state/slices';
 import {  useNavigate } from 'react-router-dom';
-import type { RootState } from '../../state/store'
+import type { RootState } from '../state/store'
 import "./landing.css";
 
 //Sign in Sign Up component panels
-import SignIn from "../SignIn";
-import SignUp from "../SignUp";
+import SignIn from "../components/SignIn";
+import SignUp from "../components/SignUp";
 
 
 

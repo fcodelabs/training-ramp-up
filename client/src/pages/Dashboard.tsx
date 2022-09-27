@@ -3,13 +3,13 @@ import { Button, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
 import '@progress/kendo-theme-material/dist/all.css';
 import { Grid, GridColumn, GridToolbar } from '@progress/kendo-react-grid';
-import MyCommandCell from '../MyCommandCell';
-import DateCell from '../DateCell';
+import MyCommandCell from '../components/MyCommandCell';
+import DateCell from '../components/DateCell';
 import { useNavigate } from "react-router-dom";
-import { UserDataType,StudentDataType, Gender, Role } from '../../interfaces';
+import { UserDataType,StudentDataType, Gender, Role } from '../interfaces';
 import { useSelector, useDispatch } from 'react-redux';
-import { logOutUser, getStudents, createStudent, deleteStudent, updateStudent, checkUser } from '../../state/slices';
-import type { RootState } from '../../state/store';
+import { logOutUser, getStudents, createStudent, deleteStudent, updateStudent, checkUser } from '../state/slices';
+import type { RootState } from '../state/store';
 
 const editField = 'inEdit';
 
