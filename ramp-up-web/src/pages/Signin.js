@@ -15,7 +15,9 @@ import { makeStyles } from "@material-ui/core/styles";
 import { findUser } from "../utils/userService";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-
+// import { useEffect } from "react";
+// import { useDispatch } from "react-redux";
+// import userSlice from "../features/userSlice";
 const MadeWithLove = () => (
   <Typography variant="body2" color="textSecondary" align="center"></Typography>
 );
@@ -67,7 +69,10 @@ const Signin = () => {
 
     console.log("RES", res);
   };
-
+  // const dispatch = useDispatch();
+  // useEffect(() => {
+  //   dispatch(userSlice.actions.getStudents());
+  // }, []);
   return (
     <>
       {successLog ? (

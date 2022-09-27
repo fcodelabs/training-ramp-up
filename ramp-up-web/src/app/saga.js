@@ -1,31 +1,57 @@
-import StudentSlice from "../features/studentSlice";
-import { all, takeEvery } from "redux-saga/effects";
+import studentSlice from "../features/studentSlice";
+import userSlice from "../features/userSlice";
+import { all, takeEvery, put, call } from "redux-saga/effects";
 import {
+  // generateid,
   insertStudent,
+  updateStudent,
   deleteStudent,
   getStudents,
-  updateStudent,
 } from "../utils/services";
+import { findUser } from "../utils/userService";
 
-// eslint-disable-next-line no-unused-vars
-function* WatchStudentAdded({ payload: post }) {
+function* WatchGetStudent() {
   try {
-    yield insertStudent;
-    yield deleteStudent;
-    yield getStudents;
-    yield updateStudent;
+    const response = yield call(getStudents);
+    yield put(studentSlice.actions.saveStudents(response));
   } catch (error) {
     console.log(error);
   }
 }
+function* watchAddStudent({ payload: payload }) {
+  try {
+    yield call(insertStudent, payload);
+  } catch (error) {
+    console.log(error);
+  }
+}
+function* watchUpdateStudent({ payload: payload }) {
+  console.log("Update Data ", payload);
+  try {
+    yield call(updateStudent, payload);
+  } catch (error) {
+    console.log(error);
+  }
+}
+function* watchDeleteStudent({ payload: payload }) {
+  try {
+    yield call(deleteStudent, payload);
+  } catch (error) {
+    console.log(error);
+  }
+}
+function* watchGetUser({ payload: payload }) {
+  const response = yield call(findUser, payload);
+  yield put(userSlice.actions.saveUser(response));
+}
 
-// eslint-disable-next-line no-unused-vars
-function* WatchloadStudent({ payload: post }) {}
-
-//done
 export function* postSagas() {
-  yield takeEvery(StudentSlice.actions.StudentAdd, WatchStudentAdded);
-  yield takeEvery(StudentSlice.actions.loadStudent, WatchloadStudent);
+  yield takeEvery(studentSlice.actions.getStudents, WatchGetStudent);
+  yield takeEvery(studentSlice.actions.createStudent, watchAddStudent);
+  yield takeEvery(studentSlice.actions.updateStudent, watchUpdateStudent);
+  yield takeEvery(studentSlice.actions.deleteStudent, watchDeleteStudent);
+
+  yield takeEvery(userSlice.actions.getUsers, watchGetUser);
 }
 
 //done

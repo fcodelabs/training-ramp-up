@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-
+import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import {
   Grid,
   GridColumn as Column,
@@ -9,27 +10,37 @@ import {
 import { MyCommandCell } from "../components/MyCommandCell";
 import { useNavigate } from "react-router-dom";
 import {
-  insertStudent,
+  //insertStudent,
   getStudents,
   //updateStudent,
-  deleteStudent,
+  //deleteStudent,
 } from "../utils/services";
 import { Upload } from "@progress/kendo-react-upload";
 const editField = "inEdit";
+import studentSlice from "../features/studentSlice";
 import io from "socket.io-client";
 const socket = io.connect("http://localhost:8000");
 
 const GridUI = () => {
   let navigate = useNavigate();
+  const dispatch = useDispatch();
+  // eslint-disable-next-line no-unused-vars
   const [data, setData] = useState([]);
+
   useEffect(() => {
-    getStudents().then(({ data }) => setData(data));
+    dispatch(studentSlice.actions.getStudents());
   }, []);
+
+  const students = useSelector((state) => state.students.students);
+  const studentList = students.data;
+  useEffect(() => {
+    setData(studentList);
+  }, [studentList]);
 
   useEffect(() => {
     socket.on("refetch_data", () => {
       getStudents()
-        .then(({ data }) => setData(data.students))
+        .then(({ students }) => setData(students.data))
         .catch(() =>
           alert(
             "Failed to retrieve data, please try refreshing the page or try again another time"
@@ -48,34 +59,43 @@ const GridUI = () => {
   }, [socket]);
 
   const remove = (dataItem) => {
-    deleteStudent(dataItem).then(() => {
-      getStudents().then((data) => {
-        setData(data);
-      });
-      socket.emit("student_remove", `Student ${dataItem.id} was delete`);
-      getStudents();
-    });
+    dispatch(studentSlice.actions.deleteStudent(dataItem));
+    window.location.reload(false);
+    // deleteStudent(dataItem).then(() => {
+    //   getStudents().then((data) => {
+    //     setData(data);
+    //   });
+    //   socket.emit("student_remove", `Student ${dataItem.id} was delete`);
+    //   getStudents();
+    // });
   };
   const add = (dataItem) => {
-    console.log("ID data", dataItem);
+    console.log(" Add Data Item", dataItem);
     dataItem.inEdit = true;
-    socket.emit("student_added", `New student was added`);
-    insertStudent(dataItem).then((res) => {
-      console.log("data", res.data);
-      console.log("data birthday", res.data.date);
-      const newData = { ...res.data };
+    dispatch(studentSlice.actions.createStudent({ dataItem }));
+    window.location.reload(false);
+    // console.log("ID data", dataItem);
+    // dataItem.inEdit = true;
+    // socket.emit("student_added", `New student was added`);
+    // insertStudent(dataItem).then((res) => {
+    //   console.log("data", res.data);
+    //   console.log("data birthday", res.data.date);
+    //   const newData = { ...res.data };
 
-      const oldStudents = data;
-      oldStudents.pop(newData);
-      setData([newData, ...oldStudents]);
-    });
+    //   const oldStudents = data;
+    //   oldStudents.pop(newData);
+    //   setData([newData, ...oldStudents]);
+    // });
   };
   const update = (dataItem) => {
-    console.log("Data items ", dataItem);
+    dataItem.s;
+    dataItem.inEdit = false;
+    console.log("Update Data Item", dataItem);
+    dispatch(studentSlice.actions.updateStudent(dataItem));
+    // window.location.reload(false);
   };
 
   const discard = () => {
-    console.log("Checking Dalin Aranga5");
     const newData = [...data];
     newData.splice(0, 1);
     setData(newData);
@@ -89,15 +109,18 @@ const GridUI = () => {
   };
 
   const enterEdit = (dataItem) => {
-    console.log("Enter Edit", dataItem);
+    console.log("Data Edit", data);
+    console.log("Data Edit data item", dataItem);
     const newData = data.map((item) =>
       item.id === dataItem.id
         ? { ...item, date: new Date(item.date), inEdit: true }
         : item
     );
+    console.log("Edit Button", newData);
 
     setData(newData);
   };
+
   const itemChange = (event) => {
     const newData = data.map((item) =>
       item.id === event.dataItem.id
@@ -106,6 +129,7 @@ const GridUI = () => {
     );
     setData(newData);
   };
+
   const addNew = () => {
     const newDataItem = {
       inEdit: true,

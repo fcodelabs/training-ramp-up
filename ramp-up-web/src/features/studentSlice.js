@@ -1,28 +1,22 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const ToDotSlice = createSlice({
+const studentSlice = createSlice({
   name: "students",
   initialState: {
-    name: "",
-    gender: "",
     loading: false,
-    address: "",
-    mobileNumber: "",
-    dataOfBirth: "",
-    age: "",
+    students: [],
   },
   reducers: {
-    // eslint-disable-next-line no-unused-vars
-    StudentAdd(state, action) {},
-
-    // eslint-disable-next-line no-unused-vars
-    loadStudent(state, action) {
-      state.loading = true;
+    saveStudents(state, action) {
+      state.students = action.payload;
     },
-    saveStudent(state, action) {
-      state.todos = action.payload;
+    createStudent() {},
+    deleteStudent() {},
+    updateStudent(state, action) {
+      console.log("Action", action);
     },
+    getStudents() {},
   },
 });
 
-export default ToDotSlice;
+export default studentSlice;
