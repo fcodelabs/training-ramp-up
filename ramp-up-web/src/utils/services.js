@@ -71,6 +71,7 @@ export const deleteItem = (item) => {
 export const getItems = async () => {
   try {
     const res = await axios.get("http://localhost:8000", config);
+    console.log("RESDATA", res);
     return res;
   } catch (e) {
     console.log(Error, e);

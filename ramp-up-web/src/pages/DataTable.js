@@ -29,11 +29,15 @@ const DataTable = () => {
   //const select = useSelector();
   //const token = select(loginSlice.reducer.tokenList);
 
+  // useEffect(() => {
+  //   //getItems().then(({ data }) => setData(data));
+  //   dispatch(studentSlice.action.getStudent());
+  // }, []);
   useEffect(() => {
-    getItems().then(({ data }) => setData(data));
-    //dispatch(studentSlice.action.getStudent());
+    dispatch(studentSlice.actions.getStudents());
   }, []);
-  console.log("STUDENTDATA", data);
+
+  //console.log("STUDENTDATA", data);
   const student = useSelector((state) => state.student);
   console.log("Student", student);
 

@@ -7,26 +7,16 @@ const studentSlice = createSlice({
   },
 
   reducers: {
-    saveStudent(state, action) {
+    addStudent(state, action) {
       console.log("payload", action.payload);
       state.student = action.payload;
 
-      //   state.id = action.payload.id;
-      //   state.name = action.payload.name;
-      //   state.gender = action.payload.gender;
-      //   state.address = action.payload.address;
-      //   state.mobileNo = action.payload.mobileNo;
-      //   state.age = action.payload.age;
-      //   state.birth = action.payload.birth;
-
-      //state.token = action.payload;
       console.log("SliceToken", state.name);
-      //   console.log("SliceName", state.token.name);
     },
-    createStudent() {},
+
     deleteStudent() {},
     updateStudent() {},
-    getStudents() {},
+    getStudents(state, action) {},
   },
 });
 
