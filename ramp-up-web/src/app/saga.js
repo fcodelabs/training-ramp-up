@@ -46,10 +46,13 @@ function* watchAddUser({ payload: payload }) {
   }
 }
 function* watchLogUser({ payload: payload }) {
-  console.log("saga Works");
-  const response = yield call(findUser, payload);
-  console.log("sagas Response", response);
-  //yield put(userSlice.actions.logUser(response));
+  try {
+    const response = yield call(findUser, payload);
+    //console.log("sagas Response", response.data.accessToken);
+    yield put(userSlice.actions.saveUser(response.data));
+  } catch (error) {
+    alert(error);
+  }
 }
 
 export function* postSagas() {
@@ -60,6 +63,7 @@ export function* postSagas() {
 
   yield takeEvery(userSlice.actions.addUser, watchAddUser);
   yield takeEvery(userSlice.actions.logUser, watchLogUser);
+  //yield takeEvery(userSlice.actions.saveUser, watchLogUser);
 }
 
 export default function* rootSaga() {

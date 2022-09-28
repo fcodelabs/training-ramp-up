@@ -13,6 +13,7 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import userSlice from "../features/userSlice";
+import { useNavigate } from "react-router-dom";
 
 function MadeWithLove() {
   return (
@@ -50,11 +51,13 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function SignUp() {
+  let navigate = useNavigate();
   const classes = useStyles();
   const dispatch = useDispatch();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [registered, setRegistered] = useState(false);
 
   const onNameChanged = (e) => setName(e.target.value);
   const onEmailChanged = (e) => setEmail(e.target.value);
@@ -62,6 +65,8 @@ export default function SignUp() {
   const onSavePostClicked = () => {
     if (name && email && password) {
       dispatch(userSlice.actions.addUser({ name, email, password }));
+      setRegistered(true);
+      alert("User Registered");
       setName("");
       setEmail("");
       setPassword("");
@@ -69,77 +74,83 @@ export default function SignUp() {
   };
 
   return (
-    <Container component="main" maxWidth="xs">
-      <CssBaseline />
-      <div className={classes.paper}>
-        <Avatar className={classes.avatar}>
-          <LockOutlinedIcon />
-        </Avatar>
-        <Typography component="h1" variant="h5">
-          Sign up
-        </Typography>
-        <form className={classes.form} noValidate>
-          <Grid container spacing={2}>
-            <Grid item xs={12}>
-              <TextField
-                autoComplete="fname"
-                name="firstName"
-                variant="outlined"
-                onChange={onNameChanged}
-                required
+    <>
+      {registered ? (
+        navigate("/")
+      ) : (
+        <Container component="main" maxWidth="xs">
+          <CssBaseline />
+          <div className={classes.paper}>
+            <Avatar className={classes.avatar}>
+              <LockOutlinedIcon />
+            </Avatar>
+            <Typography component="h1" variant="h5">
+              Sign up
+            </Typography>
+            <form className={classes.form} noValidate>
+              <Grid container spacing={2}>
+                <Grid item xs={12}>
+                  <TextField
+                    autoComplete="fname"
+                    name="firstName"
+                    variant="outlined"
+                    onChange={onNameChanged}
+                    required
+                    fullWidth
+                    id="firstName"
+                    label="Name"
+                    autoFocus
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    variant="outlined"
+                    required
+                    fullWidth
+                    id="email"
+                    label="Email Address"
+                    name="email"
+                    autoComplete="email"
+                    onChange={onEmailChanged}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    variant="outlined"
+                    required
+                    fullWidth
+                    name="password"
+                    label="Password"
+                    type="password"
+                    id="password"
+                    onChange={onPaaswordChanged}
+                    autoComplete="current-password"
+                  />
+                </Grid>
+              </Grid>
+              <Button
                 fullWidth
-                id="firstName"
-                label="Name"
-                autoFocus
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                variant="outlined"
-                required
-                fullWidth
-                id="email"
-                label="Email Address"
-                name="email"
-                autoComplete="email"
-                onChange={onEmailChanged}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                variant="outlined"
-                required
-                fullWidth
-                name="password"
-                label="Password"
-                type="password"
-                id="password"
-                onChange={onPaaswordChanged}
-                autoComplete="current-password"
-              />
-            </Grid>
-          </Grid>
-          <Button
-            fullWidth
-            variant="contained"
-            color="primary"
-            className={classes.submit}
-            onClick={onSavePostClicked}
-          >
-            Sign Up
-          </Button>
-          <Grid container>
-            <Grid item>
-              <Link href="/" variant="body2">
-                Already have an account? Sign in
-              </Link>
-            </Grid>
-          </Grid>
-        </form>
-      </div>
-      <Box mt={5}>
-        <MadeWithLove />
-      </Box>
-    </Container>
+                variant="contained"
+                color="primary"
+                className={classes.submit}
+                onClick={onSavePostClicked}
+              >
+                Sign Up
+              </Button>
+              <Grid container>
+                <Grid item>
+                  <Link href="/" variant="body2">
+                    Already have an account? Sign in
+                  </Link>
+                </Grid>
+              </Grid>
+            </form>
+          </div>
+          <Box mt={5}>
+            <MadeWithLove />
+          </Box>
+        </Container>
+      )}
+    </>
   );
 }

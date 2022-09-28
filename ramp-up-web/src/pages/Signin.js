@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
@@ -51,23 +52,27 @@ const useStyles = makeStyles((theme) => ({
 const Signin = () => {
   let navigate = useNavigate();
   const dispatch = useDispatch();
+
+  const logUserToken = useSelector((state) => state.user.users);
+  const logUserDetails = useSelector((state) => state.user.accessToken);
+
   const classes = useStyles();
   const [successLog, setSuccessLog] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  useEffect(() => {}, [logUserDetails]);
   const handleSubmit = async (e) => {
     e.preventDefault();
     dispatch(userSlice.actions.logUser({ email, password }));
-    // console.log("Dispatch");
-    // const res = await findUser(email, password);
-    // if (x.payload) {
-    //   setEmail("");
-    //   setPassword("");
-    //   setSuccessLog(true);
-    // }
-    // setEmail("");
-    // setPassword("");
-    setSuccessLog(false);
+    console.log("Log User details in signin page", logUserToken);
+    console.log("Log User token in signin page", logUserDetails);
+    if (logUserDetails) {
+      setEmail("");
+      setPassword("");
+      setSuccessLog(true);
+    } else {
+      alert("please Check your password and email");
+    }
   };
 
   return (

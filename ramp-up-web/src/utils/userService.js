@@ -7,13 +7,12 @@ const generateid = (data) =>
     0
   ) + 1;
 export const findUser = async ({ email, password }) => {
-  console.log("User Details", email, password);
   const res = await axios({
     method: "get",
     url: "http://localhost:8000/user",
     params: { email, password },
   });
-  console.log("Find User Response", res);
+
   return res;
 };
 

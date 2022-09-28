@@ -36,6 +36,7 @@ export const postUser = async (req, res) => {
     name: name,
     email: email,
     password: hash,
+    role: 'User',
   });
   await user.save();
   console.log(' Insert Item Dalin', user);

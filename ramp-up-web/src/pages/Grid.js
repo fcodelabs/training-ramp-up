@@ -19,12 +19,21 @@ const GridUI = () => {
   let navigate = useNavigate();
   const dispatch = useDispatch();
   const [data, setData] = useState([]);
+  const [admin, setAdmin] = useState(false);
 
   useEffect(() => {
     dispatch(studentSlice.actions.getStudents());
   }, []);
 
   const students = useSelector((state) => state.students.students);
+  const logUser = useSelector((state) => state.user.users);
+
+  useEffect(() => {
+    if (logUser) {
+      setAdmin(logUser.role === "Admin");
+    }
+  });
+
   const studentList = students.data;
   useEffect(() => {
     setData(studentList);
@@ -132,19 +141,26 @@ const GridUI = () => {
       editField={editField}
     >
       <GridToolbar>
-        <button
-          title="Add new"
-          className="k-button k-button-md k-rounded-md k-button-solid k-button-solid-primary"
-          onClick={addNew}
-        >
-          Add new
-        </button>
+        <>
+          {admin ? (
+            <button
+              title="Add new"
+              className="k-button k-button-md k-rounded-md k-button-solid k-button-solid-primary"
+              onClick={addNew}
+            >
+              Add new
+            </button>
+          ) : (
+            <div></div>
+          )}
+        </>
         <button
           className="k-button k-button-md k-rounded-md k-button-solid k-button-solid-primary"
           onClick={logout}
         >
           Logout
         </button>
+
         <Upload
           restrictions={{
             allowedExtensions: [".csv", ".xlsx"],
@@ -157,12 +173,13 @@ const GridUI = () => {
             "https://demos.telerik.com/kendo-ui/service-v4/upload/remove"
           }
         />
+        <button className="k-button k-button-md k-rounded-md k-button-solid k-button-solid-primary">
+          {logUser.name}
+        </button>
       </GridToolbar>
-
       <Column field="id" title="ID" width="80px" editable={false} />
       <Column field="name" title="Name" width="200px" />
       <Column field="gender" title="Gender" width="200px" editor="text" />
-
       <Column field="address" title="Address" width="200px" />
       <Column
         field="mobile_number"
@@ -179,7 +196,7 @@ const GridUI = () => {
       />
       <Column field="age" title="Age" width="130px" editable={false} />
 
-      <Column cell={CommandCell} width="180px" />
+      {admin && <Column cell={CommandCell} width="180px" />}
     </Grid>
   );
 };
