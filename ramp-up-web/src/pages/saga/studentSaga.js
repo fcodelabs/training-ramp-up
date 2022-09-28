@@ -1,5 +1,5 @@
 import studentSlice from "../slice/studentSlice";
-import { all, takeEvery, put, call } from "redux-saga/effects";
+import { takeEvery, put, call } from "redux-saga/effects";
 import {
   getItems,
   updateItem,
@@ -7,26 +7,23 @@ import {
   insertItem,
 } from "../../utils/services";
 
-function* studentGetFun() {
-  //console.log("studentgenFun");
+function* callstudentGetFun() {
   try {
     const res = yield call(getItems);
-    //console.log("ResStudent", res);
+
     yield put(studentSlice.actions.addStudent(res.data));
   } catch (e) {
     console.log(e);
   }
 }
-function* studentUpdateFun({ payload: payload }) {
-  //console.log("UpdateStudent");
+function* callstudentUpdateFun({ payload: payload }) {
   try {
     yield call(updateItem, payload);
-    //yield put(studentSlice.actions.addStudent())
   } catch (e) {
     console.log(e);
   }
 }
-function* studentDeleteFun({ payload: payload }) {
+function* callstudentDeleteFun({ payload: payload }) {
   console.log("Delete Student", payload);
   try {
     yield call(deleteItem, payload);
@@ -34,7 +31,7 @@ function* studentDeleteFun({ payload: payload }) {
     console.log(e);
   }
 }
-function* studentAddFun({ payload: payload }) {
+function* callstudentAddFun({ payload: payload }) {
   //console.log("STUDENTSAGAPAYLOAD", payload);
   try {
     yield call(insertItem, payload);
@@ -44,8 +41,8 @@ function* studentAddFun({ payload: payload }) {
 }
 
 export function* callStudentFun() {
-  yield takeEvery(studentSlice.actions.getStudents, studentGetFun);
-  yield takeEvery(studentSlice.actions.updateStudent, studentUpdateFun);
-  yield takeEvery(studentSlice.actions.deleteStudent, studentDeleteFun);
-  yield takeEvery(studentSlice.actions.createStudent, studentAddFun);
+  yield takeEvery(studentSlice.actions.getStudents, callstudentGetFun);
+  yield takeEvery(studentSlice.actions.updateStudent, callstudentUpdateFun);
+  yield takeEvery(studentSlice.actions.deleteStudent, callstudentDeleteFun);
+  yield takeEvery(studentSlice.actions.createStudent, callstudentAddFun);
 }

@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Avatar, Button, Grid, Paper, TextField } from "@mui/material";
-import { insertUser } from "../utils/services";
+
 import React from "react";
 //import DataTable from "./DataTable";
 import { useNavigate } from "react-router-dom";
@@ -119,6 +119,10 @@ function SignUp() {
                 style={mrstyle}
               >
                 Register
+              </Button>
+              <hr />
+              <Button fullWidth href="/">
+                Back
               </Button>
             </ValidatorForm>
           </Paper>

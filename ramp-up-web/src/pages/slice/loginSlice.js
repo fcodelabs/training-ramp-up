@@ -12,7 +12,7 @@ const loginSlice = createSlice({
     // },
   },
   reducers: {
-    tokenList(state, action) {},
+    tokenList() {},
     saveToken(state, action) {
       console.log("payload", action.payload);
       state.token = action.payload.token;

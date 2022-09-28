@@ -32,10 +32,15 @@ const DataTable = () => {
   const student = useSelector((state) => state);
   const token = useSelector((state) => state.token);
   console.log("TokenValue", token);
-  if (token.role == "Admin") {
-    setAdmin(true);
-  }
-  console.log("AdminDetails", admin);
+
+  useEffect(() => {
+    // console.log("Adminclg", token);
+    if (token.role == "Admin") {
+      setAdmin(true);
+    }
+  });
+
+  // console.log("AdminDetails", admin);
   //console.log("Student", student.student.student);
   useEffect(() => {
     dispatch(studentSlice.actions.getStudents());
@@ -221,10 +226,8 @@ const DataTable = () => {
           width="150px"
         />
         <Column field="age" title="Age" width="100px" editable={false} />
-        <>
-          admin ? (<Column cell={CommandCell} width="200px" title="commond" />
-          ):( )
-        </>
+
+        {admin && <Column cell={CommandCell} width="200px" title="commond" />}
       </Grid>
       <Upload
         restrictions={{

@@ -4,8 +4,7 @@ import userSlice from "../slice/userSlice";
 import loginSlice from "../slice/loginSlice";
 import { findUser, insertUser } from "../../utils/services";
 
-function* userGetFun(payload) {
-  //console.log("Payload", payload.payload.user);
+function* callUserGetFun(payload) {
   let res = yield call(findUser, payload.payload);
   console.log("Response", res.data);
   yield put(
@@ -15,15 +14,13 @@ function* userGetFun(payload) {
       token: res.data.accessToken,
     }),
   );
-
-  //console.log("Response", res);
 }
-function* userRegFun(payload) {
+function* callUserRegFun(payload) {
   console.log("Payload", payload);
   yield call(insertUser, payload);
 }
 
-export function* callUserGetFun() {
-  yield takeEvery(userSlice.actions.logInUser, userGetFun);
-  yield takeEvery(userSlice.actions.registerUser, userRegFun);
+export function* callUserFun() {
+  yield takeEvery(userSlice.actions.logInUser, callUserGetFun);
+  yield takeEvery(userSlice.actions.registerUser, callUserRegFun);
 }

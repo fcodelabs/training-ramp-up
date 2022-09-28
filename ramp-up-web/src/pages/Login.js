@@ -7,6 +7,8 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import { ValidatorForm, TextValidator } from "react-material-ui-form-validator";
+
 //import DataTable from "./DataTable";
 import React from "react";
 import { useNavigate } from "react-router-dom";
@@ -85,14 +87,16 @@ function Login() {
             </Grid>
             <form onSubmit={handleSubmit}>
               <TextField
-                id="username"
-                ref={userRef}
+                //id="username"
+                //ref={userRef}
                 value={user}
-                autoComplete="off"
+                //autoComplete="off"
                 label="User Email"
                 placeholder="Enter Email"
                 fullWidth
                 required
+                validators={["required", "isEmail"]}
+                errorMessages={["this field is required", "email is not valid"]}
                 style={mrstyle}
                 variant="standard"
                 onChange={(e) => setUser(e.target.value)}
