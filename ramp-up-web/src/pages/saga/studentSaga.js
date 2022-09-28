@@ -8,22 +8,26 @@ import {
 } from "../../utils/services";
 
 function* studentGetFun() {
+  //console.log("studentgenFun");
   try {
     const res = yield call(getItems);
-    console.log("ResStudent", res);
-    yield put(studentSlice.actions.saveStudent(res));
+    //console.log("ResStudent", res);
+    yield put(studentSlice.actions.addStudent(res.data));
   } catch (e) {
     console.log(e);
   }
 }
 function* studentUpdateFun({ payload: payload }) {
+  //console.log("UpdateStudent");
   try {
     yield call(updateItem, payload);
+    //yield put(studentSlice.actions.addStudent())
   } catch (e) {
     console.log(e);
   }
 }
 function* studentDeleteFun({ payload: payload }) {
+  console.log("Delete Student", payload);
   try {
     yield call(deleteItem, payload);
   } catch (e) {
@@ -31,6 +35,7 @@ function* studentDeleteFun({ payload: payload }) {
   }
 }
 function* studentAddFun({ payload: payload }) {
+  //console.log("STUDENTSAGAPAYLOAD", payload);
   try {
     yield call(insertItem, payload);
   } catch (e) {
@@ -41,6 +46,6 @@ function* studentAddFun({ payload: payload }) {
 export function* callStudentFun() {
   yield takeEvery(studentSlice.actions.getStudents, studentGetFun);
   yield takeEvery(studentSlice.actions.updateStudent, studentUpdateFun);
-  yield takeEvery(studentSlice.action.deleteStudent, studentDeleteFun);
-  yield takeEvery(studentSlice.actions.saveStudent, studentAddFun);
+  yield takeEvery(studentSlice.actions.deleteStudent, studentDeleteFun);
+  yield takeEvery(studentSlice.actions.createStudent, studentAddFun);
 }

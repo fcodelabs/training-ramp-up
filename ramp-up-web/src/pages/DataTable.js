@@ -23,6 +23,7 @@ const socket = io.connect("http://localhost:8000");
 import studentSlice from "./slice/studentSlice";
 const DataTable = () => {
   const [data, setData] = useState([]);
+  const [admin, setAdmin] = useState(false);
   let navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -33,17 +34,29 @@ const DataTable = () => {
   //   //getItems().then(({ data }) => setData(data));
   //   dispatch(studentSlice.action.getStudent());
   // }, []);
+  const student = useSelector((state) => state);
+  const token = useSelector((state) => state.token);
+  console.log("TokenValue", token);
+  if (token.role == "Admin") {
+    setAdmin(true);
+  }
+  console.log("AdminDetails", admin);
+  //console.log("Student", student.student.student);
   useEffect(() => {
     dispatch(studentSlice.actions.getStudents());
   }, []);
+  useEffect(() => {
+    setData(student.student.student);
+  }, [student]);
 
-  //console.log("STUDENTDATA", data);
-  const student = useSelector((state) => state.student);
-  console.log("Student", student);
-
-  const token = useSelector((state) => state.token);
+  // const token = useSelector((state) => state.token);
   //const name = useSelector((state) => state.token);
-  console.log("DataTabelToken", token.token);
+  //console.log("DataTabelToken", token.role);
+  // if (token.role == "Admin") {
+  //   setAdmin(true);
+  // }
+  // console.log("AdminDetails", admin);
+
   //console.log("DataTabelName", loginUser.name);
   useEffect(() => {
     socket.on("student_received", (data) => {
@@ -57,14 +70,17 @@ const DataTable = () => {
   }, [socket]);
 
   const remove = (dataItem) => {
-    deleteItem(dataItem).then(() => {
-      getItems().then((data) => {
-        setData(data);
-      });
-      socket.emit("student_remove", `Student was delete`);
-      alert("Student was delete");
-      getItems();
-    });
+    dispatch(studentSlice.actions.deleteStudent(dataItem));
+    //dispatch(studentSlice.actions.getStudents());
+    window.location.reload(false);
+    // deleteItem(dataItem).then(() => {
+    //   getItems().then((data) => {
+    //     setData(data);
+    //   });
+    //   socket.emit("student_remove", `Student was delete`);
+    //   alert("Student was delete");
+    //   getItems();
+    // });
   };
 
   const add = (dataItem) => {
@@ -74,17 +90,22 @@ const DataTable = () => {
     console.log(date);
     // dispatch(studentSlice.actions.saveStudent(dataItem));
     socket.emit("student_added", `New student was added`);
-
-    insertItem(dataItem).then((res) => {
-      console.log("data", res.data);
-      window.location.reload(false);
-      alert("Student was Added");
-    });
+    dispatch(studentSlice.actions.createStudent(dataItem));
+    dispatch(studentSlice.actions.getStudents());
+    // window.localStorage.reload(false);
+    // insertItem(dataItem).then((res) => {
+    //   console.log("data", res.data);
+    //   window.location.reload(false);
+    //   alert("Student was Added");
+    // });
   };
 
   const update = (dataItem) => {
     dataItem.inEdit = false;
     console.log("Upadate Dataitem", dataItem);
+    dispatch(studentSlice.actions.updateStudent(dataItem));
+    //window.localStorage.reload(false);
+    //dispatch(studentSlice.actions.getStudents());
     //socket.emit("student_added", `Student Changed`);
     // updateItem(dataItem).then((res) => {
     //   console.log("res dara", res.data);
@@ -166,6 +187,7 @@ const DataTable = () => {
       >
         <GridToolbar>
           <h1>{token.name}</h1>
+          <p1>{token.role}</p1>
           <button
             title="Add new"
             className="k-button k-button-md k-rounded-md k-button-solid k-button-solid-primary"
@@ -190,7 +212,6 @@ const DataTable = () => {
           width="150px"
           editor="numeric"
         />
-
         <Column
           field="birth"
           title="Date of Birth"
@@ -199,8 +220,10 @@ const DataTable = () => {
           width="150px"
         />
         <Column field="age" title="Age" width="100px" editable={false} />
-
-        <Column cell={CommandCell} width="200px" title="commond" />
+        <>
+          admin ? (<Column cell={CommandCell} width="200px" title="commond" />{" "}
+          ):( )
+        </>
       </Grid>
       <Upload
         restrictions={{

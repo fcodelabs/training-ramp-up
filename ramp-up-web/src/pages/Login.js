@@ -43,7 +43,7 @@ function Login() {
     console.log("user", user);
     const res = dispatch(
       userSlice.actions.logInUser({ user: user, password: pwd }),
-      console.log("Dispatch test"),
+      //console.log("Dispatch test"),
     );
     console.log("User Value", res);
     if (res) {

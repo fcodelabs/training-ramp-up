@@ -5,6 +5,7 @@ const loginSlice = createSlice({
   initialState: {
     token: "",
     name: "",
+    role: "",
     // token: {
     //   token: "",
     //   name: "",
@@ -16,8 +17,9 @@ const loginSlice = createSlice({
       console.log("payload", action.payload);
       state.token = action.payload.token;
       state.name = action.payload.name;
-      console.log("SliceToken", state.token);
-      console.log("SliceName", state.name);
+      state.role = action.payload.role;
+      //console.log("SliceToken", state.token);
+      //console.log("SliceName", state.role);
     },
   },
 });

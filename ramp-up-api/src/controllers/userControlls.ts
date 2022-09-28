@@ -21,6 +21,7 @@ export const postUser = async (req, res) => {
     name: name,
     email: email,
     password: hash,
+    role: 'User',
   });
   try {
     await user.save();
