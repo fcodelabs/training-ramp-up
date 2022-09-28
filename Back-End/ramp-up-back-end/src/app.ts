@@ -5,12 +5,11 @@ import express, {
   Application,
   ErrorRequestHandler,
 } from "express";
-import { Server } from "http";
 import createHttpError from "http-errors";
 
 const app: Application = express();
 
-app.get("/", (req: Request, res: Response, next: NextFunction) => {
+app.get("/", (req: Request, res: Response) => {
   res.send("Ramp Up");
 });
 
@@ -18,7 +17,7 @@ app.use((req: Request, res: Response, next: NextFunction) => {
   next(new createHttpError.NotFound());
 });
 
-const errorHandeler: ErrorRequestHandler = (err, req, res, next) => {
+const errorHandeler: ErrorRequestHandler = (err, req, res) => {
   res.status(err.status || 500);
   res.send({
     status: err.status || 500,
@@ -28,6 +27,6 @@ const errorHandeler: ErrorRequestHandler = (err, req, res, next) => {
 
 app.use(errorHandeler);
 
-const server: Server = app.listen(3000, () =>
+app.listen(3000, () =>
   console.log("The application is listening on port 3000!")
 );
