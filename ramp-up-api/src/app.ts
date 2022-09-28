@@ -7,6 +7,7 @@ import cors from "cors";
 import studentRoute from "./routes/studentRoute";
 import { Server } from "socket.io";
 import http from "http";
+import userRoute from "./routes/userRoute"
 
 const app = express();
 const server = http.createServer(app);
@@ -15,6 +16,7 @@ app.use(BodyParser.json());
 app.use(BodyParser.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(studentRoute);
+app.use(userRoute);
 
 const io = new Server(server, {
   cors: {

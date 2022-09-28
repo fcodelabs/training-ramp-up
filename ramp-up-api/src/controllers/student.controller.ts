@@ -3,12 +3,12 @@ import { Request, Response } from "express";
 
 export const getStudent = async (req: Request, res: Response) => {
   const student = await Student.find();
-  console.log("testing the getStudent",student);
+  console.log("testing the getStudent", student);
   res.send(student);
 };
 
 export const postStudent = async (req: Request, res: Response) => {
-  console.log("post student",req.body);
+  console.log("post student", req.body);
   const { StudentName, Gender, Address, MobileNo, DOB, Age } = req.body;
   const student = Student.create({
     StudentName: StudentName,
