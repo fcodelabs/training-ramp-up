@@ -46,8 +46,10 @@ function* watchAddUser({ payload: payload }) {
   }
 }
 function* watchLogUser({ payload: payload }) {
+  console.log("saga Works");
   const response = yield call(findUser, payload);
-  yield put(userSlice.actions.saveUser(response));
+  console.log("sagas Response", response);
+  //yield put(userSlice.actions.logUser(response));
 }
 
 export function* postSagas() {

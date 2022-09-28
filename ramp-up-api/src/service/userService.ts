@@ -5,18 +5,18 @@ const saltRounds = 10;
 const jwt = require('jsonwebtoken');
 
 export const findUser = async (req, res) => {
-  console.log('dwwwwwwwwwwwwwwwwwwwwwwwwwwwwww');
-  console.log('parmsData', req.query);
+  console.log('backedn request', req.query);
   const accessToken = jwt.sign(
     req.query.email,
     process.env.TOKEN_KEY,
     // { expiresIn: '10s' },
   );
+  console.log('Users', Users);
   const user = await Users.findOneBy({ email: req.query.email });
-  console.log('UserDetails', user);
+  console.log('fund User ', user);
+
   if (user) {
     const value = await bcrypt.compare(req.query.password, user.password);
-    console.log(value);
     if (value) {
       console.log('token', accessToken);
       return res.send({ user: user, accessToken: accessToken });

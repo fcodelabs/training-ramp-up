@@ -1,4 +1,5 @@
 import React from "react";
+import { useDispatch } from "react-redux";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -10,9 +11,10 @@ import Grid from "@material-ui/core/Grid";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
-import { findUser } from "../utils/userService";
+// import { findUser } from "../utils/userService";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import userSlice from "../features/userSlice";
 const MadeWithLove = () => (
   <Typography variant="body2" color="textSecondary" align="center"></Typography>
 );
@@ -48,18 +50,24 @@ const useStyles = makeStyles((theme) => ({
 
 const Signin = () => {
   let navigate = useNavigate();
+  const dispatch = useDispatch();
   const classes = useStyles();
   const [successLog, setSuccessLog] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const res = await findUser(email, password);
-    if (res) {
-      setEmail("");
-      setPassword("");
-      setSuccessLog(true);
-    }
+    dispatch(userSlice.actions.logUser({ email, password }));
+    // console.log("Dispatch");
+    // const res = await findUser(email, password);
+    // if (x.payload) {
+    //   setEmail("");
+    //   setPassword("");
+    //   setSuccessLog(true);
+    // }
+    // setEmail("");
+    // setPassword("");
+    setSuccessLog(false);
   };
 
   return (
