@@ -9,12 +9,7 @@ import { useNavigate } from "react-router-dom";
 
 import { useSelector, useDispatch } from "react-redux";
 
-import {
-  insertItem,
-  getItems,
-  updateItem,
-  deleteItem,
-} from "../utils/services";
+import { getItems } from "../utils/services";
 const editField = "inEdit";
 import { Upload } from "@progress/kendo-react-upload";
 
@@ -188,13 +183,19 @@ const DataTable = () => {
         <GridToolbar>
           <h1>{token.name}</h1>
           <p1>{token.role}</p1>
-          <button
-            title="Add new"
-            className="k-button k-button-md k-rounded-md k-button-solid k-button-solid-primary"
-            onClick={addNew}
-          >
-            Add new
-          </button>
+          <>
+            {admin ? (
+              <button
+                title="Add new"
+                className="k-button k-button-md k-rounded-md k-button-solid k-button-solid-primary"
+                onClick={addNew}
+              >
+                Add new
+              </button>
+            ) : (
+              <div></div>
+            )}
+          </>
           <button
             className="k-button k-button-md k-rounded-md k-button-solid k-button-solid-primary"
             onClick={logOut}
@@ -221,7 +222,7 @@ const DataTable = () => {
         />
         <Column field="age" title="Age" width="100px" editable={false} />
         <>
-          admin ? (<Column cell={CommandCell} width="200px" title="commond" />{" "}
+          admin ? (<Column cell={CommandCell} width="200px" title="commond" />
           ):( )
         </>
       </Grid>

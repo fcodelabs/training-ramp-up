@@ -89,8 +89,8 @@ function Login() {
                 ref={userRef}
                 value={user}
                 autoComplete="off"
-                label="User Name"
-                placeholder="Enter User Name"
+                label="User Email"
+                placeholder="Enter Email"
                 fullWidth
                 required
                 style={mrstyle}
