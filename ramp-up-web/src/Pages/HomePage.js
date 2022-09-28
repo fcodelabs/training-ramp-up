@@ -5,82 +5,67 @@ import {
   GridToolbar,
 } from "@progress/kendo-react-grid";
 import { MyCommandCell } from "../Components/MyCommandCell";
-import {
-  insertItem,
-  getItems,
-  updateItem,
-  deleteItem,
-} from "../Utils/services";
+import { getItems } from "../services/studentServices";
 import { Upload } from "@progress/kendo-react-upload";
 import { io } from "socket.io-client";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import studentSlice from "../redux/slice/studentSlice";
 
 const socket = io("http://localhost:8080");
 const editField = "inEdit";
 
 const HomePage = () => {
   const [data, setData] = useState([]);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-  const fetchItems = async () => {
-    const res = await getItems();
-    const formattedData = res.map((e) => ({
-      inEdit: false,
-      Discontinued: false,
-      ...e,
-    }));
-    setData(formattedData);
-  };
+  const students = useSelector((state) => state.students.students);
+  const studentList = students.data;
+
   useEffect(() => {
-    fetchItems();
+    setData(studentList);
+  }, [studentList]);
+
+  useEffect(() => {
+    dispatch(studentSlice.actions.retrieveStudents());
   }, []);
 
   useEffect(() => {
     socket.on("student_received", (data) => {
       alert(data);
-      fetchItems();
     });
     socket.on("student_deleted", (data) => {
       alert(data);
-      fetchItems();
     });
   }, [socket]);
 
   const remove = (dataItem) => {
     try {
-      deleteItem(dataItem);
+      dispatch(studentSlice.actions.removeStudent(dataItem));
+
       socket.emit("student_removed", `Student was deleted`);
       alert("Student was deleted");
-      fetchItems();
     } catch (error) {
       console.log(error);
     }
   };
 
   const add = (dataItem) => {
-    dataItem.inEdit = true;
     try {
-      insertItem(dataItem);
+      dispatch(studentSlice.actions.insertStudent({ dataItem }));
       socket.emit("student_added", `Student was added `);
       alert("Student was added");
-      fetchItems();
     } catch (error) {
       console.log(error);
     }
   };
 
   const update = (dataItem) => {
-    // dataItem.inEdit = false;
-
     try {
-      updateItem(dataItem);
-
-      // updateItem(dataItem).then((res) => {
-      //   console.log("res dara", res.data);
-
-      // });
-
+      dispatch(studentSlice.actions.putStudent(dataItem));
       socket.emit("student_added", `Student was changed`);
       alert("Student was updated");
-      fetchItems();
     } catch (error) {
       console.log(error);
     }
@@ -88,7 +73,6 @@ const HomePage = () => {
   const discard = () => {
     const newData = [...data];
     newData.splice(0, 1);
-
     setData(newData);
   };
 
@@ -145,6 +129,10 @@ const HomePage = () => {
     />
   );
 
+  const logout = () => {
+    navigate("/");
+  };
+
   return (
     <Grid
       style={{
@@ -162,7 +150,12 @@ const HomePage = () => {
         >
           Add new
         </button>
-
+        <button
+          className="k-button k-button-md k-rounded-md k-button-solid k-button-solid-primary"
+          onClick={logout}
+        >
+          Logout
+        </button>
         <Upload
           restrictions={{
             allowedExtensions: [".csv", ".xlsx"],
@@ -179,7 +172,6 @@ const HomePage = () => {
       <Column field="ID" title="ID" width="50px" editable={false} />
       <Column field="StudentName" title="Student Name" width="200px" />
       <Column field="Gender" title="Gender" width="120px" />
-      {/* <DropDownList Gender={["Female", "Male", "Other"]}/> */}
       <Column field="Address" title="Address" width="200px" />
       <Column field="MobileNo" title="Mobile No" width="150px" />
       <Column

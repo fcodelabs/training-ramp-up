@@ -28,9 +28,10 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "serve": "nodemon server.js",
-    "start": "ts-node src/app.ts",
+    "start": "nodemon src/app.ts",
     "typeorm": "typeorm-ts-node-commonjs",
     "dev": "nodemon ./index.ts"
+
   },
   "author": "",
   "license": "ISC",

@@ -1,20 +1,14 @@
 import * as React from "react";
-// import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
 import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
-// import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useState, useEffect } from "react";
-// import { useNavigate } from "react-router-dom";
-// import {Formik} from 'formik';
-// import * as EmailValidator from "email-validator";
-// import * as Yup from "yup"; //JavaScript schema builder for value parsing and validation
 
 const theme = createTheme();
 
@@ -23,7 +17,6 @@ export default function SignUp() {
   const [formValues, setFormValues] = useState(initialValues);
   const [formErrors, setFormErrors] = useState({});
   const [isSubmit, setIsSubmit] = useState(false);
-  // const navigate = useNavigate();
 
   const handleChange = (event) => {
     console.log(event.target);
@@ -37,7 +30,7 @@ export default function SignUp() {
     setFormErrors(validate(formValues));
     setIsSubmit(true);
     const data = new FormData(event.currentTarget);
-    // navigate ("/home");
+
     console.log({
       email: data.get("email"),
       password: data.get("password"),
@@ -74,7 +67,6 @@ export default function SignUp() {
       errors.password = "Password must be more than 4 characters!";
     }
     return errors;
-    
   };
 
   return (
@@ -89,9 +81,6 @@ export default function SignUp() {
             alignItems: "center",
           }}
         >
-          {/* <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
-            <LockOutlinedIcon />
-          </Avatar> */}
           <Typography component="h1" variant="h5">
             Sign up
           </Typography>
@@ -100,7 +89,6 @@ export default function SignUp() {
             noValidate
             onSubmit={handleSubmit}
             sx={{ mt: 3 }}
-            
           >
             <Grid container spacing={2}>
               <Grid item xs={12} sm={6}>
@@ -173,7 +161,7 @@ export default function SignUp() {
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
-              onClick = {handleSubmit}
+              onClick={handleSubmit}
             >
               Sign Up
             </Button>

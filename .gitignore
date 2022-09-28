@@ -6,6 +6,7 @@ ramp-up-web/package-lock.json
 .vscode
 ramp-up-api/node_modules/**/*
 # dependencies
+ramp-up-api/dist
 
 /node_modules
 /.pnp

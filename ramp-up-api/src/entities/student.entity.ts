@@ -1,12 +1,4 @@
-// import { type } from "os";
 import { Entity, Column, BaseEntity, PrimaryGeneratedColumn } from "typeorm";
-
-//enum consists of constant strings as shown as below
-enum Gender{
-  Female = "Female",
-  Male = "Male",
-  Other = "Other"
-}
 
 @Entity()
 export class Student extends BaseEntity {
@@ -16,10 +8,8 @@ export class Student extends BaseEntity {
   @Column()
   StudentName: string;
 
-  @Column(
-    {type: 'enum', enum:Gender}
-)
-  Gender: Gender;
+  @Column()
+  Gender: string;
 
   @Column()
   Address: string;
