@@ -41,6 +41,7 @@ function* watchDeleteStudent({ payload: payload }) {
 function* watchAddUser({ payload: payload }) {
   try {
     yield call(insertUser, payload);
+    payload.navigate("/");
   } catch (error) {
     console.log(error);
   }
@@ -50,6 +51,8 @@ function* watchLogUser({ payload: payload }) {
     const response = yield call(findUser, payload);
     //console.log("sagas Response", response.data.accessToken);
     yield put(userSlice.actions.saveUser(response.data));
+    console.log("Payload", payload);
+    payload.navigate("/grid");
   } catch (error) {
     alert(error);
   }

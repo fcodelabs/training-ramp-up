@@ -66,7 +66,7 @@ const GridUI = () => {
   const add = (dataItem) => {
     dataItem.inEdit = true;
     dispatch(studentSlice.actions.createStudent({ dataItem }));
-    window.location.reload(false);
+    //window.location.reload(false);
   };
   const update = (dataItem) => {
     dataItem.s;

@@ -71,7 +71,7 @@ const Signin = () => {
       /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
     if (email.match(emailCond)) {
       e.preventDefault();
-      dispatch(userSlice.actions.logUser({ email, password }));
+      dispatch(userSlice.actions.logUser({ email, password, navigate }));
 
       if (successLog) {
         setEmail("");
@@ -83,81 +83,67 @@ const Signin = () => {
   };
 
   return (
-    <>
-      {successLog ? (
-        navigate("/grid")
-      ) : (
-        <Grid container component="main" className={classes.root}>
-          <CssBaseline />
-          <Grid item xs={false} sm={4} md={7} className={classes.image} />
-          <Grid
-            item
-            xs={12}
-            sm={8}
-            md={5}
-            component={Paper}
-            elevation={6}
-            square
-          >
-            <div className={classes.paper}>
-              <Avatar className={classes.avatar}>
-                <LockOutlinedIcon />
-              </Avatar>
-              <Typography component="h1" variant="h5">
-                Sign in
-              </Typography>
-              <form className={classes.form} noValidate onSubmit={handleSubmit}>
-                <TextField
-                  variant="outlined"
-                  margin="normal"
-                  required
-                  fullWidth
-                  id="email"
-                  label="Email Address"
-                  name="email"
-                  onChange={(e) => setEmail(e.target.value)}
-                  autoComplete="email"
-                  autoFocus
-                />
-                <TextField
-                  variant="outlined"
-                  margin="normal"
-                  required
-                  fullWidth
-                  name="password"
-                  label="Password"
-                  type="password"
-                  id="password"
-                  onChange={(e) => setPassword(e.target.value)}
-                  autoComplete="current-password"
-                />
+    <Grid container component="main" className={classes.root}>
+      <CssBaseline />
+      <Grid item xs={false} sm={4} md={7} className={classes.image} />
+      <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
+        <div className={classes.paper}>
+          <Avatar className={classes.avatar}>
+            <LockOutlinedIcon />
+          </Avatar>
+          <Typography component="h1" variant="h5">
+            Sign in
+          </Typography>
+          <form className={classes.form} noValidate onSubmit={handleSubmit}>
+            <TextField
+              variant="outlined"
+              margin="normal"
+              required
+              fullWidth
+              id="email"
+              label="Email Address"
+              name="email"
+              onChange={(e) => setEmail(e.target.value)}
+              autoComplete="email"
+              autoFocus
+            />
+            <TextField
+              variant="outlined"
+              margin="normal"
+              required
+              fullWidth
+              name="password"
+              label="Password"
+              type="password"
+              id="password"
+              onChange={(e) => setPassword(e.target.value)}
+              autoComplete="current-password"
+            />
 
-                <Button
-                  type="submit"
-                  onClick={handleSubmit}
-                  fullWidth
-                  variant="contained"
-                  color="primary"
-                  className={classes.submit}
-                >
-                  Sign In
-                </Button>
-                <Grid container>
-                  <Grid item>
-                    <Link href="/signup" variant="body2">
-                      {"Don't have an account? Sign Up"}
-                    </Link>
-                  </Grid>
-                </Grid>
-                <Box mt={5}>
-                  <MadeWithLove />
-                </Box>
-              </form>
-            </div>
-          </Grid>
-        </Grid>
-      )}
-    </>
+            <Button
+              type="submit"
+              onClick={handleSubmit}
+              fullWidth
+              variant="contained"
+              color="primary"
+              className={classes.submit}
+            >
+              Sign In
+            </Button>
+            <Grid container>
+              <Grid item>
+                <Link href="/signup" variant="body2">
+                  {"Don't have an account? Sign Up"}
+                </Link>
+              </Grid>
+            </Grid>
+            <Box mt={5}>
+              <MadeWithLove />
+            </Box>
+          </form>
+        </div>
+      </Grid>
+    </Grid>
   );
 };
 
