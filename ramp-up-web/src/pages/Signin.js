@@ -53,25 +53,32 @@ const Signin = () => {
   let navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const logUserToken = useSelector((state) => state.user.users);
+  //const logUserToken = useSelector((state) => state.user.users);
   const logUserDetails = useSelector((state) => state.user.accessToken);
 
   const classes = useStyles();
   const [successLog, setSuccessLog] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  useEffect(() => {}, [logUserDetails]);
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    dispatch(userSlice.actions.logUser({ email, password }));
-    console.log("Log User details in signin page", logUserToken);
-    console.log("Log User token in signin page", logUserDetails);
+
+  useEffect(() => {
     if (logUserDetails) {
-      setEmail("");
-      setPassword("");
       setSuccessLog(true);
+    }
+  }, [logUserDetails]);
+  const handleSubmit = async (e) => {
+    const emailCond =
+      /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+    if (email.match(emailCond)) {
+      e.preventDefault();
+      dispatch(userSlice.actions.logUser({ email, password }));
+
+      if (successLog) {
+        setEmail("");
+        setPassword("");
+      }
     } else {
-      alert("please Check your password and email");
+      alert("please Enter Valid email or correct email and password");
     }
   };
 

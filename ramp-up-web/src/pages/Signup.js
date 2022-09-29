@@ -1,5 +1,4 @@
-import React from "react";
-import { useState } from "react";
+import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
@@ -14,6 +13,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import userSlice from "../features/userSlice";
 import { useNavigate } from "react-router-dom";
+// import { ValidatorForm, TextValidator } from "react-material-ui-form-validator";
 
 function MadeWithLove() {
   return (
@@ -64,12 +64,48 @@ export default function SignUp() {
   const onPaaswordChanged = (e) => setPassword(e.target.value);
   const onSavePostClicked = () => {
     if (name && email && password) {
-      dispatch(userSlice.actions.addUser({ name, email, password }));
-      setRegistered(true);
-      alert("User Registered");
-      setName("");
-      setEmail("");
-      setPassword("");
+      const emailCond =
+        /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+      const cond1 = /^(?=.*[a-z]).{6,20}$/;
+      const cond2 = /^(?=.*[A-Z]).{6,20}$/;
+      const cond3 = /^(?=.*[0-9]).{6,20}$/;
+      if (
+        email.match(emailCond) &&
+        password.length > 6 &&
+        password.length < 20 &&
+        password.match(cond1) &&
+        password.match(cond2) &&
+        password.match(cond3)
+      ) {
+        dispatch(userSlice.actions.addUser({ name, email, password }));
+        setRegistered(true);
+        alert("User Registered");
+        setName("");
+        setEmail("");
+        setPassword("");
+      } else if (password.length > 6 && password.length < 20) {
+        alert("Password must be range 5 to 20");
+      } else if (
+        !(
+          password.match(cond1) &&
+          password.match(cond2) &&
+          password.match(cond3)
+        )
+      ) {
+        alert(
+          "Paasord must Be include least one capital letter,at least a number,least one lowercase"
+        );
+      } else {
+        alert("Email must be valid");
+      }
+    } else if (!name) {
+      alert("All Field Must Be fill");
+    } else if (!email) {
+      alert("All Field Must Be fill");
+    } else if (!password) {
+      alert("All Field Must Be fill");
+    } else {
+      console.log("");
     }
   };
 
