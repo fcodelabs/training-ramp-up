@@ -6,7 +6,10 @@ import { findUser, insertUser } from "../../utils/services";
 
 function* callUserGetFun(payload) {
   let res = yield call(findUser, payload.payload);
-  console.log("Response", res.data);
+  console.log("USERDETAILSLOG", res.data.user.role);
+  localStorage.setItem("name", res.data.user.name);
+  localStorage.setItem("role", res.data.user.role);
+
   yield put(
     loginSlice.actions.saveToken({
       name: res.data.user.name,
@@ -14,10 +17,11 @@ function* callUserGetFun(payload) {
       token: res.data.accessToken,
     }),
   );
+  payload.payload.navigate("/datatable");
 }
 function* callUserRegFun(payload) {
-  console.log("Payload", payload);
   yield call(insertUser, payload);
+  payload.payload.navigate("/");
 }
 
 export function* callUserFun() {

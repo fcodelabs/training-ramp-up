@@ -17,24 +17,26 @@ function* callstudentGetFun() {
   }
 }
 function* callstudentUpdateFun({ payload: payload }) {
+  console.log("UpdatePayload", payload);
   try {
     yield call(updateItem, payload);
+    yield put(studentSlice.actions.getStudents());
   } catch (e) {
     console.log(e);
   }
 }
 function* callstudentDeleteFun({ payload: payload }) {
-  console.log("Delete Student", payload);
   try {
     yield call(deleteItem, payload);
+    yield put(studentSlice.actions.getStudents());
   } catch (e) {
     console.log(e);
   }
 }
 function* callstudentAddFun({ payload: payload }) {
-  //console.log("STUDENTSAGAPAYLOAD", payload);
   try {
     yield call(insertItem, payload);
+    yield put(studentSlice.actions.getStudents());
   } catch (e) {
     console.log(e);
   }

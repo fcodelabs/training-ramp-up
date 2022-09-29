@@ -31,11 +31,11 @@ const DataTable = () => {
   // }, []);
   const student = useSelector((state) => state);
   const token = useSelector((state) => state.token);
-  console.log("TokenValue", token);
-
+  //console.log("TokenValue", token);
+  console.log("AAdminDetails", localStorage.getItem("role"));
   useEffect(() => {
     // console.log("Adminclg", token);
-    if (token.role == "Admin") {
+    if (localStorage.getItem("role") == "Admin") {
       setAdmin(true);
     }
   });
@@ -72,7 +72,8 @@ const DataTable = () => {
   const remove = (dataItem) => {
     dispatch(studentSlice.actions.deleteStudent(dataItem));
     //dispatch(studentSlice.actions.getStudents());
-    window.location.reload(false);
+    //dispatch(studentSlice.actions.getStudents());
+    //window.location.reload(false);
     // deleteItem(dataItem).then(() => {
     //   getItems().then((data) => {
     //     setData(data);
@@ -91,7 +92,7 @@ const DataTable = () => {
     // dispatch(studentSlice.actions.saveStudent(dataItem));
     socket.emit("student_added", `New student was added`);
     dispatch(studentSlice.actions.createStudent(dataItem));
-    dispatch(studentSlice.actions.getStudents());
+    //dispatch(studentSlice.actions.getStudents());
     // window.localStorage.reload(false);
     // insertItem(dataItem).then((res) => {
     //   console.log("data", res.data);
@@ -104,6 +105,7 @@ const DataTable = () => {
     dataItem.inEdit = false;
     console.log("Upadate Dataitem", dataItem);
     dispatch(studentSlice.actions.updateStudent(dataItem));
+    dispatch(studentSlice.actions.getStudents());
     //window.localStorage.reload(false);
     //dispatch(studentSlice.actions.getStudents());
     //socket.emit("student_added", `Student Changed`);
@@ -186,8 +188,8 @@ const DataTable = () => {
         editField={editField}
       >
         <GridToolbar>
-          <h1>{token.name}</h1>
-          <p1>{token.role}</p1>
+          <h1>{localStorage.getItem("name")}</h1>
+          <p1>{localStorage.getItem("role")}</p1>
           <>
             {admin ? (
               <button

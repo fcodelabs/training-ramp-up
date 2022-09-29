@@ -45,7 +45,7 @@ export const insertItem = async (item) => {
     data.unshift(item);
     item.age = new Date().getFullYear() - new Date(item.birth).getFullYear();
     //console.log("Age", typeof item.age);
-    const resdata = await axios.post("http://localhost:8000", item);
+    const resdata = await axios.post("http://localhost:8000", item, config);
     console.log("RESDATA", resdata);
     return resdata;
   }
@@ -61,14 +61,20 @@ export const updateItem = async (item) => {
   ) {
     alert("Incorrect Validation");
   } else {
-    item.age = new Date().getFullYear() - new Date(item.date).getFullYear();
-    const res = await axios.put(`http://localhost:8000/${item.id}`, item);
+    item.age = new Date().getFullYear() - new Date(item.birth).getFullYear();
+    console.log("Upadte AGE", item);
+    const res = await axios.put(
+      `http://localhost:8000/${item.id}`,
+      item,
+      config,
+    );
     return res;
   }
 };
 export const deleteItem = (item) => {
-  const res = axios.delete(`http://localhost:8000/${item.id}`);
-
+  console.log("USERDELETRES", item);
+  const res = axios.delete(`http://localhost:8000/${item.id}`, config);
+  console.log("USERDELETRES", res);
   return res;
 };
 export const getItems = async () => {

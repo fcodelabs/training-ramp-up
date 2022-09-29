@@ -8,11 +8,9 @@ export const userSlice = createSlice({
   reducers: {
     logInUser(state, action) {
       console.log("Action", action);
-      return action.payload;
     },
     registerUser(state, action) {
       console.log("User Register", action);
-      return action.payload.user;
     },
   },
 });

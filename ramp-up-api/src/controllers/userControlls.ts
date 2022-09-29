@@ -45,19 +45,21 @@ export const getUser = async (req, res) => {
 
 export const findUser = async (req, res) => {
   console.log('parmsData', req.query);
-  const accessToken = jwt.sign(
-    req.query.email,
-    process.env.ACCESS_TOKEN_SECRET,
-    // { expiresIn: '10s' },
-  );
+  // const accessToken = jwt.sign(
+  //   req.query.email,
+  //   process.env.ACCESS_TOKEN_SECRET,
+  //   // { expiresIn: '10s' },
+  // );
   const user = await User.findOneBy({ email: req.query.email });
-  console.log('UserDetails', user);
+  console.log('USERDETAILS', user);
   if (user) {
     const value = await bcrypt.compare(req.query.password, user.password);
     console.log(value);
     if (value) {
-      console.log('token', accessToken);
-      return res.send({ user: user, accessToken: accessToken });
+      return res.send({
+        user: user,
+        accessToken: jwt.sign(req.query.email, process.env.ACCESS_TOKEN_SECRET),
+      });
     } else {
       console.log('User not here');
     }

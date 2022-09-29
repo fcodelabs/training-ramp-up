@@ -40,6 +40,7 @@ function SignUp() {
         user: user,
         password: password,
         email: email,
+        navigate,
       }),
     );
     console.log("Register res", res);
@@ -59,76 +60,69 @@ function SignUp() {
     //console.log(data);
   };
   return (
-    <>
-      {success ? (
-        // <DataTable />
-        navigate("/")
-      ) : (
-        <Grid>
-          <Paper elevation={10} style={paperStyle}>
-            <Grid align="center">
-              <Avatar>{/* <FaceIcon /> */}</Avatar>
-              <h2>Register</h2>
-            </Grid>
-            <ValidatorForm onSubmit={handleSubmit}>
-              <TextField
-                id="user"
-                ref={userRef}
-                value={user}
-                autoComplete="off"
-                label="User Name"
-                placeholder="Enter User Name"
-                fullWidth
-                required
-                style={mrstyle}
-                variant="standard"
-                onChange={(e) => setUser(e.target.value)}
-              ></TextField>
-
-              <TextValidator
-                // ref={emailRef}
-                label="Email"
-                // onBlur={handleBlur}
-                required
-                onChange={(e) => setEmail(e.target.value)}
-                name="email"
-                value={email}
-                fullWidth
-                variant="standard"
-                validators={["required", "isEmail"]}
-                errorMessages={["this field is required", "email is not valid"]}
-              />
-
-              <TextField
-                id="password"
-                label="Password"
-                placeholder="Enter Password"
-                type="password"
-                fullWidth
-                required
-                style={mrstyle}
-                value={password}
-                variant="standard"
-                onChange={(e) => setPassword(e.target.value)}
-              ></TextField>
-              <Button
-                type="submit"
-                color="primary"
-                variant="contained"
-                fullWidth
-                style={mrstyle}
-              >
-                Register
-              </Button>
-              <hr />
-              <Button fullWidth href="/">
-                Back
-              </Button>
-            </ValidatorForm>
-          </Paper>
+    <Grid>
+      <Paper elevation={10} style={paperStyle}>
+        <Grid align="center">
+          <Avatar>{/* <FaceIcon /> */}</Avatar>
+          <h2>Register</h2>
         </Grid>
-      )}
-    </>
+        <ValidatorForm onSubmit={handleSubmit}>
+          <TextField
+            id="user"
+            ref={userRef}
+            value={user}
+            autoComplete="off"
+            label="User Name"
+            placeholder="Enter User Name"
+            fullWidth
+            required
+            style={mrstyle}
+            variant="standard"
+            onChange={(e) => setUser(e.target.value)}
+          ></TextField>
+
+          <TextValidator
+            // ref={emailRef}
+            label="Email"
+            // onBlur={handleBlur}
+            required
+            onChange={(e) => setEmail(e.target.value)}
+            name="email"
+            value={email}
+            fullWidth
+            variant="standard"
+            validators={["required", "isEmail"]}
+            errorMessages={["this field is required", "email is not valid"]}
+          />
+
+          <TextField
+            id="password"
+            label="Password"
+            placeholder="Enter Password"
+            type="password"
+            fullWidth
+            required
+            style={mrstyle}
+            value={password}
+            variant="standard"
+            onChange={(e) => setPassword(e.target.value)}
+          ></TextField>
+          <Button
+            type="submit"
+            color="primary"
+            variant="contained"
+            fullWidth
+            style={mrstyle}
+          >
+            Register
+          </Button>
+          <hr />
+          <Button fullWidth href="/">
+            Back
+          </Button>
+        </ValidatorForm>
+      </Paper>
+    </Grid>
   );
 }
 

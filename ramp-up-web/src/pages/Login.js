@@ -14,8 +14,9 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { findUser } from "../utils/services";
 import loginSlice from "./slice/loginSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { userSlice } from "./slice/userSlice";
+
 function Login() {
   const userRef = useRef();
   let navigate = useNavigate();
@@ -24,8 +25,8 @@ function Login() {
   const [pwd, setPwd] = useState("");
   //const [token, setToken] = useState("");
   const [errMsg, setErrMsg] = useState("");
-  const [success, setSuccess] = useState(false);
 
+  const token = useSelector((state) => state.token);
   useEffect(() => {
     setErrMsg("");
   }, [user, pwd]);
@@ -42,15 +43,16 @@ function Login() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("user", user);
-    const res = dispatch(
-      userSlice.actions.logInUser({ user: user, password: pwd }),
-      //console.log("Dispatch test"),
+    console.log("TOKEN", token);
+    dispatch(
+      userSlice.actions.logInUser({ user: user, password: pwd, navigate }),
+      //console.log("Dispatch test", token),
     );
-    console.log("User Value", res);
-    if (res) {
-      setSuccess(true);
-    }
+    // const token = useSelector((state) => state.token.token);
+    // if (useSelector((state) => state.token.token) {
+    //   setSuccess(true);
+    // }
+
 
     // const res = await findUser(user, pwd);
     // if (!res.data) {
@@ -69,75 +71,63 @@ function Login() {
     // }
   };
   return (
-    <>
-      {success ? (
-        // <DataTable />
-
-        navigate("/datatable")
-      ) : (
-        // <Navigate to={"/datatable"} state={{ token }}></Navigate>
-        // <div>
-        //   <h1>User is here</h1>
-        // </div>
-        <Grid>
-          <Paper elevation={10} style={paperStyle}>
-            <Grid align="center">
-              <Avatar>{/* <FaceIcon /> */}</Avatar>
-              <h2>Sign In</h2>
-            </Grid>
-            <form onSubmit={handleSubmit}>
-              <TextField
-                //id="username"
-                //ref={userRef}
-                value={user}
-                //autoComplete="off"
-                label="User Email"
-                placeholder="Enter Email"
-                fullWidth
-                required
-                validators={["required", "isEmail"]}
-                errorMessages={["this field is required", "email is not valid"]}
-                style={mrstyle}
-                variant="standard"
-                onChange={(e) => setUser(e.target.value)}
-              ></TextField>
-              <TextField
-                id="password"
-                label="Password"
-                placeholder="Enter Password"
-                type="password"
-                fullWidth
-                required
-                style={mrstyle}
-                value={pwd}
-                variant="standard"
-                onChange={(e) => setPwd(e.target.value)}
-              ></TextField>
-              <Button
-                type="submit"
-                color="primary"
-                variant="contained"
-                fullWidth
-                style={mrstyle}
-              >
-                Sign in
-              </Button>
-            </form>
-
-            <Typography>
-              <p>
-                {" "}
-                Need an Account?
-                <br />
-                <span>
-                  <a href="/sign">Sign Up</a>
-                </span>
-              </p>
-            </Typography>
-          </Paper>
+    <Grid>
+      <Paper elevation={10} style={paperStyle}>
+        <Grid align="center">
+          <Avatar>{/* <FaceIcon /> */}</Avatar>
+          <h2>Sign In</h2>
         </Grid>
-      )}
-    </>
+        <form onSubmit={handleSubmit}>
+          <TextField
+            //id="username"
+            //ref={userRef}
+            value={user}
+            //autoComplete="off"
+            label="User Email"
+            placeholder="Enter Email"
+            fullWidth
+            required
+            validators={["required", "isEmail"]}
+            errorMessages={["this field is required", "email is not valid"]}
+            style={mrstyle}
+            variant="standard"
+            onChange={(e) => setUser(e.target.value)}
+          ></TextField>
+          <TextField
+            id="password"
+            label="Password"
+            placeholder="Enter Password"
+            type="password"
+            fullWidth
+            required
+            style={mrstyle}
+            value={pwd}
+            variant="standard"
+            onChange={(e) => setPwd(e.target.value)}
+          ></TextField>
+          <Button
+            type="submit"
+            color="primary"
+            variant="contained"
+            fullWidth
+            style={mrstyle}
+          >
+            Sign in
+          </Button>
+        </form>
+
+        <Typography>
+          <p>
+            {" "}
+            Need an Account?
+            <br />
+            <span>
+              <a href="/sign">Sign Up</a>
+            </span>
+          </p>
+        </Typography>
+      </Paper>
+    </Grid>
   );
 }
 
