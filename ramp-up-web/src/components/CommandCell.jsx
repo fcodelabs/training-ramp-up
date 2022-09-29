@@ -2,7 +2,7 @@
 import { Button } from "@progress/kendo-react-buttons";
 import * as yup from "yup";
 import { startEdit, discardEntry, cancelChanges } from "../utils/functions";
-import { editField } from "../../../constants";
+import { editField } from "../constants";
 import { useStore } from "react-redux";
 
 const entrySchema = yup.object().shape({

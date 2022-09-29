@@ -7,6 +7,7 @@ import { Server } from "socket.io";
 import { AppDataSource } from "./data-source";
 
 import studentRoutes from "./routes/students";
+import userRoutes from "./routes/users";
 
 AppDataSource.initialize()
   .then(() => {
@@ -22,6 +23,8 @@ app.use(cors());
 app.use(bodyParser.json());
 
 app.use("/students", studentRoutes);
+
+app.use("/user", userRoutes);
 
 const server = http.createServer(app);
 

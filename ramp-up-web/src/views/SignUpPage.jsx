@@ -1,11 +1,9 @@
 import { Grid } from "@mui/material";
 import SignUpForm from "../components/SignUpForm";
-import { useNavigate } from "react-router-dom";
 import { Formik } from "formik";
 import Image from "../assets/background.jpg";
 import * as Yup from "yup";
-// import { useStore } from "react-redux";
-// import * as actions from "../../../reducer";
+import { useStore } from "react-redux";
 
 const SignupSchema = Yup.object().shape({
   username: Yup.string().required("Username Required"),
@@ -16,14 +14,13 @@ const SignupSchema = Yup.object().shape({
 });
 
 function SignUpPage() {
-  const navigate = useNavigate();
-  // const store = useStore();
+  const store = useStore();
 
   function handleSubmit(values) {
-    console.log(values);
-    // store.dispatch(actions.addUser({ payload: values.nickName }));
-    // localStorage.setItem("user", values.nickName);
-    navigate("/students", { replace: true });
+    store.dispatch({
+      type: "addUser",
+      payload: values,
+    });
   }
 
   return (

@@ -1,24 +1,25 @@
 import io from "socket.io-client";
 import { takeLatest, all, put, call, select } from "redux-saga/effects";
-import * as actions from "./reducer";
-import { URL } from "./constants";
-import { startEdit } from "./views/Students/utils/functions";
+import * as actions from "../reducer";
+import { URL } from "../constants";
+import { startEdit } from "../utils/functions";
 
-const getStudents = () =>
+const getStudents = (token) =>
   fetch(`${URL}/students`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
+      "X-Access-Token": token,
     },
   })
     .then((res) => res.json())
     .then((result) => result);
 
 function* workGetStudents(props) {
+  const { changingEntry, token } = yield select();
   const { notify, id } = props.payload;
-  const response = yield call(getStudents);
+  const response = yield call(() => getStudents(token));
   let sortedEntries = response.sort((a, b) => parseInt(a.ID) - parseInt(b.ID));
-  const { changingEntry } = yield select();
   if (notify && changingEntry !== null) {
     if (id === undefined) {
       if (changingEntry.new) {
@@ -48,56 +49,62 @@ function* workGetStudents(props) {
   }
 }
 
-const addStudent = (student) =>
+const addStudent = (student, token) =>
   fetch(`${URL}/students`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      "X-Access-Token": token,
     },
     body: JSON.stringify(student),
   }).then((result) => result.text());
 
 function* workAddStudent(entry) {
+  const { token } = yield select();
   const insertingEntry = { ...entry.payload };
   const socket = io.connect(URL);
   delete insertingEntry.inEdit;
   delete insertingEntry.new;
   yield put(actions.addUpdatingEntry(null));
   yield put(actions.addChangingEntry(null));
-  const response = yield call(() => addStudent(insertingEntry));
+  const response = yield call(() => addStudent(insertingEntry, token));
   socket.emit("student_added", response);
 }
 
-const updateStudent = (student) =>
+const updateStudent = (student, token) =>
   fetch(`${URL}/students/${student.ID}`, {
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",
+      "X-Access-Token": token,
     },
     body: JSON.stringify(student),
   }).then((result) => result.text());
 
 function* workUpdateStudent(entry) {
+  const { token } = yield select();
   let updatedEntry = { ...entry.payload };
   const socket = io.connect(URL);
   delete updatedEntry.inEdit;
   yield put(actions.addUpdatingEntry(null));
   yield put(actions.addChangingEntry(null));
-  const response = yield call(() => updateStudent(updatedEntry));
+  const response = yield call(() => updateStudent(updatedEntry, token));
   socket.emit("student_edit", [response, updatedEntry.ID]);
 }
 
-const deleteStudent = (ID) =>
+const deleteStudent = (ID, token) =>
   fetch(`${URL}/students/${ID}`, {
     method: "DELETE",
     headers: {
       "Content-Type": "application/json",
+      "X-Access-Token": token,
     },
   }).then((result) => result.text());
 
 function* workDeleteStudent(entry) {
+  const { token } = yield select();
   const socket = io.connect(URL);
-  const response = yield call(() => deleteStudent(entry.payload.ID));
+  const response = yield call(() => deleteStudent(entry.payload.ID, token));
   socket.emit("student_remove", [response, entry.payload.ID]);
 }
 
@@ -117,7 +124,7 @@ function* deleteStudentSaga() {
   yield takeLatest("deleteStudent", workDeleteStudent);
 }
 
-function* rootSaga() {
+function* studentSaga() {
   yield all([
     addStudentSaga(),
     getStudentsSaga(),
@@ -126,4 +133,4 @@ function* rootSaga() {
   ]);
 }
 
-export default rootSaga;
+export default studentSaga;

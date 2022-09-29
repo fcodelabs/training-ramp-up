@@ -1,21 +1,26 @@
 import { Grid } from "@mui/material";
 import SignInForm from "../components/SignInForm";
-import { useNavigate } from "react-router-dom";
 import { Formik } from "formik";
 import Image from "../assets/background.jpg";
-// import { useStore } from "react-redux";
+import { useStore, useSelector } from "react-redux";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 // import * as actions from "../../../reducer";
 
 function SignInPage() {
+  const store = useStore();
+  const token = useSelector(() => store.getState().token);
   const navigate = useNavigate();
-  // const store = useStore();
 
   function handleSubmit(values) {
-    console.log(values);
-    // store.dispatch(actions.addUser({ payload: values.nickName }));
-    // localStorage.setItem("user", values.nickName);
-    navigate("/students", { replace: true });
+    store.dispatch({ type: "getUser", payload: values });
   }
+
+  useEffect(() => {
+    if (token !== null) {
+      navigate("/students", { replace: true });
+    }
+  }, [token]);
 
   return (
     <Grid

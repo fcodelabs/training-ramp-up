@@ -1,5 +1,5 @@
-import { store } from "../../..";
-import * as actions from "../../../reducer";
+import { store } from "../index";
+import * as actions from "../reducer";
 
 export const getBirthday = (birthday) => {
   var date = birthday.split("/");
