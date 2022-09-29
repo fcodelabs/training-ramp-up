@@ -6,10 +6,6 @@ const loginSlice = createSlice({
     token: "",
     name: "",
     role: "",
-    // token: {
-    //   token: "",
-    //   name: "",
-    // },
   },
   reducers: {
     tokenList() {},
@@ -18,8 +14,6 @@ const loginSlice = createSlice({
       state.token = action.payload.token;
       state.name = action.payload.name;
       state.role = action.payload.role;
-      //console.log("SliceToken", state.token);
-      //console.log("SliceName", state.role);
     },
   },
 });

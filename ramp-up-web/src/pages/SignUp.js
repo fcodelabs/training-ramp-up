@@ -16,12 +16,6 @@ function SignUp() {
   const [email, setEmail] = useState("");
   //const [data, setData] = useState();
 
-  const [success, setSuccess] = useState(false);
-  useEffect(() => {
-    if (success) {
-      console.log("Success signUp");
-    }
-  }, [success]);
   const paperStyle = {
     padding: 20,
     height: "70vh",
@@ -34,30 +28,16 @@ function SignUp() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(user, password, email);
-    const res = dispatch(
+    const lowCasePassword = email.toLowerCase();
+
+    dispatch(
       userSlice.actions.registerUser({
         user: user,
         password: password,
-        email: email,
+        email: lowCasePassword,
         navigate,
       }),
     );
-    console.log("Register res", res);
-    if (res) {
-      setSuccess(true);
-    }
-
-    // const usertoken = await insertUser(user, email, password);
-    // if (usertoken) {
-    //   setUser("");
-    //   setPassword("");
-    //   setSuccess(true);
-    // } else {
-    //   alert("Token is not here");
-    // }
-    // console.log("user", usertoken);
-    //console.log(data);
   };
   return (
     <Grid>

@@ -9,11 +9,9 @@ import {
 } from "@mui/material";
 import { ValidatorForm, TextValidator } from "react-material-ui-form-validator";
 
-//import DataTable from "./DataTable";
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { findUser } from "../utils/services";
-import loginSlice from "./slice/loginSlice";
+
 import { useDispatch, useSelector } from "react-redux";
 import { userSlice } from "./slice/userSlice";
 
@@ -26,7 +24,6 @@ function Login() {
   //const [token, setToken] = useState("");
   const [errMsg, setErrMsg] = useState("");
 
-  const token = useSelector((state) => state.token);
   useEffect(() => {
     setErrMsg("");
   }, [user, pwd]);
@@ -43,32 +40,15 @@ function Login() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("TOKEN", token);
+    const lowCaseUser = user.toLowerCase();
+
     dispatch(
-      userSlice.actions.logInUser({ user: user, password: pwd, navigate }),
-      //console.log("Dispatch test", token),
+      userSlice.actions.logInUser({
+        user: lowCaseUser,
+        password: pwd,
+        navigate,
+      }),
     );
-    // const token = useSelector((state) => state.token.token);
-    // if (useSelector((state) => state.token.token) {
-    //   setSuccess(true);
-    // }
-
-
-    // const res = await findUser(user, pwd);
-    // if (!res.data) {
-    //   alert("Can you check Email or Password");
-    //   setSuccess(false);
-    // } else {
-    //   console.log("ress", res.data.user.name);
-
-    //   setUser("");
-    //   setPwd("");
-    //   const token = res.data.accessToken;
-    //   const name = res.data.user.name;
-    //   dispatch(loginSlice.actions.saveToken({ token: token, name: name }));
-
-    //   setSuccess(true);
-    // }
   };
   return (
     <Grid>

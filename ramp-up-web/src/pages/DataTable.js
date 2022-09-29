@@ -22,42 +22,23 @@ const DataTable = () => {
   let navigate = useNavigate();
   const dispatch = useDispatch();
 
-  //const select = useSelector();
-  //const token = select(loginSlice.reducer.tokenList);
-
-  // useEffect(() => {
-  //   //getItems().then(({ data }) => setData(data));
-  //   dispatch(studentSlice.action.getStudent());
-  // }, []);
   const student = useSelector((state) => state);
   const token = useSelector((state) => state.token);
-  //console.log("TokenValue", token);
-  console.log("AAdminDetails", localStorage.getItem("role"));
+
   useEffect(() => {
-    // console.log("Adminclg", token);
     if (localStorage.getItem("role") == "Admin") {
       setAdmin(true);
     }
   });
 
-  // console.log("AdminDetails", admin);
-  //console.log("Student", student.student.student);
   useEffect(() => {
     dispatch(studentSlice.actions.getStudents());
   }, []);
+
   useEffect(() => {
     setData(student.student.student);
   }, [student]);
 
-  // const token = useSelector((state) => state.token);
-  //const name = useSelector((state) => state.token);
-  //console.log("DataTabelToken", token.role);
-  // if (token.role == "Admin") {
-  //   setAdmin(true);
-  // }
-  // console.log("AdminDetails", admin);
-
-  //console.log("DataTabelName", loginUser.name);
   useEffect(() => {
     socket.on("student_received", (data) => {
       alert(data);
@@ -71,17 +52,7 @@ const DataTable = () => {
 
   const remove = (dataItem) => {
     dispatch(studentSlice.actions.deleteStudent(dataItem));
-    //dispatch(studentSlice.actions.getStudents());
-    //dispatch(studentSlice.actions.getStudents());
-    //window.location.reload(false);
-    // deleteItem(dataItem).then(() => {
-    //   getItems().then((data) => {
-    //     setData(data);
-    //   });
-    //   socket.emit("student_remove", `Student was delete`);
-    //   alert("Student was delete");
-    //   getItems();
-    // });
+    socket.emit("student_remove", `Student was delete`);
   };
 
   const add = (dataItem) => {
@@ -89,32 +60,15 @@ const DataTable = () => {
     dataItem.inEdit = true;
     const date = new Date(dataItem.birth);
     console.log(date);
-    // dispatch(studentSlice.actions.saveStudent(dataItem));
+
     socket.emit("student_added", `New student was added`);
     dispatch(studentSlice.actions.createStudent(dataItem));
-    //dispatch(studentSlice.actions.getStudents());
-    // window.localStorage.reload(false);
-    // insertItem(dataItem).then((res) => {
-    //   console.log("data", res.data);
-    //   window.location.reload(false);
-    //   alert("Student was Added");
-    // });
   };
 
   const update = (dataItem) => {
     dataItem.inEdit = false;
-    console.log("Upadate Dataitem", dataItem);
-    dispatch(studentSlice.actions.updateStudent(dataItem));
-    dispatch(studentSlice.actions.getStudents());
-    //window.localStorage.reload(false);
-    //dispatch(studentSlice.actions.getStudents());
-    //socket.emit("student_added", `Student Changed`);
-    // updateItem(dataItem).then((res) => {
-    //   console.log("res dara", res.data);
 
-    //   window.location.reload(false);
-    //   alert("Student was Updated");
-    // });
+    dispatch(studentSlice.actions.updateStudent(dataItem));
   };
 
   const discard = () => {

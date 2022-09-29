@@ -6,7 +6,7 @@ import { findUser, insertUser } from "../../utils/services";
 
 function* callUserGetFun(payload) {
   let res = yield call(findUser, payload.payload);
-  console.log("USERDETAILSLOG", res.data.user.role);
+  console.log("login sagares", res);
   localStorage.setItem("name", res.data.user.name);
   localStorage.setItem("role", res.data.user.role);
 
@@ -17,10 +17,13 @@ function* callUserGetFun(payload) {
       token: res.data.accessToken,
     }),
   );
+  alert("User Login success");
+
   payload.payload.navigate("/datatable");
 }
 function* callUserRegFun(payload) {
   yield call(insertUser, payload);
+  alert("User Register Success");
   payload.payload.navigate("/");
 }
 

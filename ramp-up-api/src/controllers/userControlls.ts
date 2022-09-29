@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken');
 require('dotenv').config();
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
-//import { loginUser } from '../service/userService';
+
 
 export const postUser = async (req, res) => {
   console.log(req.body);
@@ -45,11 +45,7 @@ export const getUser = async (req, res) => {
 
 export const findUser = async (req, res) => {
   console.log('parmsData', req.query);
-  // const accessToken = jwt.sign(
-  //   req.query.email,
-  //   process.env.ACCESS_TOKEN_SECRET,
-  //   // { expiresIn: '10s' },
-  // );
+ 
   const user = await User.findOneBy({ email: req.query.email });
   console.log('USERDETAILS', user);
   if (user) {
@@ -64,6 +60,6 @@ export const findUser = async (req, res) => {
       console.log('User not here');
     }
   } else {
-    console.log('User not here');
+    console.log('User not here', user);
   }
 };

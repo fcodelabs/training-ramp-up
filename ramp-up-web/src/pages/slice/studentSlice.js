@@ -8,18 +8,13 @@ const studentSlice = createSlice({
 
   reducers: {
     addStudent(state, action) {
-      //console.log("AddstudentPayload", action.payload);
       state.student = action.payload;
-
-      //console.log("studentADDSLICE", state.student);
     },
 
     createStudent() {},
     deleteStudent() {},
     updateStudent() {},
-    getStudents(state, action) {
-      //console.log("GetStudent");
-    },
+    getStudents(state, action) {},
   },
 });
 
