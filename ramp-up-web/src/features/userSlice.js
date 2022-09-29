@@ -9,8 +9,6 @@ const userSlice = createSlice({
   },
   reducers: {
     saveUser(state, action) {
-      //console.log("Action payload", action.payload.user);
-      //console.log("Action payload token", action.payload.accessToken);
       state.users = action.payload.user;
       state.accessToken = action.payload.accessToken;
     },

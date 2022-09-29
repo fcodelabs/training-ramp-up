@@ -7,10 +7,6 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 function App() {
   return (
-    // <div>
-    //   <SignInSide />
-    // </div>
-
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<SignInSide />}></Route>

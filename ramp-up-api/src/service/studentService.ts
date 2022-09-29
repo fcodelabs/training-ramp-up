@@ -23,7 +23,6 @@ export const postStudent = async (req, res) => {
     age: age,
   });
   await student.save();
-  console.log(' Insert Item Dalin', student);
   res.json(student);
   return res.status(200);
 };
@@ -31,7 +30,6 @@ export const postStudent = async (req, res) => {
 export const deleteStudent = async (req, res) => {
   const { studentId } = req.params;
   const response = await Student.delete(studentId);
-  console.log('delete log', response);
   return res.json(response);
 };
 

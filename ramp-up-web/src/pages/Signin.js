@@ -12,7 +12,6 @@ import Grid from "@material-ui/core/Grid";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
-// import { findUser } from "../utils/userService";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import userSlice from "../features/userSlice";
@@ -52,10 +51,7 @@ const useStyles = makeStyles((theme) => ({
 const Signin = () => {
   let navigate = useNavigate();
   const dispatch = useDispatch();
-
-  //const logUserToken = useSelector((state) => state.user.users);
   const logUserDetails = useSelector((state) => state.user.accessToken);
-
   const classes = useStyles();
   const [successLog, setSuccessLog] = useState(false);
   const [email, setEmail] = useState("");
@@ -66,6 +62,7 @@ const Signin = () => {
       setSuccessLog(true);
     }
   }, [logUserDetails]);
+
   const handleSubmit = async (e) => {
     const emailCond =
       /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;

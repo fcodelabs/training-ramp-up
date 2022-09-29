@@ -94,7 +94,7 @@ export default function SignUp() {
         )
       ) {
         alert(
-          "Paasord must Be include least one capital letter,at least a number,least one lowercase"
+          "Paasord must Be include least a capital letter,at least a number,least one lowercase"
         );
       } else {
         alert("Email must be valid");

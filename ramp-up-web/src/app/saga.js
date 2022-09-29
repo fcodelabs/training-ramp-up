@@ -17,27 +17,34 @@ function* watchGetStudent() {
     console.log(error);
   }
 }
+
 function* watchAddStudent({ payload: payload }) {
   try {
     yield call(insertStudent, payload);
+    yield put(studentSlice.actions.getStudents());
   } catch (error) {
     console.log(error);
   }
 }
+
 function* watchUpdateStudent({ payload: payload }) {
   try {
     yield call(updateStudent, payload);
+    yield put(studentSlice.actions.getStudents());
   } catch (error) {
     console.log(error);
   }
 }
+
 function* watchDeleteStudent({ payload: payload }) {
   try {
     yield call(deleteStudent, payload);
+    yield put(studentSlice.actions.getStudents());
   } catch (error) {
     console.log(error);
   }
 }
+
 function* watchAddUser({ payload: payload }) {
   try {
     yield call(insertUser, payload);
@@ -46,12 +53,15 @@ function* watchAddUser({ payload: payload }) {
     console.log(error);
   }
 }
+
 function* watchLogUser({ payload: payload }) {
   try {
     const response = yield call(findUser, payload);
-    //console.log("sagas Response", response.data.accessToken);
+    console.log("token", response.data.accessToken);
     yield put(userSlice.actions.saveUser(response.data));
-    console.log("Payload", payload);
+    localStorage.setItem("role", response.data.user.role);
+    localStorage.setItem("name", response.data.user.name);
+    localStorage.setItem("token", response.data.accessToken);
     payload.navigate("/grid");
   } catch (error) {
     alert(error);
@@ -66,7 +76,6 @@ export function* postSagas() {
 
   yield takeEvery(userSlice.actions.addUser, watchAddUser);
   yield takeEvery(userSlice.actions.logUser, watchLogUser);
-  //yield takeEvery(userSlice.actions.saveUser, watchLogUser);
 }
 
 export default function* rootSaga() {

@@ -26,11 +26,11 @@ const GridUI = () => {
   }, []);
 
   const students = useSelector((state) => state.students.students);
-  const logUser = useSelector((state) => state.user.users);
+  const token = useSelector((state) => state.user.accessToken);
 
   useEffect(() => {
-    if (logUser) {
-      setAdmin(logUser.role === "Admin");
+    if (localStorage.getItem("role") == "Admin") {
+      setAdmin(true);
     }
   });
 
@@ -61,18 +61,17 @@ const GridUI = () => {
 
   const remove = (dataItem) => {
     dispatch(studentSlice.actions.deleteStudent(dataItem));
-    window.location.reload(false);
   };
+
   const add = (dataItem) => {
     dataItem.inEdit = true;
     dispatch(studentSlice.actions.createStudent({ dataItem }));
-    //window.location.reload(false);
   };
+
   const update = (dataItem) => {
     dataItem.s;
     dataItem.inEdit = false;
     dispatch(studentSlice.actions.updateStudent(dataItem));
-    window.location.reload(false);
   };
 
   const discard = () => {
@@ -80,6 +79,7 @@ const GridUI = () => {
     newData.splice(0, 1);
     setData(newData);
   };
+
   const cancel = (dataItem) => {
     const originalItem = getStudents().find((p) => p.id === dataItem.id);
     const newData = data.map((item) =>
@@ -128,6 +128,7 @@ const GridUI = () => {
     />
   );
   const logout = () => {
+    localStorage.removeItem("token", token);
     navigate("/");
   };
 
@@ -174,7 +175,7 @@ const GridUI = () => {
           }
         />
         <button className="k-button k-button-md k-rounded-md k-button-solid k-button-solid-primary">
-          {logUser.name}
+          {localStorage.getItem("name")}
         </button>
       </GridToolbar>
       <Column field="id" title="ID" width="80px" editable={false} />
