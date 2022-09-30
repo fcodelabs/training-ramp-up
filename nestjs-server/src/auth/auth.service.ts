@@ -41,7 +41,7 @@ export class AuthService {
       role: user.role,
     };
     const accessToken = sign(tokenData, process.env.ACCESS_SECRET, {
-      expiresIn: '30s',
+      expiresIn: '2m',
     });
     const refreshToken = sign(tokenData, process.env.REFRESH_SECRET, {
       expiresIn: '1y',
@@ -75,7 +75,6 @@ export class AuthService {
     }
   }
   async refresh(refreshStr: string) {
-    console.log('is this running');
     const payload = this.retrieveRefreshToken(refreshStr);
     if (!payload) {
       return undefined; //throw error

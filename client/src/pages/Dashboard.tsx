@@ -38,28 +38,9 @@ export default function Dashboard(){
   useEffect(()=>{
     dispatch(checkUser());
     dispatch(getStudents());
+    return;
   },[]);
 
-  //socket io integration
-  // useEffect(() => {
-  //   const token = localStorage.getItem('access_token');
-  //   if(token){
-  //     socket.on('refetch_data', () => {
-  //       getStudents(token)
-  //       .then(({ data }) => {setStudentData(data.students);})
-  //       .catch((error)=>{
-  //         if(error.response.status===401){
-  //           localStorage.removeItem('access_token');
-  //           navigate("/");
-  //           return;
-  //         }
-  //       });
-  //     });
-  //   }
-  //   return ()=>{socket.off('refetch_data');}
-  // }, [navigate]);
-
-  //logOut user
   const handleLogOut = () => {
     dispatch(logOutUser({sessionId:userData.sessionId}));
   }

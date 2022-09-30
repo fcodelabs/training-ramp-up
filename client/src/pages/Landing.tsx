@@ -20,6 +20,7 @@ export default function Landing(){
 
     useEffect(()=>{
         dispatch(checkUser());
+        return;
     },[])
 
     useEffect(()=>{

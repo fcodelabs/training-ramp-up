@@ -1,14 +1,14 @@
 import { Module } from '@nestjs/common';
 import { AuthModule } from './auth/auth.module';
-import { UserModule } from './user/users.module';
+import { StudentModule } from './student/student.module';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { User, Session } from './entities';
+import { User, Session, Student } from './entities';
 
 @Module({
   imports: [
     AuthModule,
-    UserModule,
+    StudentModule,
     ConfigModule.forRoot({ isGlobal: true }),
     TypeOrmModule.forRoot({
       type: 'postgres',
@@ -17,7 +17,7 @@ import { User, Session } from './entities';
       username: 'postgres',
       password: 'postgress',
       database: 'postgres',
-      entities: [User, Session],
+      entities: [User, Session, Student],
       synchronize: true,
     }),
   ],
