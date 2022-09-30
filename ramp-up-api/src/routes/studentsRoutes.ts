@@ -7,6 +7,7 @@ import {
   deleteStudent,
   updateStudent,
 } from '../controllers/studentControlls';
+const auth = require('../middleware/auth');
 
 router.get('/', getStudent);
 router.post('/', postStudent);

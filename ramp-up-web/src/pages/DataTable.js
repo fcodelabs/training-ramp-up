@@ -9,7 +9,6 @@ import { useNavigate } from "react-router-dom";
 
 import { useSelector, useDispatch } from "react-redux";
 
-import { getItems } from "../utils/services";
 const editField = "inEdit";
 import { Upload } from "@progress/kendo-react-upload";
 
@@ -78,11 +77,12 @@ const DataTable = () => {
   };
 
   const cancel = (dataItem) => {
-    const originalItem = getItems().find((p) => p.id === dataItem.id);
-    const newData = data.map((item) =>
-      item.id === originalItem.id ? originalItem : item,
-    );
-    setData(newData);
+    // const originalItem = getItems().find((p) => p.id === dataItem.id);
+    // const newData = data.map((item) =>
+    //   item.id === originalItem.id ? originalItem : item,
+    // );
+    // setData(newData);
+    dispatch(studentSlice.actions.getStudents());
   };
 
   const enterEdit = (dataItem) => {

@@ -99,9 +99,9 @@ export const getItems = async () => {
 //User Servise
 
 export const insertUser = async (userRes) => {
-  const config = {
-    headers: { "Content-Type": "application/json" },
-  };
+  // const config = {
+  //   headers: { "Content-Type": "application/json" },
+  // };
 
   const body = {
     name: userRes.payload.user,
@@ -109,11 +109,11 @@ export const insertUser = async (userRes) => {
     password: userRes.payload.password,
   };
   try {
-    const res = await axios.post("http://localhost:8000/signin", body, config);
+    const res = await axios.post("http://localhost:8000/signin", body);
 
-    localStorage.setItem("token", res.data.accessToken);
+    // localStorage.setItem("token", res.data.accessToken);
 
-    return res.data.accessToken;
+    return res;
   } catch (e) {
     console.log(e);
   }
@@ -121,20 +121,14 @@ export const insertUser = async (userRes) => {
 
 export const findUser = async (user) => {
   try {
-    const res = await axios(
-      {
-        method: "get",
-        url: "http://localhost:8000/login",
-        params: { email: user.user, password: user.password },
-        // config,
-      },
-      config,
-    );
+    const res = await axios({
+      method: "post",
+      url: "http://localhost:8000/login",
+      params: { email: user.user, password: user.password },
+      // config,
+    });
 
-    if (!res) {
-      alert("User not here");
-    }
-    localStorage.setItem("token", res.data.accessToken);
+    // localStorage.setItem("token", res.data.accessToken);
 
     return res;
   } catch (e) {

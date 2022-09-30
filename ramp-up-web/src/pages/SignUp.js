@@ -28,13 +28,12 @@ function SignUp() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const lowCasePassword = email.toLowerCase();
-
+    const lowCaseEmail = email.toLowerCase();
     dispatch(
       userSlice.actions.registerUser({
         user: user,
         password: password,
-        email: lowCasePassword,
+        email: lowCaseEmail,
         navigate,
       }),
     );

@@ -9,6 +9,7 @@ function* callUserGetFun(payload) {
   console.log("login sagares", res);
   localStorage.setItem("name", res.data.user.name);
   localStorage.setItem("role", res.data.user.role);
+  localStorage.setItem("token", res.data.accessToken);
 
   yield put(
     loginSlice.actions.saveToken({
