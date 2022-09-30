@@ -8,10 +8,12 @@ import {
   updateStudent,
 } from '../service/studentService';
 
-router.get('/api', getStudent);
-router.post('/api', postStudent);
-router.get('/api/:studentId', findStudent);
-router.delete('/api/:studentId', deleteStudent);
-router.put('/api/:studentId', updateStudent);
+const userMiddleware = require('../middleware/userMiddleware');
+
+router.get('/api', userMiddleware, getStudent);
+router.post('/api', userMiddleware, postStudent);
+router.get('/api/:studentId', userMiddleware, findStudent);
+router.delete('/api/:studentId', userMiddleware, deleteStudent);
+router.put('/api/:studentId', userMiddleware, updateStudent);
 
 export default router;

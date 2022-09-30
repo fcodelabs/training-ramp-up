@@ -6,6 +6,8 @@ const jwt = require('jsonwebtoken');
 
 export const findUser = async (req, res) => {
   const accessToken = jwt.sign(req.query.email, process.env.TOKEN_KEY);
+
+  console.log('accessToken', accessToken);
   const user = await Users.findOneBy({ email: req.query.email.toLowerCase() });
 
   if (user) {
@@ -31,6 +33,7 @@ export const postUser = async (req, res) => {
     role: 'User',
   });
   await user.save();
-  res.json(user);
-  return res.status(200);
+  //res.json(user)
+  //return .status(2000)
+  return res.json(user).status(200);
 };

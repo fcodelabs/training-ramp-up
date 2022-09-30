@@ -62,6 +62,7 @@ function* watchLogUser({ payload: payload }) {
     localStorage.setItem("role", response.data.user.role);
     localStorage.setItem("name", response.data.user.name);
     localStorage.setItem("token", response.data.accessToken);
+    console.log("Token", response.data.accessToken);
     payload.navigate("/grid");
   } catch (error) {
     alert(error);

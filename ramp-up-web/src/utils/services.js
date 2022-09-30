@@ -58,6 +58,7 @@ export const deleteStudent = (item) => {
 };
 
 export const getStudents = async () => {
+  console.log("Config", config);
   try {
     const res = await axios.get("http://localhost:8000/api", config);
     return res;
