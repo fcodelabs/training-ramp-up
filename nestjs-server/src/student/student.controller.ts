@@ -13,6 +13,7 @@ import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { Roles } from './decorators/roles.decorator';
 import { Role } from '../entities/index';
 import { StudentService } from './student.service';
+import { RolesGuard } from './guards/roles.guard';
 
 @Controller('student')
 export class StudentController {
@@ -35,6 +36,7 @@ export class StudentController {
 
   //Admin Requests
   @UseGuards(JwtAuthGuard)
+  @UseGuards(RolesGuard)
   @Roles(Role.admin)
   @Post('/addStudent')
   async addStudent(@Body() body: any, @Response() res) {
@@ -50,6 +52,7 @@ export class StudentController {
   }
 
   @UseGuards(JwtAuthGuard)
+  @UseGuards(RolesGuard)
   @Roles(Role.admin)
   @Put('/updateStudent')
   async updateStudent(@Body() body: any, @Response() res) {
@@ -64,6 +67,7 @@ export class StudentController {
     return;
   }
   @UseGuards(JwtAuthGuard)
+  @UseGuards(RolesGuard)
   @Roles(Role.admin)
   @Delete('/deleteStudent/:id')
   async deleteStudent(@Req() req: any, @Response() res) {
