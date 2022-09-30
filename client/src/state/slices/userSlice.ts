@@ -1,5 +1,4 @@
-import { PayloadAction,createSlice } from '@reduxjs/toolkit';
-import { UserDataType } from '../../interfaces';
+import { createSlice} from "@reduxjs/toolkit";
 
 const initialState = null
 
