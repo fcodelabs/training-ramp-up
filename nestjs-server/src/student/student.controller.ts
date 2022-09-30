@@ -10,6 +10,8 @@ import {
   Delete,
 } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { Roles } from './decorators/roles.decorator';
+import { Role } from '../entities/index';
 import { StudentService } from './student.service';
 
 @Controller('student')
@@ -33,6 +35,7 @@ export class StudentController {
 
   //Admin Requests
   @UseGuards(JwtAuthGuard)
+  @Roles(Role.admin)
   @Post('/addStudent')
   async addStudent(@Body() body: any, @Response() res) {
     const result = await this.studentService.addStudent(body);
@@ -47,6 +50,7 @@ export class StudentController {
   }
 
   @UseGuards(JwtAuthGuard)
+  @Roles(Role.admin)
   @Put('/updateStudent')
   async updateStudent(@Body() body: any, @Response() res) {
     const result = await this.studentService.updateStudent(body);
@@ -60,6 +64,7 @@ export class StudentController {
     return;
   }
   @UseGuards(JwtAuthGuard)
+  @Roles(Role.admin)
   @Delete('/deleteStudent/:id')
   async deleteStudent(@Req() req: any, @Response() res) {
     const result = await this.studentService.deleteStudent(req.params.id);

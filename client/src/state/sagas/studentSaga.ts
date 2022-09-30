@@ -73,6 +73,7 @@ export function* handleUpdateStudent({payload}:{payload:StudentDataType}){
         let reAuthorize: AxiosResponse = yield call(refreshAccessToken); 
         if(reAuthorize.status === 200){
             let result: AxiosResponse = yield call(updateStudent,payload);
+            delete result.data.student.inEdit;
             yield put(sliceActions.setUpdatedStudent(result.data.student));
         }else{
             alert(err);
