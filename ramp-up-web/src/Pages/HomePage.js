@@ -17,11 +17,19 @@ const editField = "inEdit";
 
 const HomePage = () => {
   const [data, setData] = useState([]);
+  const[admin,setAdmin] = useState(false)
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const students = useSelector((state) => state.students.students);
   const studentList = students.data;
+
+useEffect(()=>{
+ if( localStorage.getItem("role") =="Admin"){
+  setAdmin(true)
+ }
+  
+},[])
 
   useEffect(() => {
     setData(studentList);
@@ -131,6 +139,7 @@ const HomePage = () => {
 
   const logout = () => {
     navigate("/");
+    localStorage.removeItem("role")
   };
 
   return (
@@ -143,13 +152,20 @@ const HomePage = () => {
       editField={editField}
     >
       <GridToolbar>
-        <button
-          title="Add new"
-          className="k-button k-button-md k-rounded-md k-button-solid k-button-solid-primary"
-          onClick={addNew}
-        >
-          Add new
-        </button>
+        <> 
+        {admin ? (
+           <button
+           title="Add new"
+           className="k-button k-button-md k-rounded-md k-button-solid k-button-solid-primary"
+           onClick={addNew}
+         >
+           Add new
+         </button>
+        ):(
+          <div></div>
+        )}
+       
+        </>
         <button
           className="k-button k-button-md k-rounded-md k-button-solid k-button-solid-primary"
           onClick={logout}
@@ -183,7 +199,7 @@ const HomePage = () => {
       />
 
       <Column field="Age" title="Age" width="150px" editable={false} />
-      <Column cell={CommandCell} title="Command" width="200px" />
+      {admin && <Column cell={CommandCell} title="Command" width="200px" />}
     </Grid>
   );
 };
