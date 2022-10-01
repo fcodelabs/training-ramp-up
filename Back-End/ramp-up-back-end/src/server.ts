@@ -4,9 +4,9 @@ import { Request, Response } from "express";
 const app = express();
 
 app.get("/", (req: Request, res: Response) => {
-  res.send("Ramp Up!");
+  res.send("Ramp Up");
 });
 
-app.listen(3000, () => {
+app.listen(8000, () => {
   console.log("Application started on port 3000!");
 });
