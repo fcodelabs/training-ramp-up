@@ -8,6 +8,7 @@ import {
   UseGuards,
   Put,
   Delete,
+  Inject,
 } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { Roles } from './decorators/roles.decorator';
@@ -19,7 +20,10 @@ import { Request, Response } from 'express';
 
 @Controller('user')
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(
+    @Inject('USER_SERVICE')
+    private readonly userService: UserService,
+  ) {}
 
   //Guest Requests
   @UseGuards(JwtAuthGuard)

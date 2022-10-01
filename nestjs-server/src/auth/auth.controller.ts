@@ -7,21 +7,51 @@ import {
   Delete,
   UseGuards,
   Get,
+  Inject,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { LogInDto } from './dto';
+import { LogInDto, SignUpDto } from './dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { Request, Response } from 'express';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private authService: AuthService) {}
+  constructor(
+    @Inject('AUTH_SERVICE')
+    private readonly authService: AuthService,
+  ) {}
+
+  @Post('/signup')
+  async signup(@Body() body: SignUpDto, @Res() res: Response) {
+    const result = await this.authService.signup(body);
+    if (!result) {
+      res.status(400);
+      res.send('Signup Failed!');
+      return;
+    }
+    res.cookie('accessToken', result.accessToken, {
+      maxAge: 300000,
+      httpOnly: true,
+    });
+    res.cookie('refreshToken', result.refreshToken, {
+      maxAge: 3.154e10,
+      httpOnly: true,
+    });
+    res.cookie('userData', result.userData, {
+      maxAge: 300000,
+    });
+    res.status(200);
+    res.send('User has been registered!');
+    return;
+  }
 
   @Post('/login')
   async login(@Body() body: LogInDto, @Res() res: Response) {
     const result = await this.authService.login(body.email, body.password);
     if (!result) {
-      return res.status(400).send('Invalid Credentials!');
+      res.status(400);
+      res.send('Invalid Credentials!');
+      return;
     }
     res.cookie('accessToken', result.accessToken, {
       maxAge: 300000,
@@ -43,7 +73,9 @@ export class AuthController {
   async refreshToken(@Req() req: Request, @Res() res: Response) {
     const result = await this.authService.refresh(req.cookies.refreshToken);
     if (!result) {
-      return res.status(400).send('Unauthorized!');
+      res.status(400);
+      res.send('Unauthorized!');
+      return;
     }
     res.cookie('accessToken', result.accessToken, {
       maxAge: 300000,
@@ -59,10 +91,13 @@ export class AuthController {
   @UseGuards(JwtAuthGuard)
   @Delete('/logout/:sessionId')
   async logout(@Req() req: Request, @Res() res: Response) {
-    const result = await this.authService.logout(req.params.sessionId);
+    const { sessionId } = req.params;
+    const result = await this.authService.logout(sessionId);
 
-    if (result.error) {
-      return res.status(400).send('Failed to logout!');
+    if (!result) {
+      res.status(400);
+      res.send('Failed to logout!');
+      return;
     }
     res.cookie('accessToken', '', {
       maxAge: 0,

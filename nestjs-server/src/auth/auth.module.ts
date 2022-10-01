@@ -7,7 +7,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 
 @Module({
   controllers: [AuthController],
-  providers: [AuthService, JwtStrategy],
+  providers: [{ provide: 'AUTH_SERVICE', useClass: AuthService }, JwtStrategy],
   imports: [
     TypeOrmModule.forFeature([User]),
     TypeOrmModule.forFeature([Session]),

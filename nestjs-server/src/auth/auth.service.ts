@@ -14,6 +14,20 @@ export class AuthService {
     private readonly sessionRepository: Repository<Session>,
   ) {}
 
+  async signup(data) {
+    const { name, email, password } = data;
+    const hash = await argon.hash(password);
+    const user = new User();
+    user.name = name;
+    user.email = email.toLowerCase();
+    user.password = hash;
+    const newUser = await this.authRepository.save(user);
+    if (!newUser) {
+      return undefined;
+    }
+    return this.newRefreshAndAccessToken(newUser);
+  }
+
   async login(email: string, password: string) {
     const user = await this.authRepository.findOneBy({ email });
     if (!user) {
@@ -63,7 +77,7 @@ export class AuthService {
     try {
       const session = await this.sessionRepository.findOneBy({ id: sessionId });
       if (!session) {
-        return { error: "Session doesn't exist!" };
+        return undefined;
       }
       const invalidSession = await this.sessionRepository.save({
         ...session,
@@ -71,7 +85,7 @@ export class AuthService {
       });
       return { message: 'Successfully logged out!' };
     } catch (error) {
-      return { error: 'Failed to log out!' };
+      return undefined;
     }
   }
   async refresh(refreshStr: string) {
