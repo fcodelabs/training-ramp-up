@@ -78,7 +78,7 @@ export class UserService {
     }
   }
 
-  private calcAge(date: Date) {
+  calcAge(date: Date) {
     const today = new Date();
     const age = today.getFullYear() - date.getFullYear();
     return age;

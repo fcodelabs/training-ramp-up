@@ -41,7 +41,7 @@ export class AuthService {
     return this.newRefreshAndAccessToken(user);
   }
 
-  private async newRefreshAndAccessToken(user: User) {
+  async newRefreshAndAccessToken(user: User) {
     const newSession = await this.sessionRepository.save({
       email: user.email,
       name: user.name,
@@ -111,7 +111,7 @@ export class AuthService {
       email: user.email,
       role: user.role,
     };
-    const accessToken = sign(tokenData, process.env.ACCESS_SECRET, {
+    const accessToken = sign(tokenData, `${process.env.ACCESS_SECRET}`, {
       expiresIn: '30s',
     });
     const userData = {
@@ -123,7 +123,7 @@ export class AuthService {
     return { accessToken, userData };
   }
 
-  private retrieveRefreshToken(refreshStr: string) {
+  retrieveRefreshToken(refreshStr: string) {
     try {
       const payload = verify(refreshStr, process.env.REFRESH_SECRET);
       if (typeof payload === 'string') {
