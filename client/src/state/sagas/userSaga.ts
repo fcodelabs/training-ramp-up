@@ -7,12 +7,12 @@ import { LogInDataInputType, SignUpDataInputType } from "../../interfaces";
 const cookies = new Cookies();
 
 function refreshAccessToken(){
-    const res = axios.post('http://localhost:8000/user/refresh',{},{withCredentials:true});
+    const res = axios.post('http://localhost:8000/auth/refresh',{},{withCredentials:true});
     return res;
 }
 
 function signoutUser(sessionId:string){
-    const res = axios.delete(`http://localhost:8000/user/logout/${sessionId}`,{
+    const res = axios.delete(`http://localhost:8000/auth/logout/${sessionId}`,{
         withCredentials: true,
       });
     return res;
@@ -27,21 +27,21 @@ export function* handleLogOutUser({payload}:{payload:{sessionId:string}}){
     }catch(err){
         try{
             let result: AxiosResponse = yield call(refreshAccessToken)
-            console.log(result);
             if(result.status===200){
                 yield call(signoutUser,payload.sessionId);
-                console.log('unsetting user');
                 yield put(unsetUser());
+            }else{
+                alert("Failed to delete student!")
             }
         }catch(err) {
-            alert(err);
+            alert("Failed to delete student!");
         }
     }
 }
 
 
 function signinUser(data:any){
-    const res = axios.post("http://localhost:8000/user/login",data,{
+    const res = axios.post("http://localhost:8000/auth/login",data,{
         withCredentials: true,
     });
     return res;
@@ -49,17 +49,21 @@ function signinUser(data:any){
     
 export function* handleLogInUser({payload}:{payload:LogInDataInputType}){
     try{
-        let data: AxiosResponse = yield call(signinUser,payload);
-        data = cookies.get('userData');
-        yield put(setUser(data));
+        const result: AxiosResponse = yield call(signinUser,payload);
+        if(result.status === 200){
+            const userData = cookies.get('userData');
+            yield put(setUser(userData));
+        }else{
+            alert("Invalid Credentials!");
+        }
     }catch(err){
-        alert(err);
+        alert("Invalid Credentials!");
     }
 }
 
 
 function signupUser(data: any){
-    const res = axios.post("http://localhost:8000/user/register",data,{
+    const res = axios.post("http://localhost:8000/auth/register",data,{
         withCredentials: true,
       });
     return res;
@@ -67,19 +71,21 @@ function signupUser(data: any){
 
 export function* handleSignUpUser({payload}:{payload:SignUpDataInputType}){
     try{
-        let data: AxiosResponse = yield call(signupUser,payload);
-        if(data.status === 200){
-            data = cookies.get('userData');
-            yield put(setUser(data));
+        const result: AxiosResponse = yield call(signupUser,payload);
+        if(result.status === 200){
+            const userData = cookies.get('userData');
+            yield put(setUser(userData));
+        }else{
+            alert("Sign up failed, please provide valid information and try again!");
         }
     }catch(err){
-       alert(err);
+       alert("Sign up failed, please provide valid information and try again!");
     }
 }
 
 
 function signinStatus(){
-    const res = axios.get("http://localhost:8000/user/status",{
+    const res = axios.get("http://localhost:8000/auth/status",{
         withCredentials:true
     });
 
@@ -99,11 +105,12 @@ export function* handleGetUserStatus(){
             if(result.status===200){
                 const userdata = cookies.get('userData');
                 yield put(setUser(userdata));
+            }else{
+                console.log("User is not authenticated!");
             }
         }catch(err){
             console.log("User is not authenticated!");
         }
-        console.log(err);
     }
 }
 

@@ -2,22 +2,23 @@ import {
   Body,
   Controller,
   Post,
-  Response,
+  Response as Res,
   Req,
   Delete,
   UseGuards,
   Get,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { LoginDto } from './dto';
+import { LogInDto } from './dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { Request, Response } from 'express';
 
-@Controller('user')
+@Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
 
   @Post('/login')
-  async login(@Body() body: LoginDto, @Response() res) {
+  async login(@Body() body: LogInDto, @Res() res: Response) {
     const result = await this.authService.login(body.email, body.password);
     if (!result) {
       return res.status(400).send('Invalid Credentials!');
@@ -34,14 +35,12 @@ export class AuthController {
       maxAge: 300000,
     });
     res.status(200);
-    res.send({
-      message: 'User has been authenticated!',
-    });
+    res.send('User has been authenticated!');
     return;
   }
 
   @Post('/refresh')
-  async refreshToken(@Req() req, @Response() res) {
+  async refreshToken(@Req() req: Request, @Res() res: Response) {
     const result = await this.authService.refresh(req.cookies.refreshToken);
     if (!result) {
       return res.status(400).send('Unauthorized!');
@@ -54,14 +53,12 @@ export class AuthController {
       maxAge: 300000,
     });
     res.status(200);
-    res.send({
-      message: 'User has been re-authenticated!',
-    });
+    res.send('User has been re-authenticated!');
   }
 
   @UseGuards(JwtAuthGuard)
   @Delete('/logout/:sessionId')
-  async logout(@Req() req: any, @Response() res) {
+  async logout(@Req() req: Request, @Res() res: Response) {
     const result = await this.authService.logout(req.params.sessionId);
 
     if (result.error) {
@@ -85,9 +82,9 @@ export class AuthController {
 
   @UseGuards(JwtAuthGuard)
   @Get('/status')
-  status(@Response() res) {
+  status(@Res() res: Response) {
     res.status(200);
-    res.send({ message: 'User already authenticated!' });
+    res.send('User is verified!');
     return;
   }
 }
