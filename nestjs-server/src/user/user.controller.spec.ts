@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { Test, TestingModule } from '@nestjs/testing';
-import { Gender, Student } from '../entities';
+import { Gender } from '../entities';
 import { UserController } from './user.controller';
 import { UserService } from './user.service';
 

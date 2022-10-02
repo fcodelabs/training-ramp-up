@@ -28,6 +28,8 @@ export class UserController {
   //Guest Requests
   @UseGuards(JwtAuthGuard)
   @Get('/getStudents')
+  @UseGuards(RolesGuard)
+  @Roles(Role.admin, Role.guest)
   async getStudents(@Res() res: Response) {
     const result = await this.userService.getStudents();
     if (result.error) {

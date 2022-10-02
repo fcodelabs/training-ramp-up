@@ -5,13 +5,6 @@ import * as argon from 'argon2';
 import { AuthService } from './auth.service';
 import { Role, User, Session } from '../entities';
 
-jest.mock('argon2', () => {
-  return {
-    __esModule: true,
-    ...jest.requireActual('argon2'),
-  };
-});
-
 describe('AuthService', () => {
   let service: AuthService;
   let authRepository: Repository<User>;

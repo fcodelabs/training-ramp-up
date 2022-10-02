@@ -4,13 +4,6 @@ import { Repository } from 'typeorm';
 import { UserService } from './user.service';
 import { Student, Gender } from '../entities';
 
-jest.mock('argon2', () => {
-  return {
-    __esModule: true,
-    ...jest.requireActual('argon2'),
-  };
-});
-
 describe('AuthService', () => {
   let service: UserService;
   let studentRepository: Repository<Student>;
