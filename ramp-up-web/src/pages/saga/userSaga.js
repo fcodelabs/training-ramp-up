@@ -2,14 +2,16 @@ import { call, put, takeEvery } from "redux-saga/effects";
 
 import userSlice from "../slice/userSlice";
 import loginSlice from "../slice/loginSlice";
-import { findUser, insertUser } from "../../utils/services";
+import { findUser, insertUser } from "../../utils/userService";
 
 function* callUserGetFun(payload) {
   let res = yield call(findUser, payload.payload);
+
   console.log("login sagares", res);
   localStorage.setItem("name", res.data.user.name);
   localStorage.setItem("role", res.data.user.role);
   localStorage.setItem("token", res.data.accessToken);
+  localStorage.setItem("email", res.data.user.email);
 
   yield put(
     loginSlice.actions.saveToken({

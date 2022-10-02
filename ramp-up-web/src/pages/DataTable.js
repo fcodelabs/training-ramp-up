@@ -28,6 +28,7 @@ const DataTable = () => {
     if (localStorage.getItem("role") == "Admin") {
       setAdmin(true);
     }
+    // console.log("Admin", admin);
   });
 
   useEffect(() => {
@@ -55,10 +56,7 @@ const DataTable = () => {
   };
 
   const add = (dataItem) => {
-    console.log("id data", dataItem);
     dataItem.inEdit = true;
-    const date = new Date(dataItem.birth);
-    console.log(date);
 
     socket.emit("student_added", `New student was added`);
     dispatch(studentSlice.actions.createStudent(dataItem));

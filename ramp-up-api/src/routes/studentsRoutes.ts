@@ -9,7 +9,7 @@ import {
 } from '../controllers/studentControlls';
 const auth = require('../middleware/auth');
 
-router.get('/', getStudent);
+router.post('/student', auth, getStudent);
 router.post('/', postStudent);
 router.get('/:studentId', findStudent);
 router.delete('/:studentId', deleteStudent);

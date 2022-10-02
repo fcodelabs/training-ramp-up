@@ -11,7 +11,7 @@ function* callstudentGetFun() {
   try {
     const res = yield call(getItems);
 
-    yield put(studentSlice.actions.addStudent(res.data));
+    yield put(studentSlice.actions.addStudent(res.student));
   } catch (e) {
     console.log(e);
   }

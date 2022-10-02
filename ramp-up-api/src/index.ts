@@ -17,7 +17,7 @@ AppDataSource.initialize()
     console.log('Now its running');
     app.use(express.json());
     app.use(userRoutes);
-    app.use(auth, studentsRoutes);
+    app.use(studentsRoutes);
 
     const io = new Server(server, {
       cors: {

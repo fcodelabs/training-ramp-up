@@ -74,9 +74,15 @@ export const updateItem = async (item) => {
     console.log(e);
   }
 };
-export const deleteItem = (item) => {
+export const deleteItem = async (item) => {
   try {
-    const res = axios.delete(`http://localhost:8000/${item.id}`, config);
+    const res = await axios.delete(
+      `http://localhost:8000/${item.id}`,
+
+      config,
+    );
+
+    console.log("DELETESTUDENT", res);
 
     if (res) {
       alert("User Delete Sucess");
@@ -88,9 +94,17 @@ export const deleteItem = (item) => {
 };
 export const getItems = async () => {
   try {
-    const res = await axios.get("http://localhost:8000", config);
+    const res = await axios.post(
+      "http://localhost:8000/student",
+      {
+        user: localStorage.getItem("email"),
+      },
+      config,
+    );
 
-    return res;
+    // console.log("GETITEM", res);
+
+    return res.data;
   } catch (e) {
     console.log(Error, e);
   }
@@ -98,40 +112,40 @@ export const getItems = async () => {
 
 //User Servise
 
-export const insertUser = async (userRes) => {
-  // const config = {
-  //   headers: { "Content-Type": "application/json" },
-  // };
+// export const insertUser = async (userRes) => {
+//   // const config = {
+//   //   headers: { "Content-Type": "application/json" },
+//   // };
 
-  const body = {
-    name: userRes.payload.user,
-    email: userRes.payload.email,
-    password: userRes.payload.password,
-  };
-  try {
-    const res = await axios.post("http://localhost:8000/signin", body);
+//   const body = {
+//     name: userRes.payload.user,
+//     email: userRes.payload.email,
+//     password: userRes.payload.password,
+//   };
+//   try {
+//     const res = await axios.post("http://localhost:8000/signin", body);
 
-    // localStorage.setItem("token", res.data.accessToken);
+//     // localStorage.setItem("token", res.data.accessToken);
 
-    return res;
-  } catch (e) {
-    console.log(e);
-  }
-};
+//     return res;
+//   } catch (e) {
+//     console.log(e);
+//   }
+// };
 
-export const findUser = async (user) => {
-  try {
-    const res = await axios({
-      method: "post",
-      url: "http://localhost:8000/login",
-      params: { email: user.user, password: user.password },
-      // config,
-    });
+// export const findUser = async (user) => {
+//   try {
+//     const res = await axios({
+//       method: "post",
+//       url: "http://localhost:8000/login",
+//       params: { email: user.user, password: user.password },
+//       // config,
+//     });
 
-    // localStorage.setItem("token", res.data.accessToken);
+//     // localStorage.setItem("token", res.data.accessToken);
 
-    return res;
-  } catch (e) {
-    console.log(Error, e);
-  }
-};
+//     return res;
+//   } catch (e) {
+//     console.log(Error, e);
+//   }
+// };

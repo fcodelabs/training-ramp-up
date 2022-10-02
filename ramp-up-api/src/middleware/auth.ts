@@ -3,23 +3,19 @@ require('dotenv').config();
 
 module.exports = function (req, res, next) {
   let token;
-  try {
-    if (
-      req.headers.authorization &&
-      req.headers.authorization.startsWith('bearer')
-    ) {
-      token = req.headers.authorization.split(' ')[1];
-      if (token == null) res.sendStatus(401);
-
-      jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (email) => {
-        req.email = email;
-        console.log('testMW');
-        next();
-      });
-    } else {
-      res.sendStatus(401);
+  console.log('res', req.body.user);
+  if (
+    req.headers.authorization &&
+    req.headers.authorization.startsWith('bearer')
+  ) {
+    token = req.headers.authorization.split(' ')[1];
+    if (token == null) res.sendStatus(401);
+    const decode = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+    console.log('first', decode);
+    if (decode == req.body.user) {
+      next();
     }
-  } catch (e) {
-    console.log(e);
+  } else {
+    res.sendStatus(401);
   }
 };
