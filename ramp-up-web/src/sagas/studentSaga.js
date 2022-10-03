@@ -19,7 +19,7 @@ function* workGetStudents(props) {
   const { changingEntry, token } = yield select();
   const { notify, id } = props.payload;
   const response = yield call(() => getStudents(token));
-  let sortedEntries = response.sort((a, b) => parseInt(a.ID) - parseInt(b.ID));
+  let sortedEntries = response.sort((a, b) => parseInt(a.id) - parseInt(b.id));
   if (notify && changingEntry !== null) {
     if (id === undefined) {
       if (changingEntry.new) {
@@ -30,7 +30,7 @@ function* workGetStudents(props) {
         yield put(actions.addUpdatingEntry(null));
         startEdit(changingEntry);
       }
-    } else if (id === changingEntry.ID) {
+    } else if (id === changingEntry.id) {
       yield put(actions.addEntries(sortedEntries));
       yield put(actions.addUpdatingEntry(null));
       yield put(actions.addChangingEntry(null));
@@ -65,6 +65,7 @@ function* workAddStudent(entry) {
   const socket = io.connect(URL);
   delete insertingEntry.inEdit;
   delete insertingEntry.new;
+  console.log(insertingEntry);
   yield put(actions.addUpdatingEntry(null));
   yield put(actions.addChangingEntry(null));
   const response = yield call(() => addStudent(insertingEntry, token));
@@ -72,7 +73,7 @@ function* workAddStudent(entry) {
 }
 
 const updateStudent = (student, token) =>
-  fetch(`${URL}/students/${student.ID}`, {
+  fetch(`${URL}/students/${student.id}`, {
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",
@@ -89,11 +90,11 @@ function* workUpdateStudent(entry) {
   yield put(actions.addUpdatingEntry(null));
   yield put(actions.addChangingEntry(null));
   const response = yield call(() => updateStudent(updatedEntry, token));
-  socket.emit("student_edit", [response, updatedEntry.ID]);
+  socket.emit("student_edit", [response, updatedEntry.id]);
 }
 
-const deleteStudent = (ID, token) =>
-  fetch(`${URL}/students/${ID}`, {
+const deleteStudent = (id, token) =>
+  fetch(`${URL}/students/${id}`, {
     method: "DELETE",
     headers: {
       "Content-Type": "application/json",
@@ -104,8 +105,8 @@ const deleteStudent = (ID, token) =>
 function* workDeleteStudent(entry) {
   const { token } = yield select();
   const socket = io.connect(URL);
-  const response = yield call(() => deleteStudent(entry.payload.ID, token));
-  socket.emit("student_remove", [response, entry.payload.ID]);
+  const response = yield call(() => deleteStudent(entry.payload.id, token));
+  socket.emit("student_remove", [response, entry.payload.id]);
 }
 
 function* getStudentsSaga() {

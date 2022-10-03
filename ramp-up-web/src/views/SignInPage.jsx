@@ -5,7 +5,6 @@ import Image from "../assets/background.jpg";
 import { useStore, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-// import * as actions from "../../../reducer";
 
 function SignInPage() {
   const store = useStore();

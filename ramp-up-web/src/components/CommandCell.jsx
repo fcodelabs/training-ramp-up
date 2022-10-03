@@ -6,15 +6,15 @@ import { editField } from "../constants";
 import { useStore } from "react-redux";
 
 const entrySchema = yup.object().shape({
-  Name: yup.string().required(),
-  Gender: yup.string().required(),
-  Address: yup.string().required(),
-  Number: yup
+  name: yup.string().required(),
+  gender: yup.string().required(),
+  address: yup.string().required(),
+  number: yup
     .string()
     .required()
     .matches(/^[0-9]{10}$/),
-  Birthday: yup.string().required(),
-  Age: yup.string().required(),
+  birthday: yup.string().required(),
+  age: yup.string().required(),
 });
 
 const MyCommandCell = (props) => {

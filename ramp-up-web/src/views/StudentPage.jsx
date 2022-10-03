@@ -75,17 +75,17 @@ function StudentPage() {
             Sign Out
           </Button>
         </GridToolbar>
-        <GridColumn field="ID" editable={false} />
-        <GridColumn field="Name" />
-        <GridColumn field="Gender" cell={GenderList} />
-        <GridColumn field="Address" />
-        <GridColumn field="Number" title="Mobile No" />
+        <GridColumn field="id" title="ID" editable={false} />
+        <GridColumn field="name" title="Name" />
+        <GridColumn field="gender" title="Gender" cell={GenderList} />
+        <GridColumn field="address" title="Address" />
+        <GridColumn field="number" title="Mobile No" />
         <GridColumn
-          field="Birthday"
+          field="birthday"
           title="Date of Birth"
           cell={BirthdayPicker}
         />
-        <GridColumn field="Age" editable={false} />
+        <GridColumn field="age" title="Age" editable={false} />
         <GridColumn field="command" cell={MyCommandCell} />
       </Grid>
       <Upload

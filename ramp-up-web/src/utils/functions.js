@@ -40,8 +40,8 @@ export const birthdayChange = (value, dataItem) => {
   }
   const age = `${years} years ${months} months ${days} days`;
   const newEntry = entries.map((entry) =>
-    entry.ID === dataItem.ID
-      ? { ...entry, ["Birthday"]: value, ["Age"]: age }
+    entry.id === dataItem.id
+      ? { ...entry, ["birthday"]: value, ["age"]: age }
       : entry
   );
   store.dispatch(actions.addEntries(newEntry));
@@ -50,14 +50,14 @@ export const birthdayChange = (value, dataItem) => {
 export const genderChange = (value, dataItem) => {
   const { entries } = store.getState();
   const newEntry = entries.map((entry) =>
-    entry.ID === dataItem.ID ? { ...entry, ["Gender"]: value } : entry
+    entry.id === dataItem.id ? { ...entry, ["gender"]: value } : entry
   );
   store.dispatch(actions.addEntries(newEntry));
 };
 
 export const getGender = (dataItem) => {
   const { entries } = store.getState();
-  const gender = entries.find((e) => e.ID === dataItem.ID).Gender;
+  const gender = entries.find((e) => e.id === dataItem.id).gender;
   return gender;
 };
 
@@ -72,7 +72,7 @@ export const discardEntry = () => {
 
 export const cancelChanges = (entry) => {
   const { updatingEntry, entries } = store.getState();
-  const index = entries.findIndex((e) => e.ID === entry.ID);
+  const index = entries.findIndex((e) => e.id === entry.id);
   const newEntries = [...entries];
   newEntries[index] = updatingEntry;
   store.dispatch(actions.addUpdatingEntry(null));
@@ -84,7 +84,7 @@ export const startEdit = (entry) => {
   const { updatingEntry, entries } = store.getState();
   if (updatingEntry === null) {
     const newEntries = entries.map((e) => {
-      if (e.ID === entry.ID) {
+      if (e.id === entry.id) {
         store.dispatch(actions.addUpdatingEntry(entry));
         store.dispatch(actions.addChangingEntry(entry));
         return { ...e, inEdit: true };
@@ -98,12 +98,12 @@ export const startEdit = (entry) => {
 
 export const fieldChange = (event) => {
   const { entries } = store.getState();
-  const inEditID = event.dataItem.ID;
+  const inEditID = event.dataItem.id;
   const field = event.field || "";
   const newEntries = entries.map((entry) =>
-    entry.ID === inEditID ? { ...entry, [field]: event.value } : entry
+    entry.id === inEditID ? { ...entry, [field]: event.value } : entry
   );
-  const changingEntry = newEntries.find((e) => e.ID === inEditID);
+  const changingEntry = newEntries.find((e) => e.id === inEditID);
   store.dispatch(actions.addChangingEntry(changingEntry));
   store.dispatch(actions.addEntries(newEntries));
 };
@@ -113,7 +113,7 @@ export const addEntry = () => {
   const date = new Date().toLocaleDateString("en-GB");
   if (updatingEntry === null) {
     const newEntry = {
-      Birthday: date,
+      birthday: date,
       new: true,
       inEdit: true,
     };

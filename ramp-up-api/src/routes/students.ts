@@ -13,8 +13,8 @@ router.get("/", verifyToken, getStudents);
 
 router.post("/", verifyToken, addStudent);
 
-router.delete("/:ID", verifyToken, deleteStudent);
+router.delete("/:id", verifyToken, deleteStudent);
 
-router.patch("/:ID", verifyToken, updateStudent);
+router.patch("/:id", verifyToken, updateStudent);
 
 export default router;

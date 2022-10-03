@@ -8,7 +8,7 @@ const BirthdayPicker = (props) => {
     <td>
       <DatePicker
         format="dd/MM/yyyy"
-        defaultValue={getBirthday(dataItem.Birthday)}
+        defaultValue={getBirthday(dataItem.birthday)}
         max={new Date()}
         disabled={!dataItem.inEdit}
         onChange={(e) => {

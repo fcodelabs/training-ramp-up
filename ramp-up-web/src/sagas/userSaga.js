@@ -69,8 +69,8 @@ function* workRefreshUser(userName) {
 function* workAddUser(user) {
   const response = yield call(() => addUser(user));
   if (response.error == null) {
-    yield put(actions.addToken(response.Token));
-    localStorage.setItem("user", response.UserName);
+    yield put(actions.addToken(response.token));
+    localStorage.setItem("user", response.username);
   } else {
     alert(response.error);
   }
@@ -79,8 +79,8 @@ function* workAddUser(user) {
 function* workGetUser(user) {
   const response = yield call(() => getUser(user));
   if (response.error == null) {
-    yield put(actions.addToken(response.Token));
-    localStorage.setItem("user", response.UserName);
+    yield put(actions.addToken(response.token));
+    localStorage.setItem("user", response.username);
   } else {
     alert(response.error);
   }
