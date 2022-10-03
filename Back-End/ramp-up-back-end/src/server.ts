@@ -1,5 +1,14 @@
 import express from "express";
 import { Request, Response } from "express";
+import { AppDataSource } from "./dataSource";
+
+AppDataSource.initialize()
+  .then(() => {
+    console.log("Data Source has been initialized!");
+  })
+  .catch((err) => {
+    console.error("Error during Data Source initialization:", err);
+  });
 
 const app = express();
 
