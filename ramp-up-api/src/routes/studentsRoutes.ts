@@ -1,16 +1,16 @@
 import express from 'express';
 const router = express.Router();
 import {
-  getStudent,
-  postStudent,
+  allStudent,
+  addStudent,
   findStudent,
   deleteStudent,
   updateStudent,
-} from '../controllers/studentControlls';
+} from '../controllers/studentController';
 const auth = require('../middleware/auth');
 
-router.post('/student', auth, getStudent);
-router.post('/', postStudent);
+router.post('/student', auth, allStudent);
+router.post('/', addStudent);
 router.get('/:studentId', findStudent);
 router.delete('/:studentId', deleteStudent);
 router.put('/:studentId', updateStudent);

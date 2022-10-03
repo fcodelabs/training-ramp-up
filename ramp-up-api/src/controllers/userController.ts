@@ -75,7 +75,7 @@ export const login = async (req, res) => {
     const user = await loginUser(req);
     if (!user) return res.json('Error First').status(400);
     return res.send({
-      user: user, //Todo - remove password
+      user: user, //Todo -> remove password
       accessToken: jwt.sign(req.query.email, process.env.ACCESS_TOKEN_SECRET),
     });
   } catch (error) {

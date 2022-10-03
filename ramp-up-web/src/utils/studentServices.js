@@ -8,14 +8,14 @@ const config = {
 };
 
 //Student Servide
-const generateid = (data) =>
-  data.reduce(
-    (previousValue, currentValue) => Math.max(previousValue, currentValue.id),
-    0,
-  ) + 1;
+// const generateid = (data) =>
+//   data.reduce(
+//     (previousValue, currentValue) => Math.max(previousValue, currentValue.id),
+//     0,
+//   ) + 1;
 
 export const insertItem = async (item) => {
-  item.id = generateid(data);
+  //item.id = generateid(data);
   item.inEdit = false;
 
   if (
@@ -102,8 +102,7 @@ export const getItems = async () => {
       config,
     );
 
-    // console.log("GETITEM", res);
-
+    console.log("GETITEM", res.data.user);
     return res.data;
   } catch (e) {
     console.log(Error, e);

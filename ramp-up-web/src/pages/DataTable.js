@@ -126,6 +126,9 @@ const DataTable = () => {
 
   const logOut = () => {
     localStorage.removeItem("token", token);
+    localStorage.removeItem("name");
+    localStorage.removeItem("role");
+    localStorage.removeItem("email");
     navigate("/");
   };
 

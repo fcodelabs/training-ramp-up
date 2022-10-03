@@ -5,13 +5,13 @@ import {
   updateItem,
   deleteItem,
   insertItem,
-} from "../../utils/services";
+} from "../../utils/studentServices";
 
 function* callstudentGetFun() {
   try {
     const res = yield call(getItems);
-
-    yield put(studentSlice.actions.addStudent(res.student));
+    console.log("AllStudent", res);
+    yield put(studentSlice.actions.addStudent(res.user));
   } catch (e) {
     console.log(e);
   }
