@@ -2,24 +2,15 @@ import { Module } from '@nestjs/common';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
 import { ConfigModule } from '@nestjs/config';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { User, Session, Student } from './entities';
-
+import { DatabaseModule } from './config/configure.service';
+import { SocketGateway } from './gateways/websocket.gateway';
 @Module({
   imports: [
+    ConfigModule.forRoot({ isGlobal: true }),
     AuthModule,
     UserModule,
-    ConfigModule.forRoot({ isGlobal: true }),
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      host: 'localhost',
-      port: 5432,
-      username: 'postgres',
-      password: 'postgress',
-      database: 'postgres',
-      entities: [User, Session, Student],
-      synchronize: true,
-    }),
+    DatabaseModule,
   ],
+  providers: [SocketGateway],
 })
 export class AppModule {}

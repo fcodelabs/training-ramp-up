@@ -29,7 +29,9 @@ export class AuthService {
   }
 
   async login(email: string, password: string) {
-    const user = await this.authRepository.findOneBy({ email });
+    const user = await this.authRepository.findOneBy({
+      email: email.toLowerCase(),
+    });
     if (!user) {
       return undefined;
     }

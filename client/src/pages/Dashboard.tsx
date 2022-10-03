@@ -1,5 +1,6 @@
 import './dashboard.css';
-import { Button, Typography } from '@mui/material';
+import { Button, Typography, styled, ButtonProps } from '@mui/material';
+import { grey } from '@mui/material/colors';
 import { useEffect, useState } from 'react';
 import '@progress/kendo-theme-material/dist/all.css';
 import { Grid, GridColumn, GridToolbar } from '@progress/kendo-react-grid';
@@ -10,8 +11,30 @@ import { UserDataType,StudentDataType, Gender, Role } from '../interfaces';
 import { useSelector, useDispatch } from 'react-redux';
 import { logOutUser, getStudents, createStudent, deleteStudent, updateStudent, checkUser } from '../state/slices';
 import type { RootState } from '../state/store';
+import { io } from 'socket.io-client';
+
 
 const editField = 'inEdit';
+
+const LogoutButton = styled(Button)<ButtonProps>(({ theme }) => ({
+  color: '#ffffff',
+  backgroundColor: grey[800],
+  fontWeight:'bold',
+  '&:hover': {
+    backgroundColor: grey[900],
+  },
+}));
+
+const AddNew = styled(Button)<ButtonProps>(({ theme }) => ({
+  color: '#ffffff',
+  backgroundColor: '#ef4444',
+  margin:'2px',
+  fontWeight:'bold',
+  '&:hover': {
+      backgroundColor: '#d32f2f',
+  },
+}));
+const socket = io('http://localhost:8000');
 
 export default function Dashboard(){
   const user:UserDataType|null = useSelector((state: RootState)=>state.user);
@@ -20,7 +43,13 @@ export default function Dashboard(){
   const [studentData, setStudentData] = useState<StudentDataType[]>([]);
   const [userData,setUserData] = useState<UserDataType>({sessionId:'',name:'',email:'',role:Role.guest});
   const navigate = useNavigate();
-
+  
+  useEffect(()=>{
+    socket.on('students updated', () => {
+      dispatch(getStudents());
+    });
+  },[socket])
+  
   useEffect(()=>{
     if(!user){
         navigate("/");
@@ -45,7 +74,7 @@ export default function Dashboard(){
     dispatch(logOutUser({sessionId:userData.sessionId}));
   }
 
-  const addNewItem = () => {
+  const addNewStudent = () => {
     const newDataItem: StudentDataType= {
       name:'',
       address:'',
@@ -58,8 +87,9 @@ export default function Dashboard(){
     setStudentData([...studentData, newDataItem]);
   };
 
-  const add = (dataItem: StudentDataType) => {
-    dispatch(createStudent({...dataItem}));
+  const add = (dataItem: any) => {
+    const newStudent:StudentDataType = {...dataItem,mobileNo:parseInt(dataItem.mobileNo)}
+    dispatch(createStudent({...newStudent}));
     };
     
   const discard = () => {
@@ -73,18 +103,20 @@ export default function Dashboard(){
     setStudentData(studentData.map((item) => (item.id === dataItem.id ? { ...item,dob,inEdit: true } : item)));
   };
   
-  const cancel = (dataItem: StudentDataType) => {
+  const cancel = () => {
       setStudentData(students);
   };
 
   
   const update = (dataItem: StudentDataType) => {
-
       dispatch(updateStudent({...dataItem}));
   };
 
   const remove = (dataItem: StudentDataType) => {
-    dispatch(deleteStudent({id:dataItem.id}))
+    // eslint-disable-next-line no-restricted-globals
+    if(confirm("Are you sure you want to delete this student")){
+      dispatch(deleteStudent({id:dataItem.id}))
+    }
   };
 
   const itemChange = (e: any) => {
@@ -107,29 +139,28 @@ export default function Dashboard(){
             <Typography variant="subtitle2" style={{color:'#a9a9a9'}}>Role : {userData.role}</Typography>
           </div>
           <div>
-            <Button onClick={handleLogOut} variant="contained" sx={{width:"fit"}}>Log Out</Button>
+            <LogoutButton onClick={handleLogOut} className='logout_button'>Log Out</LogoutButton>
           </div>
         </div>
         <div className="data_grid">
           <Grid data={studentData} editField={editField} onItemChange={itemChange}>
             <GridToolbar>
               <div>
-                <button
+                <AddNew
                   title="Add new"
                   className="k-button k-button-md k-rounded-md "
-                  style={{ background: '#e2e8f0', color: '#000', border: 'none' }}
-                  onClick={addNewItem}
+                  onClick={addNewStudent}
                   disabled = {userData.role==="ADMIN"?false:true}
                 >
                   Add new
-                </button>
+                </AddNew>
               </div>
             </GridToolbar>
             <GridColumn field="id" title="ID" editable={false} />
             <GridColumn field="name" title="Name" editor="text" />
             <GridColumn field="gender" title="Gender" editor="text" />
             <GridColumn field="address" title="Address" editor="text" />
-            <GridColumn field="mobileNo" title="Mobile-No" editor="numeric" />
+            <GridColumn field="mobileNo" title="Mobile-No" editor="text" />
             <GridColumn field="dob" title="Date of Birth" editor="date" format="{0:d}" cell={DateCell} />
             <GridColumn field="age" title="Age" editor="numeric" editable={false} />
             <GridColumn cell={commandCell} title="command" />

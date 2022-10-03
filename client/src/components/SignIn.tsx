@@ -1,4 +1,4 @@
-import Button from '@mui/material/Button';
+import { Button, styled, ButtonProps } from '@mui/material';
 import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
@@ -8,6 +8,28 @@ import { logInUser } from '../state/slices';
 import {zodResolver} from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { LogInDataInputType, loginInputDataValidator } from "../interfaces";
+
+
+const SignUpButton = styled(Button)<ButtonProps>(({ theme }) => ({
+  color: '#ffffff',
+  backgroundColor: '#ef4444',
+  margin:'2px',
+  fontWeight:'bold',
+  '&:hover': {
+      backgroundColor: '#d32f2f',
+  },
+}));
+const CustomTextField = styled(TextField)({
+  '& label.Mui-focused': {
+    color: '#ef4444',
+  },
+  '& .MuiOutlinedInput-root': {
+    '&.Mui-focused fieldset': {
+      borderColor: '#ef4444',
+    },
+  },
+ 
+});
 
 export default function SignIn() {
   const dispatch = useDispatch()
@@ -37,7 +59,7 @@ export default function SignIn() {
             Sign In
           </Typography>
           <form onSubmit={handleSubmit(onSubmit)}>
-            <TextField
+            <CustomTextField
               margin="normal"
               fullWidth
               label="Email"
@@ -47,7 +69,7 @@ export default function SignIn() {
               error = {!!errors?.email}
               helperText={errors?.email ? errors.email.message:null}
             />
-            <TextField
+            <CustomTextField
               margin="normal"
               fullWidth
               label="Password"
@@ -57,14 +79,14 @@ export default function SignIn() {
               error = {!!errors?.password}
               helperText={errors?.password ? errors.password.message:null}
             />
-            <Button
+            <SignUpButton
               type="submit"
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 , py:2}}
             >
               Sign In
-            </Button>
+            </SignUpButton>
           </form>
         </Box>
       </Container>

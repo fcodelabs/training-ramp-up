@@ -2,6 +2,9 @@ import { call,put } from "redux-saga/effects";
 import axios, { AxiosResponse } from "axios";
 import * as sliceActions from "../slices";
 import { StudentDataType } from "../../interfaces";
+import { io } from 'socket.io-client';
+
+const socket = io('http://localhost:8000');
 
 function refreshAccessToken(){
     const res = axios.post('http://localhost:8000/auth/refresh',{},{withCredentials:true});
@@ -51,7 +54,11 @@ function addStudent(data:StudentDataType){
 export function* handleAddStudent({payload}:{payload:StudentDataType}){
     try{
         let result: AxiosResponse  = yield call(addStudent,payload);
-        yield put(sliceActions.setNewStudent(result.data.student));
+        if(result.status === 200){
+            yield put(sliceActions.setNewStudent(result.data.student));
+            socket.emit('update occured');
+            alert("Student has been successfully added")
+        }
     }catch(err){
         let reAuthorize: AxiosResponse = yield call(refreshAccessToken); 
         if(reAuthorize.status === 200){
@@ -59,14 +66,14 @@ export function* handleAddStudent({payload}:{payload:StudentDataType}){
                 let result: AxiosResponse  = yield call(addStudent,payload);
                 if(result.status === 200){
                     yield put(sliceActions.setNewStudent(result.data.student));
-                }else{
-                    alert(result.data.error);
+                    socket.emit('update occured');
+                    alert("Student has been successfully added")
                 }
             }catch(err){
-                alert(err);
+                alert("Failed to add student, please provide valid details");
             }
         }else{
-            alert(err);
+            alert("Failed to add student, please provide valid details");
         }
     }
 }
@@ -85,6 +92,8 @@ export function* handleUpdateStudent({payload}:{payload:StudentDataType}){
         if(result.status === 200){
             delete result.data.student.inEdit;
             yield put(sliceActions.setUpdatedStudent(result.data.student));
+            socket.emit('update occured');
+            alert("Student has been successfully updated")
         }
     }catch(err){
         let reAuthorize: AxiosResponse = yield call(refreshAccessToken); 
@@ -94,14 +103,14 @@ export function* handleUpdateStudent({payload}:{payload:StudentDataType}){
                 if(result.status===200){
                     delete result.data.student.inEdit;
                     yield put(sliceActions.setUpdatedStudent(result.data.student));
-                }else{
-                    alert(result.data.error)
+                    socket.emit('update occured');
+                    alert("Student has been successfully updated")
                 }
             }catch(err){
-                alert(err);
+                alert("Failed to update student, please provide valid details");
             }
         }else{
-            alert(err);
+            alert("Failed to update student, please provide valid details");
         }
     }
 }
@@ -119,6 +128,8 @@ export function* handleDeleteStudent({payload}:{payload:{id:number}}){
         let result: AxiosResponse  = yield call(deleteStudent,payload.id);
         if(result.status === 200){
             yield put(sliceActions.setRemainingStudents(payload.id));
+            socket.emit('update occured');
+            alert("Student has been successfully deleted")
         }
     }catch(err){
         let reAuthorize: AxiosResponse = yield call(refreshAccessToken); 
@@ -127,14 +138,14 @@ export function* handleDeleteStudent({payload}:{payload:{id:number}}){
                 let result: AxiosResponse = yield call(deleteStudent,payload.id);
                 if(result.status === 200){
                     yield put(sliceActions.setRemainingStudents(result.data.student.id));
-                }else{
-                    alert(result.data.error);
+                    socket.emit('update occured');
+                    alert("Student has been successfully deleted");
                 }
             }catch(err){
-                alert(err);
+                alert("Failed to remove student, please try again");
             }
         }else{
-            alert(err);
+            alert("Failed to remove student, please try again");
         }
     }
 }

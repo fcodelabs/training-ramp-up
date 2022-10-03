@@ -1,3 +1,27 @@
+import { Button, ButtonProps, styled } from "@mui/material";
+import { grey } from "@mui/material/colors";
+
+const Button1 = styled(Button)<ButtonProps>(({ theme }) => ({
+    color: '#ef4444',
+    backgroundColor: grey[100],
+    margin:'2px',
+    border:'1px solid #ef4444',
+    fontWeight:'bold',
+    '&:hover': {
+        backgroundColor: '#ffebee',
+    },
+}));
+const Button2 = styled(Button)<ButtonProps>(({ theme }) => ({
+    color: '#2b2b2b',
+    backgroundColor: grey[100],
+    border:'1px solid #2b2b2b',
+    margin:'2px',
+    fontWeight:'bold',
+    '&:hover': {
+      backgroundColor: grey[300],
+    },
+  }));
+
 export default function MyCommandCell(props:any){
     const {dataItem,role} = props;
     const inEdit = dataItem[props.editField]
@@ -5,24 +29,24 @@ export default function MyCommandCell(props:any){
     return inEdit ? 
         (
             <td className="k-command-cell">
-                <button style={{background:'#ef4444',color:'#fff',padding:"5px 15px", border:"1px solid #ef4444",borderRadius:"5px", fontWeight:"bold", margin:"2px", textTransform:"uppercase"}} disabled={role==="ADMIN"?false:true} onClick={()=>isNewItem?props.add(dataItem):props.update(dataItem)}>
+                <Button1 disabled={role==="ADMIN"?false:true} onClick={()=>isNewItem?props.add(dataItem):props.update({...dataItem,mobileNo:parseInt(dataItem.mobileNo)})}>
                     {isNewItem ? 'Add' : 'Update'}
-                </button>
-                <button style={{background:'#ffffff',padding:"5px 15px", border:"1px solid black",borderRadius:"5px", fontWeight:"bold", margin:"2px",textTransform:"uppercase"}} disabled={role==="ADMIN"?false:true} onClick={()=>isNewItem ? props.discard():props.cancel(dataItem)}>
+                </Button1>
+                <Button2 disabled={role==="ADMIN"?false:true} onClick={()=>isNewItem ? props.discard():props.cancel()}>
                     {isNewItem ? 'Discard' : 'Cancel'}
-                </button>
+                </Button2>
             </td>
         )
             :
         (
             <td className="k-command-cell">
                 <div className="">
-                    <button style={{background:'#ef4444',color:'#fff',padding:"5px 15px", border:"1px solid #ef4444",borderRadius:"5px", fontWeight:"bold", margin:"2px",textTransform:"uppercase"}} disabled={role==="ADMIN"?false:true} onClick={()=>props.edit(dataItem)}>
+                    <Button1 disabled={role==="ADMIN"?false:true} onClick={()=>props.edit(dataItem)}>
                         Edit
-                    </button>
-                    <button style={{background:'#ffffff',padding:"5px 15px", border:"1px solid black",borderRadius:"5px", fontWeight:"bold", margin:"2px",textTransform:"uppercase"}} disabled={role==="ADMIN"?false:true} onClick ={()=>props.remove(dataItem)}>
+                    </Button1>
+                    <Button2 disabled={role==="ADMIN"?false:true} onClick ={()=>props.remove(dataItem)}>
                         Remove
-                    </button>
+                    </Button2>
                 </div>
             </td>
         )

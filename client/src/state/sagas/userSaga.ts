@@ -31,10 +31,10 @@ export function* handleLogOutUser({payload}:{payload:{sessionId:string}}){
                 yield call(signoutUser,payload.sessionId);
                 yield put(unsetUser());
             }else{
-                alert("Failed to delete student!")
+                alert("Failed to log out!")
             }
         }catch(err) {
-            alert("Failed to delete student!");
+            alert("Failed to log out!");
         }
     }
 }
@@ -54,16 +54,16 @@ export function* handleLogInUser({payload}:{payload:LogInDataInputType}){
             const userData = cookies.get('userData');
             yield put(setUser(userData));
         }else{
-            alert("Invalid Credentials!");
+            alert("Log in failed, invalid Credentials!");
         }
     }catch(err){
-        alert("Invalid Credentials!");
+        alert("Log in failed, invalid Credentials!");
     }
 }
 
 
 function signupUser(data: any){
-    const res = axios.post("http://localhost:8000/auth/register",data,{
+    const res = axios.post("http://localhost:8000/auth/signup",data,{
         withCredentials: true,
       });
     return res;

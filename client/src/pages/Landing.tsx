@@ -33,7 +33,7 @@ export default function Landing(){
     return (
     <div className="landing">
         {compState?<SignUp /> : <SignIn />}
-       <Link onClick={()=>setCompState(!compState)} sx={{cursor:"pointer"}}>
+       <Link onClick={()=>setCompState(!compState)} sx={{cursor:"pointer",color:"#ef4444",textDecoration:"none",borderBottom:"1px solid #ef4444"}}>
             {compState?"Already have an account? Sign In":"Don't have an account? Sign Up"}
         </Link>
     </div>

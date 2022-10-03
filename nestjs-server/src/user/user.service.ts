@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Student } from '../entities';
+import { StudentDto } from './dto';
 
 @Injectable()
 export class UserService {
@@ -18,10 +19,16 @@ export class UserService {
     }
   }
 
-  async addStudent(data: any) {
+  async addStudent(data: StudentDto) {
     try {
       const dob = new Date(data.dob);
       const age = this.calcAge(dob);
+      if (data.mobileNo < 99999999 || data.mobileNo > 999999999) {
+        return { error: 'Please provide a valid phone number to add student!' };
+      }
+      if (age < 0) {
+        return { error: 'Please provide a valid age to add student!' };
+      }
       const student = new Student();
       student.name = data.name;
       student.gender = data.gender;
@@ -39,7 +46,7 @@ export class UserService {
     }
   }
 
-  async updateStudent(data: any) {
+  async updateStudent(data: StudentDto) {
     try {
       const student = await this.studentRepository.findOneBy({ id: data.id });
       if (!student) {
@@ -47,6 +54,12 @@ export class UserService {
       }
       const dob = new Date(data.dob);
       const age = this.calcAge(dob);
+      if (data.mobileNo < 99999999 || data.mobileNo > 999999999) {
+        return { error: 'Please provide a valid phone number to add student!' };
+      }
+      if (age < 0) {
+        return { error: 'Please provide a valid age to add student!' };
+      }
       const updatedStudent = await this.studentRepository.save({
         ...student,
         ...data,
