@@ -2,7 +2,7 @@ import axios from "axios";
 
 //User Service
 let data = [];
-
+const numberValidator = /^[0-9]{10}$/;
 const config = {
   headers: { Authorization: `bearer ${localStorage.getItem("token")}` },
 };
@@ -14,27 +14,43 @@ const config = {
 //     0,
 //   ) + 1;
 
-export const insertItem = async (item) => {
-  //item.id = generateid(data);
-  item.inEdit = false;
+export const insertItem = async (student) => {
+  //student.id = generateid(data);
+  student.inEdit = false;
 
   if (
-    !item.name ||
-    !item.gender ||
-    !item.birth ||
-    !item.mobileNo ||
-    !item.address
+    !student.name ||
+    !student.gender ||
+    !student.birth ||
+    !student.mobileNo ||
+    !student.address
   ) {
     alert("Incorrect Validation");
   } else {
-    if (item.gender == "Male" || item.gender == "Female") {
-      data.unshift(item);
-      item.age = new Date().getFullYear() - new Date(item.birth).getFullYear();
+    if (student.gender == "Male" || student.gender == "Female") {
+      if (numberValidator.test(student.mobileNo)) {
+        if (
+          new Date() - new Date(student.birth) < 0 ||
+          new Date().getDate() - new Date(student.birth).getDate() == 0
+        ) {
+          alert("Enter valid Age");
+        } else {
+          data.unshift(student);
+          student.age =
+            new Date().getFullYear() - new Date(student.birth).getFullYear();
 
-      const resdata = await axios.post("http://localhost:8000", item, config);
-      if (resdata) {
-        alert("User Insert Success");
-        return resdata;
+          const resdata = await axios.post(
+            "http://localhost:8000",
+            student,
+            config,
+          );
+          if (resdata) {
+            alert("User Insert Success");
+            return resdata;
+          }
+        }
+      } else {
+        alert("Mobile number need 10 character");
       }
     } else {
       alert("Please check Gender");
@@ -42,29 +58,40 @@ export const insertItem = async (item) => {
   }
 };
 
-export const updateItem = async (item) => {
+export const updateItem = async (student) => {
   try {
     if (
-      !item.name ||
-      !item.gender ||
-      !item.birth ||
-      !item.mobileNo ||
-      !item.address
+      !student.name ||
+      !student.gender ||
+      !student.birth ||
+      !student.mobileNo ||
+      !student.address
     ) {
       alert("Incorrect Validation");
     } else {
-      if (item.gender == "Male" || item.gender == "Female") {
-        item.age =
-          new Date().getFullYear() - new Date(item.birth).getFullYear();
+      if (student.gender == "Male" || student.gender == "Female") {
+        if (numberValidator.test(student.mobileNo)) {
+          if (
+            new Date() - new Date(student.birth) < 0 ||
+            new Date().getDate() - new Date(student.birth).getDate() == 0
+          ) {
+            alert("Enter valid Age");
+          } else {
+            student.age =
+              new Date().getFullYear() - new Date(student.birth).getFullYear();
 
-        const res = await axios.put(
-          `http://localhost:8000/${item.id}`,
-          item,
-          config,
-        );
-        if (res) {
-          alert("User Update Success");
-          return res;
+            const res = await axios.put(
+              `http://localhost:8000/${student.id}`,
+              student,
+              config,
+            );
+            if (res) {
+              alert("User Update Success");
+              return res;
+            }
+          }
+        } else {
+          alert("Mobile number need 10 character");
         }
       } else {
         alert("Please check gender");
@@ -74,10 +101,10 @@ export const updateItem = async (item) => {
     console.log(e);
   }
 };
-export const deleteItem = async (item) => {
+export const deleteItem = async (student) => {
   try {
     const res = await axios.delete(
-      `http://localhost:8000/${item.id}`,
+      `http://localhost:8000/${student.id}`,
 
       config,
     );
