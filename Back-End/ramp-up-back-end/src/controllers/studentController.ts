@@ -21,7 +21,7 @@ export const addStudent = async (req: Request, res: Response) => {
 };
 
 export const getAllStudents = async (req: Request, res: Response) => {
-  const students = getAllStudentService();
+  const students = await getAllStudentService();
   res.send(students);
 };
 
@@ -31,7 +31,7 @@ export const updateStudent = async (req: Request, res: Response) => {
 
   if (student) {
     mergeStudentService(student, req.body);
-    const results = saveStudentService(student);
+    const results = await saveStudentService(student);
     return res.send(results);
   }
 };

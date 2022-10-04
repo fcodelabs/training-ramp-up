@@ -22,7 +22,8 @@ export const createStudentService = async (
 
 //get all students
 export const getAllStudentService = async () => {
-  return await Student.find();
+  const allStudents = await Student.find();
+  return allStudents;
 };
 
 //delete student
