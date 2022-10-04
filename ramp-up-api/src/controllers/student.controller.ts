@@ -9,14 +9,14 @@ export const getStudent = async (req: Request, res: Response) => {
 
 export const postStudent = async (req: Request, res: Response) => {
   console.log("post student", req.body);
-  const { StudentName, Gender, Address, MobileNo, DOB, Age } = req.body;
+  const { studentName, gender, address, mobileNo, dob, age } = req.body;
   const student = Student.create({
-    StudentName: StudentName,
-    Gender: Gender,
-    Address: Address,
-    MobileNo: MobileNo,
-    DOB: DOB,
-    Age: Age,
+    studentName: studentName,
+    gender: gender,
+    address: address,
+    mobileNo: mobileNo,
+    dob: dob,
+    age: age,
   });
   await student.save();
   res.json(student);

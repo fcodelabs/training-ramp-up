@@ -5,7 +5,7 @@ import {
   GridToolbar,
 } from "@progress/kendo-react-grid";
 import { MyCommandCell } from "../Components/MyCommandCell";
-import { getItems } from "../services/studentServices";
+import { getStudents } from "../services/studentServices";
 import { Upload } from "@progress/kendo-react-upload";
 import { io } from "socket.io-client";
 import { useDispatch, useSelector } from "react-redux";
@@ -25,7 +25,7 @@ const HomePage = () => {
   const studentList = students.data;
 
 useEffect(()=>{
- if( localStorage.getItem("role") =="Admin"){
+ if( localStorage.getItem("role") ==="Admin"){
   setAdmin(true)
  }
   
@@ -85,28 +85,28 @@ useEffect(()=>{
   };
 
   const cancel = (dataItem) => {
-    const originalItem = getItems().find((p) => p.ID === dataItem.ID);
-    const newData = data.map((item) =>
-      item.ID === originalItem.ID ? originalItem : item
+    const originalStudent = getStudents().find((p) => p.ID === dataItem.ID);
+    const newData = data.map((student) =>
+      student.ID === originalStudent.ID ? originalStudent : student
     );
     setData(newData);
   };
 
   const enterEdit = (dataItem) => {
     setData(
-      data.map((item) =>
-        item.ID === dataItem.ID
-          ? { ...item, DOB: new Date(item.DOB), inEdit: true }
-          : item
+      data.map((student) =>
+        student.ID === dataItem.ID
+          ? { ...student, dob: new Date(student.dob), inEdit: true }
+          : student
       )
     );
   };
 
   const itemChange = (event) => {
-    const newData = data.map((item) =>
-      item.ID === event.dataItem.ID
-        ? { ...item, [event.field || ""]: event.value }
-        : item
+    const newData = data.map((student) =>
+      student.ID === event.dataItem.ID
+        ? { ...student, [event.field || ""]: event.value }
+        : student
     );
     setData(newData);
   };
@@ -186,19 +186,19 @@ useEffect(()=>{
         />
       </GridToolbar>
       <Column field="ID" title="ID" width="50px" editable={false} />
-      <Column field="StudentName" title="Student Name" width="200px" />
-      <Column field="Gender" title="Gender" width="120px" />
-      <Column field="Address" title="Address" width="200px" />
-      <Column field="MobileNo" title="Mobile No" width="150px" />
+      <Column field="studentName" title="Student Name" width="200px" />
+      <Column field="gender" title="Gender" width="120px" />
+      <Column field="address" title="Address" width="200px" />
+      <Column field="mobileNo" title="Mobile No" width="150px" />
       <Column
-        field="DOB"
+        field="dob"
         title="Date of Birth"
         editor="date"
         format="{0:d}"
         width="175px"
       />
 
-      <Column field="Age" title="Age" width="150px" editable={false} />
+      <Column field="age" title="Age" width="150px" editable={false} />
       {admin && <Column cell={CommandCell} title="Command" width="200px" />}
     </Grid>
   );

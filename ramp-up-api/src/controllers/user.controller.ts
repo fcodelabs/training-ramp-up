@@ -14,31 +14,32 @@ export const postUser = async (req: Request, res: Response) => {
   
 
   const salt = bcrypt.genSaltSync(saltRounds);
-  const hash = bcrypt.hashSync(req.body.Password, salt);
+  const hash = bcrypt.hashSync(req.body.password, salt);
   console.log("hash",hash)
   
-  const { User, Email } = req.body;
+  const { User, email } = req.body;
   const user = Users.create({
     User: User,
-    Password: hash,
-    Email: Email,
-    Role: "User",
+    password: hash,
+    email: email,
+    role: "User",
   });
   await user.save();
-  res.json(user);
+  // res.json(user);
+  return res.json(user).status(200);
 };
 
 
 export const findUser = async (req: Request , res: Response) => {
   
 
-  const user = await Users.findOneBy({Email : req.query.email as FindOptionsWhere<string> });
+  const user = await Users.findOneBy({email : req.query.email as FindOptionsWhere<string> });
   console.log("User",user)
   const accessToken = jwt.sign(req.query.email, process.env.ACCESS_TOKEN_KEY);
 
   if (user) {
    
-    const value = await bcrypt.compare(req.query.password , user.Password);
+    const value = await bcrypt.compare(req.query.password , user.password);
     
   
     console.log(value);

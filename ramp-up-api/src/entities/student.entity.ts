@@ -6,20 +6,20 @@ export class Student extends BaseEntity {
   ID: number;
 
   @Column()
-  StudentName: string;
+  studentName: string;
 
   @Column()
-  Gender: string;
+  gender: string;
 
   @Column()
-  Address: string;
+  address: string;
 
   @Column()
-  MobileNo: string;
+  mobileNo: string;
 
   @Column({ type: "date", nullable: true })
-  DOB: string;
+  dob: string;
 
   @Column()
-  Age: number;
+  age: number;
 }

@@ -5,7 +5,7 @@ import {
   deleteStudent,
   updateStudent,
 } from "../controllers/student.controller";
-
+const userAuth = require('../middleware/userAuth');
 import cors from "cors";
 import * as BodyParser from "body-parser";
 
@@ -16,9 +16,9 @@ app.use(BodyParser.urlencoded({ extended: false }));
 
 const router = express.Router();
 
-router.get("/students", getStudent);
-router.post("/students", postStudent);
-router.delete("/students/:id", deleteStudent);
-router.put("/students/:id", updateStudent);
+router.get("/students",userAuth, getStudent);
+router.post("/students",userAuth, postStudent);
+router.delete("/students/:id",userAuth, deleteStudent);
+router.put("/students/:id",userAuth, updateStudent);
 
 export default router;

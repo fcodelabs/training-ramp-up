@@ -25,8 +25,8 @@ export const insertUser = async (user) => {
   user.inEdit = false;
   const body = {
     User:user.name,
-    Password:user.password,
-    Email:user.email
+    password:user.password,
+    email:user.email
   }
   if (!user.name || !user.email || !user.password) {
     alert("Incorrect Validation");

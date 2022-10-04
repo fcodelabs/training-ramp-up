@@ -1,17 +1,17 @@
 import studentSlice from "../slice/studentSlice";
 import { all, takeEvery, put, call } from "redux-saga/effects";
 import {
-  insertItem,
-  updateItem,
-  deleteItem,
-  getItems,
+  insertStudent,
+  updateStudent,
+  deleteStudent,
+  getStudents,
 } from "../../services/studentServices.js";
 import userSlice from "../slice/userSlice";
 import {insertUser, findUser} from "../../services/userService"
 
 function* watchRetrieveStudent() {
   try {
-    const response = yield call(getItems);
+    const response = yield call(getStudents);
     yield put(studentSlice.actions.saveStudents(response));
   } catch (error) {
     console.log(error);
@@ -20,7 +20,7 @@ function* watchRetrieveStudent() {
 // eslint-disable-next-line no-useless-rename
 function* watchInsertStudent({ payload: payload }) {
   try {
-    yield call(insertItem, payload);
+    yield call(insertStudent, payload);
   } catch (error) {
     console.log(error);
   }
@@ -28,7 +28,7 @@ function* watchInsertStudent({ payload: payload }) {
 // eslint-disable-next-line no-useless-rename
 function* watchPutStudent({ payload: payload }) {
   try {
-    yield call(updateItem, payload);
+    yield call(updateStudent, payload);
   } catch (error) {
     console.log(error);
   }
@@ -36,7 +36,7 @@ function* watchPutStudent({ payload: payload }) {
 // eslint-disable-next-line no-useless-rename
 function* watchRemoveStudent({ payload: payload }) {
   try {
-    yield call(deleteItem, payload);
+    yield call(deleteStudent, payload);
     
   } catch (error) {
     console.log(error);
@@ -46,11 +46,13 @@ function* watchRemoveStudent({ payload: payload }) {
 // eslint-disable-next-line no-useless-rename
 function* watchSignUser({ payload: payload}){
   console.log("root saga")
-  console.log("payoloadsa",payload)
+  console.log("payload",payload)
   try {
     const response = yield call(findUser, payload);
     yield put(userSlice.actions.saveUser(response.data));
-    localStorage.setItem("role", response.data.user.Role);
+    localStorage.setItem("role", response.data.user.role);
+    localStorage.setItem("token",response.data.accessToken)
+    localStorage.setItem("email" , response.data.email)
    payload.navigate("/home");
   } catch (error) {
     alert(error);
@@ -76,10 +78,8 @@ export function* postSagas() {
   yield takeEvery(studentSlice.actions.insertStudent, watchInsertStudent);
   yield takeEvery(studentSlice.actions.putStudent, watchPutStudent);
   yield takeEvery(studentSlice.actions.removeStudent, watchRemoveStudent);
-
-
   yield takeEvery(userSlice.actions.insertUser, watchInsertUser);
-  yield takeEvery(userSlice.actions.signInUser,watchSignUser)
+  yield takeEvery(userSlice.actions.signInUser,watchSignUser);
 }
 
 export default function* rootSaga() {

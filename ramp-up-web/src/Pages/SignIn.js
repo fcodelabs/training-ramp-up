@@ -10,7 +10,7 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useNavigate } from "react-router-dom";
-import { useState} from "react";
+import { useState } from "react";
 import userSlice from "../redux/slice/userSlice";
 
 const theme = createTheme();
@@ -18,14 +18,14 @@ const theme = createTheme();
 export default function SignIn() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+ 
 
   // const initialValues = { email: "", password: "" };
   // const [formValues, setFormValues] = useState(initialValues);
   // const [formErrors, setFormErrors] = useState({});
   // const [isSubmit, setIsSubmit] = useState(false);
-  const[email,setEmail] = useState("")
-  const[password,setPassword] = useState("")
-
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   // // const handleChange = (event) => {
   // //   console.log(event.target);
@@ -36,13 +36,12 @@ export default function SignIn() {
   // };
 
   const handleSubmit = async (event) => {
-
     event.preventDefault();
     // setFormErrors(validate(formValues));
     // setIsSubmit(true);
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;
     if (email.match(regex)) {
-      console.log("Email Doen")
+      console.log("Email Done");
       event.preventDefault();
       dispatch(userSlice.actions.signInUser({ email, password, navigate }));
 
@@ -56,10 +55,8 @@ export default function SignIn() {
       //   email: data.get("email"),
       //   password: data.get("password"),
       // });
-
-    
+    }
   };
-  }
   // useEffect(() => {
   //   console.log(formErrors);
   //   if (Object.keys(formErrors).length === 0 && isSubmit) {
@@ -85,6 +82,9 @@ export default function SignIn() {
   //   return errors;
   // };
 
+  
+
+
   return (
     <ThemeProvider theme={theme}>
       <Container component="main" maxWidth="xs">
@@ -94,7 +94,6 @@ export default function SignIn() {
             marginTop: 8,
             display: "flex",
             flexDirection: "column",
-
             alignItems: "center",
           }}
         >
@@ -104,10 +103,11 @@ export default function SignIn() {
           <Box
             component="form"
             noValidate
-            sx={{ mt: 1 }}
+            sx={{ mt: 3 }}
             // onSubmit={handleSubmit}
           >
-            <Grid item xs={12}>
+             <Grid container spacing={2}>
+            <Grid item xs={12} sm={12}>
               <TextField
                 margin="normal"
                 required
@@ -117,13 +117,14 @@ export default function SignIn() {
                 name="email"
                 autoComplete="email"
                 autoFocus
+                // onBlur={handleSubmit}
                 // value={formValues.email}
-                onChange={(e)=>setEmail(e.target.value)}
+                onChange={(e) => setEmail(e.target.value)}
                 // onChange={handleChange}
               />
               {/* <i>{formErrors.email}</i> */}
             </Grid>
-            <Grid item xs={12}>
+            <Grid item xs={12} sm={12}>
               <TextField
                 margin="normal"
                 required
@@ -135,11 +136,11 @@ export default function SignIn() {
                 autoComplete="current-password"
                 // value={formValues.password}
                 // onChange={handleChange}
-                onChange={(e)=>setPassword(e.target.value)}
+                onChange={(e) => setPassword(e.target.value)}
               />
-              <i>
-                {/* <p>{formErrors.password}</p> */}
-              </i>
+              <i>{/* <p>{formErrors.password}</p> */}</i>
+            </Grid>
+            < Grid item xs={12}></Grid>
             </Grid>
 
             <Button
@@ -151,7 +152,7 @@ export default function SignIn() {
             >
               Sign In
             </Button>
-            <Grid container>
+            <Grid container justifyContent="flex-end">
               <Grid item>
                 <Link href="/signup" variant="body2">
                   {"Don't have an account? Sign Up"}
@@ -163,5 +164,4 @@ export default function SignIn() {
       </Container>
     </ThemeProvider>
   );
-
 }

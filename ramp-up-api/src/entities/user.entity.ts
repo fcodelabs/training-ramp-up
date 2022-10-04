@@ -9,11 +9,11 @@ export class Users extends BaseEntity {
   User: string;
 
   @Column()
-  Password: string;
+  password: string;
 
   @Column()
-  Email: string;
+  email: string;
 
   @Column()
-  Role: string;
+  role: string;
 }

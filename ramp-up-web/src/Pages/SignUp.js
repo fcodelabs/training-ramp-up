@@ -22,9 +22,9 @@ export default function SignUp() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const[name,setName] = useState("")
-  const[email,setEmail] = useState("")
-  const[password,setPassword] = useState("")
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   // const handleChange = (event) => {
   //   console.log(event.target);
@@ -35,10 +35,8 @@ export default function SignUp() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    dispatch(userSlice.actions.insertUser({name, email, password, navigate }));
-    
-    };
-
+    dispatch(userSlice.actions.insertUser({ name, email, password, navigate }));
+  };
 
   // useEffect(() => {
   //   console.log(formErrors);
@@ -94,56 +92,54 @@ export default function SignUp() {
             sx={{ mt: 3 }}
           >
             <Grid container spacing={2}>
-              <Grid item xs={12} sm={12}>
-                <TextField
-                  autoComplete="given-name"
-                  name="firstName"
-                  required
-                  fullWidth
-                  id="firstName"
-                  label="Name"
-                  autoFocus
-                  // value={formValues.name}
-                  onChange={(e)=>setName(e.target.value)}
-                />
+            <Grid item xs={12} sm={12}>
+              <TextField
+                autoComplete="given-name"
+                name="firstName"
+                required
+                fullWidth
+                id="firstName"
+                label="Name"
+                autoFocus
+                // value={formValues.name}
+                onChange={(e) => setName(e.target.value)}
+              />
 
-                {/* <i>
+              {/* <i>
                   <p>{formErrors.firstName}</p>
                 </i> */}
-              </Grid>
-              
-              <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
-                  id="email"
-                  label="Email Address"
-                  name="email"
-                  autoComplete="email"
-                  // value={formValues.email}
-                  onChange={(e)=>setEmail(e.target.value)}
-                />
-                {/* <i>
+            </Grid>
+
+            <Grid item xs={12}>
+              <TextField
+                required
+                fullWidth
+                id="email"
+                label="Email Address"
+                name="email"
+                autoComplete="email"
+                // value={formValues.email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+              {/* <i>
                   <p>{formErrors.email}</p>
                 </i> */}
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
-                  name="password"
-                  label="Password"
-                  type="password"
-                  id="password"
-                  autoComplete="new-password"
-                  // value={formValues.password}
-                  onChange={(e)=>setPassword(e.target.value)}
-                />
-                <i>
-                  {/* <p>{formErrors.password}</p> */}
-                </i>
-              </Grid>
-              <Grid item xs={12}></Grid>
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                required
+                fullWidth
+                name="password"
+                label="Password"
+                type="password"
+                id="password"
+                autoComplete="new-password"
+                // value={formValues.password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+              <i>{/* <p>{formErrors.password}</p> */}</i>
+            </Grid>
+            < Grid item xs={12}></Grid>
             </Grid>
             <Button
               type="submit"
