@@ -29,7 +29,7 @@ export default function MyCommandCell(props:any){
     return inEdit ? 
         (
             <td className="k-command-cell">
-                <Button1 disabled={role==="ADMIN"?false:true} onClick={()=>isNewItem?props.add(dataItem):props.update({...dataItem,mobileNo:parseInt(dataItem.mobileNo)})}>
+                <Button1 disabled={role==="ADMIN"?false:true} onClick={()=>isNewItem?props.add(dataItem):props.update(dataItem)}>
                     {isNewItem ? 'Add' : 'Update'}
                 </Button1>
                 <Button2 disabled={role==="ADMIN"?false:true} onClick={()=>isNewItem ? props.discard():props.cancel()}>

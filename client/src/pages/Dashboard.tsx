@@ -6,6 +6,7 @@ import '@progress/kendo-theme-material/dist/all.css';
 import { Grid, GridColumn, GridToolbar } from '@progress/kendo-react-grid';
 import MyCommandCell from '../components/MyCommandCell';
 import DateCell from '../components/DateCell';
+import GenderCell from '../components/GenderCell';
 import { useNavigate } from "react-router-dom";
 import { UserDataType,StudentDataType, Gender, Role } from '../interfaces';
 import { useSelector, useDispatch } from 'react-redux';
@@ -88,8 +89,14 @@ export default function Dashboard(){
   };
 
   const add = (dataItem: any) => {
-    const newStudent:StudentDataType = {...dataItem,mobileNo:parseInt(dataItem.mobileNo)}
-    dispatch(createStudent({...newStudent}));
+    const valid_number_string = /^[0-9]{9}\d*$/;
+    if(dataItem.mobileNo.match(valid_number_string)){
+      const newStudent:StudentDataType = {...dataItem,mobileNo:parseInt(dataItem.mobileNo)}
+      dispatch(createStudent({...newStudent}));
+    }else{
+      alert("Please enter a valid mobile number")
+      return;
+    }
     };
     
   const discard = () => {
@@ -108,8 +115,15 @@ export default function Dashboard(){
   };
 
   
-  const update = (dataItem: StudentDataType) => {
-      dispatch(updateStudent({...dataItem}));
+  const update = (dataItem: any) => {
+    const valid_number_string = /^[0-9]{9}\d*$/;
+    if(dataItem.mobileNo.match(valid_number_string)){
+      const updatedStudent:StudentDataType = {...dataItem,mobileNo:parseInt(dataItem.mobileNo)}
+      dispatch(updateStudent({...updatedStudent}));
+    }else{
+      alert("Please enter a valid mobile number")
+      return;
+    }
   };
 
   const remove = (dataItem: StudentDataType) => {
@@ -128,7 +142,7 @@ export default function Dashboard(){
   const commandCell = (props: any) => (
     <MyCommandCell  {...props} editField={editField} role={userData.role} edit={enterEdit} add={add} discard={discard} cancel={cancel} update={update} remove={remove} />
   );
-
+  const genderCell = (props:any)=>(<GenderCell {...props} data={["Male","Female","Other"]} />)
   return (
     <div className='dashboard'>
       <div className="content">
@@ -158,7 +172,7 @@ export default function Dashboard(){
             </GridToolbar>
             <GridColumn field="id" title="ID" editable={false} />
             <GridColumn field="name" title="Name" editor="text" />
-            <GridColumn field="gender" title="Gender" editor="text" />
+            <GridColumn cell={genderCell} field="gender" title="Gender" editor="text"/>
             <GridColumn field="address" title="Address" editor="text" />
             <GridColumn field="mobileNo" title="Mobile-No" editor="text" />
             <GridColumn field="dob" title="Date of Birth" editor="date" format="{0:d}" cell={DateCell} />
