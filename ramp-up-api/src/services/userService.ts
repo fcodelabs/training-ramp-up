@@ -4,34 +4,36 @@ require('dotenv').config();
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
 
-export async function loginUser(req) {
+export async function loginUser(details) {
+  console.log('login details', details);
   try {
-    const user = await User.findOneBy({ email: req.query.email });
-    console.log('User', user);
+    const user = await User.findOneBy({ email: details.email });
+
     if (!user) {
-      console.log('User not found');
+      //console.log('User not found');
     } else {
-      const value = await bcrypt.compare(req.query.password, user.password);
+      const value = await bcrypt.compare(details.password, user.password);
       console.log(value);
       if (!value) {
-        console.log('Password not match');
+        //console.log('Password not match');
       } else {
-        return user;
+        return { user: user, id: user.id };
       }
     }
   } catch (error) {
-    console.log('login sercive Error', error);
-    return { error: 'login sercive Error' };
+    return { error: 'login service Error' };
   }
 }
-export async function registerUser(req) {
+export async function registerUser(details) {
+  console.log('Register', details);
+  console.log('Name', details.name);
   try {
-    const checkUser = await User.findOneBy({ email: req.body.email });
+    const checkUser = await User.findOneBy({ email: details.email });
     if (checkUser == null) {
       const salt = bcrypt.genSaltSync(saltRounds);
-      const hash = bcrypt.hashSync(req.body.password, salt);
+      const hash = bcrypt.hashSync(details.password, salt);
 
-      const { name, email } = req.body;
+      const { name, email } = details;
       const user = User.create({
         name: name,
         email: email,

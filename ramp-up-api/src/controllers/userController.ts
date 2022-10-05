@@ -1,9 +1,10 @@
+import { query } from 'express';
 import { User } from '../entity/User';
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
-import { loginUser, registerUser } from '../service/userService';
+import { loginUser, registerUser } from '../services/userService';
 
 // export const postUser = async (req, res) => {
 //   console.log(req.body);
@@ -71,12 +72,21 @@ import { loginUser, registerUser } from '../service/userService';
 // };
 
 export const login = async (req, res) => {
+  const userDetails = req.query;
   try {
-    const user = await loginUser(req);
-    if (!user) return res.json('Error First').status(400);
+    const user = await loginUser(userDetails);
+
+    if (!user) return res.json('Error User login').status(400);
     return res.send({
-      user: user, //Todo -> remove password
-      accessToken: jwt.sign(req.query.email, process.env.ACCESS_TOKEN_SECRET),
+      user: user.user, //Todo -> remove password
+      accessToken: jwt.sign(
+        user.id,
+        process.env.ACCESS_TOKEN_SECRET,
+        //    {
+        //   expiresIn: '24h',
+        // }
+      ),
+      refeshToken: jwt.sign(user.id, process.env.RE_TOKEN_KEY),
     });
   } catch (error) {
     console.log('login controller error', error);
@@ -84,8 +94,10 @@ export const login = async (req, res) => {
 };
 
 export const signup = async (req, res) => {
+  const userDetails = req.body;
+
   try {
-    const user = await registerUser(req);
+    const user = await registerUser(userDetails);
 
     if (!user) return res.json('Error User SignUp').status(400);
     return res.send(user);

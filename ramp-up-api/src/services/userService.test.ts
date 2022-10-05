@@ -4,7 +4,7 @@ import { User } from '../entity/User';
 const bcrypt = require('bcrypt');
 const userRepo = AppDataSource.getRepository(User);
 
-describe('User Controll', () => {
+describe('User Controller', () => {
   describe('User Login', () => {
     const loginData = {
       query: {
@@ -20,19 +20,18 @@ describe('User Controll', () => {
       role: 'User',
     };
 
-    test('Login Successe', async () => {
+    test('Login Success', async () => {
       User.findOneBy = jest.fn().mockReturnValue(user);
       const mockHash = jest.spyOn(bcrypt, 'compare').mockResolvedValue(true);
       const res = await loginUser(loginData);
-
-      expect(res).toEqual(user);
+      expect(res.user).toEqual(user);
       mockHash.mockRestore();
     });
 
-    test('Login faield', async () => {
+    test('Login fail', async () => {
       User.findOneBy = jest.fn().mockResolvedValue(() => undefined);
       const res = await loginUser(loginData);
-      expect(res).toEqual({ error: 'login sercive Error' });
+      expect(res).toEqual({ error: 'login service Error' });
     });
   });
 
@@ -57,7 +56,7 @@ describe('User Controll', () => {
   //     email: 'test@t.com',
   //     role: 'User',
   //   };
-  //   test('Register Sucess', async () => {
+  //   test('Register Success', async () => {
   //     User.create = jest.fn().mockRejectedValue(value);
   //     //User.create.save = jest.fn().mockResolvedValue();
   //     //const userSave = jest.spyOn(user, 'save').mockResolvedValue(userTest);

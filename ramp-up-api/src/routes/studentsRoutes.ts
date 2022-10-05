@@ -9,10 +9,10 @@ import {
 } from '../controllers/studentController';
 const auth = require('../middleware/auth');
 
-router.post('/student', auth, allStudent);
-router.post('/', addStudent);
-router.get('/:studentId', findStudent);
-router.delete('/:studentId', deleteStudent);
-router.put('/:studentId', updateStudent);
+router.get('/', auth, allStudent);
+router.post('/', auth, addStudent);
+//router.get('/:studentId', findStudent);
+router.delete('/:studentId', auth, deleteStudent);
+router.put('/:studentId', auth, updateStudent);
 
 export default router;
