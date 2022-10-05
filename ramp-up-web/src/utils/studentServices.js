@@ -1,21 +1,11 @@
 import axios from "axios";
-
-//User Service
 let data = [];
 const numberValidator = /^[0-9]{10}$/;
 const config = {
   headers: { Authorization: `bearer ${localStorage.getItem("token")}` },
 };
 
-//Student Servide
-// const generateid = (data) =>
-//   data.reduce(
-//     (previousValue, currentValue) => Math.max(previousValue, currentValue.id),
-//     0,
-//   ) + 1;
-
-export const insertItem = async (student) => {
-  //student.id = generateid(data);
+export const insertStudent = async (student) => {
   student.inEdit = false;
 
   if (
@@ -58,7 +48,7 @@ export const insertItem = async (student) => {
   }
 };
 
-export const updateItem = async (student) => {
+export const updateStudent = async (student) => {
   try {
     if (
       !student.name ||
@@ -101,7 +91,7 @@ export const updateItem = async (student) => {
     console.log(e);
   }
 };
-export const deleteItem = async (student) => {
+export const deleteStudent = async (student) => {
   try {
     const res = await axios.delete(
       `http://localhost:8000/${student.id}`,
@@ -109,34 +99,31 @@ export const deleteItem = async (student) => {
       config,
     );
 
-    console.log("DELETESTUDENT", res);
-
     if (res) {
-      alert("User Delete Sucess");
+      alert("User Delete Success");
       return res;
     }
   } catch (e) {
     console.log(e);
   }
 };
-export const getItems = async () => {
+export const getStudents = async () => {
   try {
-    const res = await axios.post(
-      "http://localhost:8000/student",
-      {
-        user: localStorage.getItem("email"),
-      },
+    const res = await axios.get(
+      `http://localhost:8000/`,
+      // {
+      //   user: localStorage.getItem("email"),
+      // },
       config,
     );
 
-    console.log("GETITEM", res.data.user);
     return res.data;
   } catch (e) {
     console.log(Error, e);
   }
 };
 
-//User Servise
+//User Service
 
 // export const insertUser = async (userRes) => {
 //   // const config = {

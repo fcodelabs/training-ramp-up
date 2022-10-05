@@ -34,7 +34,7 @@ function Login() {
     width: 280,
     margin: "20px auto",
   };
-  const mrstyle = {
+  const marginStyle = {
     margin: "10px 0",
   };
 
@@ -69,7 +69,7 @@ function Login() {
             required
             validators={["required", "isEmail"]}
             errorMessages={["this field is required", "email is not valid"]}
-            style={mrstyle}
+            style={marginStyle}
             variant="standard"
             onChange={(e) => setUser(e.target.value)}
           ></TextField>
@@ -80,7 +80,7 @@ function Login() {
             type="password"
             fullWidth
             required
-            style={mrstyle}
+            style={marginStyle}
             value={pwd}
             variant="standard"
             onChange={(e) => setPwd(e.target.value)}
@@ -90,7 +90,7 @@ function Login() {
             color="primary"
             variant="contained"
             fullWidth
-            style={mrstyle}
+            style={marginStyle}
           >
             Sign in
           </Button>

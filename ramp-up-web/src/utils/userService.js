@@ -13,7 +13,7 @@ export const insertUser = async (userRes) => {
     const res = await axios.post("http://localhost:8000/signup", body);
 
     // localStorage.setItem("token", res.data.accessToken);
-    console.log("LOGINRES", res.data);
+
     if (res.data.error == "user was here") {
       alert("User was here");
     } else {
@@ -25,7 +25,6 @@ export const insertUser = async (userRes) => {
 };
 
 export const findUser = async (user) => {
-  console.log("User Servide", user);
   try {
     const res = await axios({
       method: "post",

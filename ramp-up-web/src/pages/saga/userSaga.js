@@ -7,17 +7,18 @@ import { findUser, insertUser } from "../../utils/userService";
 function* callUserGetFun(payload) {
   let res = yield call(findUser, payload.payload);
 
-  console.log("login sagares", res);
   localStorage.setItem("name", res.data.user.name);
   localStorage.setItem("role", res.data.user.role);
   localStorage.setItem("token", res.data.accessToken);
-  localStorage.setItem("email", res.data.user.email);
+  //localStorage.setItem("email", res.data.user.email);
+  localStorage.setItem("id", res.data.user.id);
 
   yield put(
     loginSlice.actions.saveToken({
       name: res.data.user.name,
       role: res.data.user.role,
       token: res.data.accessToken,
+      refToken: res.data.refeshToken,
     }),
   );
   alert("User Login success");

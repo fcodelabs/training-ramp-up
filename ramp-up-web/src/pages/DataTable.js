@@ -74,7 +74,7 @@ const DataTable = () => {
     setData(newData);
   };
 
-  const cancel = (dataItem) => {
+  const cancel = () => {
     // const originalItem = getItems().find((p) => p.id === dataItem.id);
     // const newData = data.map((item) =>
     //   item.id === originalItem.id ? originalItem : item,
