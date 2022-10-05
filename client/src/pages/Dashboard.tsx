@@ -116,6 +116,10 @@ export default function Dashboard(){
 
   
   const update = (dataItem: any) => {
+    if(!isNaN(dataItem.mobileNo)){
+      dispatch(updateStudent({...dataItem}));
+      return;
+    }
     const valid_number_string = /^[0-9]{9}\d*$/;
     if(dataItem.mobileNo.match(valid_number_string)){
       const updatedStudent:StudentDataType = {...dataItem,mobileNo:parseInt(dataItem.mobileNo)}
