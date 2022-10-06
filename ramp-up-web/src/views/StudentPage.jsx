@@ -9,12 +9,14 @@ import BirthdayPicker from "../components/BirthdayPicker";
 import GenderList from "../components/GenderList";
 import { addEntry, fieldChange } from "../utils/functions";
 import { editField, URL } from "../constants";
+import { addRole } from "../reducer";
 
 const socket = io.connect(URL);
 
 function StudentPage() {
   const store = useStore();
   const entries = useSelector(() => store.getState().entries);
+  const role = useSelector(() => store.getState().role);
 
   useEffect(() => {
     const loadStudents = async () =>
@@ -23,6 +25,7 @@ function StudentPage() {
         payload: { notify: false, id: undefined },
       });
     loadStudents();
+    store.dispatch(addRole(localStorage.getItem("role")));
   }, []);
 
   useEffect(() => {
@@ -62,7 +65,11 @@ function StudentPage() {
     >
       <Grid data={entries} editField={editField} onItemChange={fieldChange}>
         <GridToolbar>
-          <Button onClick={addEntry}>Add New</Button>
+          {role == "Admin" ? (
+            <Button onClick={addEntry}>Add New</Button>
+          ) : (
+            <></>
+          )}
           <ToolbarSpacer />
           <Button
             onClick={() =>
@@ -76,17 +83,35 @@ function StudentPage() {
           </Button>
         </GridToolbar>
         <GridColumn field="id" title="ID" editable={false} />
-        <GridColumn field="name" title="Name" />
-        <GridColumn field="gender" title="Gender" cell={GenderList} />
-        <GridColumn field="address" title="Address" />
-        <GridColumn field="number" title="Mobile No" />
+        <GridColumn field="name" title="Name" editable={role == "Admin"} />
+        <GridColumn
+          field="gender"
+          title="Gender"
+          editable={role == "Admin"}
+          cell={GenderList}
+        />
+        <GridColumn
+          field="address"
+          title="Address"
+          editable={role == "Admin"}
+        />
+        <GridColumn
+          field="number"
+          title="Mobile No"
+          editable={role == "Admin"}
+        />
         <GridColumn
           field="birthday"
           title="Date of Birth"
+          editable={role == "Admin"}
           cell={BirthdayPicker}
         />
         <GridColumn field="age" title="Age" editable={false} />
-        <GridColumn field="command" cell={MyCommandCell} />
+        {role == "Admin" ? (
+          <GridColumn field="command" cell={MyCommandCell} />
+        ) : (
+          <></>
+        )}
       </Grid>
       <Upload
         batch={false}

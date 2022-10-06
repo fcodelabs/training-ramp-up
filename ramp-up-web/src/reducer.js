@@ -7,6 +7,7 @@ const reducer = createSlice({
     updatingEntry: null,
     changingEntry: null,
     token: null,
+    role: null,
   },
   reducers: {
     addEntries(state, action) {
@@ -21,9 +22,17 @@ const reducer = createSlice({
     addToken(state, action) {
       state.token = action.payload;
     },
+    addRole(state, action) {
+      state.role = action.payload;
+    },
   },
 });
 
-export const { addEntries, addUpdatingEntry, addChangingEntry, addToken } =
-  reducer.actions;
+export const {
+  addEntries,
+  addUpdatingEntry,
+  addChangingEntry,
+  addToken,
+  addRole,
+} = reducer.actions;
 export default reducer.reducer;
