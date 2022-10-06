@@ -75,12 +75,12 @@ export const login = async (req, res) => {
   const userDetails = req.query;
   try {
     const user = await loginUser(userDetails);
-
+    console.log('User', user.user.role);
     if (!user) return res.json('Error User login').status(400);
     return res.send({
       user: user.user, //Todo -> remove password
       accessToken: jwt.sign(
-        user.id,
+        { user: user.id, role: user.user.role },
         process.env.ACCESS_TOKEN_SECRET,
         //    {
         //   expiresIn: '24h',

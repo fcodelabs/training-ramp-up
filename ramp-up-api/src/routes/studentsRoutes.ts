@@ -8,11 +8,12 @@ import {
   updateStudent,
 } from '../controllers/studentController';
 const auth = require('../middleware/auth');
+const adminAuth = require('../middleware/admin.auth');
 
 router.get('/', auth, allStudent);
-router.post('/', auth, addStudent);
+router.post('/', auth, adminAuth, addStudent);
 //router.get('/:studentId', findStudent);
-router.delete('/:studentId', auth, deleteStudent);
-router.put('/:studentId', auth, updateStudent);
+router.delete('/:studentId', auth, adminAuth, deleteStudent);
+router.put('/:studentId', auth, adminAuth, updateStudent);
 
 export default router;

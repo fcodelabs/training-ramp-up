@@ -26,6 +26,8 @@ export const findStudent = async (req, res) => {
 };
 
 export const addStudent = async (req, res) => {
+  console.log('ADD Student', req.id);
+
   const student = req.body;
   try {
     const user = await addOne(student);
