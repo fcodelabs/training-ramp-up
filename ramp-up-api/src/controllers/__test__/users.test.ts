@@ -17,13 +17,13 @@ describe("student tests", () => {
     test("User already exists", async () => {
       const userRepository = AppDataSource.getRepository(User);
       const userData = await userRepository.findOne({
-        where: { UserName: `${username}` },
+        where: { username: `${username}` },
       });
       expect(userData).not.toBeNull();
     });
     test("User registration successful", async () => {
       const newUser = new User();
-      newUser.UserName = username;
+      newUser.username = username;
       const salt = crypto.randomBytes(16);
       crypto.pbkdf2(
         password,
@@ -32,25 +32,25 @@ describe("student tests", () => {
         32,
         "sha256",
         async function (err, hashedPassword) {
-          newUser.Password = hashedPassword.toString("base64");
-          newUser.Salt = salt.toString("base64");
+          newUser.password = hashedPassword.toString("base64");
+          newUser.salt = salt.toString("base64");
           const token = jwt.sign(
-            { UserName: username, Password: newUser.Password },
+            { userName: username, password: newUser.password },
             process.env.TOKEN_KEY as string,
             {
               expiresIn: "2h",
             }
           );
-          newUser.Token = token;
+          newUser.token = token;
           await expect(
             AppDataSource.manager.save(newUser)
-          ).rejects.toBeInstanceOf(Error);
+          ).resolves.toBeTruthy();
         }
       );
     });
     test("Could not signUp", async () => {
       const newUser = new User();
-      newUser.UserName = username;
+      newUser.username = username;
       const salt = crypto.randomBytes(16);
       crypto.pbkdf2(
         password,
@@ -59,16 +59,16 @@ describe("student tests", () => {
         32,
         "sha256",
         async function (err, hashedPassword) {
-          newUser.Password = hashedPassword.toString("base64");
-          newUser.Salt = salt.toString("base64");
+          newUser.password = hashedPassword.toString("base64");
+          newUser.salt = salt.toString("base64");
           const token = jwt.sign(
-            { UserName: username, Password: newUser.Password },
+            { userName: username, password: newUser.password },
             process.env.TOKEN_KEY as string,
             {
               expiresIn: "2h",
             }
           );
-          newUser.Token = token;
+          newUser.token = token;
           await expect(
             AppDataSource.manager.save(newUser)
           ).rejects.toBeInstanceOf(Error);
@@ -83,25 +83,25 @@ describe("student tests", () => {
       const userRepository = AppDataSource.getRepository(User);
       await expect(
         userRepository.findOne({
-          where: { UserName: `${username}` },
+          where: { username: `${username}` },
         })
       ).resolves.toBeNull();
     });
     test("Incorrect password", async () => {
       const userRepository = AppDataSource.getRepository(User);
       const userData = await userRepository.findOne({
-        where: { UserName: `${username}` },
+        where: { username: `${username}` },
       });
       crypto.pbkdf2(
         password,
-        Buffer.from(userData?.Salt as string, "base64"),
+        Buffer.from(userData?.salt as string, "base64"),
         310000,
         32,
         "sha256",
         async function (err, hashedPassword) {
           expect(
             crypto.timingSafeEqual(
-              Buffer.from(userData?.Password as string, "base64"),
+              Buffer.from(userData?.password as string, "base64"),
               hashedPassword
             )
           ).toBe(false);
@@ -111,28 +111,28 @@ describe("student tests", () => {
     test("User signed in successfully", async () => {
       const userRepository = AppDataSource.getRepository(User);
       const userData = await userRepository.findOne({
-        where: { UserName: `${username}` },
+        where: { username: `${username}` },
       });
       crypto.pbkdf2(
         password,
-        Buffer.from(userData?.Salt as string, "base64"),
+        Buffer.from(userData?.salt as string, "base64"),
         310000,
         32,
         "sha256",
         async function (err, hashedPassword) {
           const token = jwt.sign(
-            { UserName: username, Password: userData?.Password },
+            { userName: username, password: userData?.password },
             process.env.TOKEN_KEY as string,
             {
               expiresIn: "2h",
             }
           );
           if (userData) {
-            userData.Token = token;
+            userData.token = token;
             await expect(
               AppDataSource.manager.update(
                 User,
-                { UserName: username },
+                { username: username },
                 userData
               )
             ).resolves.toBeTruthy();
@@ -143,28 +143,28 @@ describe("student tests", () => {
     test("Could not sign in", async () => {
       const userRepository = AppDataSource.getRepository(User);
       const userData = await userRepository.findOne({
-        where: { UserName: `${username}` },
+        where: { username: `${username}` },
       });
       crypto.pbkdf2(
         password,
-        Buffer.from(userData?.Salt as string, "base64"),
+        Buffer.from(userData?.salt as string, "base64"),
         310000,
         32,
         "sha256",
         async function (err, hashedPassword) {
           const token = jwt.sign(
-            { UserName: username, Password: userData?.Password },
+            { UserName: username, Password: userData?.password },
             process.env.TOKEN_KEY as string,
             {
               expiresIn: "2h",
             }
           );
           if (userData) {
-            userData.Token = token;
+            userData.token = token;
             await expect(
               AppDataSource.manager.update(
                 User,
-                { UserName: username },
+                { username: username },
                 userData
               )
             ).rejects.toBeInstanceOf(Error);
@@ -178,21 +178,21 @@ describe("student tests", () => {
     test("Refresh successful", async () => {
       const userRepository = AppDataSource.getRepository(User);
       const userData = await userRepository.findOne({
-        where: { UserName: `${username}` },
+        where: { username: `${username}` },
       });
       if (userData)
         await expect(
-          jwt.verify(userData.Token, process.env.TOKEN_KEY as string)
+          jwt.verify(userData.token, process.env.TOKEN_KEY as string)
         ).resolves.toBeTruthy();
     });
     test("Invalid Token", async () => {
       const userRepository = AppDataSource.getRepository(User);
       const userData = await userRepository.findOne({
-        where: { UserName: `${username}` },
+        where: { username: `${username}` },
       });
       if (userData)
         await expect(
-          jwt.verify(userData.Token, process.env.TOKEN_KEY as string)
+          jwt.verify(userData.token, process.env.TOKEN_KEY as string)
         ).rejects.toBeInstanceOf(Error);
     });
   });
@@ -201,14 +201,14 @@ describe("student tests", () => {
     test("User signed out successfully", async () => {
       const userRepository = AppDataSource.getRepository(User);
       const userData = await userRepository.findOne({
-        where: { UserName: `${username}` },
+        where: { username: `${username}` },
       });
       if (userData) {
-        userData.Token = "";
+        userData.token = "";
         await expect(
           AppDataSource.manager.update(
             User,
-            { UserName: `${username}` },
+            { username: `${username}` },
             userData
           )
         ).resolves.toBeTruthy();
@@ -217,14 +217,14 @@ describe("student tests", () => {
     test("Error signing out user", async () => {
       const userRepository = AppDataSource.getRepository(User);
       const userData = await userRepository.findOne({
-        where: { UserName: `${username}` },
+        where: { username: `${username}` },
       });
       if (userData) {
-        userData.Token = "";
+        userData.token = "";
         await expect(
           AppDataSource.manager.update(
             User,
-            { UserName: `${username}` },
+            { username: `${username}` },
             userData
           )
         ).rejects.toBeInstanceOf(Error);
@@ -232,7 +232,7 @@ describe("student tests", () => {
     });
   });
   afterAll(async () => {
-    // await AppDataSource.manager.delete(User, { UserName: "Test" });
+    await AppDataSource.manager.delete(User, { username: "Test" });
     await AppDataSource.destroy()
       .then(() => {
         console.log("Data Source has been destroyed");

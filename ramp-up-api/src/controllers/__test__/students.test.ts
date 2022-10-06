@@ -23,12 +23,12 @@ describe("student tests", () => {
   });
   describe("addStudent tests", () => {
     const newStudent = new Student();
-    newStudent.Name = "TEST";
-    newStudent.Gender = "Male";
-    newStudent.Address = "";
-    newStudent.Number = 1;
-    newStudent.Birthday = "";
-    newStudent.Age = "";
+    newStudent.name = "TEST";
+    newStudent.gender = "Male";
+    newStudent.address = "";
+    newStudent.number = 1;
+    newStudent.birthday = "";
+    newStudent.age = "";
     test("Addstudent successful", async () => {
       await expect(
         AppDataSource.manager.save(newStudent)
@@ -42,32 +42,32 @@ describe("student tests", () => {
   });
   describe("updateStudent tests", () => {
     const newStudent = new Student();
-    newStudent.Name = "TEST";
-    newStudent.Gender = "Female";
-    newStudent.Address = "";
-    newStudent.Number = 1;
-    newStudent.Birthday = "";
-    newStudent.Age = "";
+    newStudent.name = "TEST";
+    newStudent.gender = "Female";
+    newStudent.address = "";
+    newStudent.number = 1;
+    newStudent.birthday = "";
+    newStudent.age = "";
     test("UpdateStudent successful", async () => {
       await expect(
-        AppDataSource.manager.update(Student, { Name: "TEST" }, newStudent)
+        AppDataSource.manager.update(Student, { name: "TEST" }, newStudent)
       ).resolves.toBeTruthy();
     });
     test("UpdateStudent fail", async () => {
       await expect(
-        AppDataSource.manager.update(Student, { Name: "TEST" }, newStudent)
+        AppDataSource.manager.update(Student, { name: "TEST" }, newStudent)
       ).rejects.toBeInstanceOf(Error);
     });
   });
   describe("deleteStudent tests", () => {
     test("DeleteStudent successful", async () => {
       await expect(
-        AppDataSource.manager.delete(Student, { Name: "TEST" })
+        AppDataSource.manager.delete(Student, { name: "TEST" })
       ).resolves.toBeTruthy();
     });
     test("DeleteStudent fail", async () => {
       await expect(
-        AppDataSource.manager.delete(Student, { Name: "TEST" })
+        AppDataSource.manager.delete(Student, { name: "TEST" })
       ).rejects.toBeInstanceOf(Error);
     });
   });

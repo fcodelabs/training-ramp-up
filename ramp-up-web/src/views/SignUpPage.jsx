@@ -9,6 +9,7 @@ import { useNavigate } from "react-router-dom";
 
 const SignupSchema = Yup.object().shape({
   username: Yup.string().required("Username Required"),
+  role: Yup.string().required("Role is required"),
   password: Yup.string().required("Password Required"),
   confirmPassword: Yup.string()
     .oneOf([Yup.ref("password"), null], "Passwords must match")
@@ -42,7 +43,12 @@ function SignUpPage() {
     >
       <Grid container alignItems="center" justifyContent="center">
         <Formik
-          initialValues={{ username: "", password: "", confirmPassword: "" }}
+          initialValues={{
+            username: "",
+            role: "User",
+            password: "",
+            confirmPassword: "",
+          }}
           validationSchema={SignupSchema}
           onSubmit={(values) => handleSubmit(values)}
         >

@@ -32,7 +32,7 @@ const refreshUser = (userName) =>
     },
     body: JSON.stringify(userName),
   })
-    .then((result) => result.text())
+    .then((result) => result.json())
     .then((result) => result);
 
 const signOutUser = (userName) =>
@@ -51,6 +51,7 @@ function* workSignOutUser(userName) {
   if (response !== "Error signing out user") {
     yield put(actions.addToken(null));
     localStorage.removeItem("user");
+    localStorage.removeItem("role");
   } else {
     alert(response);
   }
@@ -58,11 +59,13 @@ function* workSignOutUser(userName) {
 
 function* workRefreshUser(userName) {
   const response = yield call(() => refreshUser(userName));
-  if (response !== "Invalid Token") {
-    yield put(actions.addToken(response));
+  if (response.status === 200) {
+    yield put(actions.addToken(response.token));
   } else {
+    alert(response.token);
     yield put(actions.addToken(null));
     localStorage.removeItem("user");
+    localStorage.removeItem("role");
   }
 }
 
@@ -71,6 +74,7 @@ function* workAddUser(user) {
   if (response.error == null) {
     yield put(actions.addToken(response.token));
     localStorage.setItem("user", response.username);
+    localStorage.setItem("role", response.role);
   } else {
     alert(response.error);
   }
@@ -81,6 +85,7 @@ function* workGetUser(user) {
   if (response.error == null) {
     yield put(actions.addToken(response.token));
     localStorage.setItem("user", response.username);
+    localStorage.setItem("role", response.role);
   } else {
     alert(response.error);
   }

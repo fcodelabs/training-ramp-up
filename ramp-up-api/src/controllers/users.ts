@@ -5,7 +5,7 @@ import * as jwt from "jsonwebtoken";
 import * as userService from "../services/users";
 
 export const addUser = async (req: Request, res: Response) => {
-  const { username, password } = req.body.payload;
+  const { username, password, role } = req.body.payload;
   const userData = await userService.findUser(username);
   if (userData) {
     res.send({ error: "User already exists" });
@@ -23,7 +23,12 @@ export const addUser = async (req: Request, res: Response) => {
         newUser.password = hashedPassword.toString("base64");
         newUser.salt = salt.toString("base64");
         const token = jwt.sign(
-          { userName: username, password: newUser.password },
+          {
+            userName: username,
+            password: newUser.password,
+            role: role,
+            loggedIn: true,
+          },
           process.env.TOKEN_KEY as string,
           {
             expiresIn: "2h",
@@ -32,7 +37,7 @@ export const addUser = async (req: Request, res: Response) => {
         newUser.token = token;
         try {
           await userService.createUser(newUser);
-          res.send(newUser);
+          res.send({ ...newUser, role: role });
         } catch {
           res.send({ error: "Could not sign up" });
         }
@@ -58,8 +63,25 @@ export const getUser = async (req: Request, res: Response) => {
             hashedPassword
           )
         ) {
+          let role = "";
+          try {
+            const payload = jwt.verify(
+              userData.token,
+              process.env.TOKEN_KEY as string
+            );
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
+            role = payload.role;
+          } catch (e) {
+            console.log(e);
+          }
           const token = jwt.sign(
-            { userName: username, password: userData.password },
+            {
+              userName: username,
+              password: userData.password,
+              role: role,
+              loggedIn: true,
+            },
             process.env.TOKEN_KEY as string,
             {
               expiresIn: "2h",
@@ -68,7 +90,7 @@ export const getUser = async (req: Request, res: Response) => {
           userData.token = token;
           try {
             await userService.updateUser(username, userData);
-            res.send(userData);
+            res.send({ ...userData, role: role });
           } catch (err) {
             res.send({ error: "Could not sign in" });
           }
@@ -87,10 +109,23 @@ export const refreshUser = async (req: Request, res: Response) => {
   const userData = await userService.findUser(userName);
   if (userData) {
     try {
-      jwt.verify(userData.token, process.env.TOKEN_KEY as string);
-      res.status(200).send(userData.token);
+      const payload = jwt.verify(
+        userData.token,
+        process.env.TOKEN_KEY as string
+      );
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      if (Date.now() >= payload.exp * 1000) {
+        res.status(401).send({ token: "Token has expired", status: 400 });
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+      } else if (!payload.loggedIn) {
+        res.status(401).send({ token: "User has signed out", status: 400 });
+      } else {
+        res.status(200).send({ token: userData.token, status: 200 });
+      }
     } catch (err) {
-      res.status(401).send("Invalid Token");
+      res.status(401).send({ token: "Invalid Token", status: 400 });
     }
   }
 };
@@ -99,9 +134,22 @@ export const signOutUser = async (req: Request, res: Response) => {
   const userName = req.body.payload;
   const userData = await userService.findUser(userName);
   if (userData) {
-    userData.token = "";
+    const payload = jwt.verify(userData.token, process.env.TOKEN_KEY as string);
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    const role = payload.role;
+    const token = jwt.sign(
+      {
+        userName: userName,
+        password: userData.password,
+        role: role,
+        loggedIn: false,
+      },
+      process.env.TOKEN_KEY as string
+    );
+    userData.token = token;
     try {
-      userService.updateUser(userName, userData);
+      await userService.updateUser(userName, userData);
       res.send("User signed out");
     } catch (err) {
       res.send("Error signing out user");

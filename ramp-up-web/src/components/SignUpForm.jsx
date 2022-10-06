@@ -1,6 +1,7 @@
 /* eslint-disable react/prop-types */
 import { Grid } from "@mui/material";
 import { Form } from "formik";
+import RoleList from "./RoleList";
 import SubmitButton from "./SubmitButton";
 import TextInputField from "./TextInputField";
 
@@ -28,6 +29,9 @@ export default function SignUpForm(props) {
         >
           <Grid item xs={8}>
             <TextInputField placeHolder="Enter username" name="username" />
+          </Grid>
+          <Grid item xs={8}>
+            <RoleList />
           </Grid>
           <Grid item xs={8}>
             <TextInputField placeHolder="Enter password" name="password" />
