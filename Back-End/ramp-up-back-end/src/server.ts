@@ -4,6 +4,11 @@ import { AppDataSource } from "./dataSource";
 import { ErrorInterface } from "./interfaces/servertypes";
 import studentRoutes from "./routes/studentRoutes";
 
+const cors = require("cors");
+
+const app = express();
+app.use(cors());
+
 AppDataSource.initialize()
   .then(() => {
     console.log("Data Source has been initialized!");
@@ -12,9 +17,8 @@ AppDataSource.initialize()
     console.error("Error during Data Source initialization:", err);
   });
 
-const app = express();
 app.use(express.json());
-app.use(studentRoutes);
+app.use("/student", studentRoutes);
 
 app.use((req: Request, res: Response, next: NextFunction) => {
   const err: ErrorInterface = new Error("Not Found");

@@ -4,7 +4,7 @@ import "../utils/commandCell.css";
 function CommandCell(prop) {
   const { dataItem } = prop;
   const inEdit = dataItem[prop.editField];
-  const isNewItem = dataItem.studentID === undefined;
+  const isNewItem = dataItem.id === undefined;
   return inEdit ? (
     <td className="k-command-cell">
       <button
@@ -35,8 +35,7 @@ function CommandCell(prop) {
       <button
         className="k-button k-button-md k-rounded-md k-button-solid k-button-solid-base k-grid-remove-command"
         onClick={() =>
-          confirm("Confirm deleting: ", dataItem.StudentName) &&
-          prop.remove(dataItem)
+          confirm("Confirm deleting: ", dataItem.name) && prop.remove(dataItem)
         }
       >
         Remove

@@ -10,38 +10,48 @@ import {
 //import { StudentData } from "../data/studentDetails";
 import DropDownCell from "./DropDownCell";
 import CommandCell from "./CommandCell";
-import {
-  insertStudent,
-  getStudent,
-  updateStudent,
-  deleteStudent,
-} from "../data/services";
+
 import { useState, useEffect } from "react";
+
+import { useDispatch, useSelector } from "react-redux";
+import {
+  addStudentAction,
+  deleteStudentAction,
+  getStudentAction,
+  selectStudent,
+  updateStudentAction,
+} from "../slice/studentSlice";
+
 const editField = "inEdit";
 
 function RampUpTable() {
   const [data, setData] = useState([]);
+  const dispatch = useDispatch();
+  const students = useSelector(selectStudent);
 
   useEffect(() => {
-    const newItems = getStudent();
-    setData(newItems);
+    dispatch(getStudentAction());
   }, []);
+
+  const studentRecords = students;
+  useEffect(() => {
+    setData(studentRecords);
+  }, [studentRecords]);
 
   const add = (dataItem) => {
     dataItem.inEdit = true;
-    const newData = insertStudent(dataItem);
-    setData(newData);
+
+    dispatch(addStudentAction({ dataItem }));
   };
 
   const update = (dataItem) => {
     dataItem.inEdit = false;
-    const newData = updateStudent(dataItem);
-    setData(newData);
+
+    dispatch(updateStudentAction(dataItem));
   };
 
   const remove = (dataItem) => {
-    const newData = [...deleteStudent(dataItem)];
-    setData(newData);
+    dispatch(deleteStudentAction(dataItem));
   };
 
   const discard = () => {
@@ -51,18 +61,16 @@ function RampUpTable() {
   };
 
   const cancel = (dataItem) => {
-    const originalItem = getStudent().find(
-      (e) => e.studentID === dataItem.studentID
-    );
+    const originalItem = students.find((e) => e.id === dataItem.id);
     const newData = data.map((item) =>
-      item.studentID === originalItem.studentID ? originalItem : item
+      item.id === originalItem.id ? originalItem : item
     );
     setData(newData);
   };
 
   const itemChange = (event) => {
     const newData = data.map((item) =>
-      item.studentID === event.dataItem.studentID
+      item.id === event.dataItem.id
         ? { ...item, [event.field || ""]: event.value }
         : item
     );
@@ -80,7 +88,9 @@ function RampUpTable() {
   const enterEdit = (dataItem) => {
     setData(
       data.map((item) =>
-        item.studentID === dataItem.studentID ? { ...item, inEdit: true } : item
+        item.id === dataItem.id
+          ? { ...item, birthday: new Date(item.birthday), inEdit: true }
+          : item
       )
     );
   };
@@ -116,29 +126,25 @@ function RampUpTable() {
           Add new
         </button>
       </GridToolbar>
-      <Column field="studentID" title="Id" width="150px" editable={false} />
-      <Column field="studentName" title="Name" width="200px" />
+      <Column field="id" title="Id" width="150px" editable={false} />
+      <Column field="name" title="Name" width="200px" />
+      <Column field="gender" title="Gender" width="150px" cell={DropDownCell} />
+      <Column field="address" title="Address" width="200px" />
+      <Column field="mobile" title="Mobile" width="150px" type="number" />
       <Column
-        field="studentGender"
-        title="Gender"
-        width="150px"
-        cell={DropDownCell}
-      />
-      <Column field="studentAddress" title="Address" width="200px" />
-      <Column
-        field="studentMobile"
-        title="Mobile"
-        width="150px"
-        type="number"
-      />
-      <Column
-        field="studentDOB"
+        field="birthday"
         title="Date of Birth"
         editor="date"
         format="{0:d}"
         width="150px"
       />
-      <Column field="studentAge" title="Age" width="150px" editable={false} />
+      <Column
+        field="age"
+        title="Age"
+        width="150px"
+        type="number"
+        editable={false}
+      />
       <Column cell={commands} title="Command" width="193px" />
     </Grid>
   );

@@ -9,7 +9,7 @@ import {
 } from "../services/studentService";
 
 export const addStudent = async (req: Request, res: Response) => {
-  createStudentService(
+  const response = await createStudentService(
     req.body.name,
     req.body.gender,
     req.body.address,
@@ -17,7 +17,9 @@ export const addStudent = async (req: Request, res: Response) => {
     req.body.birthday,
     req.body.age
   );
-  return res.json();
+  res.status(201);
+  res.json(response);
+  return;
 };
 
 export const getAllStudents = async (req: Request, res: Response) => {
