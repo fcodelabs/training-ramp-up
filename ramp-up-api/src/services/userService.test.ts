@@ -69,7 +69,6 @@ describe('User Controller', () => {
       const mockHash = jest.spyOn(bcrypt, 'hashSync').mockResolvedValue(true);
       const res = await registerUser(loginData);
       expect(res).toEqual(userTest);
-      // mockHash.mockRestore();
     });
 
     test('Register fails', async () => {

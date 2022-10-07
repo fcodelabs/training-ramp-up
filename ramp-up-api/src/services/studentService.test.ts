@@ -129,26 +129,13 @@ describe('Student Service', () => {
       id: 1,
     } as never;
 
-    const student = {
-      name: 'test',
-      gender: 'Male',
-      address: 'test address',
-      mobileNo: '0123456789',
-      birth: new Date('2001-04-05 00:00:00'),
-      age: 20,
-    };
-
     test('Add Student Success', async () => {
-      // Student.create.save = jest.fn().mockResolvedValue(student);
-      // student.save = jest.fn().mockResolvedValue(studentData);
       jest.spyOn(Student, 'save').mockResolvedValue(studentData);
       const a = await addOne(request);
       expect(a).toEqual(studentData);
-      // studentSave.mockRestore();
     });
 
     test('Add Student Fail', async () => {
-      // Student.create = jest.fn().mockResolvedValue(null);
       jest.spyOn(Student, 'save').mockResolvedValue(null);
       const res = await addOne(request);
       expect(res).toEqual(null);

@@ -5,15 +5,10 @@ export const getAll = async () => {
     const student = await Student.find();
 
     if (student) {
-      //res.json({ student });
-
       return student;
     }
   } catch (error) {
     return { error: 'student not found' };
-    //res.json({ error: 'students not found' });
-
-    //console.log(error);
   }
 };
 
@@ -30,15 +25,9 @@ export const addOne = async (data) => {
       age: age,
     });
 
-    // return student;
-    // const studentData = await student.save();
     return student;
-    //return res.status(200);
   } catch (error) {
-    // const studentData = await student.save();    return { student };
-
     return { error: 'student add error' };
-    //res.json({ error: 'Student Add fails' });
   }
 };
 
@@ -66,7 +55,7 @@ export const updateOne = async (data) => {
         error: 'student update fail',
       };
     }
-    //res.json(result);
+
     return result;
   } catch (error) {
     console.log(error);

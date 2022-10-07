@@ -12,7 +12,6 @@ const adminAuth = require('../middleware/admin.auth');
 
 router.get('/', auth, allStudent);
 router.post('/', auth, adminAuth, addStudent);
-//router.get('/:studentId', findStudent);
 router.delete('/:studentId', auth, adminAuth, deleteStudent);
 router.put('/:studentId', auth, adminAuth, updateStudent);
 
