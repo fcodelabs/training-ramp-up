@@ -10,7 +10,6 @@ function* callUserGetFun(payload) {
   localStorage.setItem("name", res.data.user.name);
   localStorage.setItem("role", res.data.user.role);
   localStorage.setItem("token", res.data.accessToken);
-  //localStorage.setItem("email", res.data.user.email);
   localStorage.setItem("id", res.data.user.id);
 
   yield put(

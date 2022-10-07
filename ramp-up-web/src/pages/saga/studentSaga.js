@@ -10,14 +10,13 @@ import {
 function* callstudentGetFun() {
   try {
     const res = yield call(getStudents);
-    //console.log("AllStudent", res);
+
     yield put(studentSlice.actions.addStudent(res.user));
   } catch (e) {
     console.log(e);
   }
 }
 function* callstudentUpdateFun({ payload: payload }) {
-  //console.log("UpdatePayload", payload);
   try {
     yield call(updateStudent, payload);
     yield put(studentSlice.actions.getStudents());

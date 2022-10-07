@@ -28,7 +28,6 @@ const DataTable = () => {
     if (localStorage.getItem("role") == "Admin") {
       setAdmin(true);
     }
-    // console.log("Admin", admin);
   });
 
   useEffect(() => {

@@ -1,8 +1,7 @@
 import { loginUser, registerUser } from './userService';
-import { AppDataSource } from '../utill/data-source';
+
 import { User } from '../entity/User';
 const bcrypt = require('bcrypt');
-const userRepo = AppDataSource.getRepository(User);
 
 describe('User Controller', () => {
   describe('User Login', () => {
@@ -49,13 +48,6 @@ describe('User Controller', () => {
       id: 1,
     } as never;
 
-    const value = {
-      email: 'test@t.com',
-      password: 'testPassword',
-      id: 1,
-      role: 'User',
-    };
-
     const user = {
       name: 'test',
       password: 'test',
@@ -66,7 +58,7 @@ describe('User Controller', () => {
     test('Register Success', async () => {
       User.findOneBy = jest.fn().mockResolvedValue(null);
       jest.spyOn(User, 'save').mockResolvedValue(userTest);
-      const mockHash = jest.spyOn(bcrypt, 'hashSync').mockResolvedValue(true);
+      jest.spyOn(bcrypt, 'hashSync').mockResolvedValue(true);
       const res = await registerUser(loginData);
       expect(res).toEqual(userTest);
     });

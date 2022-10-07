@@ -7,7 +7,6 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { ValidatorForm, TextValidator } from "react-material-ui-form-validator";
 
 import React from "react";
 import { useNavigate } from "react-router-dom";
@@ -21,7 +20,6 @@ function Login() {
   const dispatch = useDispatch();
   const [user, setUser] = useState("");
   const [pwd, setPwd] = useState("");
-  //const [token, setToken] = useState("");
   const [errMsg, setErrMsg] = useState("");
 
   useEffect(() => {
@@ -59,10 +57,7 @@ function Login() {
         </Grid>
         <form onSubmit={handleSubmit}>
           <TextField
-            //id="username"
-            //ref={userRef}
             value={user}
-            //autoComplete="off"
             label="User Email"
             placeholder="Enter Email"
             fullWidth

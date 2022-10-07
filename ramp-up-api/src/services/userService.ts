@@ -1,4 +1,3 @@
-const jwt = require('jsonwebtoken');
 import { User } from '../entity/User';
 require('dotenv').config();
 const bcrypt = require('bcrypt');
@@ -39,7 +38,6 @@ export async function registerUser(details) {
         role: 'User',
       });
 
-      //await user.save();
       return user;
     } else {
       return { error: 'user was here' };

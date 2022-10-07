@@ -111,9 +111,7 @@ export const getStudents = async () => {
   try {
     const res = await axios.get(
       `http://localhost:8000/`,
-      // {
-      //   user: localStorage.getItem("email"),
-      // },
+
       config,
     );
 
@@ -122,43 +120,3 @@ export const getStudents = async () => {
     console.log(Error, e);
   }
 };
-
-//User Service
-
-// export const insertUser = async (userRes) => {
-//   // const config = {
-//   //   headers: { "Content-Type": "application/json" },
-//   // };
-
-//   const body = {
-//     name: userRes.payload.user,
-//     email: userRes.payload.email,
-//     password: userRes.payload.password,
-//   };
-//   try {
-//     const res = await axios.post("http://localhost:8000/signin", body);
-
-//     // localStorage.setItem("token", res.data.accessToken);
-
-//     return res;
-//   } catch (e) {
-//     console.log(e);
-//   }
-// };
-
-// export const findUser = async (user) => {
-//   try {
-//     const res = await axios({
-//       method: "post",
-//       url: "http://localhost:8000/login",
-//       params: { email: user.user, password: user.password },
-//       // config,
-//     });
-
-//     // localStorage.setItem("token", res.data.accessToken);
-
-//     return res;
-//   } catch (e) {
-//     console.log(Error, e);
-//   }
-// };

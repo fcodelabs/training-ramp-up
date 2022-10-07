@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from "react";
 import { Avatar, Button, Grid, Paper, TextField } from "@mui/material";
 
 import React from "react";
-//import DataTable from "./DataTable";
 import { useNavigate } from "react-router-dom";
 import { ValidatorForm, TextValidator } from "react-material-ui-form-validator";
 import { useDispatch } from "react-redux";
@@ -14,7 +13,6 @@ function SignUp() {
   const [user, setUser] = useState("");
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
-  //const [data, setData] = useState();
 
   const paperStyle = {
     padding: 20,
@@ -61,9 +59,7 @@ function SignUp() {
           ></TextField>
 
           <TextValidator
-            // ref={emailRef}
             label="Email"
-            // onBlur={handleBlur}
             required
             onChange={(e) => setEmail(e.target.value)}
             name="email"
