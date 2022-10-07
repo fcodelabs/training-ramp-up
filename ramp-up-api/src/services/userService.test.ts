@@ -35,35 +35,52 @@ describe('User Controller', () => {
     });
   });
 
-  // describe('User Register', () => {
-  //   const userRegisterDetails = {
-  //     body: {
-  //       name: 'test',
-  //       email: 'test@t@t.com',
-  //       password: 'test',
-  //     },
-  //   };
-  //   const userTest = {
-  //     name: 'test',
-  //     email: 'test@t@t.com',
-  //     password: 'test',
-  //     role: 'User',
-  //     id: 1,
-  //   };
-  //   const value = {
-  //     name: 'test',
-  //     password: 'test',
-  //     email: 'test@t.com',
-  //     role: 'User',
-  //   };
-  //   test('Register Success', async () => {
-  //     User.create = jest.fn().mockRejectedValue(value);
-  //     //User.create.save = jest.fn().mockResolvedValue();
-  //     //const userSave = jest.spyOn(user, 'save').mockResolvedValue(userTest);
-  //     const mockHash = jest.spyOn(bcrypt, 'hashSync').mockResolvedValue(true);
-  //     const res = await registerUser(userRegisterDetails);
-  //     expect(res).toEqual(userTest);
-  //     mockHash.mockRestore();
-  //   });
-  // });
+  describe('User Register', () => {
+    const loginData = {
+      name: 'test',
+      email: 'test@t.com',
+      password: 'testPassword',
+    };
+    const userTest = {
+      name: 'test',
+      email: 'test@t@t.com',
+      password: 'test',
+      role: 'User',
+      id: 1,
+    } as never;
+
+    const value = {
+      email: 'test@t.com',
+      password: 'testPassword',
+      id: 1,
+      role: 'User',
+    };
+
+    const user = {
+      name: 'test',
+      password: 'test',
+      email: 'test@t.com',
+      role: 'User',
+      save: jest.fn((x) => x),
+    };
+    test('Register Success', async () => {
+      User.findOneBy = jest.fn().mockResolvedValue(null);
+      jest.spyOn(User, 'save').mockResolvedValue(userTest);
+      const mockHash = jest.spyOn(bcrypt, 'hashSync').mockResolvedValue(true);
+      const res = await registerUser(loginData);
+      expect(res).toEqual(userTest);
+      // mockHash.mockRestore();
+    });
+
+    test('Register fails', async () => {
+      User.findOneBy = jest.fn().mockRejectedValue(null);
+      User.create = jest.fn().mockResolvedValue(null);
+      const userSave = jest.spyOn(user, 'save').mockResolvedValue(null);
+      const mockHash = jest.spyOn(bcrypt, 'hashSync').mockResolvedValue(false);
+      const res = await registerUser(loginData);
+      expect(res).toEqual(undefined);
+      mockHash.mockRestore();
+      userSave.mockRestore();
+    });
+  });
 });

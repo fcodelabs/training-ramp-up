@@ -5,7 +5,6 @@ const bcrypt = require('bcrypt');
 const saltRounds = 10;
 
 export async function loginUser(details) {
-  console.log('login details', details);
   try {
     const user = await User.findOneBy({ email: details.email });
 
@@ -25,23 +24,23 @@ export async function loginUser(details) {
   }
 }
 export async function registerUser(details) {
-  console.log('Register', details);
-  console.log('Name', details.name);
   try {
+    console.log('Details', details.email);
     const checkUser = await User.findOneBy({ email: details.email });
+    console.log('check user', checkUser);
     if (checkUser == null) {
       const salt = bcrypt.genSaltSync(saltRounds);
       const hash = bcrypt.hashSync(details.password, salt);
 
       const { name, email } = details;
-      const user = User.create({
+      const user = User.save({
         name: name,
         email: email,
         password: hash,
         role: 'User',
       });
 
-      await user.save();
+      //await user.save();
       return user;
     } else {
       console.log('User here');

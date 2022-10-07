@@ -20,7 +20,8 @@ export const getAll = async () => {
 export const addOne = async (data) => {
   try {
     const { name, gender, address, mobileNo, birth, age } = data;
-    const student = Student.create({
+
+    const student = await Student.save({
       name: name,
       gender: gender,
       address: address,
@@ -29,11 +30,13 @@ export const addOne = async (data) => {
       age: age,
     });
 
-    await student.save();
-    return { student };
+    // return student;
+    // const studentData = await student.save();
+    return student;
     //return res.status(200);
   } catch (error) {
-    console.log(error);
+    // const studentData = await student.save();    return { student };
+
     return { error: 'student add error' };
     //res.json({ error: 'Student Add fails' });
   }
@@ -66,7 +69,7 @@ export const updateOne = async (data) => {
     //res.json(result);
     return result;
   } catch (error) {
-    console.log('Update Error', error);
+    console.log(error);
     return { error: 'student update fail' };
   }
 };

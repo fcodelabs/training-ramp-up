@@ -73,15 +73,13 @@ describe('Student Service', () => {
       id: 1,
     };
     const request = {
-      params: {
-        name: 'test',
-        gender: 'Male',
-        address: 'testAddress',
-        mobileNo: '123456789',
-        birth: new Date('2001-04-05 00:00:00'),
-        age: 21,
-        studentId: 1,
-      },
+      name: 'test',
+      gender: 'Male',
+      address: 'testAddress',
+      mobileNo: '123456789',
+      birth: new Date('2001-04-05 00:00:00'),
+      age: 21,
+      studentId: 1,
     };
 
     const studentChange = {
@@ -95,9 +93,9 @@ describe('Student Service', () => {
     };
 
     test('update Student', async () => {
-      Student.findOne = jest.fn().mockRejectedValue(student);
-      Student.merge = jest.fn().mockRejectedValue(studentChange);
-      Student.save = jest.fn().mockRejectedValue(studentChange);
+      Student.findOne = jest.fn().mockResolvedValue(student);
+      Student.merge = jest.fn().mockResolvedValue(studentChange);
+      Student.save = jest.fn().mockResolvedValue(studentChange);
       const res = await updateOne(request);
       expect(res).toEqual(studentChange);
     });
@@ -111,37 +109,49 @@ describe('Student Service', () => {
     });
   });
 
-  // describe('User Add', async () => {
-  //   const request = {
-  //     name: 'test',
-  //     gender: 'Male',
-  //     address: 'test address',
-  //     mobileNo: '0123456789',
-  //     birth: new Date('2001-04-05 00:00:00'),
-  //     age: 20,
-  //   };
+  describe('User Add', () => {
+    const request = {
+      name: 'test',
+      gender: 'Male',
+      address: 'test address',
+      mobileNo: '0123456789',
+      birth: new Date('2001-04-05 00:00:00'),
+      age: 20,
+    };
 
-  //   const student = {
-  //     name: 'test',
-  //     gender: 'Male',
-  //     address: 'test address',
-  //     mobileNo: '0123456789',
-  //     birth: new Date('2001-04-05 00:00:00'),
-  //     age: 20,
-  //     id: 1,
-  //   };
+    const studentData = {
+      name: 'test',
+      gender: 'Male',
+      address: 'test address',
+      mobileNo: '0123456789',
+      birth: new Date('2001-04-05 00:00:00'),
+      age: 20,
+      id: 1,
+    } as never;
 
-  //   test('Add Student Success', async () => {
-  //     Student.create = jest.fn().mockResolvedValue(request);
-  //     // const studentSave = jest.spyOn(student , "save").mockResolvedValue(student);
-  //     const res = await addOne(request);
-  //     expect(res).toEqual(student);
-  //   });
+    const student = {
+      name: 'test',
+      gender: 'Male',
+      address: 'test address',
+      mobileNo: '0123456789',
+      birth: new Date('2001-04-05 00:00:00'),
+      age: 20,
+    };
 
-  //   test('Add Student Fail', async () => {
-  //     Student.create = jest.fn().mockResolvedValue(null);
-  //     const res = await addOne(request);
-  //     expect(res).toEqual({ error: 'student add error' });
-  //   });
-  // });
+    test('Add Student Success', async () => {
+      // Student.create.save = jest.fn().mockResolvedValue(student);
+      // student.save = jest.fn().mockResolvedValue(studentData);
+      jest.spyOn(Student, 'save').mockResolvedValue(studentData);
+      const a = await addOne(request);
+      expect(a).toEqual(studentData);
+      // studentSave.mockRestore();
+    });
+
+    test('Add Student Fail', async () => {
+      // Student.create = jest.fn().mockResolvedValue(null);
+      jest.spyOn(Student, 'save').mockResolvedValue(null);
+      const res = await addOne(request);
+      expect(res).toEqual(null);
+    });
+  });
 });
