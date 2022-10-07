@@ -35,12 +35,11 @@ const GridUI = () => {
   });
 
   const studentList = students;
-  console.log("grid", studentList);
   useEffect(() => {
     if (studentList) {
       setData(studentList);
     } else {
-      console.log("else");
+      console.log("studentList Empty");
     }
   }, [studentList]);
 
@@ -136,7 +135,6 @@ const GridUI = () => {
     localStorage.removeItem("token", token);
     navigate("/");
   };
-  console.log("token init value", token);
   return (
     <Grid
       style={{

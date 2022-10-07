@@ -8,7 +8,6 @@ const generateid = (data) =>
   ) + 1;
 
 export const findUser = async ({ email, password }) => {
-  console.log("front end", email, password);
   const res = await axios({
     method: "get",
     url: "http://localhost:8000/user",
@@ -27,7 +26,6 @@ export const insertUser = async (user) => {
     data.unshift(user);
 
     const resdata = await axios.post("http://localhost:8000/api/user", user);
-    console.log("usresdataer", resdata);
     return resdata;
   }
 };

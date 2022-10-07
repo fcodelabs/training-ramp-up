@@ -13,13 +13,7 @@ module.exports = function (req, res, next) {
     if (token == null) res.sendStatus(401);
 
     jwt.verify(token, process.env.TOKEN_KEY);
-    console.log(' swdbjdnejne', jwt.verify(token, process.env.TOKEN_KEY));
     next();
-
-    // jwt.verify(token, process.env.TOKEN_KEY, (id) => {
-    //   req.id = id;
-    //   next();
-    // });
   } else {
     res.sendStatus(401);
   }

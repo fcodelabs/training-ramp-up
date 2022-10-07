@@ -12,7 +12,6 @@ import { findUser, insertUser } from "../utils/userService";
 function* watchGetStudent() {
   try {
     const response = yield call(getStudents);
-    console.log("saga response", response.data.user);
     yield put(studentSlice.actions.saveStudents(response.data.user));
   } catch (error) {
     console.log(error);
@@ -58,14 +57,10 @@ function* watchAddUser({ payload: payload }) {
 function* watchLogUser({ payload: payload }) {
   try {
     const response = yield call(findUser, payload);
-    console.log("Saga data", response.data.user);
-
-    console.log("token", response.data.accessToken);
     yield put(userSlice.actions.saveUser(response.data.user));
     localStorage.setItem("role", response.data.user.role);
     localStorage.setItem("name", response.data.user.name);
     localStorage.setItem("token", response.data.accessToken);
-    console.log("Token", response.data.accessToken);
     payload.navigate("/grid");
   } catch (error) {
     alert(error);

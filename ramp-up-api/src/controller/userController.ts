@@ -5,8 +5,6 @@ require('dotenv').config();
 export const logUser = async (req, res) => {
   try {
     const user = await findUser(req);
-
-    console.log('user console role', user.user.role);
     if (!user) return res.json('Error First').status(400);
     return res.send({
       user: user.user,

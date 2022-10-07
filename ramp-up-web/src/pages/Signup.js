@@ -79,8 +79,6 @@ export default function SignUp() {
         dispatch(
           userSlice.actions.addUser({ name, email, password, navigate })
         );
-        console.log("email password", email, password);
-
         alert("User Registered");
         setName("");
         setEmail("");

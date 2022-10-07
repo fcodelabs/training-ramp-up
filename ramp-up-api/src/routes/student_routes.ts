@@ -10,7 +10,7 @@ import {
 const Admin = require('../middleware/admin');
 
 const userMiddleware = require('../middleware/userMiddleware');
-//console.log('student Middlewar', getStudent);
+
 router.get('/api', userMiddleware, allStudent);
 router.post('/api', Admin, userMiddleware, addStudent);
 router.get('/api/:studentId', Admin, userMiddleware, findStudent);

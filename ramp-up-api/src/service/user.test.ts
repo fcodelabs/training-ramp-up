@@ -1,8 +1,6 @@
 import { findUser, postUser } from './userService';
-import { AppDataSource } from '../utilis/data-source';
 import { Users } from '../entity/Users';
 const bcrypt = require('bcrypt');
-const userRepo = AppDataSource.getRepository(Users);
 
 describe('User Controller Unit test case', () => {
   describe('User Login unit test', () => {
@@ -60,7 +58,6 @@ describe('User Controller Unit test case', () => {
       Users.findOneBy = jest.fn().mockResolvedValue(null);
       jest.spyOn(Users, 'save').mockResolvedValue(userTest);
       const res = await postUser(loginData);
-      console.log('response', res);
       expect(res).toEqual(userTest);
     });
 

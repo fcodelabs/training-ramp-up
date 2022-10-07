@@ -49,7 +49,6 @@ export const insertStudent = async (item) => {
 export const updateStudent = async (item) => {
   item.age = new Date().getFullYear() - new Date(item.date).getFullYear();
   await axios.put(`http://localhost:8000/api/${item.id}`, item, config);
-  console.log("Payload", config);
 };
 
 export const deleteStudent = (item) => {
@@ -59,7 +58,6 @@ export const deleteStudent = (item) => {
 };
 
 export const getStudents = async () => {
-  console.log("Config", config);
   try {
     const res = await axios.get("http://localhost:8000/api", config);
     return res;

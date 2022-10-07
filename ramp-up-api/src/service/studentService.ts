@@ -50,7 +50,6 @@ export const getStudents = async () => {
     const student = await Student.find();
 
     if (student) {
-      console.log('STUDENT', student);
       return student;
     }
   } catch (error) {
@@ -94,7 +93,6 @@ export const updateStudent = async (req) => {
 
     Student.merge(student, req.body);
     const result = await Student.save(student);
-    console.log('resutls', result);
     return result;
   } catch (error) {
     return { msg: 'update failed' };

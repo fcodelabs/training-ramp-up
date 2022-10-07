@@ -38,7 +38,6 @@ export const addStudent = async (req, res) => {
 };
 
 export const deleteStudents = async (req, res) => {
-  console.log('detete student', req.id);
   try {
     const user = await deleteStudent(req);
     if (!user) return res.josn('Error Delete Student').status(400);

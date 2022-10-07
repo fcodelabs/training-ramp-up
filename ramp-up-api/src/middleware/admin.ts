@@ -14,7 +14,6 @@ module.exports = function (req, res, next) {
     if (token == null) res.sendStatus(401);
 
     const decode = jwtToken.verify(token, process.env.TOKEN_KEY);
-    console.log('Token Decode', decode);
     if (decode.role == 'Admin') {
       next();
     }
