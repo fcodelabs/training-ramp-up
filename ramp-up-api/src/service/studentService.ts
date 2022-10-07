@@ -58,10 +58,10 @@ export const getStudents = async () => {
   }
 };
 
-export const postStudent = async (req) => {
+export const postStudent = async (data) => {
   try {
-    const { name, gender, address, mobile_number, age, date } = req.body;
-    const student = Student.create({
+    const { name, gender, address, mobile_number, age, date } = data;
+    const student = await Student.save({
       name: name,
       gender: gender,
       address: address,
@@ -70,10 +70,9 @@ export const postStudent = async (req) => {
       date: date,
     });
 
-    await student.save();
-    return { student };
+    return student;
   } catch (error) {
-    console.log(error);
+    return { error: 'student add error' };
   }
 };
 
@@ -95,6 +94,7 @@ export const updateStudent = async (req) => {
 
     Student.merge(student, req.body);
     const result = await Student.save(student);
+    console.log('resutls', result);
     return result;
   } catch (error) {
     return { msg: 'update failed' };

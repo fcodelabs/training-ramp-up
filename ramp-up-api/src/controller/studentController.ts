@@ -27,7 +27,7 @@ export const findStudent = async (req, res) => {
 
 export const addStudent = async (req, res) => {
   try {
-    const user = await postStudent(req);
+    const user = await postStudent(req.body);
     if (!user) return res.josn('Error Add Student').status(400);
     return res.send({
       user: user,

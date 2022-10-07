@@ -26,22 +26,23 @@ export async function findUser(req) {
   }
 }
 
-export async function postUser(req) {
+export async function postUser(data) {
   try {
-    const checkUser = await Users.findOneBy({ email: req.body.email });
+    const checkUser = await Users.findOneBy({ email: data.email });
+    console.log('Data', checkUser);
     if (checkUser == null) {
       const salt = bcrypt.genSaltSync(saltRounds);
-      const hash = bcrypt.hashSync(req.body.password, salt);
+      const hash = bcrypt.hashSync(data.password, salt);
 
-      const { name, email } = req.body;
-      const user = Users.create({
+      const { name, email } = data;
+      const user = await Users.save({
         name: name,
         email: email.toLowerCase(),
         password: hash,
         role: 'User',
       });
 
-      await user.save();
+      // await user.save();
       return user;
     } else {
       console.log('User here');

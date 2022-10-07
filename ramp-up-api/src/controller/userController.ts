@@ -22,7 +22,7 @@ export const logUser = async (req, res) => {
 
 export const signupUser = async (req, res) => {
   try {
-    const user = await postUser(req);
+    const user = await postUser(req.body);
     if (!user) return res.json('Error User SignUp').status(400);
     return res.send(user);
   } catch (error) {
