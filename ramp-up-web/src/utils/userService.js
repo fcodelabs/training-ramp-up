@@ -1,9 +1,6 @@
 import axios from "axios";
 let data = [];
-// const config = {
-//   headers: { Authorization: `bearer ${localStorage.getItem("token")}` },
-// };
-// console.log("Headers", config.headers);
+
 const generateid = (data) =>
   data.reduce(
     (previousValue, currentValue) => Math.max(previousValue, currentValue.id),
@@ -11,19 +8,16 @@ const generateid = (data) =>
   ) + 1;
 
 export const findUser = async ({ email, password }) => {
+  console.log("front end", email, password);
   const res = await axios({
     method: "get",
     url: "http://localhost:8000/user",
     params: { email, password },
   });
-
   return res;
 };
 
 export const insertUser = async (user) => {
-  // const config = {
-  //   headers: { "Content-Type": "application/json" },
-  // };
   user.id = generateid(data);
   user.inEdit = false;
 
@@ -33,7 +27,7 @@ export const insertUser = async (user) => {
     data.unshift(user);
 
     const resdata = await axios.post("http://localhost:8000/api/user", user);
-
+    console.log("usresdataer", resdata);
     return resdata;
   }
 };

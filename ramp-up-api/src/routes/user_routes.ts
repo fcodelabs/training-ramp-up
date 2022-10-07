@@ -1,8 +1,8 @@
 import * as express from 'express';
 const router = express.Router();
-import { postUser, findUser } from '../service/userService';
+import { logUser, signupUser } from '../controller/userController';
 
-router.post('/api/user', postUser);
-router.get('/user', findUser);
+router.post('/api/user', signupUser);
+router.get('/user', logUser);
 
 export default router;

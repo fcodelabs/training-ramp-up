@@ -1,19 +1,20 @@
 import * as express from 'express';
 const router = express.Router();
 import {
-  getStudent,
-  postStudent,
+  allStudent,
   findStudent,
-  deleteStudent,
-  updateStudent,
-} from '../service/studentService';
+  addStudent,
+  deleteStudents,
+  updateStudents,
+} from '../controller/studentController';
+const Admin = require('../middleware/admin');
 
 const userMiddleware = require('../middleware/userMiddleware');
-
-router.get('/api', userMiddleware, getStudent);
-router.post('/api', userMiddleware, postStudent);
-router.get('/api/:studentId', userMiddleware, findStudent);
-router.delete('/api/:studentId', userMiddleware, deleteStudent);
-router.put('/api/:studentId', userMiddleware, updateStudent);
+//console.log('student Middlewar', getStudent);
+router.get('/api', userMiddleware, allStudent);
+router.post('/api', Admin, userMiddleware, addStudent);
+router.get('/api/:studentId', Admin, userMiddleware, findStudent);
+router.delete('/api/:studentId', Admin, userMiddleware, deleteStudents);
+router.put('/api/:studentId', Admin, userMiddleware, updateStudents);
 
 export default router;

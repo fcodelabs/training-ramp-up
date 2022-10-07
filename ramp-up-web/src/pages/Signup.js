@@ -79,13 +79,14 @@ export default function SignUp() {
         dispatch(
           userSlice.actions.addUser({ name, email, password, navigate })
         );
+        console.log("email password", email, password);
 
         alert("User Registered");
         setName("");
         setEmail("");
         setPassword("");
       } else if (password.length > 6 && password.length < 20) {
-        alert("Password must be range 5 to 20");
+        alert("Please enter valid email");
       } else if (
         !(
           password.match(cond1) &&

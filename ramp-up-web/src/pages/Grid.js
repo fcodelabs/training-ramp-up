@@ -34,9 +34,14 @@ const GridUI = () => {
     }
   });
 
-  const studentList = students.data;
+  const studentList = students;
+  console.log("grid", studentList);
   useEffect(() => {
-    setData(studentList);
+    if (studentList) {
+      setData(studentList);
+    } else {
+      console.log("else");
+    }
   }, [studentList]);
 
   useEffect(() => {
@@ -131,7 +136,7 @@ const GridUI = () => {
     localStorage.removeItem("token", token);
     navigate("/");
   };
-
+  console.log("token init value", token);
   return (
     <Grid
       style={{
@@ -180,7 +185,12 @@ const GridUI = () => {
       </GridToolbar>
       <Column field="id" title="ID" width="80px" editable={false} />
       <Column field="name" title="Name" width="200px" />
-      <Column field="gender" title="Gender" width="200px" editor="text" />
+      <Column
+        field="gender"
+        title="Gender(Male/Female)"
+        width="200px"
+        editor="text"
+      />
       <Column field="address" title="Address" width="200px" />
       <Column
         field="mobile_number"

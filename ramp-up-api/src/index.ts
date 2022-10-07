@@ -5,7 +5,6 @@ const cors = require('cors');
 import * as express from 'express';
 import student_routes from './routes/student_routes';
 import user_routes from './routes/user_routes';
-// const userMiddleware = require('./middleware/userMiddleware');
 const { Server } = require('socket.io');
 const app = express();
 const server = http.createServer(app);
