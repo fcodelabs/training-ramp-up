@@ -1,53 +1,31 @@
-import { Users } from "../entities/user.entity";
-import { Request, Response } from "express";
-import { FindOptionsWhere } from "typeorm";
-require('dotenv').config();
-const bcrypt = require('bcrypt');
-const saltRounds = 10;
-const jwt = require('jsonwebtoken');
-
-
-
-export const postUser = async (req: Request, res: Response) => {
-  console.log("post student", req.body);
-
-  
-
-  const salt = bcrypt.genSaltSync(saltRounds);
-  const hash = bcrypt.hashSync(req.body.password, salt);
-  console.log("hash",hash)
-  
-  const { User, email } = req.body;
-  const user = Users.create({
-    User: User,
-    password: hash,
-    email: email,
-    role: "User",
-  });
-  await user.save();
-  // res.json(user);
-  return res.json(user).status(200);
+import { postUser,findUser } from "../services/user.service";
+require("dotenv").config();
+export const registerUser = async (req: any, res: any) => {
+  try {
+    console.log("register user here", req.body);
+    const userDetails = req.body;
+    const user = await postUser(userDetails);
+    console.log("I am coming from register user", user);
+    //   const user = await postUser();
+    //   // console.log("user", user);
+    //   if (!user) return res.json("Error get Student").status(400);
+    return res.send(user);
+  } catch (error) {
+    console.log(error);
+  }
 };
 
-
-export const findUser = async (req: Request , res: Response) => {
-  
-
-  const user = await Users.findOneBy({email : req.query.email as FindOptionsWhere<string> });
-  console.log("User",user)
-  const accessToken = jwt.sign(req.query.email, process.env.ACCESS_TOKEN_KEY);
-
-  if (user) {
-   
-    const value = await bcrypt.compare(req.query.password , user.password);
-    
-  
-    console.log(value);
-    if (value) {     
-      return res.send({ user: user,accessToken:accessToken });
-    } 
-  } else {
-    console.log('User not here');
+export const SignInUser = async (req: any, res: any) => {
+  try {
+     const loginDetails = req.query;
+    const user = await findUser(loginDetails);
+    console.log("User with token",user);
+if (!user) return res.json("Error get Student").status(400);
+     return res.send({
+      user:user,
+      accessToken :jwt.sign({user:user?.email, role:user?.role}, process.env.ACCESS_TOKEN_KEY)
+     });
+  } catch (error) {
+    console.log(error);
   }
-
 };

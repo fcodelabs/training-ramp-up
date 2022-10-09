@@ -4,10 +4,10 @@ import { AppDataSource } from "./utils/data-source";
 import express from "express";
 import * as BodyParser from "body-parser";
 import cors from "cors";
-import studentRoute from "./routes/studentRoute";
+import studentRoute from "./routes/student.route";
 import { Server } from "socket.io";
 import http from "http";
-import userRoute from "./routes/userRoute"
+import userRoute from "./routes/user.route"
 
 const app = express();
 const server = http.createServer(app);

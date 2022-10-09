@@ -14,7 +14,7 @@ export const findUser = async ({ email, password }) => {
     url: "http://localhost:8080/singin",
     params: { email, password },
   });
-  console.log("LGI",res);
+  console.log("Log user response",res);
 
   return res;
 };

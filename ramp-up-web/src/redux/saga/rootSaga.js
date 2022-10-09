@@ -21,6 +21,7 @@ function* watchRetrieveStudent() {
 function* watchInsertStudent({ payload: payload }) {
   try {
     yield call(insertStudent, payload);
+    yield put(studentSlice.actions.retrieveStudents())
   } catch (error) {
     console.log(error);
   }
@@ -29,6 +30,7 @@ function* watchInsertStudent({ payload: payload }) {
 function* watchPutStudent({ payload: payload }) {
   try {
     yield call(updateStudent, payload);
+    yield put(studentSlice.actions.retrieveStudents());
   } catch (error) {
     console.log(error);
   }
@@ -37,7 +39,7 @@ function* watchPutStudent({ payload: payload }) {
 function* watchRemoveStudent({ payload: payload }) {
   try {
     yield call(deleteStudent, payload);
-    
+    yield put(studentSlice.actions.retrieveStudents())
   } catch (error) {
     console.log(error);
   }
@@ -61,7 +63,7 @@ function* watchSignUser({ payload: payload}){
 
 // eslint-disable-next-line no-useless-rename
 function* watchInsertUser({ payload: payload}){
-
+console.log("payload");
  
   try {
    
