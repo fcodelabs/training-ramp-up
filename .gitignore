@@ -2,8 +2,9 @@ ramp-up-web/node_modules/**/*
 ramp-up-web/package-lock.json
 .vscode
 
-
-
+nest-js-api/node_modules/**/*
+nest-js-api/dist
+ramp-up-api
 
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
