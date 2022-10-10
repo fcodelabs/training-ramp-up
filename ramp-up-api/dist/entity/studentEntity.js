@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 // import { Entity, PrimaryGeneratedColumn, Column, BaseEntity } from 'typeorm';
 // @Entity()
 // export class Student extends BaseEntity {
