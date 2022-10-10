@@ -19,33 +19,39 @@ function* workGetStudents(props) {
   const { changingEntry, token } = yield select();
   const { notify, id } = props.payload;
   const response = yield call(() => getStudents(token));
-  let sortedEntries = response.sort((a, b) => parseInt(a.id) - parseInt(b.id));
-  if (notify && changingEntry !== null) {
-    if (id === undefined) {
-      if (changingEntry.new) {
-        sortedEntries.unshift(changingEntry);
-        yield put(actions.addEntries(sortedEntries));
-      } else {
-        yield put(actions.addEntries(sortedEntries));
-        yield put(actions.addUpdatingEntry(null));
-        startEdit(changingEntry);
-      }
-    } else if (id === changingEntry.id) {
-      yield put(actions.addEntries(sortedEntries));
-      yield put(actions.addUpdatingEntry(null));
-      yield put(actions.addChangingEntry(null));
-    } else {
-      if (changingEntry.new) {
-        sortedEntries.unshift(changingEntry);
-        yield put(actions.addEntries(sortedEntries));
-      } else {
-        yield put(actions.addEntries(sortedEntries));
-        yield put(actions.addUpdatingEntry(null));
-        startEdit(changingEntry);
-      }
-    }
+  if (response.error !== null) {
+    alert(response.error);
   } else {
-    yield put(actions.addEntries(sortedEntries));
+    let sortedEntries = response.sort(
+      (a, b) => parseInt(a.id) - parseInt(b.id)
+    );
+    if (notify && changingEntry !== null) {
+      if (id === undefined) {
+        if (changingEntry.new) {
+          sortedEntries.unshift(changingEntry);
+          yield put(actions.addEntries(sortedEntries));
+        } else {
+          yield put(actions.addEntries(sortedEntries));
+          yield put(actions.addUpdatingEntry(null));
+          startEdit(changingEntry);
+        }
+      } else if (id === changingEntry.id) {
+        yield put(actions.addEntries(sortedEntries));
+        yield put(actions.addUpdatingEntry(null));
+        yield put(actions.addChangingEntry(null));
+      } else {
+        if (changingEntry.new) {
+          sortedEntries.unshift(changingEntry);
+          yield put(actions.addEntries(sortedEntries));
+        } else {
+          yield put(actions.addEntries(sortedEntries));
+          yield put(actions.addUpdatingEntry(null));
+          startEdit(changingEntry);
+        }
+      }
+    } else {
+      yield put(actions.addEntries(sortedEntries));
+    }
   }
 }
 

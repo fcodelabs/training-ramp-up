@@ -7,8 +7,7 @@ export const getStudents = async (req: Request, res: Response) => {
     const students = await studentService.getStudents();
     res.status(200).send(students);
   } catch {
-    console.log(`Error getting students`);
-    res.status(400).send([]);
+    res.status(400).send({ error: "Error getting students" });
   }
 };
 

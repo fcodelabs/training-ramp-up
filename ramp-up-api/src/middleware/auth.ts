@@ -9,7 +9,7 @@ const verifyToken = (req: Request, res: Response, next: NextFunction) => {
   }
   if (req.method == "GET") {
     try {
-      const payload = jwt.verify(token, process.env.TOKEN_KEY as string);
+      jwt.verify(token, process.env.TOKEN_KEY as string);
       return next();
     } catch (err) {
       return res.status(401).send("Invalid Token");
