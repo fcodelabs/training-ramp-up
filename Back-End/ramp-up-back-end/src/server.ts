@@ -1,13 +1,16 @@
 import express from "express";
 import { Request, Response, NextFunction } from "express";
+
 import { AppDataSource } from "./dataSource";
 import { ErrorInterface } from "./interfaces/servertypes";
 import studentRoutes from "./routes/studentRoutes";
+import bodyParser from "body-parser";
+import cors from "cors";
 
-const cors = require("cors");
+//const cors = require("cors");
+//const bodyParser = require("body-parser");
 
 const app = express();
-app.use(cors());
 
 AppDataSource.initialize()
   .then(() => {
@@ -18,6 +21,19 @@ AppDataSource.initialize()
   });
 
 app.use(express.json());
+app.use(bodyParser.json());
+app.use(
+  bodyParser.urlencoded({
+    extended: true,
+  })
+);
+
+app.use(cors());
+
+// app.get("/", (req: Request, res: Response) => {
+//   res.send("Ramp Up");
+// });
+
 app.use("/student", studentRoutes);
 
 app.use((req: Request, res: Response, next: NextFunction) => {
