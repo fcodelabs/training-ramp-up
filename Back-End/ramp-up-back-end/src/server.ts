@@ -7,10 +7,14 @@ import studentRoutes from "./routes/studentRoutes";
 import bodyParser from "body-parser";
 import cors from "cors";
 
+import { createServer } from "http";
+import { Server } from "socket.io";
+
 //const cors = require("cors");
 //const bodyParser = require("body-parser");
 
 const app = express();
+const httpServer = createServer(app);
 
 AppDataSource.initialize()
   .then(() => {
@@ -35,6 +39,17 @@ app.use(cors());
 // });
 
 app.use("/student", studentRoutes);
+
+const io = new Server(httpServer, {
+  cors: {
+    origin: "http://localhost:3000/",
+    methods: ["GET", "POST", "PUT", "DELETE"],
+  },
+});
+
+io.on("connection", (socket) => {
+  console.log(`connect ${socket.id}`);
+});
 
 app.use((req: Request, res: Response, next: NextFunction) => {
   const err: ErrorInterface = new Error("Not Found");
