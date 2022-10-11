@@ -15,7 +15,8 @@ export async function findUser(req) {
       if (!value) {
         console.log('User not here');
       } else {
-        return { user: user, id: user.id };
+        // return { user: user, id: user.id };
+        return 'user registered';
       }
     }
   } catch (error) {

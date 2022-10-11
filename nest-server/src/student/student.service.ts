@@ -23,7 +23,7 @@ export class StudentService {
     return await this.StudentRepo.delete(categoryId);
   }
 
-  async updateStudent(studentId: any) {
-    return await this.StudentRepo.update(studentId, Student);
+  async updateStudent(studentId: any, studentUpdate: Student) {
+    return await this.StudentRepo.update(studentId, studentUpdate);
   }
 }

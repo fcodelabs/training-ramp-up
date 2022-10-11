@@ -6,7 +6,7 @@ import {
   GridColumn as Column,
   GridToolbar,
 } from "@progress/kendo-react-grid";
-import { MyCommandCell } from "../components/MyCommandCell";
+import { MyCommandCell } from "../components/myCommandCell";
 import { useNavigate } from "react-router-dom";
 import { getStudents } from "../utils/services";
 import { Upload } from "@progress/kendo-react-upload";

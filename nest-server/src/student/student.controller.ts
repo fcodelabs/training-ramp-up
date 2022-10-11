@@ -30,7 +30,7 @@ export class StudentController {
     return this.studentService.deleteOne(studentId);
   }
   @Put(':studentId')
-  Update(@Param('studentId') studentId) {
-    return this.studentService.updateStudent(studentId);
+  Update(@Param('studentId') studentId, @Body() studentUpdate: any) {
+    return this.studentService.updateStudent(studentId, studentUpdate);
   }
 }

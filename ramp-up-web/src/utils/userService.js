@@ -10,9 +10,10 @@ const generateid = (data) =>
 export const findUser = async ({ email, password }) => {
   const res = await axios({
     method: "get",
-    url: "http://localhost:8000/user",
+    url: "http://localhost:3000/api/user",
     params: { email, password },
   });
+  console.log("Log User details email password ", email, password);
   return res;
 };
 
@@ -24,8 +25,12 @@ export const insertUser = async (user) => {
     alert("Incorrect Validation");
   } else {
     data.unshift(user);
-
-    const resdata = await axios.post("http://localhost:8000/api/user", user);
+    console.log("User", user);
+    const resdata = await axios.post(
+      "http://localhost:3000/api/user/sign",
+      user
+    );
+    console.log("Response", resdata);
     return resdata;
   }
 };

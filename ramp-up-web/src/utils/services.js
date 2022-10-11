@@ -32,7 +32,7 @@ export const insertStudent = async (item) => {
       item.dataItem.age =
         new Date().getFullYear() - new Date(item.dataItem.date).getFullYear();
       const resdata = await axios.post(
-        "http://localhost:8000/api",
+        "http://localhost:3000/api/student",
         item.dataItem,
         config
       );
@@ -48,18 +48,36 @@ export const insertStudent = async (item) => {
 
 export const updateStudent = async (item) => {
   item.age = new Date().getFullYear() - new Date(item.date).getFullYear();
-  await axios.put(`http://localhost:8000/api/${item.id}`, item, config);
+  console.log("item ID", item);
+  const newItem = {
+    name: item.name,
+    gender: item.gender,
+    address: item.address,
+    mobile_number: item.mobile_number,
+    age: item.age,
+    date: item.date,
+  };
+  await axios.put(
+    `http://localhost:3000/api/student/${item.id}`,
+    newItem,
+    config
+  );
 };
 
 export const deleteStudent = (item) => {
-  const res = axios.delete(`http://localhost:8000/api/${item.id}`, config);
+  const res = axios.delete(
+    `http://localhost:3000/api/student/${item.id}`,
+    config
+  );
 
   return res;
 };
 
 export const getStudents = async () => {
   try {
-    const res = await axios.get("http://localhost:8000/api", config);
+    // const res = await axios.get("http://localhost:3000/api/student", config);
+    const res = await axios.get("http://localhost:3000/api/student");
+    console.log("students", res);
     return res;
   } catch (e) {
     console.log(Error, e);

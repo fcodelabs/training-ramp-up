@@ -12,7 +12,7 @@ import { findUser, insertUser } from "../utils/userService";
 function* watchGetStudent() {
   try {
     const response = yield call(getStudents);
-    yield put(studentSlice.actions.saveStudents(response.data.user));
+    yield put(studentSlice.actions.saveStudents(response.data));
   } catch (error) {
     console.log(error);
   }
@@ -57,9 +57,10 @@ function* watchAddUser({ payload: payload }) {
 function* watchLogUser({ payload: payload }) {
   try {
     const response = yield call(findUser, payload);
-    yield put(userSlice.actions.saveUser(response.data.user));
-    localStorage.setItem("role", response.data.user.role);
-    localStorage.setItem("name", response.data.user.name);
+    console.log("response for log user saga", response);
+    yield put(userSlice.actions.saveUser(response.data));
+    localStorage.setItem("role", response.data.role);
+    localStorage.setItem("name", response.data.name);
     localStorage.setItem("token", response.data.accessToken);
     payload.navigate("/grid");
   } catch (error) {

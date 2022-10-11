@@ -1,7 +1,12 @@
-import { Body, Controller, Post } from '@nestjs/common';
-import { User } from 'src/entity/user.entity';
+import { Body, Controller, Get, Param, Post, Req } from '@nestjs/common';
+import { ok } from 'assert';
 import { Users } from 'src/entity/user.interface';
 import { UserService } from './user.service';
+
+interface logingDto {
+  email: string;
+  password: string;
+}
 
 @Controller('user')
 export class UserController {
@@ -9,12 +14,13 @@ export class UserController {
 
   @Post('sign')
   async create(@Body() User: Users) {
+    console.log('nest User', User);
     return await this.userService.createUser(User);
   }
-  @Post('loging')
-  async logUser(@Body() User: Users) {
+  @Get()
+  async logUser(@Req() req: any) {
     try {
-      const user = await this.userService.logUser(User);
+      const user = await this.userService.logUser(req.query);
       if (!user) return 'User not found';
       return user;
     } catch (error) {
