@@ -22,6 +22,11 @@ import {
   updateStudentAction,
 } from "../slice/studentSlice";
 
+import { io } from "socket.io-client";
+const socket = io("http://localhost:8000/", {
+  transports: ["websocket"],
+});
+
 const editField = "inEdit";
 
 function RampUpTable() {
@@ -37,6 +42,16 @@ function RampUpTable() {
   useEffect(() => {
     setData(studentRecords);
   }, [studentRecords]);
+
+  useEffect(() => {
+    socket.on("connect", () => {
+      console.log("Socket Id ", socket.id);
+    });
+
+    socket.on("connect_error", (err) => {
+      console.log(`connect_error due to ${err.message}`);
+    });
+  }, [socket]);
 
   const add = (dataItem) => {
     dataItem.inEdit = true;

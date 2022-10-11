@@ -73,6 +73,6 @@ app.use((err: ErrorInterface, req: Request, res: Response) => {
 // });
 // app.use("/student", studentRouter);
 
-app.listen(8000, () => {
+httpServer.listen(8000, () => {
   console.log("Application started on port 8000!");
 });
