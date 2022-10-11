@@ -1,12 +1,8 @@
-import { Body, Controller, Get, Param, Post, Req } from '@nestjs/common';
-import { ok } from 'assert';
+import { Body, Controller, Get, Post, Req } from '@nestjs/common';
 import { Users } from 'src/entity/user.interface';
 import { UserService } from './user.service';
-
-interface logingDto {
-  email: string;
-  password: string;
-}
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const jwt = require('jsonwebtoken');
 
 @Controller('user')
 export class UserController {
@@ -14,15 +10,20 @@ export class UserController {
 
   @Post('sign')
   async create(@Body() User: Users) {
-    console.log('nest User', User);
     return await this.userService.createUser(User);
   }
   @Get()
   async logUser(@Req() req: any) {
     try {
       const user = await this.userService.logUser(req.query);
+
       if (!user) return 'User not found';
-      return user;
+      const tokenwithUser = {
+        user: user,
+        accessToken: jwt.sign({ id: user.id, role: user.role }, 'udwd4545'),
+      };
+      console.log('User tooken', tokenwithUser);
+      return tokenwithUser;
     } catch (error) {
       console.log('SignUp Error', error);
     }

@@ -58,9 +58,10 @@ function* watchLogUser({ payload: payload }) {
   try {
     const response = yield call(findUser, payload);
     console.log("response for log user saga", response);
-    yield put(userSlice.actions.saveUser(response.data));
-    localStorage.setItem("role", response.data.role);
-    localStorage.setItem("name", response.data.name);
+    console.log("response for log user saga", response.data.user.name);
+    yield put(userSlice.actions.saveUser(response.data.user.name));
+    localStorage.setItem("role", response.data.user.role);
+    localStorage.setItem("name", response.data.user.name);
     localStorage.setItem("token", response.data.accessToken);
     payload.navigate("/grid");
   } catch (error) {

@@ -38,14 +38,11 @@ export class UserService {
 
   async logUser(reqUser: Users) {
     try {
-      console.log('user', reqUser);
-
       const userFind = await User.findOneBy({ email: reqUser.email });
       if (!userFind) {
         console.log('User not here email');
       } else {
         const value = await bcrypt.compare(reqUser.password, userFind.password);
-        console.log('Value', value);
         if (!value) {
           console.log('User not here');
         } else {

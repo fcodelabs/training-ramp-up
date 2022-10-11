@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken');
 
 require('dotenv').config();
 
-module.exports = function (req, res, next) {
+export default function userMiddleware(req, res, next) {
   let token;
 
   if (
@@ -17,4 +17,4 @@ module.exports = function (req, res, next) {
   } else {
     res.sendStatus(401);
   }
-};
+}

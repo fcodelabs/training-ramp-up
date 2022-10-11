@@ -15,12 +15,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserController = void 0;
 const common_1 = require("@nestjs/common");
 const user_service_1 = require("./user.service");
+const jwt = require('jsonwebtoken');
 let UserController = class UserController {
     constructor(userService) {
         this.userService = userService;
     }
     async create(User) {
-        console.log('nest User', User);
         return await this.userService.createUser(User);
     }
     async logUser(req) {
@@ -28,7 +28,12 @@ let UserController = class UserController {
             const user = await this.userService.logUser(req.query);
             if (!user)
                 return 'User not found';
-            return user;
+            const tokenwithUser = {
+                user: user,
+                accessToken: jwt.sign({ id: user.id, role: user.role }, 'udwd4545'),
+            };
+            console.log('User tooken', tokenwithUser);
+            return tokenwithUser;
         }
         catch (error) {
             console.log('SignUp Error', error);

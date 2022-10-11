@@ -75,9 +75,8 @@ export const deleteStudent = (item) => {
 
 export const getStudents = async () => {
   try {
-    // const res = await axios.get("http://localhost:3000/api/student", config);
-    const res = await axios.get("http://localhost:3000/api/student");
-    console.log("students", res);
+    const res = await axios.get("http://localhost:3000/api/student", config);
+
     return res;
   } catch (e) {
     console.log(Error, e);
