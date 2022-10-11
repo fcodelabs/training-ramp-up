@@ -24,7 +24,7 @@ app.use(bodyParser.json());
 
 app.use("/students", studentRoutes);
 
-app.use("/user", userRoutes);
+app.use("/users", userRoutes);
 
 const server = http.createServer(app);
 

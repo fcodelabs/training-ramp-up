@@ -7,78 +7,28 @@ import * as userService from "../services/users";
 export const addUser = async (req: Request, res: Response) => {
   const { username, password, role } = req.body.payload;
   const userData = await userService.findUser(username);
-  if (userData) {
-    res.send({ error: "User already exists" });
+  if (userData instanceof Error) {
+    res.send({ error: (userData as Error).message });
   } else {
-    const newUser = new User();
-    newUser.username = username;
-    const salt = crypto.randomBytes(16);
-    crypto.pbkdf2(
-      password,
-      salt,
-      310000,
-      32,
-      "sha256",
-      async function (err, hashedPassword) {
-        newUser.password = hashedPassword.toString("base64");
-        newUser.salt = salt.toString("base64");
-        const token = jwt.sign(
-          {
-            userName: username,
-            password: newUser.password,
-            role: role,
-            loggedIn: true,
-          },
-          process.env.TOKEN_KEY as string,
-          {
-            expiresIn: "2h",
-          }
-        );
-        newUser.token = token;
-        try {
-          await userService.createUser(newUser);
-          res.send({ ...newUser, role: role });
-        } catch {
-          res.send({ error: "Could not sign up" });
-        }
-      }
-    );
-  }
-};
-
-export const getUser = async (req: Request, res: Response) => {
-  const { username, password } = req.body.payload;
-  const userData = await userService.findUser(username);
-  if (userData) {
-    crypto.pbkdf2(
-      password,
-      Buffer.from(userData.salt as string, "base64"),
-      310000,
-      32,
-      "sha256",
-      async function (err, hashedPassword) {
-        if (
-          crypto.timingSafeEqual(
-            Buffer.from(userData.password as string, "base64"),
-            hashedPassword
-          )
-        ) {
-          let role = "";
-          try {
-            const payload = jwt.verify(
-              userData.token,
-              process.env.TOKEN_KEY as string
-            );
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-ignore
-            role = payload.role;
-          } catch (e) {
-            console.log(e);
-          }
-          const token = jwt.sign(
+    if (userData) {
+      res.send({ error: "User already exists" });
+    } else {
+      const newUser = new User();
+      newUser.username = username;
+      const salt = crypto.randomBytes(16);
+      crypto.pbkdf2(
+        password,
+        salt,
+        310000,
+        32,
+        "sha256",
+        async function (err, hashedPassword) {
+          newUser.password = hashedPassword.toString("base64");
+          newUser.salt = salt.toString("base64");
+          newUser.token = jwt.sign(
             {
               userName: username,
-              password: userData.password,
+              password: newUser.password,
               role: role,
               loggedIn: true,
             },
@@ -87,45 +37,105 @@ export const getUser = async (req: Request, res: Response) => {
               expiresIn: "2h",
             }
           );
-          userData.token = token;
           try {
-            await userService.updateUser(username, userData);
-            res.send({ ...userData, role: role });
-          } catch (err) {
-            res.send({ error: "Could not sign in" });
+            await userService.createUser(newUser);
+            res.send({ ...newUser, role: role });
+          } catch {
+            res.send({ error: "Could not sign up" });
           }
-        } else {
-          res.send({ error: "Incorrect password" });
         }
-      }
-    );
+      );
+    }
+  }
+};
+
+export const getUser = async (req: Request, res: Response) => {
+  const { username, password } = req.body.payload;
+  const userData = await userService.findUser(username);
+  if (userData instanceof Error) {
+    res.send({ error: (userData as Error).message });
   } else {
-    res.send({ error: "User does not exist" });
+    if (userData) {
+      crypto.pbkdf2(
+        password,
+        Buffer.from(userData.salt as string, "base64"),
+        310000,
+        32,
+        "sha256",
+        async function (err, hashedPassword) {
+          if (
+            crypto.timingSafeEqual(
+              Buffer.from(userData.password as string, "base64"),
+              hashedPassword
+            )
+          ) {
+            let role = "";
+            try {
+              const payload = jwt.verify(
+                userData.token,
+                process.env.TOKEN_KEY as string
+              );
+              // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+              // @ts-ignore
+              role = payload.role;
+            } catch (e) {
+              console.log(e);
+            }
+            userData.token = jwt.sign(
+              {
+                userName: username,
+                password: userData.password,
+                role: role,
+                loggedIn: true,
+              },
+              process.env.TOKEN_KEY as string,
+              {
+                expiresIn: "2h",
+              }
+            );
+            try {
+              await userService.updateUser(username, userData);
+              res.send({ ...userData, role: role });
+            } catch (err) {
+              res.send({ error: "Could not sign in" });
+            }
+          } else {
+            res.send({ error: "Incorrect password" });
+          }
+        }
+      );
+    } else {
+      res.send({ error: "User does not exist" });
+    }
   }
 };
 
 export const refreshUser = async (req: Request, res: Response) => {
   const userName = req.body.payload;
   const userData = await userService.findUser(userName);
-  if (userData) {
-    try {
-      const payload = jwt.verify(
-        userData.token,
-        process.env.TOKEN_KEY as string
-      );
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      if (Date.now() >= payload.exp * 1000) {
-        res.status(401).send({ token: "Token has expired", status: 400 });
+  if (userData instanceof Error) {
+    res.status(400).send({ token: (userData as Error).message, status: 400 });
+  } else {
+    if (userData) {
+      try {
+        const payload = jwt.verify(
+          userData.token,
+          process.env.TOKEN_KEY as string
+        );
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
-      } else if (!payload.loggedIn) {
-        res.status(401).send({ token: "User has signed out", status: 400 });
-      } else {
-        res.status(200).send({ token: userData.token, status: 200 });
+        if (Date.now() >= payload.exp * 1000) {
+          res.status(400).send({ token: "Token has expired", status: 400 });
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore
+        } else if (!payload.loggedIn) {
+          res.status(400).send({ token: "User has signed out", status: 400 });
+        } else {
+          res.status(200).send({ token: userData.token, status: 200 });
+        }
+      } catch (err) {
+        res.status(400).send({ token: "Invalid Token", status: 400 });
       }
-    } catch (err) {
-      res.status(401).send({ token: "Invalid Token", status: 400 });
     }
   }
 };
@@ -133,26 +143,32 @@ export const refreshUser = async (req: Request, res: Response) => {
 export const signOutUser = async (req: Request, res: Response) => {
   const userName = req.body.payload;
   const userData = await userService.findUser(userName);
-  if (userData) {
-    const payload = jwt.verify(userData.token, process.env.TOKEN_KEY as string);
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    const role = payload.role;
-    const token = jwt.sign(
-      {
-        userName: userName,
-        password: userData.password,
-        role: role,
-        loggedIn: false,
-      },
-      process.env.TOKEN_KEY as string
-    );
-    userData.token = token;
-    try {
-      await userService.updateUser(userName, userData);
-      res.send("User signed out");
-    } catch (err) {
-      res.send("Error signing out user");
+  if (userData instanceof Error) {
+    res.status(400).send({ error: (userData as Error).message });
+  } else {
+    if (userData) {
+      const payload = jwt.verify(
+        userData.token,
+        process.env.TOKEN_KEY as string
+      );
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      const role = payload.role;
+      userData.token = jwt.sign(
+        {
+          userName: userName,
+          password: userData.password,
+          role: role,
+          loggedIn: false,
+        },
+        process.env.TOKEN_KEY as string
+      );
+      try {
+        await userService.updateUser(userName, userData);
+        res.status(400).send({ error: "User signed out" });
+      } catch (err) {
+        res.status(400).send({ error: "Error signing out user" });
+      }
     }
   }
 };

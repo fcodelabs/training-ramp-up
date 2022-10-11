@@ -2,7 +2,7 @@ import io from "socket.io-client";
 import { takeLatest, all, put, call, select } from "redux-saga/effects";
 import * as actions from "../reducer";
 import { URL } from "../constants";
-import { startEdit } from "../utils/functions";
+import { getAge, startEdit } from "../utils/functions";
 
 const getStudents = (token) =>
   fetch(`${URL}/students`, {
@@ -19,10 +19,14 @@ function* workGetStudents(props) {
   const { changingEntry, token } = yield select();
   const { notify, id } = props.payload;
   const response = yield call(() => getStudents(token));
-  if (response.error !== null) {
+  if (response.error != null) {
     alert(response.error);
   } else {
-    let sortedEntries = response.sort(
+    const entriesWithAge = response.map((entry) => ({
+      ...entry,
+      age: getAge(entry.birthday),
+    }));
+    let sortedEntries = entriesWithAge.sort(
       (a, b) => parseInt(a.id) - parseInt(b.id)
     );
     if (notify && changingEntry !== null) {

@@ -12,14 +12,13 @@ export const getStudents = async (req: Request, res: Response) => {
 };
 
 export const addStudent = async (req: Request, res: Response) => {
-  const { name, gender, address, number, birthday, age } = req.body;
+  const { name, gender, address, number, birthday } = req.body;
   const newStudent = new Student();
   newStudent.name = name;
   newStudent.gender = gender;
   newStudent.address = address;
   newStudent.number = number;
   newStudent.birthday = birthday;
-  newStudent.age = age;
 
   try {
     await studentService.addStudent(newStudent);
@@ -41,14 +40,13 @@ export const deleteStudent = async (req: Request, res: Response) => {
 
 export const updateStudent = async (req: Request, res: Response) => {
   const { id } = req.params;
-  const { name, gender, address, number, birthday, age } = req.body;
+  const { name, gender, address, number, birthday } = req.body;
   const newStudent = new Student();
   newStudent.name = name;
   newStudent.gender = gender;
   newStudent.address = address;
   newStudent.number = number;
   newStudent.birthday = birthday;
-  newStudent.age = age;
   try {
     await studentService.updateStudent(id, newStudent);
     res.status(200).send(`Student with the id ${id} has been updated`);

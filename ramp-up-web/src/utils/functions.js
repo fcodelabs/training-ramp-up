@@ -9,10 +9,9 @@ export const getBirthday = (birthday) => {
   return new Date(y, m - 1, d);
 };
 
-export const birthdayChange = (value, dataItem) => {
-  const { entries } = store.getState();
+export const getAge = (date) => {
   const today = new Date();
-  const birthdate = getBirthday(value);
+  const birthdate = getBirthday(date);
   const currentYear = today.getFullYear();
   const currentMonth = today.getMonth();
   const currentDay = today.getDate();
@@ -38,7 +37,13 @@ export const birthdayChange = (value, dataItem) => {
     months = 11;
     years--;
   }
-  const age = `${years} years ${months} months ${days} days`;
+  return `${years} years ${months} months ${days} days`;
+};
+
+export const birthdayChange = (value, dataItem) => {
+  const { entries } = store.getState();
+  const birthdate = getBirthday(value);
+  const age = getAge(birthdate);
   const newEntry = entries.map((entry) =>
     entry.id === dataItem.id
       ? { ...entry, ["birthday"]: value, ["age"]: age }

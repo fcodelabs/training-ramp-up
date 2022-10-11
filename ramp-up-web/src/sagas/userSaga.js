@@ -3,7 +3,7 @@ import * as actions from "../reducer";
 import { URL } from "../constants";
 
 const getUser = (user) =>
-  fetch(`${URL}/user/get`, {
+  fetch(`${URL}/users/get`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -14,7 +14,7 @@ const getUser = (user) =>
     .then((result) => result);
 
 const addUser = (user) =>
-  fetch(`${URL}/user/add`, {
+  fetch(`${URL}/users/add`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -25,7 +25,7 @@ const addUser = (user) =>
     .then((result) => result);
 
 const refreshUser = (userName) =>
-  fetch(`${URL}/user/refresh`, {
+  fetch(`${URL}/users/refresh`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -36,7 +36,7 @@ const refreshUser = (userName) =>
     .then((result) => result);
 
 const signOutUser = (userName) =>
-  fetch(`${URL}/user/signout`, {
+  fetch(`${URL}/users/signout`, {
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",
@@ -48,12 +48,12 @@ const signOutUser = (userName) =>
 
 function* workSignOutUser(userName) {
   const response = yield call(() => signOutUser(userName));
-  if (response !== "Error signing out user") {
+  if (response.error == null) {
     yield put(actions.addToken(null));
     localStorage.removeItem("user");
     localStorage.removeItem("role");
   } else {
-    alert(response);
+    alert(response.error);
   }
 }
 

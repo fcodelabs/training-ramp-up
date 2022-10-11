@@ -65,7 +65,7 @@ function StudentPage() {
     >
       <Grid data={entries} editField={editField} onItemChange={fieldChange}>
         <GridToolbar>
-          {role == "Admin" ? (
+          {role === "Admin" ? (
             <Button onClick={addEntry}>Add New</Button>
           ) : (
             <></>
@@ -83,31 +83,31 @@ function StudentPage() {
           </Button>
         </GridToolbar>
         <GridColumn field="id" title="ID" editable={false} />
-        <GridColumn field="name" title="Name" editable={role == "Admin"} />
+        <GridColumn field="name" title="Name" editable={role === "Admin"} />
         <GridColumn
           field="gender"
           title="Gender"
-          editable={role == "Admin"}
+          editable={role === "Admin"}
           cell={GenderList}
         />
         <GridColumn
           field="address"
           title="Address"
-          editable={role == "Admin"}
+          editable={role === "Admin"}
         />
         <GridColumn
           field="number"
           title="Mobile No"
-          editable={role == "Admin"}
+          editable={role === "Admin"}
         />
         <GridColumn
           field="birthday"
           title="Date of Birth"
-          editable={role == "Admin"}
+          editable={role === "Admin"}
           cell={BirthdayPicker}
         />
         <GridColumn field="age" title="Age" editable={false} />
-        {role == "Admin" ? (
+        {role === "Admin" ? (
           <GridColumn field="command" cell={MyCommandCell} />
         ) : (
           <></>

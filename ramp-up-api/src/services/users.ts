@@ -3,10 +3,13 @@ import { User } from "../entity/User";
 
 const findUser = async (userName: string) => {
   const userRepository = AppDataSource.getRepository(User);
-  const userData = await userRepository.findOne({
-    where: { username: `${userName}` },
-  });
-  return userData;
+  try {
+    return await userRepository.findOne({
+      where: { username: `${userName}` },
+    });
+  } catch (e) {
+    return Error("Getting user failed");
+  }
 };
 
 const createUser = async (newUser: User) => AppDataSource.manager.save(newUser);
