@@ -10,9 +10,6 @@ import cors from "cors";
 import { createServer } from "http";
 import { Server } from "socket.io";
 
-//const cors = require("cors");
-//const bodyParser = require("body-parser");
-
 const app = express();
 const httpServer = createServer(app);
 
@@ -34,10 +31,6 @@ app.use(
 
 app.use(cors());
 
-// app.get("/", (req: Request, res: Response) => {
-//   res.send("Ramp Up");
-// });
-
 app.use("/student", studentRoutes);
 
 const io = new Server(httpServer, {
@@ -49,6 +42,18 @@ const io = new Server(httpServer, {
 
 io.on("connection", (socket) => {
   console.log(`connect ${socket.id}`);
+
+  socket.on("student_add", (data) => {
+    socket.broadcast.emit("student_added", data);
+  });
+
+  socket.on("student_update", (data) => {
+    socket.broadcast.emit("student_updated", data);
+  });
+
+  socket.on("student_delete", (data) => {
+    socket.broadcast.emit("student_deleted", data);
+  });
 });
 
 app.use((req: Request, res: Response, next: NextFunction) => {
@@ -65,13 +70,6 @@ app.use((err: ErrorInterface, req: Request, res: Response) => {
     },
   });
 });
-
-// const studentRouter = require("./routes/studentRoutes");
-
-// app.get("/", (req: Request, res: Response) => {
-//   res.send("Ramp Up");
-// });
-// app.use("/student", studentRouter);
 
 httpServer.listen(8000, () => {
   console.log("Application started on port 8000!");

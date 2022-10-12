@@ -44,29 +44,51 @@ function RampUpTable() {
   }, [studentRecords]);
 
   useEffect(() => {
+    console.log("useEffect");
+
     socket.on("connect", () => {
       console.log("Socket Id ", socket.id);
+    });
+
+    socket.on("student_added", (data) => {
+      alert(data);
+      window.location.reload(false);
+    });
+
+    socket.on("student_updated", (data) => {
+      alert(data);
+      window.location.reload(false);
+    });
+
+    socket.on("student_deleted", (data) => {
+      alert(data);
+      window.location.reload(false);
     });
 
     socket.on("connect_error", (err) => {
       console.log(`connect_error due to ${err.message}`);
     });
+
+    return () => {
+      socket.off();
+    };
   }, [socket]);
 
   const add = (dataItem) => {
     dataItem.inEdit = true;
-
     dispatch(addStudentAction({ dataItem }));
+    socket.emit("student_add", `Student Added`);
   };
 
   const update = (dataItem) => {
     dataItem.inEdit = false;
-
     dispatch(updateStudentAction(dataItem));
+    socket.emit("student_update", `Student Updated`);
   };
 
   const remove = (dataItem) => {
     dispatch(deleteStudentAction(dataItem));
+    socket.emit("student_delete", `Student Deleted`);
   };
 
   const discard = () => {
