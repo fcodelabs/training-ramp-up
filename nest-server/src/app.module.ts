@@ -28,7 +28,6 @@ import AdminMiddleware from './middleware/admin.middleware';
     UserModule,
   ],
 })
-// export class AppModule {}
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer

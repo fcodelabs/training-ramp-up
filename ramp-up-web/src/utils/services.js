@@ -4,7 +4,7 @@ let data = [];
 const config = {
   headers: { Authorization: `bearer ${localStorage.getItem("token")}` },
 };
-
+console.log("headers", config);
 const generateid = (data) =>
   data.reduce(
     (previousValue, currentValue) => Math.max(previousValue, currentValue.id),
@@ -74,6 +74,7 @@ export const deleteStudent = (item) => {
 };
 
 export const getStudents = async () => {
+  console.log("config", config);
   try {
     const res = await axios.get("http://localhost:3000/api/student", config);
 
@@ -81,5 +82,4 @@ export const getStudents = async () => {
   } catch (e) {
     console.log(Error, e);
   }
-  console.log("Payload", config);
 };

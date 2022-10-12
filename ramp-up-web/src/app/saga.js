@@ -55,6 +55,7 @@ function* watchAddUser({ payload: payload }) {
 }
 
 function* watchLogUser({ payload: payload }) {
+  console.log("log");
   try {
     const response = yield call(findUser, payload);
     console.log("response for log user saga", response);

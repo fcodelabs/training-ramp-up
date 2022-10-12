@@ -13,7 +13,7 @@ export const findUser = async ({ email, password }) => {
     url: "http://localhost:3000/api/user",
     params: { email, password },
   });
-  console.log("Log User details email password ", email, password);
+  console.log("res", res);
   return res;
 };
 
