@@ -6,6 +6,7 @@ import { findUser, insertUser } from "../../utils/userService";
 
 function* callUserGetFun(payload) {
   let res = yield call(findUser, payload.payload);
+
   console.log("user login", res);
   localStorage.setItem("name", res.data.user.name);
   localStorage.setItem("role", res.data.user.role);

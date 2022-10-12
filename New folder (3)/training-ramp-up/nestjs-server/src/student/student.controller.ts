@@ -17,6 +17,7 @@ export class StudentController {
   constructor(private readonly studentService: StudentService) {}
   @Get()
   async getStudent() {
+    // console.log('RES', res);
     return await this.studentService.getAll();
   }
 
