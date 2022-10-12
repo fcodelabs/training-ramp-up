@@ -15,6 +15,7 @@ export class UserService {
   ) {}
 
   async createUser(user: Users) {
+    console.log('first', user);
     try {
       const checkUser = await User.findOneBy({ email: user.email });
       if (checkUser == null) {
@@ -32,6 +33,7 @@ export class UserService {
         console.log('user Already Here');
       }
     } catch (error) {
+      // return { error: 'catch error' };
       return error;
     }
   }

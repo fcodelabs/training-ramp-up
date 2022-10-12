@@ -21,11 +21,6 @@ export class UserController {
         'udwd4545',
       );
       if (!user) return 'User not found';
-      // const tokenwithUser = {
-      //   user: user,
-      //   accessToken: jwt.sign({ id: user.id, role: user.role }, 'udwd4545'),
-      // };
-
       return user;
     } catch (error) {
       console.log('SignUp Error', error);

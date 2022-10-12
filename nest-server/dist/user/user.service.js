@@ -24,6 +24,7 @@ let UserService = class UserService {
         this.userRepo = userRepo;
     }
     async createUser(user) {
+        console.log('first', user);
         try {
             const checkUser = await user_entity_1.User.findOneBy({ email: user.email });
             if (checkUser == null) {
