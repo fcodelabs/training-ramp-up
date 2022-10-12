@@ -1,4 +1,4 @@
-import { Users } from 'src/entity/user.interface';
+import { Users } from '../dto/user.dto';
 import { Repository } from 'typeorm';
 export declare class UserService {
     private readonly userRepo;

@@ -27,8 +27,8 @@ let StudentService = class StudentService {
     async createPost(student) {
         return await this.StudentRepo.save(student);
     }
-    async deleteOne(categoryId) {
-        return await this.StudentRepo.delete(categoryId);
+    async deleteOne(studnetId) {
+        return await this.StudentRepo.delete(studnetId);
     }
     async updateStudent(studentId, studentUpdate) {
         return await this.StudentRepo.update(studentId, studentUpdate);

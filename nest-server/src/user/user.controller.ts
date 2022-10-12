@@ -1,5 +1,5 @@
 import { Body, Controller, Get, Post, Req } from '@nestjs/common';
-import { Users } from 'src/entity/user.interface';
+import { Users } from '../dto/user.dto';
 import { UserService } from './user.service';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const jwt = require('jsonwebtoken');
@@ -16,14 +16,17 @@ export class UserController {
   async logUser(@Req() req: any) {
     try {
       const user = await this.userService.logUser(req.query);
-
+      user['accessToken'] = jwt.sign(
+        { id: user.id, role: user.role },
+        'udwd4545',
+      );
       if (!user) return 'User not found';
-      const tokenwithUser = {
-        user: user,
-        accessToken: jwt.sign({ id: user.id, role: user.role }, 'udwd4545'),
-      };
-      console.log('User tooken', tokenwithUser);
-      return tokenwithUser;
+      // const tokenwithUser = {
+      //   user: user,
+      //   accessToken: jwt.sign({ id: user.id, role: user.role }, 'udwd4545'),
+      // };
+
+      return user;
     } catch (error) {
       console.log('SignUp Error', error);
     }

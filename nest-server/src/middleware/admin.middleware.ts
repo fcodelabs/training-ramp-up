@@ -8,8 +8,6 @@ export default function AdminMiddleware(req, res, next) {
     req.headers.authorization.startsWith('bearer')
   ) {
     token = req.headers.authorization.split(' ')[1];
-    console.log('Checking ', req.headers.authorization.split(' ')[1]);
-    console.log('Checking ', req.headers.authorization.split(' ')[1]);
     if (token == null) res.sendStatus(401);
 
     const decode = jwtToken.verify(token, 'udwd4545');

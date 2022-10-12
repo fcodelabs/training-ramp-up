@@ -8,7 +8,7 @@ import {
   Put,
 } from '@nestjs/common';
 import { StudentService } from './student.service';
-import { Students } from '../entity/student.interface';
+import { Students } from '../dto/student.dto';
 
 @Controller('student')
 export class StudentController {
@@ -21,7 +21,6 @@ export class StudentController {
 
   @Post()
   async create(@Body() student: Students) {
-    console.log(student);
     return await this.studentService.createPost(student);
   }
 

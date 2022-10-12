@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { User } from 'src/entity/user.entity';
-import { Users } from 'src/entity/user.interface';
+import { User } from '../entity/user.entity';
+import { Users } from '../dto/user.dto';
 import { Repository } from 'typeorm';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const bcrypt = require('bcrypt');

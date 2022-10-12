@@ -1,5 +1,5 @@
 import { StudentService } from './student.service';
-import { Students } from '../entity/student.interface';
+import { Students } from '../dto/student.dto';
 export declare class StudentController {
     private readonly studentService;
     constructor(studentService: StudentService);

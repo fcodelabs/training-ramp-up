@@ -14,6 +14,7 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserController = void 0;
 const common_1 = require("@nestjs/common");
+const user_dto_1 = require("../dto/user.dto");
 const user_service_1 = require("./user.service");
 const jwt = require('jsonwebtoken');
 let UserController = class UserController {
@@ -26,14 +27,10 @@ let UserController = class UserController {
     async logUser(req) {
         try {
             const user = await this.userService.logUser(req.query);
+            user['accessToken'] = jwt.sign({ id: user.id, role: user.role }, 'udwd4545');
             if (!user)
                 return 'User not found';
-            const tokenwithUser = {
-                user: user,
-                accessToken: jwt.sign({ id: user.id, role: user.role }, 'udwd4545'),
-            };
-            console.log('User tooken', tokenwithUser);
-            return tokenwithUser;
+            return user;
         }
         catch (error) {
             console.log('SignUp Error', error);
@@ -44,7 +41,7 @@ __decorate([
     (0, common_1.Post)('sign'),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object]),
+    __metadata("design:paramtypes", [user_dto_1.Users]),
     __metadata("design:returntype", Promise)
 ], UserController.prototype, "create", null);
 __decorate([
