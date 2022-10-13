@@ -13,10 +13,16 @@ import {
 } from "../data/services";
 import { takeEvery, call, put } from "redux-saga/effects";
 
+import { io } from "socket.io-client";
+const socket = io("http://localhost:8000/", {
+  transports: ["websocket"],
+});
+
 function* addStudentGenerator({ payload }) {
   try {
     const response = yield call(insertStudent, payload);
     if (response) {
+      socket.emit("student_add", `Student Added`);
       yield put(getStudentAction());
     }
   } catch (err) {
@@ -37,6 +43,7 @@ function* updateStudentGenerator({ payload }) {
   try {
     const response = yield call(updateStudent, payload);
     if (response) {
+      socket.emit("student_update", `Student Updated`);
       yield put(getStudentAction());
     }
   } catch (err) {
@@ -46,8 +53,11 @@ function* updateStudentGenerator({ payload }) {
 
 function* deleteStudentGenerator({ payload }) {
   try {
-    yield call(deleteStudent, payload);
-    yield put(getStudentAction());
+    const response = yield call(deleteStudent, payload);
+    if (response) {
+      socket.emit("student_delete", `Student Deleted`);
+      yield put(getStudentAction());
+    }
   } catch (err) {
     console.log(err);
   }

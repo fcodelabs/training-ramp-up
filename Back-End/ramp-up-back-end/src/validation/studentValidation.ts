@@ -38,7 +38,6 @@ export const updateStudentValidation = (
   res: Response,
   next: NextFunction
 ) => {
-  console.log("validation");
   const validateArray = [
     check("name", "Name is requied").notEmpty(),
     check("gender", "Gender is requied")

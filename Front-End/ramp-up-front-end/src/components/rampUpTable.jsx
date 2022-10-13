@@ -77,18 +77,15 @@ function RampUpTable() {
   const add = (dataItem) => {
     dataItem.inEdit = true;
     dispatch(addStudentAction({ dataItem }));
-    socket.emit("student_add", `Student Added`);
   };
 
   const update = (dataItem) => {
     dataItem.inEdit = false;
     dispatch(updateStudentAction(dataItem));
-    socket.emit("student_update", `Student Updated`);
   };
 
   const remove = (dataItem) => {
     dispatch(deleteStudentAction(dataItem));
-    socket.emit("student_delete", `Student Deleted`);
   };
 
   const discard = () => {
