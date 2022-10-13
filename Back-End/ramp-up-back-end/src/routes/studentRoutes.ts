@@ -1,5 +1,5 @@
-import express, { Request, Response } from "express";
-import { validationResult } from "express-validator";
+import express from "express";
+
 import {
   addStudent,
   deleteStudent,
@@ -7,15 +7,21 @@ import {
   updateStudent,
 } from "../controllers/studentController";
 import {
-  addStudentValidation,
-  updateStudentValidation,
+  studentValidation,
+  updateStudentRules,
+  addStudentRules,
 } from "../validation/studentValidation";
 
 const router = express.Router();
 
 router.get("/", getAllStudents);
-router.post("/", addStudentValidation, addStudent);
-router.put("/:studentId", updateStudentValidation, updateStudent);
+router.post("/", addStudentRules(), studentValidation, addStudent);
+router.put(
+  "/:studentId",
+  updateStudentRules(),
+  studentValidation,
+  updateStudent
+);
 router.delete("/:studentId", deleteStudent);
 
 export default router;

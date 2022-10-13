@@ -5,11 +5,11 @@ function DropDownCell(prop) {
   const selectGender = [
     {
       text: "Male",
-      value: " Male",
+      value: "Male",
     },
     {
       text: "Female",
-      value: " Female",
+      value: "Female",
     },
   ];
 

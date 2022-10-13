@@ -80,7 +80,7 @@ function RampUpTable() {
   };
 
   const update = (dataItem) => {
-    dataItem.inEdit = false;
+    dataItem.inEdit = true;
     dispatch(updateStudentAction(dataItem));
   };
 
