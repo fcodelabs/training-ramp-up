@@ -1,6 +1,5 @@
 import express from "express";
-import { postUser } from "../services/user.service";
-import { registerUser , SignInUser } from "../controllers/user.controller";
+import { registerUser, SignInUser } from "../controllers/user.controller";
 
 import cors from "cors";
 import * as BodyParser from "body-parser";
@@ -16,4 +15,3 @@ router.get("/singin", SignInUser);
 router.post("/signup", registerUser);
 
 export default router;
-

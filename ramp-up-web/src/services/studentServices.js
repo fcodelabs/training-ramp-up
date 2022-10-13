@@ -5,11 +5,7 @@ const config = {
   headers: { Authorization: `bearer ${localStorage.getItem("token")}` },
 };
 
-// const generateId = (data) =>
-//   data.reduce((acc, current) => Math.max(acc, current.ID), 0) + 1;
-
 export const insertStudent = async (student) => {
-  // student.ID = generateId(data);
   student.inEdit = false;
   if (
     student.dataItem.studentName == null ||
@@ -20,46 +16,51 @@ export const insertStudent = async (student) => {
     alert("Please input valid data");
   } else {
     data.unshift(student.dataItem);
-    if(new Date() - new Date(student.dataItem.dob)<0){
-      alert("Please input valid date")
-    }
-    else{
-
-      if(student.dataItem.gender === "Male"|| student.dataItem.gender ==="Female" || student.dataItem.gender === "Other"){
-
+    if (new Date() - new Date(student.dataItem.dob) < 0) {
+      alert("Please input valid date");
+    } else {
+      if (
+        student.dataItem.gender === "Male" ||
+        student.dataItem.gender === "Female" ||
+        student.dataItem.gender === "Other"
+      ) {
         student.dataItem.age =
-        new Date().getFullYear() - new Date(student.dataItem.dob).getFullYear();
-  
-        
-    const studentDetails = {
-      studentName: student.dataItem.studentName,
-      gender: student.dataItem.gender,
-      address: student.dataItem.address,
-      mobileNo: student.dataItem.mobileNo,
-      dob: student.dataItem.dob,
-      age: student.dataItem.age,
-    };
-  
-    await axios.post("http://localhost:8080/students", studentDetails,config);
-    
-      }else{
-        alert("Please use these keywords only : Male, Female, and Other")
+          new Date().getFullYear() -
+          new Date(student.dataItem.dob).getFullYear();
+
+        const studentDetails = {
+          studentName: student.dataItem.studentName,
+          gender: student.dataItem.gender,
+          address: student.dataItem.address,
+          mobileNo: student.dataItem.mobileNo,
+          dob: student.dataItem.dob,
+          age: student.dataItem.age,
+        };
+
+        await axios.post(
+          "http://localhost:3000/student",
+          studentDetails,
+          config
+        );
+      } else {
+        alert("Please use these keywords only : Male, Female, and Other");
       }
-
     }
-   
   }
-
 };
 
 export const getStudents = async () => {
-  const res = await axios.get("http://localhost:8080/students",config);
+  const res = await axios.get("http://localhost:3000/student", config);
 
   return res;
 };
 export const updateStudent = async (student) => {
-  await axios.put(`http://localhost:8080/students/${student.ID}`, student,config);
+  await axios.put(
+    `http://localhost:3000/student/${student.ID}`,
+    student,
+    config
+  );
 };
 export const deleteStudent = async (student) => {
-  await axios.delete(`http://localhost:8080/students/${student.ID}`,config);
+  await axios.delete(`http://localhost:3000/student/${student.ID}`, config);
 };

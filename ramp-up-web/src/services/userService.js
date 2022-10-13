@@ -6,35 +6,30 @@ const generateid = (data) =>
     (previousValue, currentValue) => Math.max(previousValue, currentValue.id),
     0
   ) + 1;
-  
+
 export const findUser = async ({ email, password }) => {
-  console.log("axios",email,password)
+  console.log("axios", email, password);
   const res = await axios({
-    method: "get",
-    url: "http://localhost:8080/singin",
+    method: "post",
+    url: "http://localhost:3000/user/signin",
     params: { email, password },
   });
-  console.log("Log user response",res);
-
   return res;
 };
 
 export const insertUser = async (user) => {
-  console.log("User details", user);
   user.id = generateid(data);
   user.inEdit = false;
   const body = {
-    User:user.name,
-    password:user.password,
-    email:user.email
-  }
+    User: user.name,
+    password: user.password,
+    email: user.email,
+  };
   if (!user.name || !user.email || !user.password) {
     alert("Incorrect Validation");
   } else {
     data.unshift(user);
-console.log("body",body);
-    const resdata = await axios.post("http://localhost:8080/signup", body);
-
+    const resdata = await axios.post("http://localhost:3000/user/signup", body);
     return resdata;
   }
 };

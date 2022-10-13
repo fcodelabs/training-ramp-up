@@ -14,17 +14,10 @@ module.exports = function (
     ) {
       token = req.headers.authorization.split(" ")[1];
       if (token == null) res.sendStatus(401);
-      console.log("TokenV", token);
-      const userData =jwt.verify(token, process.env.ACCESS_TOKEN_KEY)
-
-console.log("I am from userAuth", userData);
-if(userData){
-  next();
-}
-      //   , (email: any) => {
-      //   req.email = email;
-      //   next();
-      // });
+      const userData = jwt.verify(token, process.env.ACCESS_TOKEN_KEY);
+      if (userData) {
+        next();
+      }
     } else {
       res.sendStatus(401);
     }

@@ -1,17 +1,12 @@
 import { Users } from "../entities/user.entity";
-// import { Request, Response } from "express";
-// import { FindOptionsWhere } from "typeorm";
 require("dotenv").config();
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
-const jwt = require("jsonwebtoken");
+// const jwt = require("jsonwebtoken");
 
-export const postUser = async (userDetails:any) => {
-  
+export const postUser = async (userDetails: any) => {
   const salt = bcrypt.genSaltSync(saltRounds);
   const hash = bcrypt.hashSync(userDetails.password, salt);
-  console.log("hash", hash);
-
   const { User, email } = userDetails;
   const user = await Users.save({
     User: User,
@@ -19,32 +14,22 @@ export const postUser = async (userDetails:any) => {
     email: email,
     role: "User",
   });
-  // await user.save();
- return user
-  // return res.json(user).status(200);
+  return user;
 };
 
 export const findUser = async (req: any) => {
-  
   const user = await Users.findOneBy({
-    email: req.email 
+    email: req.email,
   });
 
   if (user) {
     const value = await bcrypt.compare(req.password, user.password);
     if (value) {
-
-       return user
-        // {
-      //   user:user,
-      //   //accessToken:accessToken
-      // } ;
+      return user;
+    } else {
+      return { error: "user not here" };
     }
-    else {
-      return {error:"user not here"};
-      }
-    }
-   else {
+  } else {
     console.log("User not here");
   }
 };

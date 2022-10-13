@@ -4,8 +4,6 @@ export const getStudent = async () => {
   try {
     const student = await Student.find();
     if (student) {
-      // console.log("STUDENT", student);
-
       return student;
     }
   } catch (error) {
@@ -23,13 +21,11 @@ export const postStudent = async (studentDetails: any) => {
     dob: dob,
     age: age,
   });
-  // await student.save();
   return student;
 };
 
 export const deleteStudent = async (studentRemoveDetails: any) => {
   const id = studentRemoveDetails;
-
   const response = await Student.delete(id);
   return response;
 };
@@ -40,6 +36,5 @@ export const updateStudent = async (studentUpdateDetails: any) => {
   });
   Student.merge(student, studentUpdateDetails.user);
   const result = await Student.save({ ...student });
-
   return result;
 };
