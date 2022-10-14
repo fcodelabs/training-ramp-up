@@ -52,17 +52,17 @@ function RampUpTable() {
 
     socket.on("student_added", (data) => {
       alert(data);
-      window.location.reload(false);
+      dispatch(getStudentAction());
     });
 
     socket.on("student_updated", (data) => {
       alert(data);
-      window.location.reload(false);
+      dispatch(getStudentAction());
     });
 
     socket.on("student_deleted", (data) => {
       alert(data);
-      window.location.reload(false);
+      dispatch(getStudentAction());
     });
 
     socket.on("connect_error", (err) => {
@@ -72,7 +72,7 @@ function RampUpTable() {
     return () => {
       socket.off();
     };
-  }, [socket]);
+  }, [studentRecords, socket]);
 
   const add = (dataItem) => {
     dataItem.inEdit = true;
