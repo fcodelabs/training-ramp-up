@@ -13,7 +13,7 @@ const editField = "inEdit";
 import { Upload } from "@progress/kendo-react-upload";
 
 import io from "socket.io-client";
-const socket = io.connect("http://localhost:8000");
+const socket = io.connect("http://localhost:8080");
 import studentSlice from "./slice/studentSlice";
 const DataTable = () => {
   const [data, setData] = useState([]);

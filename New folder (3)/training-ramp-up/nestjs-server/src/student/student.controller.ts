@@ -8,7 +8,7 @@ import {
   Req,
   Res,
 } from '@nestjs/common';
-import { StudentDto } from 'src/dto/student.dto';
+import { StudentDto } from '../dto/student.dto';
 
 import { StudentService } from './student.service';
 
@@ -18,35 +18,47 @@ export class StudentController {
   @Get()
   async getStudent() {
     // console.log('RES', res);
-    return await this.studentService.getAll();
+    const student = await this.studentService.getAll();
+    if (!student) return { msg: 'student get error' };
+    return student;
   }
 
   @Post()
   //   @HttpCode(200)
   async addStudent(@Body() data: StudentDto) {
-    return await this.studentService.addOne(data);
+    // console.log('Student Input data', data);
+    const student = await this.studentService.addOne(data);
+    if (!student) return { msg: 'student post error' };
+    return student;
   }
 
   @Delete('/:id')
   // eslint-disable-next-line prettier/prettier
-  async deleteStudent(@Req() req, @Res() res) {
+  async deleteStudent(@Req() req) {
     const student = await this.studentService.deleteOne(
       parseInt(req.params.id),
     );
-    res.json(student);
+    if (!student) return { msg: 'student delete error' };
+    return student;
+    // res.json(student);
   }
 
   @Put('/:id')
   async updateStudent(@Req() req, @Res() res) {
     const student = req.body;
+    // console.log('student', res);
 
     try {
       const user = await this.studentService.updateOne(student);
-      console.log('Student', user);
+
       if (!user) return res.json('Error Update Student').status(400);
-      return res.send({
-        user: user,
-      });
+      res.send({ user: user });
+      return user;
+
+      // return user;
+      // return res.send({
+      //   user: user,
+      // });
     } catch (error) {
       console.log(error);
     }

@@ -8,22 +8,24 @@ function* callUserGetFun(payload) {
   let res = yield call(findUser, payload.payload);
 
   console.log("user login", res);
-  localStorage.setItem("name", res.data.user.name);
-  localStorage.setItem("role", res.data.user.role);
+  localStorage.setItem("name", res.data.name);
+  localStorage.setItem("role", res.data.role);
   localStorage.setItem("token", res.data.accessToken);
-  localStorage.setItem("id", res.data.user.id);
+  localStorage.setItem("id", res.data.id);
 
   yield put(
     loginSlice.actions.saveToken({
-      name: res.data.user.name,
-      role: res.data.user.role,
+      name: res.data.name,
+      role: res.data.role,
       token: res.data.accessToken,
-      // refToken: res.data.user.refeshToken,
     }),
   );
-  alert("User Login success");
-
-  payload.payload.navigate("/datatable");
+  if (res.data) {
+    alert("User Login success");
+    payload.payload.navigate("/datatable");
+  } else {
+    alert("User Login Fail");
+  }
 }
 function* callUserRegFun(payload) {
   yield call(insertUser, payload);

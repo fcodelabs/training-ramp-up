@@ -25,6 +25,7 @@ export const findUser = async (user) => {
       url: "http://localhost:8080/user/signin",
       params: { email: user.user, password: user.password },
     });
+    console.log("Loging User details", res);
 
     return res;
   } catch (e) {

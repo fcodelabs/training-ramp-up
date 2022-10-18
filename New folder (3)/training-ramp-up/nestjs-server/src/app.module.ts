@@ -13,6 +13,7 @@ import { UserModule } from './user/user.module';
 import { User } from './entity/user.entity';
 import AdminMiddleware from './middleware/admin.middleware';
 import { StudentController } from './student/student.controller';
+require('dotenv').config();
 
 @Module({
   imports: [
@@ -20,10 +21,10 @@ import { StudentController } from './student/student.controller';
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: 'localhost',
-      port: 5432,
-      username: 'postgres',
-      password: '2015',
-      database: 'rampup_nestjs',
+      port: Number(process.env.DB_PORT),
+      username: process.env.DB_NAME,
+      password: process.env.DB_PASSWORD,
+      database: process.env.DB_USERNAME,
       synchronize: true,
       logging: false,
       entities: [Student, User],
@@ -35,6 +36,7 @@ import { StudentController } from './student/student.controller';
   controllers: [AppController],
   providers: [AppService],
 })
+// export class AppModule {}
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer

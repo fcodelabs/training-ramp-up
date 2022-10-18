@@ -1,10 +1,10 @@
 /* eslint-disable prettier/prettier */
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { StudentDto } from 'src/dto/student.dto';
-import { StudentRepository } from './student.repository';
+import { StudentDto } from '../dto/student.dto';
+// import { StudentRepository } from './student.repository';
 import { Repository } from 'typeorm';
-import { Student } from 'src/entity/student.entity';
+import { Student } from '../entity/student.entity';
 @Injectable()
 export class StudentService {
   constructor(
@@ -32,6 +32,7 @@ export class StudentService {
   }
 
   async updateOne(data) {
+    console.log('Update', data);
     try {
       const student = await this.studentRepository.findOne({
         where: { id: parseInt(data.id) },

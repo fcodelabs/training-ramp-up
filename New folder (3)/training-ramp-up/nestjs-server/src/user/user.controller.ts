@@ -1,14 +1,5 @@
-import {
-  Controller,
-  Body,
-  Post,
-  Get,
-  Delete,
-  Put,
-  Req,
-  Res,
-} from '@nestjs/common';
-import { UserDto } from 'src/dto/user.dto';
+import { Controller, Body, Post, Req, Res } from '@nestjs/common';
+import { UserDto } from '../dto/user.dto';
 import { UserService } from './user.service';
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
@@ -21,25 +12,32 @@ export class UserController {
   async signUp(@Body() data: UserDto) {
     // console.log('User was', data);
     // return await this.userService.userRegister(data);
-    const user = await this.userService.userRegister(data);
-    console.log('User', user);
+    return await this.userService.userRegister(data);
+    // console.log('User', user);
   }
   @Post('signin')
-  async signIn(@Req() req, @Res() res) {
-    // console.log('Details', req.query);
-    const userDetails = req.query;
+  async signIn(@Req() req) {
+    // const userDetails = req.query;
     try {
-      const user = await this.userService.loginUser(userDetails);
-      console.log('Login User', user.user);
-      if (!user) return res.json('Error User login').status(400);
-      return res.send({
-        user: user.user,
-        accessToken: jwt.sign(
-          { user: user.id, role: user.user.role },
+      const { user } = await this.userService.loginUser(req.query);
+      if (!user) {
+        console.log('User Not here');
+      } else {
+        user['accessToken'] = jwt.sign(
+          { user: user.id, role: user.role },
           process.env.ACCESS_TOKEN_SECRET,
-        ),
-        refreshToken: jwt.sign(user.id, process.env.RE_TOKEN_KEY),
-      });
+        );
+        return user;
+      }
+      // if (!user) return res.json('Error User login').status(400);
+
+      // return res.send({
+      //   user: user.user,
+      //   accessToken: jwt.sign(
+      //     { user: user.id, role: user.user.role },
+      //     process.env.ACCESS_TOKEN_SECRET,
+      //   ),
+      // });
       // return res.send({ user: user.user });
     } catch (error) {
       console.log('login controller error', error);

@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { UserDto } from 'src/dto/user.dto';
-import { User } from 'src/entity/user.entity';
+import { UserDto } from '../dto/user.dto';
+import { User } from '../entity/user.entity';
 import { Repository } from 'typeorm';
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
@@ -16,11 +16,11 @@ export class UserService {
       const checkUser = await this.userRepository.findOneBy({
         email: details.email,
       });
+      console.log('Checkuser', checkUser);
 
       if (checkUser == null) {
         const salt = bcrypt.genSaltSync(saltRounds);
         const hash = bcrypt.hashSync(details.password, salt);
-        console.log('Hash', hash);
 
         const { name, email } = details;
         const user = await this.userRepository.save({
@@ -39,9 +39,11 @@ export class UserService {
     }
   }
 
-  async loginUser(details) {
+  async loginUser(details: any) {
     try {
-      const user = await User.findOneBy({ email: details.email });
+      const user = await this.userRepository.findOneBy({
+        email: details.email,
+      });
 
       if (!user) {
         console.log('User not found');
@@ -51,7 +53,7 @@ export class UserService {
         if (!value) {
           console.log('Password not match');
         } else {
-          return { user: user, id: user.id };
+          return { user };
         }
       }
     } catch (error) {

@@ -7,13 +7,13 @@ require('dotenv').config();
 
 export default function AdminMiddleware(req, res, next) {
   let token;
-  console.log('res', req);
+
   if (
     req.headers.authorization &&
     req.headers.authorization.startsWith('bearer')
   ) {
     token = req.headers.authorization.split(' ')[1];
-    console.log('TOKEN', token);
+
     if (token == null) res.sendStatus(401);
     const decode = jwtToken.verify(token, process.env.ACCESS_TOKEN_SECRET);
     console.log('Token Decode', decode.role);
@@ -23,7 +23,7 @@ export default function AdminMiddleware(req, res, next) {
     if (decode.role == 'User' && req.method == 'GET') {
       next();
     } else {
-      console.log('CHECKIGN');
+      console.log('check');
     }
   } else {
     res.sendStatus(401);

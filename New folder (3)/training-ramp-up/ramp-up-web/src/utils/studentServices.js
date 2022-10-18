@@ -75,6 +75,8 @@ export const updateStudent = async (student) => {
               student,
               config,
             );
+            console.log("Update res", res);
+
             if (res) {
               alert("User Update Success");
               return res;
