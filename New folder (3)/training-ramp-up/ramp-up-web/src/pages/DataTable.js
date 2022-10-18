@@ -10,7 +10,7 @@ import { useSelector, useDispatch } from "react-redux";
 import jwt_decode from "jwt-decode";
 const editField = "inEdit";
 import { Upload } from "@progress/kendo-react-upload";
-
+import DropDownCell from "../components/DropDownCell";
 import io from "socket.io-client";
 const socket = io.connect("http://localhost:8080");
 import studentSlice from "./slice/studentSlice";
@@ -170,7 +170,12 @@ const DataTable = () => {
         </GridToolbar>
         <Column field="id" title="ID" width="50px" editable={false} />
         <Column field="name" title="Name" width="200px" />
-        <Column field="gender" title="Gender(Male/Female)" width="170px" />
+        <Column
+          field="gender"
+          title="Gender(Male/Female)"
+          width="170px"
+          cell={DropDownCell}
+        />
         <Column field="address" title="Address" width="300px" />
         <Column
           field="mobileNo"
