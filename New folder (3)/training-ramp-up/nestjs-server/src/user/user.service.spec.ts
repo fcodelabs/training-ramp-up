@@ -38,7 +38,7 @@ describe('UserService', () => {
   });
   describe('log User', () => {
     it('it should log success', async () => {
-      const user_02 = {
+      const user = {
         id: 1,
         name: 'test',
         email: 'test@gmail.com',
@@ -54,8 +54,8 @@ describe('UserService', () => {
       } as never;
       // jest.spyOn(userRepository, 'findOneBy').mockResolvedValueOnce(user_02);
       // const res = await service.loginUser(user_01);
-      const res = await userRepository.findOneBy(user_02);
-      expect(res).toStrictEqual(user_02);
+      const res = await userRepository.findOneBy(user);
+      expect(res).toStrictEqual(user);
       // jest.spyOn(bcrypt, 'compare').mockResolvedValueOnce(user_02);
       // const res = await service.loginUser(user_01);
     });
@@ -66,7 +66,7 @@ describe('UserService', () => {
       } as never;
       // jest.spyOn(userRepository, 'findOneBy').mockResolvedValueOnce(null);
       const res = await userRepository.save(user1);
-      // const res = await service.loginUser(user1);
+
       expect(res).toEqual(user1);
     });
   });

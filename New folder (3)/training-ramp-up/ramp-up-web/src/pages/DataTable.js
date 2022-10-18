@@ -6,9 +6,8 @@ import {
 } from "@progress/kendo-react-grid";
 import { Command } from "../components/CommandCell";
 import { useNavigate } from "react-router-dom";
-
 import { useSelector, useDispatch } from "react-redux";
-
+import jwt_decode from "jwt-decode";
 const editField = "inEdit";
 import { Upload } from "@progress/kendo-react-upload";
 
@@ -25,9 +24,14 @@ const DataTable = () => {
   const token = useSelector((state) => state.token);
 
   useEffect(() => {
-    if (localStorage.getItem("role") == "Admin") {
+    const token = localStorage.getItem("token");
+    var decoded = jwt_decode(token);
+    if (decoded.role == "Admin") {
       setAdmin(true);
     }
+    // if (localStorage.getItem("role") == "Admin") {
+    //   setAdmin(true);
+    // }
   });
 
   useEffect(() => {

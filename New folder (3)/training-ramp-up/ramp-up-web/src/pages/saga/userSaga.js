@@ -9,7 +9,7 @@ function* callUserGetFun(payload) {
 
   console.log("user login", res);
   localStorage.setItem("name", res.data.name);
-  localStorage.setItem("role", res.data.role);
+  // localStorage.setItem("role", res.data.role);
   localStorage.setItem("token", res.data.accessToken);
   localStorage.setItem("id", res.data.id);
 

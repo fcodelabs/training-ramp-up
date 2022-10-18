@@ -1,3 +1,4 @@
+// eslint-disable-next-line prettier/prettier
 import {
   Controller,
   Body,
@@ -17,36 +18,30 @@ export class StudentController {
   constructor(private readonly studentService: StudentService) {}
   @Get()
   async getStudent() {
-    // console.log('RES', res);
     const student = await this.studentService.getAll();
     if (!student) return { msg: 'student get error' };
     return student;
   }
 
   @Post()
-  //   @HttpCode(200)
   async addStudent(@Body() data: StudentDto) {
-    // console.log('Student Input data', data);
     const student = await this.studentService.addOne(data);
     if (!student) return { msg: 'student post error' };
     return student;
   }
 
   @Delete('/:id')
-  // eslint-disable-next-line prettier/prettier
   async deleteStudent(@Req() req) {
     const student = await this.studentService.deleteOne(
       parseInt(req.params.id),
     );
     if (!student) return { msg: 'student delete error' };
     return student;
-    // res.json(student);
   }
 
   @Put('/:id')
   async updateStudent(@Req() req, @Res() res) {
     const student = req.body;
-    // console.log('student', res);
 
     try {
       const user = await this.studentService.updateOne(student);
@@ -54,11 +49,6 @@ export class StudentController {
       if (!user) return res.json('Error Update Student').status(400);
       res.send({ user: user });
       return user;
-
-      // return user;
-      // return res.send({
-      //   user: user,
-      // });
     } catch (error) {
       console.log(error);
     }

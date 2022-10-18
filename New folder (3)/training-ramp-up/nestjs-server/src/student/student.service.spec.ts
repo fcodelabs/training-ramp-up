@@ -65,15 +65,10 @@ describe('StudentService', () => {
       ];
       // jest.spyOn(studentRepository, 'find').mockResolvedValueOnce(student);
       // const res = await service.getAll();
-      const res = await studentRepository.find();
+      const res = await service.getAll();
+      await studentRepository.find();
       expect(res).toEqual(student);
     });
-
-    // it('it must student get error', async () => {
-    //   // jest.spyOn(studentRepository, 'find').mockResolvedValueOnce(null);
-    //   const res = await service.getAll();
-    //   expect(res).toEqual(null);
-    // });
   });
   describe('Create Student', () => {
     it('it should create success', async () => {
@@ -97,8 +92,8 @@ describe('StudentService', () => {
       } as never;
       // jest.spyOn(studentRepository, 'save').mockResolvedValueOnce(student_02);
 
-      // const res = await service.addOne(student_01);
-      const res = await studentRepository.save(student_01);
+      const res = await service.addOne(student_01);
+      // const res = await studentRepository.save(student_01);
       expect(res).toEqual(student_02);
     });
     it('it should create fails', async () => {
@@ -122,8 +117,9 @@ describe('StudentService', () => {
       // } as never;
       // jest.spyOn(studentRepository, 'save').mockResolvedValueOnce(student_02);
 
-      // const res = await service.addOne(student_01);
-      const res = await studentRepository.save(null);
+      const res = await service.addOne(null);
+      // const res = await studentRepository.save(null);
+
       expect(res).toEqual(null);
     });
   });
@@ -133,13 +129,7 @@ describe('StudentService', () => {
         id: 1,
       } as any;
       const student1 = {
-        id: 1,
-        name: 'test',
-        gender: 'Male',
-        address: 'testAddress',
-        mobile_number: '123456789',
-        date: new Date('2001-04-05 00:00:00'),
-        age: 21,
+        id: { id: 1 },
       } as any;
       // jest
       //   .spyOn(studentRepository, 'findOneBy')
@@ -150,10 +140,9 @@ describe('StudentService', () => {
       // // await studentRepository.findOneBy(student1);
       // // await studentRepository.remove(student1);
       // expect(res).toEqual({ id: { id: 1 } });
-
-      // const res = await service.deleteOne(req);
-      // await studentRepository.findOneBy(student1);
-      const res = await studentRepository.remove(student1);
+      const res = await service.deleteOne(req);
+      await studentRepository.findOneBy(student1);
+      // const res = await studentRepository.remove(student1);
       expect(res).toEqual(student1);
     });
     it('it must delete error', async () => {
@@ -171,7 +160,7 @@ describe('StudentService', () => {
     it('it should Update success', async () => {
       const req = {
         params: {
-          studnetId: 1,
+          id: 1,
         },
       } as any;
       const student1 = {
@@ -196,6 +185,7 @@ describe('StudentService', () => {
       // jest.spyOn(studentRepository, 'merge').mockResolvedValueOnce(student1);
       // jest.spyOn(studentRepository, 'save').mockResolvedValueOnce(student1);
       // const res = await service.updateOne(req);
+      // console.log('UPDATE', res);
       const res = await studentRepository.findOne(student1);
       expect(res).toEqual(student1);
     });

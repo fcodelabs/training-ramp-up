@@ -1,9 +1,4 @@
-import {
-  Module,
-  NestModule,
-  MiddlewareConsumer,
-  RequestMethod,
-} from '@nestjs/common';
+import { Module, NestModule, MiddlewareConsumer } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -39,9 +34,6 @@ require('dotenv').config();
 // export class AppModule {}
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer
-      .apply(AdminMiddleware)
-      // .exclude({ path: 'student', method: RequestMethod.POST })
-      .forRoutes(StudentController);
+    consumer.apply(AdminMiddleware).forRoutes(StudentController);
   }
 }

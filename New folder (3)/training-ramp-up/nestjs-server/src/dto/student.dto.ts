@@ -2,9 +2,6 @@
 import { IsNotEmpty, IsString, IsInt } from 'class-validator';
 
 export class StudentDto {
-  // @IsInt()
-  // id: number;
-
   @IsString()
   @IsNotEmpty()
   name: string;
