@@ -35,16 +35,19 @@ export class StudentService {
       const student = await this.studentRepository.findOne({
         where: { id: parseInt(data.id) },
       });
+      if (!student) {
+        return { error: 'student cant find' };
+      } else {
+        const res = this.studentRepository.merge(student, data);
+        const result = await this.studentRepository.save(res);
+        if (!result) {
+          return {
+            error: 'student update fail',
+          };
+        }
 
-      const res = this.studentRepository.merge(student, data);
-      const result = await this.studentRepository.save(res);
-      if (!result) {
-        return {
-          error: 'student update fail',
-        };
+        return result;
       }
-
-      return result;
     } catch (error) {
       console.log(error);
       return { error: 'student update fail' };

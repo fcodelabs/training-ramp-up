@@ -87,7 +87,6 @@ describe('StudentController', () => {
         } as any,
       ];
 
-      await studentService.getAll();
       const res = await controller.getStudent();
       expect(res).toStrictEqual(student);
     });

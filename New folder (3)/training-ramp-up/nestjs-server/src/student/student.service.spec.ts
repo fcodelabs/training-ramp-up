@@ -193,6 +193,7 @@ describe('StudentService', () => {
       const res = await service.updateOne(req);
       expect(res).toEqual(studentData);
     });
+
     it('student update fail', async () => {
       const req = {
         id: 33,
@@ -204,8 +205,8 @@ describe('StudentService', () => {
         age: 22,
       } as any;
 
-      const res = studentRepository.findOneBy(req);
-      expect(res).toEqual(null);
+      const res = await service.updateOne(req);
+      expect(res).toEqual({ error: 'student cant find' });
     });
   });
 });

@@ -19,7 +19,7 @@ export class UserService {
       });
       if (checkUser == null) {
         const salt = bcrypt.genSaltSync(saltRounds);
-        const hash = bcrypt.hashSync(details.password, salt);
+        const hash = await bcrypt.hashSync(details.password, salt);
         const { name, email } = details;
         const user = await this.userRepository.save({
           name: name,
@@ -44,11 +44,11 @@ export class UserService {
       if (!user) {
         console.log('User not found');
       } else {
-        const value = await bcrypt.compare(details.password, user.password);
+        const value = bcrypt.compare(details.password, user.password);
         if (!value) {
           console.log('Password not match');
         } else {
-          user['accessToken'] = jwt.sign(
+          user['accessToken'] = await jwt.sign(
             { user: user.id, role: user.role },
             process.env.ACCESS_TOKEN_SECRET,
           );
