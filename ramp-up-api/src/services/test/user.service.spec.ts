@@ -12,7 +12,7 @@
 //     };
 
 //     const users = {
-//       email: "test@t.com",
+//       email: "bob@gmail.com",
 //       password: "testPassword",
 //       id: 1,
 //       role: "User",
@@ -40,7 +40,7 @@
 //   describe('User Register', () => {
 //     const loginData = {
 //       User: 'test',
-//       email: 'test@t.com',
+//       email: 'bob@gmail.com',
 //       password: 'testPassword',
 //     };
 //     const userTest = {
@@ -54,7 +54,7 @@
 //     // const user = {
 //     //   User: 'test',
 //     //   password: 'test',
-//     //   email: 'test@t.com',
+//     //   email: 'bob@gmail.com',
 //     //   role: 'User',
 //     //   save: jest.fn((x) => x),
 //     // };

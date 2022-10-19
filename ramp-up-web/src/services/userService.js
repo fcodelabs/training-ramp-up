@@ -8,12 +8,13 @@ const generateid = (data) =>
   ) + 1;
 
 export const findUser = async ({ email, password }) => {
-  console.log("axios", email, password);
+  // console.log("axios", email, password);
   const res = await axios({
     method: "post",
     url: "http://localhost:3000/user/signin",
     params: { email, password },
   });
+  console.log("RES USER LOGIN" , res);
   return res;
 };
 

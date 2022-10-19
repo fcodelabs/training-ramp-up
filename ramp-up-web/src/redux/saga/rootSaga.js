@@ -50,6 +50,7 @@ function* watchSignUser({ payload: payload }) {
     yield put(userSlice.actions.saveUser(response.data));
     localStorage.setItem("role", response.data.role);
     localStorage.setItem("email", response.data.email);
+    localStorage.setItem("token", response.data.accessToken);
     payload.navigate("/home");
   } catch (error) {
     alert(error);
