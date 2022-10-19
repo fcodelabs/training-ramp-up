@@ -5,40 +5,35 @@ import axios from "axios";
 let data = [];
 const current = new Date();
 
-const generateId = (data) =>
-  data.reduce((acc, current) => Math.max(acc, current.id), 0) + 1;
-
 export const insertStudent = async (student) => {
-  console.log(student.dataItem.birthday);
-  if (!student.dataItem.name) {
+  console.log(student.birthday);
+  if (!student.name) {
     alert("Name Required");
-  } else if (!student.dataItem.gender) {
+  } else if (!student.gender) {
     alert("Gender Required");
-  } else if (student.dataItem.gender === "") {
+  } else if (student.gender === "") {
     alert("Gender is wrong");
-  } else if (!student.dataItem.address) {
+  } else if (!student.address) {
     alert("Address Required");
   } else if (
-    !student.dataItem.mobile ||
-    isNaN(student.dataItem.mobile) ||
-    student.dataItem.mobile.length !== 10
+    !student.mobile ||
+    isNaN(student.mobile) ||
+    student.mobile.length !== 10
   ) {
     alert("Please Enter valid Mobile Number");
-  } else if (!student.dataItem.birthday) {
+  } else if (!student.birthday) {
     alert("Date of Birth Required");
   } else {
-    student.id = generateId(data);
-    const studentAge =
-      current.getFullYear() - student.dataItem.birthday.getFullYear();
-    student.dataItem.age = studentAge;
+    const studentAge = current.getFullYear() - student.birthday.getFullYear();
+    student.age = studentAge;
     if (studentAge <= 0) {
       alert("Please Enter Correct Date of Birth");
     } else {
       student.inEdit = false;
-      data.unshift(student.dataItem);
+      data.unshift(student);
       const responseData = await axios.post(
         "http://localhost:8000/student",
-        student.dataItem
+        student
       );
       return responseData;
     }

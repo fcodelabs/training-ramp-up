@@ -14,14 +14,13 @@ import {
 
 const router = express.Router();
 
-router.get("/", getAllStudents);
-router.post("/", addStudentRules(), studentValidation, addStudent);
-router.put(
-  "/:studentId",
-  updateStudentRules(),
-  studentValidation,
-  updateStudent
-);
-router.delete("/:studentId", deleteStudent);
+router
+  .route("/")
+  .get(getAllStudents)
+  .post(addStudentRules(), studentValidation, addStudent);
+router
+  .route("/:studentId")
+  .put(updateStudentRules(), studentValidation, updateStudent)
+  .delete(deleteStudent);
 
 export default router;

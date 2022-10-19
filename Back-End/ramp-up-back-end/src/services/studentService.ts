@@ -22,7 +22,11 @@ export const createStudentService = async (
 
 //get all students
 export const getAllStudentService = async () => {
-  const allStudents = await Student.find();
+  const allStudents = await Student.find({
+    order: {
+      id: "ASC",
+    },
+  });
   return allStudents;
 };
 

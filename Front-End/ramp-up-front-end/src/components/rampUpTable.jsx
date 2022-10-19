@@ -76,7 +76,7 @@ function RampUpTable() {
 
   const add = (dataItem) => {
     dataItem.inEdit = true;
-    dispatch(addStudentAction({ dataItem }));
+    dispatch(addStudentAction(dataItem));
   };
 
   const update = (dataItem) => {
