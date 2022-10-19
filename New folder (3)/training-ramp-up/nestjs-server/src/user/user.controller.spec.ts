@@ -2,11 +2,18 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { UserController } from './user.controller';
 import { User } from '../entity/user.entity';
 import { UserService } from './user.service';
+import { combineLatest } from 'rxjs';
 const jwt = require('jsonwebtoken');
 describe('UserController', () => {
   let controller: UserController;
   let userService: UserService;
-
+  const userData = [
+    {
+      name: 'test1',
+      email: 'test1@t.com',
+      password: 'testpw',
+    },
+  ];
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [UserController],
@@ -15,8 +22,28 @@ describe('UserController', () => {
         {
           provide: UserService,
           useValue: {
-            userRegister: jest.fn((x) => x),
-            loginUser: jest.fn((x) => x),
+            userRegister: jest.fn((x) => {
+              const index = userData
+                .map((object) => object.email)
+                .indexOf(x.email);
+              if (index == -1) {
+                userData.push(x);
+                return userData;
+              } else return null;
+            }),
+            loginUser: jest.fn((x) => {
+              if (x) {
+                const index = userData
+                  .map((object) => object.email)
+                  .indexOf(x.email);
+
+                if (index == -1) {
+                  return { user: null };
+                } else {
+                  return { user: userData[index] };
+                }
+              } else return null;
+            }),
           },
         },
       ],
@@ -34,85 +61,67 @@ describe('UserController', () => {
   });
   describe('user Register', () => {
     it('get user success controller', async () => {
-      const user = {
+      const user = [
+        {
+          name: 'test1',
+          email: 'test1@t.com',
+          password: 'testpw',
+        },
+        {
+          name: 'test',
+          email: 'test@t.com',
+          password: 'testpw',
+        },
+      ];
+      const req = {
         name: 'test',
         email: 'test@t.com',
         password: 'testpw',
-      } as any;
+      };
 
-      const res = await controller.signUp(user);
+      const res = await controller.signUp(req);
+
       expect(res).toStrictEqual(user);
     });
     it('get student fails controller', async () => {
-      const res = await controller.signUp(null);
-      expect(res).toStrictEqual(null);
-    });
-    it('get user success userService', async () => {
-      const user = {
+      const req = {
         name: 'test',
         email: 'test@t.com',
         password: 'testpw',
-      } as any;
-      const res = await userService.userRegister(user);
-      expect(res).toStrictEqual(user);
-    });
-    it('get user success userService', async () => {
-      const user = {
-        name: 'test',
-        email: 'test@t.com',
-        password: 'testpw',
-      } as any;
-      const res = await userService.userRegister(null);
+      };
+      const res = await controller.signUp(req);
       expect(res).toStrictEqual(null);
     });
   });
   describe('Login', () => {
     it(' log user service success', async () => {
-      const user = {
+      const req = {
         query: {
-          email: 'test@gmail.com',
+          email: 'test@t.com',
           password: 'password',
         },
       } as never;
 
-      const res = await userService.loginUser(user);
-      expect(res).toEqual(user);
-    });
-
-    it('log user service  error', async () => {
-      const res = await userService.loginUser(null);
-      expect(res).toStrictEqual(null);
-    });
-    it('log user  controller success', async () => {
       const user = {
-        query: {
-          name: 'test',
-          email: 'test@t.com',
-          password: 'testpw',
-        },
-      } as any;
-      const userDetails = {
-        user: {
-          name: 'test',
-          email: 'test@t.com',
-          password: 'testpw',
-        },
-      } as any;
-      const resUser = {
-        email: 'test@t.com',
         name: 'test',
+        email: 'test@t.com',
         password: 'testpw',
       };
-      // await userService.loginUser(userDetails);
-      jest.spyOn(userService, 'loginUser').mockResolvedValue(userDetails);
-      jest.spyOn(jwt, 'sign').mockResolvedValue(user);
-      const res = await controller.signIn(user);
-      await expect(res.email).toBe(resUser.email);
-    });
 
-    it('log user controller fail', async () => {
-      const res = await controller.signIn(null);
-      expect(res).toStrictEqual(undefined);
+      const res = await controller.signIn(req);
+      console.log('RES', res);
+      expect(res).toEqual(user);
+    });
+    it('user login fail', async () => {
+      const req = {
+        query: {
+          email: 'fake@g.com',
+          password: '123',
+        },
+      };
+
+      const res = await controller.signIn(req);
+      expect(res).toEqual(undefined);
     });
   });
 });

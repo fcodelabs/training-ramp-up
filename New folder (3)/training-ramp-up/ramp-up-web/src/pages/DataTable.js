@@ -14,6 +14,7 @@ import DropDownCell from "../components/DropDownCell";
 import io from "socket.io-client";
 const socket = io.connect("http://localhost:8080");
 import studentSlice from "./slice/studentSlice";
+
 const DataTable = () => {
   const [data, setData] = useState([]);
   const [admin, setAdmin] = useState(false);
@@ -24,8 +25,12 @@ const DataTable = () => {
   const token = useSelector((state) => state.token);
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    var decoded = jwt_decode(token);
+    const tokenData = localStorage.getItem("token");
+    console.log("TOken Data", tokenData);
+    var decoded = jwt_decode(tokenData);
+    if (tokenData == null) {
+      navigate("/");
+    }
     if (decoded.role == "Admin") {
       setAdmin(true);
     }

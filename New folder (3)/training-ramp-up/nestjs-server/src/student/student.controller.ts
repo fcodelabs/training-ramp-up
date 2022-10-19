@@ -42,11 +42,10 @@ export class StudentController {
   @Put('/:id')
   async updateStudent(@Req() req, @Res() res) {
     const student = req.body;
-
     try {
       const user = await this.studentService.updateOne(student);
 
-      if (!user) return res.json('Error Update Student').status(400);
+      if (!user) return res.json('Error Update Student');
       res.send({ user: user });
       return user;
     } catch (error) {

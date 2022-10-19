@@ -31,14 +31,13 @@ export class StudentService {
   }
 
   async updateOne(data) {
-    console.log('Update', data);
     try {
       const student = await this.studentRepository.findOne({
         where: { id: parseInt(data.id) },
       });
 
-      this.studentRepository.merge(student, data);
-      const result = await this.studentRepository.save(student);
+      const res = this.studentRepository.merge(student, data);
+      const result = await this.studentRepository.save(res);
       if (!result) {
         return {
           error: 'student update fail',
