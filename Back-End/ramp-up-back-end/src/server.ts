@@ -4,6 +4,7 @@ import { Request, Response, NextFunction } from "express";
 import { AppDataSource } from "./dataSource";
 import { ErrorInterface } from "./interfaces/servertypes";
 import studentRoutes from "./routes/studentRoutes";
+import userRoutes from "./routes/userRoutes";
 import bodyParser from "body-parser";
 import cors from "cors";
 
@@ -32,6 +33,7 @@ app.use(
 app.use(cors());
 
 app.use("/student", studentRoutes);
+app.use("/user", userRoutes);
 
 const io = new Server(httpServer, {
   cors: {
