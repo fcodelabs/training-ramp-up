@@ -11,25 +11,25 @@ import { io } from "socket.io-client";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import studentSlice from "../redux/slice/studentSlice";
+import  Dropdown  from "../Components/Dropdown";
 
 const socket = io("http://localhost:8080");
 const editField = "inEdit";
 
 const HomePage = () => {
   const [data, setData] = useState([]);
-  const[admin,setAdmin] = useState(false)
+  const [admin, setAdmin] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const students = useSelector((state) => state.students.students);
   const studentList = students.data;
 
-useEffect(()=>{
- if( localStorage.getItem("role") ==="Admin"){
-  setAdmin(true)
- }
-  
-},[])
+  useEffect(() => {
+    if (localStorage.getItem("role") === "Admin") {
+      setAdmin(true);
+    }
+  }, []);
 
   useEffect(() => {
     setData(studentList);
@@ -139,9 +139,9 @@ useEffect(()=>{
 
   const logout = () => {
     navigate("/");
-    localStorage.removeItem("role")
-    localStorage.removeItem("token")
-    localStorage.removeItem("email")
+    localStorage.removeItem("role");
+    localStorage.removeItem("token");
+    localStorage.removeItem("email");
   };
 
   return (
@@ -154,19 +154,18 @@ useEffect(()=>{
       editField={editField}
     >
       <GridToolbar>
-        <> 
-        {admin ? (
-           <button
-           title="Add new"
-           className="k-button k-button-md k-rounded-md k-button-solid k-button-solid-primary"
-           onClick={addNew}
-         >
-           Add new
-         </button>
-        ):(
-          <div></div>
-        )}
-       
+        <>
+          {admin ? (
+            <button
+              title="Add new"
+              className="k-button k-button-md k-rounded-md k-button-solid k-button-solid-primary"
+              onClick={addNew}
+            >
+              Add new
+            </button>
+          ) : (
+            <div></div>
+          )}
         </>
         <button
           className="k-button k-button-md k-rounded-md k-button-solid k-button-solid-primary"
@@ -189,9 +188,9 @@ useEffect(()=>{
       </GridToolbar>
       <Column field="ID" title="ID" width="50px" editable={false} />
       <Column field="studentName" title="Student Name" width="200px" />
-      <Column field="gender" title="Gender" width="120px" />
+      <Column field="gender" title="Gender" width="120px" cell={Dropdown} />
       <Column field="address" title="Address" width="200px" />
-      <Column field="mobileNo" title="Mobile No" width="150px" />
+      <Column field="mobileNo" title="Mobile No" width="150px" editor = "numeric" />
       <Column
         field="dob"
         title="Date of Birth"

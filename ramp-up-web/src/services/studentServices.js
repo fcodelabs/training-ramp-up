@@ -22,7 +22,8 @@ export const insertStudent = async (student) => {
       if (
         student.dataItem.gender === "Male" ||
         student.dataItem.gender === "Female" ||
-        student.dataItem.gender === "Other"
+        student.dataItem.gender === "Others" ||
+        student.dataItem.gender === "Prefer not to say"
       ) {
         student.dataItem.age =
           new Date().getFullYear() -
