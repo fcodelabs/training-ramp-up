@@ -11,6 +11,13 @@ export const registerUserRules = () => {
   ];
 };
 
+export const loginUserRules = () => {
+  return [
+    body("email", "Enter Valid Email").notEmpty().isEmail(),
+    body("password", "Enter Valid Password").notEmpty().isLength({ min: 8 }),
+  ];
+};
+
 export const userValidation = (
   req: Request,
   res: Response,
