@@ -1,7 +1,9 @@
 import { NextFunction, Request, Response } from "express";
-import { createUserService, loginUserService } from "../services/userService";
-import jwt from "jsonwebtoken";
-import { config } from "../../utils/config";
+import {
+  createUserService,
+  loginUserService,
+  createToken,
+} from "../services/userService";
 
 export const registerUser = async (
   req: Request,
@@ -17,14 +19,23 @@ export const registerUser = async (
       password,
     });
 
+    if (user) {
+      const newToken = createToken(user);
+      res.cookie("accessToken", newToken.newAccessToken, {
+        maxAge: 60 * 60,
+        httpOnly: true,
+      });
+      res.cookie("refreshToken", newToken.newRefreshToken, {
+        maxAge: 60 * 60 * 24,
+        httpOnly: true,
+      });
+    }
+
     res.status(201).json({
       status: "success",
       data: {
         user,
       },
-      accessToken: jwt.sign({ Email: email }, config.jwt_secret_key, {
-        expiresIn: "5m",
-      }),
     });
   } catch (err: any) {
     if (err.code === "23505") {
@@ -50,12 +61,40 @@ export const loginUser = async (
       password,
     });
 
+    if (user) {
+      const newToken = createToken(user);
+      res.cookie("accessToken", newToken.newAccessToken, {
+        maxAge: 60 * 60,
+        httpOnly: true,
+      });
+      res.cookie("refreshToken", newToken.newRefreshToken, {
+        maxAge: 60 * 60 * 24,
+        httpOnly: true,
+      });
+    }
+
     res.status(200).json({
       status: "success",
       data: user,
-      accessToken: jwt.sign({ Email: email }, config.jwt_secret_key, {
-        expiresIn: "5m",
-      }),
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const logoutUser = (req: Request, res: Response, next: NextFunction) => {
+  try {
+    res.cookie("accessToken", "", {
+      maxAge: -1,
+      httpOnly: true,
+    });
+    res.cookie("refreshToken", "", {
+      maxAge: -1,
+      httpOnly: true,
+    });
+
+    res.status(200).json({
+      status: "success",
     });
   } catch (err) {
     next(err);

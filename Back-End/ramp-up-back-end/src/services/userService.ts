@@ -1,19 +1,16 @@
 import { User } from "../entities/userEntity";
 import { AppDataSource } from "../dataSource";
 import * as bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+import { config } from "../../utils/config";
+import {
+  CreateUserType,
+  DataStoredInToken,
+  LoginUserType,
+  TokenType,
+} from "./userServiceTypes";
 
 const userRepository = AppDataSource.getRepository(User);
-
-interface CreateUserType {
-  name: string;
-  email: string;
-  password: string;
-}
-
-interface LoginUserType {
-  email: string;
-  password: string;
-}
 
 export const createUserService = async (data: CreateUserType) => {
   try {
@@ -46,4 +43,17 @@ export const loginUserService = async (data: LoginUserType) => {
   } catch (err) {
     console.log(err);
   }
+};
+
+export const createToken = (user: User): TokenType => {
+  const secret = config.jwt_secret_key;
+  const dataStoredInToken: DataStoredInToken = {
+    email: user.email,
+  };
+  return {
+    newAccessToken: jwt.sign(dataStoredInToken, secret, { expiresIn: 60 * 60 }),
+    newRefreshToken: jwt.sign(dataStoredInToken, secret, {
+      expiresIn: 60 * 60 * 24,
+    }),
+  };
 };
