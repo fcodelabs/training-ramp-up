@@ -22,13 +22,16 @@ export const registerUser = async (
     if (user) {
       const newToken = createToken(user);
       res.cookie("accessToken", newToken.newAccessToken, {
-        maxAge: 60 * 60,
+        maxAge: 60 * 60 * 1000,
         httpOnly: true,
       });
       res.cookie("refreshToken", newToken.newRefreshToken, {
-        maxAge: 60 * 60 * 24,
+        maxAge: 60 * 60 * 24 * 1000,
         httpOnly: true,
       });
+
+      console.log("acctoken", newToken.newAccessToken);
+      console.log("refrhtoken", newToken.newRefreshToken);
     }
 
     res.status(201).json({
@@ -64,13 +67,15 @@ export const loginUser = async (
     if (user) {
       const newToken = createToken(user);
       res.cookie("accessToken", newToken.newAccessToken, {
-        maxAge: 60 * 60,
+        maxAge: 60 * 60 * 1000,
         httpOnly: true,
       });
       res.cookie("refreshToken", newToken.newRefreshToken, {
-        maxAge: 60 * 60 * 24,
+        maxAge: 60 * 60 * 24 * 1000,
         httpOnly: true,
       });
+      console.log("acctoken", newToken.newAccessToken);
+      console.log("refrhtoken", newToken.newRefreshToken);
     }
 
     res.status(200).json({
@@ -94,7 +99,7 @@ export const logoutUser = (req: Request, res: Response, next: NextFunction) => {
     });
 
     res.status(200).json({
-      status: "success",
+      status: "Successfully logged out",
     });
   } catch (err) {
     next(err);

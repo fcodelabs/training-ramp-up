@@ -11,16 +11,17 @@ import {
   updateStudentRules,
   addStudentRules,
 } from "../validation/studentValidation";
+import { authPermissions } from "../middlewares/auth";
 
 const router = express.Router();
 
 router
   .route("/")
-  .get(getAllStudents)
-  .post(addStudentRules(), studentValidation, addStudent);
+  .get(authPermissions, getAllStudents)
+  .post(addStudentRules(), studentValidation, authPermissions, addStudent);
 router
   .route("/:studentId")
-  .put(updateStudentRules(), studentValidation, updateStudent)
-  .delete(deleteStudent);
+  .put(authPermissions, updateStudentRules(), studentValidation, updateStudent)
+  .delete(authPermissions, deleteStudent);
 
 export default router;

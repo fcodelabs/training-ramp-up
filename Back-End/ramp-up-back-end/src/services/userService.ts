@@ -2,7 +2,7 @@ import { User } from "../entities/userEntity";
 import { AppDataSource } from "../dataSource";
 import * as bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import { config } from "../../utils/config";
+import { config } from "../utils/config";
 import {
   CreateUserType,
   DataStoredInToken,
@@ -49,11 +49,12 @@ export const createToken = (user: User): TokenType => {
   const secret = config.jwt_secret_key;
   const dataStoredInToken: DataStoredInToken = {
     email: user.email,
+    role: user.role,
   };
   return {
-    newAccessToken: jwt.sign(dataStoredInToken, secret, { expiresIn: 60 * 60 }),
+    newAccessToken: jwt.sign(dataStoredInToken, secret, { expiresIn: "1h" }),
     newRefreshToken: jwt.sign(dataStoredInToken, secret, {
-      expiresIn: 60 * 60 * 24,
+      expiresIn: "24h",
     }),
   };
 };

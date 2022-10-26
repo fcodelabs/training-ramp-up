@@ -1,4 +1,5 @@
 import express from "express";
+import { authorization } from "../middlewares/auth";
 import {
   registerUser,
   loginUser,
@@ -16,6 +17,6 @@ router
   .route("/register")
   .post(registerUserRules(), userValidation, registerUser);
 router.route("/login").post(loginUserRules(), userValidation, loginUser);
-router.route("/logout").post(logoutUser);
+router.route("/logout").get(authorization, logoutUser);
 
 export default router;

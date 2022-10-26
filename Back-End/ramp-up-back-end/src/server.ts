@@ -11,6 +11,8 @@ import cors from "cors";
 import { createServer } from "http";
 import { Server } from "socket.io";
 
+import cookieParser from "cookie-parser";
+
 const app = express();
 const httpServer = createServer(app);
 
@@ -29,6 +31,8 @@ app.use(
     extended: true,
   })
 );
+
+app.use(cookieParser());
 
 app.use(cors());
 

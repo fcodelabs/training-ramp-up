@@ -16,4 +16,5 @@ export interface TokenType {
 
 export interface DataStoredInToken {
   email: string;
+  role: string;
 }
