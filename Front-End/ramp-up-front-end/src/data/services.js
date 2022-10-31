@@ -33,7 +33,8 @@ export const insertStudent = async (student) => {
       data.unshift(student);
       const responseData = await axios.post(
         "http://localhost:8000/student",
-        student
+        student,
+        { withCredentials: true }
       );
       return responseData;
     }
@@ -41,7 +42,9 @@ export const insertStudent = async (student) => {
 };
 export const getStudent = async () => {
   try {
-    const response = await axios.get("http://localhost:8000/student");
+    const response = await axios.get("http://localhost:8000/student", {
+      withCredentials: true,
+    });
     console.log(response);
     return response.data;
   } catch (error) {
@@ -66,7 +69,8 @@ export const updateStudent = async (student) => {
   } else {
     const response = await axios.put(
       `http://localhost:8000/student/${student.id}`,
-      student
+      student,
+      { withCredentials: true }
     );
     return response;
   }
@@ -75,7 +79,8 @@ export const updateStudent = async (student) => {
 export const deleteStudent = (student) => {
   try {
     const response = axios.delete(
-      `http://localhost:8000/student/${student.id}`
+      `http://localhost:8000/student/${student.id}`,
+      { withCredentials: true }
     );
     return response;
   } catch (err) {

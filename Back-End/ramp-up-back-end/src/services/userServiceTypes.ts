@@ -12,6 +12,7 @@ export interface LoginUserType {
 export interface TokenType {
   newAccessToken: string;
   newRefreshToken: string;
+  dataStoredInToken: DataStoredInToken;
 }
 
 export interface DataStoredInToken {

@@ -4,6 +4,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import HomeRampUp from "./pages/HomeRampUp";
 import Login from "./pages/LoginPage";
 import Register from "./pages/RegisterPage";
+import PrivateRoutes from "./routes/privateRoutes";
 
 function App() {
   return (
@@ -12,7 +13,9 @@ function App() {
         <Routes>
           <Route path="/" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/homeRampUp" element={<HomeRampUp />} />
+          <Route element={<PrivateRoutes />}>
+            <Route path="/homeRampUp" element={<HomeRampUp />} />
+          </Route>
         </Routes>
       </BrowserRouter>
     </div>

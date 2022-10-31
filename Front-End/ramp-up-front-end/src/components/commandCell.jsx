@@ -2,7 +2,7 @@ import * as React from "react";
 import "../utils/commandCell.css";
 
 function CommandCell(prop) {
-  const { dataItem } = prop;
+  const { dataItem, role } = prop;
   const inEdit = dataItem[prop.editField];
   const isNewItem = dataItem.id === undefined;
   return inEdit ? (
@@ -11,6 +11,7 @@ function CommandCell(prop) {
         className="k-button k-button-md k-rounded-md k-button-solid k-button-solid-base k-grid-save-command"
         id="addBtn"
         onClick={() => (isNewItem ? prop.add(dataItem) : prop.update(dataItem))}
+        disabled={role === "admin" ? false : true}
       >
         {isNewItem ? "Add" : "Update"}
       </button>
@@ -19,6 +20,7 @@ function CommandCell(prop) {
         onClick={() =>
           isNewItem ? prop.discard(dataItem) : prop.cancel(dataItem)
         }
+        disabled={role === "admin" ? false : true}
       >
         {isNewItem ? "Discard Changes" : "Cancel"}
       </button>
@@ -29,6 +31,7 @@ function CommandCell(prop) {
         className="k-button k-button-md k-rounded-md k-button-solid k-button-solid-primary k-grid-edit-command"
         id="editBtn"
         onClick={() => prop.edit(dataItem)}
+        disabled={role === "admin" ? false : true}
       >
         Edit
       </button>
@@ -37,6 +40,7 @@ function CommandCell(prop) {
         onClick={() =>
           confirm("Confirm deleting: ", dataItem.name) && prop.remove(dataItem)
         }
+        disabled={role === "admin" ? false : true}
       >
         Remove
       </button>

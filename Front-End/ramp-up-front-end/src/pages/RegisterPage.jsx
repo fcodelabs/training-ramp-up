@@ -10,6 +10,9 @@ import { useNavigate } from "react-router-dom";
 
 import styled from "styled-components";
 
+import { useDispatch } from "react-redux";
+import { registerUserAction } from "../slice/userSlice";
+
 const RegisterBody = styled.div`
   background-image: linear-gradient(to bottom right, white, blue);
   min-height: 100vh;
@@ -80,6 +83,9 @@ const RegisterErrMsg = styled.span`
 `;
 
 function Register() {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const initialValues = {
     name: "",
     email: "",
@@ -96,17 +102,19 @@ function Register() {
       .matches(/[a-z]/, "Password Requires a Lowercase Letter")
       .matches(/[A-Z]/, "Password Rquires an Uppercase Letter"),
   });
-  const onSubmit = (e) => {
-    const name = e.name;
-    const email = e.email;
-    const password = e.password;
+  const onSubmit = (data) => {
+    const name = data.name;
+    const email = data.email.toLowerCase();
+    const password = data.password;
 
     console.log("Name ", name);
     console.log("Email ", email);
     console.log("Password ", password);
+
+    dispatch(registerUserAction({ name, email, password, navigate }));
   };
 
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   const navigateToLogin = () => {
     navigate("/");
@@ -168,6 +176,7 @@ function Register() {
                 id="password"
                 name="password"
                 label="Password"
+                type="password"
                 variant="filled"
                 size="small"
                 helperText={

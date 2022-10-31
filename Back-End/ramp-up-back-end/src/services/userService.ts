@@ -56,5 +56,6 @@ export const createToken = (user: User): TokenType => {
     newRefreshToken: jwt.sign(dataStoredInToken, secret, {
       expiresIn: "24h",
     }),
+    dataStoredInToken,
   };
 };

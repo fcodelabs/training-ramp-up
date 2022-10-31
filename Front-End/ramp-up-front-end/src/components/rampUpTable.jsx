@@ -23,6 +23,8 @@ import {
 } from "../slice/studentSlice";
 
 import { io } from "socket.io-client";
+import { selectUser } from "../slice/userSlice";
+
 const socket = io("http://localhost:8000/", {
   transports: ["websocket"],
 });
@@ -31,8 +33,15 @@ const editField = "inEdit";
 
 function RampUpTable() {
   const [data, setData] = useState([]);
+  const [userData, setUserData] = useState("");
   const dispatch = useDispatch();
   const students = useSelector(selectStudent);
+  const user = useSelector(selectUser);
+
+  const userDetails = user;
+  useEffect(() => {
+    setUserData(userDetails);
+  }, [userDetails]);
 
   useEffect(() => {
     dispatch(getStudentAction());
@@ -139,6 +148,8 @@ function RampUpTable() {
       remove={remove}
       cancel={cancel}
       edit={enterEdit}
+      role={userData.role}
+      email={userData.email}
     />
   );
   return (
@@ -156,6 +167,7 @@ function RampUpTable() {
           title="Add new"
           className="k-button k-button-md k-rounded-md k-button-solid k-button-solid-primary"
           onClick={addNew}
+          disabled={userData.role === "admin" ? false : true}
         >
           Add new
         </button>

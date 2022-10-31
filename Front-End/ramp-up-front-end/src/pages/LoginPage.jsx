@@ -11,6 +11,9 @@ import styled from "styled-components";
 
 import { useNavigate } from "react-router-dom";
 
+import { useDispatch } from "react-redux";
+import { loginUserAction } from "../slice/userSlice";
+
 const LoginBody = styled.div`
   background-image: linear-gradient(to bottom right, white, blue);
   min-height: 100vh;
@@ -80,6 +83,9 @@ const LogErrMsg = styled.span`
 `;
 
 function Login() {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const initialValues = {
     email: "",
     password: "",
@@ -88,19 +94,20 @@ function Login() {
     email: yup.string().email("Please Enter Valid Email").required("Required"),
     password: yup.string().required("Required"),
   });
-  const onSubmit = (e) => {
-    const email = e.email;
-    const password = e.password;
+  const onSubmit = (data) => {
+    const email = data.email.toLowerCase();
+    const password = data.password;
 
     console.log("Email ", email);
     console.log("Password ", password);
-  };
 
-  const navigate = useNavigate();
+    dispatch(loginUserAction({ email, password, navigate }));
+  };
 
   const navigateToRegister = () => {
     navigate("/register");
   };
+
   return (
     <LoginBody>
       <Title>
@@ -136,11 +143,13 @@ function Login() {
                   />
                 }
               />
-              <TextField
+              <Field
+                as={TextField}
                 id="password"
                 name="password"
                 label="Password"
                 variant="filled"
+                type="password"
                 helperText={
                   <ErrorMessage
                     name="password"

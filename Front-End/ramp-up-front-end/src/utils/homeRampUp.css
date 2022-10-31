@@ -5,7 +5,7 @@
   border: 1px solid black;
 }
 .RampUpHeader {
-  height: 150px;
+  height: 170px;
   width: 100%;
   border: 1px solid black;
   text-align: center;
@@ -18,4 +18,20 @@
   height: fit-content;
   width: 100%;
   border: 1px solid black;
+}
+
+.logout {
+  float: right;
+  margin-right: 30px;
+  margin-top: -10px;
+}
+
+#logoutBtn {
+  background-color: red;
+}
+
+.userName {
+  float: left;
+  margin-left: 20px;
+  margin-top: -10px;
 }
