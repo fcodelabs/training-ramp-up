@@ -20,7 +20,7 @@ export const createUserService = async (data: CreateUserType) => {
     user.password = data.password;
     return await userRepository.save(user);
   } catch (err) {
-    console.log(err);
+    return { err: "Registration Failed" };
   }
 };
 
@@ -41,7 +41,7 @@ export const loginUserService = async (data: LoginUserType) => {
       }
     }
   } catch (err) {
-    console.log(err);
+    return { err: "Login Failed" };
   }
 };
 

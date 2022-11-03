@@ -1,15 +1,11 @@
-import { NextFunction, Request, Response } from "express";
+import { Request, Response } from "express";
 import {
   createUserService,
   loginUserService,
   createToken,
 } from "../services/userService";
 
-export const registerUser = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+export const registerUser = async (req: Request, res: Response) => {
   try {
     const { name, password, email } = req.body;
 
@@ -20,40 +16,35 @@ export const registerUser = async (
     });
 
     if (user) {
-      const newToken = createToken(user);
-      res.cookie("accessToken", newToken.newAccessToken, {
-        maxAge: 60 * 60 * 1000,
-        httpOnly: true,
-      });
-      res.cookie("refreshToken", newToken.newRefreshToken, {
-        maxAge: 60 * 60 * 24 * 1000,
-        httpOnly: true,
-      });
-      res.cookie("logedUser", newToken.dataStoredInToken, {
-        maxAge: 60 * 60 * 1000,
-      });
+      if (!("err" in user)) {
+        const newToken = createToken(user);
+        res.cookie("accessToken", newToken.newAccessToken, {
+          maxAge: 60 * 60 * 1000,
+          httpOnly: true,
+        });
+        res.cookie("refreshToken", newToken.newRefreshToken, {
+          maxAge: 60 * 60 * 24 * 1000,
+          httpOnly: true,
+        });
+        res.cookie("logedUser", newToken.dataStoredInToken, {
+          maxAge: 60 * 60 * 1000,
+        });
 
-      console.log("acctoken", newToken.newAccessToken);
-      console.log("refrhtoken", newToken.newRefreshToken);
+        console.log("acctoken", newToken.newAccessToken);
+        console.log("refrhtoken", newToken.newRefreshToken);
 
-      return res.status(200).send(user);
+        res.status(200);
+        res.json(user);
+        return;
+      }
     }
-  } catch (err: any) {
-    if (err.code === "23505") {
-      return res.status(409).json({
-        status: "fail",
-        message: "User with that email already exist",
-      });
-    }
-    next(err);
+  } catch (err) {
+    console.log("Register User Error", err);
+    res.status(400);
   }
 };
 
-export const loginUser = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+export const loginUser = async (req: Request, res: Response) => {
   try {
     const { password, email } = req.body;
 
@@ -63,30 +54,35 @@ export const loginUser = async (
     });
 
     if (user) {
-      const newToken = createToken(user);
-      res.cookie("accessToken", newToken.newAccessToken, {
-        maxAge: 60 * 60 * 1000,
-        httpOnly: true,
-      });
-      res.cookie("refreshToken", newToken.newRefreshToken, {
-        maxAge: 60 * 60 * 24 * 1000,
-        httpOnly: true,
-      });
-      res.cookie("logedUser", newToken.dataStoredInToken, {
-        maxAge: 60 * 60 * 1000,
-      });
+      if (!("err" in user)) {
+        const newToken = createToken(user);
+        res.cookie("accessToken", newToken.newAccessToken, {
+          maxAge: 60 * 60 * 1000,
+          httpOnly: true,
+        });
+        res.cookie("refreshToken", newToken.newRefreshToken, {
+          maxAge: 60 * 60 * 24 * 1000,
+          httpOnly: true,
+        });
+        res.cookie("logedUser", newToken.dataStoredInToken, {
+          maxAge: 60 * 60 * 1000,
+        });
 
-      console.log("acctoken", newToken.newAccessToken);
-      console.log("refrhtoken", newToken.newRefreshToken);
+        console.log("acctoken", newToken.newAccessToken);
+        console.log("refrhtoken", newToken.newRefreshToken);
 
-      res.status(200).send(user);
+        res.status(200);
+        res.json(user);
+        return;
+      }
     }
   } catch (err) {
-    next(err);
+    console.log("Login User Error", err);
+    res.status(400);
   }
 };
 
-export const logoutUser = (req: Request, res: Response, next: NextFunction) => {
+export const logoutUser = (req: Request, res: Response) => {
   try {
     res.cookie("accessToken", "", {
       maxAge: -1,
@@ -103,6 +99,7 @@ export const logoutUser = (req: Request, res: Response, next: NextFunction) => {
       status: "Successfully logged out",
     });
   } catch (err) {
-    next(err);
+    console.log("Logout User Error ", err);
+    res.status(400);
   }
 };
