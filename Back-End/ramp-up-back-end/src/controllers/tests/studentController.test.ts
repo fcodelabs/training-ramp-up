@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import { DeleteResult } from "typeorm";
 import { Student } from "../../entities/studentEntity";
 import * as studentServices from "../../services/studentService";
 import {
@@ -7,6 +8,7 @@ import {
   getAllStudents,
   updateStudent,
 } from "../studentController";
+import { GetStudentType } from "./studentControllerTypes";
 
 const mockResponse = () => {
   const res = {} as Response;
@@ -29,7 +31,7 @@ describe("Student Controller", () => {
           age: 23,
         },
       ],
-    } as any;
+    } as GetStudentType;
 
     const req = {} as Request;
 
@@ -56,11 +58,14 @@ describe("Student Controller", () => {
   });
 
   describe("Delete Student", () => {
-    const id = 1 as any;
+    const deleteOne = {
+      raw: [],
+      affected: 1,
+    } as DeleteResult;
 
     const req = {
       params: {
-        studentId: 1,
+        studentId: "1",
       },
     } as any;
 
@@ -69,7 +74,7 @@ describe("Student Controller", () => {
     test("Delete Student Success", async () => {
       const spyDeleteStudent = jest
         .spyOn(studentServices, "deleteStudentService")
-        .mockResolvedValue(id);
+        .mockResolvedValue(deleteOne);
       await deleteStudent(req, res);
       expect(res.status).toHaveBeenCalledWith(200);
       spyDeleteStudent.mockRestore();
@@ -151,13 +156,14 @@ describe("Student Controller", () => {
 
     const req = {
       params: {
-        studentId: 1,
+        studentId: "1",
       },
       body: {
+        id: 1,
         name: "newName1",
         gender: "Female",
         address: "newAddress1",
-        mobile: "112463256",
+        mobile: 112463256,
         birthday: "1999-10-10",
         age: 23,
       },

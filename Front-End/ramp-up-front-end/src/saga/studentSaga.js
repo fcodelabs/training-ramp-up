@@ -27,6 +27,8 @@ function* addStudentGenerator({ payload }) {
     }
   } catch (err) {
     console.log(err);
+    alert("Your Session is Expired");
+    payload.navigate("/");
   }
 }
 
@@ -48,6 +50,8 @@ function* updateStudentGenerator({ payload }) {
     }
   } catch (err) {
     console.log(err);
+    alert("Your Session is Expired");
+    payload.navigate("/");
   }
 }
 
@@ -60,6 +64,8 @@ function* deleteStudentGenerator({ payload }) {
     }
   } catch (err) {
     console.log(err);
+    alert("Your Session is Expired");
+    payload.navigate("/");
   }
 }
 

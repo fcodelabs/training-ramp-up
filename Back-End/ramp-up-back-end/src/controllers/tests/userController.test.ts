@@ -96,20 +96,12 @@ describe("User Controller", () => {
   describe("Logout User", () => {
     const req = {} as Request;
 
-    const res = {
-      status: jest.fn((x) => x),
-      cookie: jest.fn((x) => x),
-    } as unknown as Response;
+    const res = mockResponse();
 
     test("Logout User Success", () => {
       logoutUser(req, res);
       expect(res.status).toHaveBeenCalledWith(200);
       expect(res.cookie).toHaveBeenCalledTimes(3);
-    });
-
-    test("Logout User Fail", () => {
-      logoutUser(req, res);
-      expect(res.status).toHaveBeenCalledWith(400);
     });
   });
 });

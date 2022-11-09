@@ -56,6 +56,9 @@ function* logoutUserGenerator({ payload }) {
     const response = yield call(logoutUserService);
     if (response) {
       payload.navigate("/");
+    } else {
+      alert("Your Session is Expired");
+      payload.navigate("/");
     }
   } catch (err) {
     console.log(err);

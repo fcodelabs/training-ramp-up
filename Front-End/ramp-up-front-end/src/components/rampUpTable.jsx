@@ -24,6 +24,7 @@ import {
 
 import { io } from "socket.io-client";
 import { selectUser } from "../slice/userSlice";
+import { useNavigate } from "react-router-dom";
 
 const socket = io("http://localhost:8000/", {
   transports: ["websocket"],
@@ -37,6 +38,7 @@ function RampUpTable() {
   const dispatch = useDispatch();
   const students = useSelector(selectStudent);
   const user = useSelector(selectUser);
+  const navigate = useNavigate();
 
   const userDetails = user;
   useEffect(() => {
@@ -85,16 +87,16 @@ function RampUpTable() {
 
   const add = (dataItem) => {
     dataItem.inEdit = true;
-    dispatch(addStudentAction(dataItem));
+    dispatch(addStudentAction({ dataItem, navigate }));
   };
 
   const update = (dataItem) => {
     dataItem.inEdit = true;
-    dispatch(updateStudentAction(dataItem));
+    dispatch(updateStudentAction({ dataItem, navigate }));
   };
 
   const remove = (dataItem) => {
-    dispatch(deleteStudentAction(dataItem));
+    dispatch(deleteStudentAction({ dataItem, navigate }));
   };
 
   const discard = () => {

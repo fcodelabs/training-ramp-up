@@ -6,34 +6,35 @@ let data = [];
 const current = new Date();
 
 export const insertStudent = async (student) => {
-  console.log(student.birthday);
-  if (!student.name) {
+  console.log(student.dataItem.birthday);
+  if (!student.dataItem.name) {
     alert("Name Required");
-  } else if (!student.gender) {
+  } else if (!student.dataItem.gender) {
     alert("Gender Required");
-  } else if (student.gender === "") {
+  } else if (student.dataItem.gender === "") {
     alert("Gender is wrong");
-  } else if (!student.address) {
+  } else if (!student.dataItem.address) {
     alert("Address Required");
   } else if (
-    !student.mobile ||
-    isNaN(student.mobile) ||
-    student.mobile.length !== 10
+    !student.dataItem.mobile ||
+    isNaN(student.dataItem.mobile) ||
+    student.dataItem.mobile.length !== 10
   ) {
     alert("Please Enter valid Mobile Number");
-  } else if (!student.birthday) {
+  } else if (!student.dataItem.birthday) {
     alert("Date of Birth Required");
   } else {
-    const studentAge = current.getFullYear() - student.birthday.getFullYear();
-    student.age = studentAge;
+    const studentAge =
+      current.getFullYear() - student.dataItem.birthday.getFullYear();
+    student.dataItem.age = studentAge;
     if (studentAge <= 0) {
       alert("Please Enter Correct Date of Birth");
     } else {
-      student.inEdit = false;
-      data.unshift(student);
+      student.dataItem.inEdit = false;
+      data.unshift(student.dataItem);
       const responseData = await axios.post(
         "http://localhost:8000/student",
-        student,
+        student.dataItem,
         { withCredentials: true }
       );
       return responseData;
@@ -54,22 +55,22 @@ export const getStudent = async () => {
 
 export const updateStudent = async (student) => {
   const studentAge =
-    current.getFullYear() - new Date(student.birthday).getFullYear();
+    current.getFullYear() - new Date(student.dataItem.birthday).getFullYear();
 
-  if (student.id === "") {
+  if (student.dataItem.id === "") {
     alert("Name cannot be Null");
-  } else if (student.gender === "") {
+  } else if (student.dataItem.gender === "") {
     alert("Gender is Wrong");
-  } else if (student.address === "") {
+  } else if (student.dataItem.address === "") {
     alert("Address cannot be Null");
-  } else if (isNaN(student.mobile)) {
+  } else if (isNaN(student.dataItem.mobile)) {
     alert("Mobile Number is Wrong");
   } else if (studentAge <= 0) {
     alert("Enter valid Date of Birth");
   } else {
     const response = await axios.put(
-      `http://localhost:8000/student/${student.id}`,
-      student,
+      `http://localhost:8000/student/${student.dataItem.id}`,
+      student.dataItem,
       { withCredentials: true }
     );
     return response;
@@ -77,9 +78,10 @@ export const updateStudent = async (student) => {
 };
 
 export const deleteStudent = (student) => {
+  console.log("ssss", student);
   try {
     const response = axios.delete(
-      `http://localhost:8000/student/${student.id}`,
+      `http://localhost:8000/student/${student.dataItem.id}`,
       { withCredentials: true }
     );
     return response;
