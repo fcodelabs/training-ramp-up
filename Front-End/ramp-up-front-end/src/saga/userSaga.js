@@ -33,6 +33,7 @@ function* registerUserGenerator({ payload }) {
     }
   } catch (err) {
     console.log(err);
+    alert("Registration Failed! Please Enter Valid Details");
   }
 }
 
