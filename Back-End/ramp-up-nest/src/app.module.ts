@@ -5,12 +5,15 @@ import { AppService } from './app.service';
 import { Student } from './entities/student.entity';
 import * as dotenv from 'dotenv';
 import { StudentModule } from './student/student.module';
+import { UserModule } from './user/user.module';
+import { User } from './entities/user.entity';
 
 dotenv.config();
 
 @Module({
   imports: [
     StudentModule,
+    UserModule,
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: process.env.DB_HOST,
@@ -18,7 +21,7 @@ dotenv.config();
       username: process.env.DB_USER,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_DATABASE,
-      entities: [Student],
+      entities: [Student, User],
       synchronize: true,
     }),
   ],
