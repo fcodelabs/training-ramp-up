@@ -4,11 +4,13 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { Student } from './entities/student.entity';
 import * as dotenv from 'dotenv';
+import { StudentModule } from './student/student.module';
 
 dotenv.config();
 
 @Module({
   imports: [
+    StudentModule,
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: process.env.DB_HOST,
