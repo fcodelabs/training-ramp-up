@@ -1,5 +1,5 @@
-import { Body, Controller, Post, Res } from '@nestjs/common';
-import { Response } from 'express';
+import { Body, Controller, Get, Post, Req, Res } from '@nestjs/common';
+import { Request, Response } from 'express';
 import { LoginUserDto, RegisterUserDto } from '../dto/user.dto';
 import { UserService } from './user.service';
 
@@ -17,9 +17,23 @@ export class UserController {
         email: email.toLowerCase(),
         password,
       });
-      res.status(200);
-      res.json(user);
-      return;
+
+      if (user) {
+        const newToken = this.userService.createToken(user);
+        res.cookie('accessToken', newToken.newAccessToken, {
+          maxAge: 60 * 60 * 1000,
+          httpOnly: true,
+        });
+        res.cookie('refreshToken', newToken.newAccessToken, {
+          maxAge: 60 * 60 * 24 * 1000,
+          httpOnly: true,
+        });
+        res.cookie('LogedUser', newToken.tokenData, { maxAge: 60 * 60 * 1000 });
+
+        res.status(200);
+        res.json(user);
+        return;
+      }
     } catch (err) {
       res.status(400);
     }
@@ -34,9 +48,67 @@ export class UserController {
         email: email.toLowerCase(),
         password,
       });
+      if (user) {
+        const newToken = this.userService.createToken(user);
+        res.cookie('accessToken', newToken.newAccessToken, {
+          maxAge: 60 * 60 * 1000,
+          httpOnly: true,
+        });
+        res.cookie('refreshToken', newToken.newAccessToken, {
+          maxAge: 60 * 60 * 24 * 1000,
+          httpOnly: true,
+        });
+        res.cookie('LogedUser', newToken.tokenData, { maxAge: 60 * 60 * 1000 });
+
+        res.status(200);
+        res.json(user);
+
+        return;
+      }
+    } catch (err) {
+      res.status(400);
+    }
+  }
+
+  @Get('/logout')
+  logoutUser(@Res() res: Response) {
+    try {
+      res.cookie('accessToken', '', {
+        maxAge: -1,
+        httpOnly: true,
+      });
+      res.cookie('refreshToken', '', {
+        maxAge: -1,
+        httpOnly: true,
+      });
+      res.cookie('LogedUser', '', { maxAge: -1 });
       res.status(200);
-      res.json(user);
-      return;
+      res.json({ msg: 'Successfully logged out' });
+    } catch (err) {
+      res.status(400);
+    }
+  }
+
+  @Post('/refresh')
+  async refreshUser(@Req() req: Request, @Res() res: Response) {
+    try {
+      const refToken = req.cookies.refreshToken;
+      const userData = req.body;
+      const userToken = await this.userService.refreshService(
+        refToken,
+        userData,
+      );
+      if (userToken) {
+        res.cookie('accessToken', userToken.newAccessToken, {
+          maxAge: 60 * 60 * 1000,
+          httpOnly: true,
+        });
+        res.cookie('LogedUser', userToken.tokenData, {
+          maxAge: 60 * 60 * 1000,
+        });
+        res.status(200);
+        res.json(userToken);
+      }
     } catch (err) {
       res.status(400);
     }

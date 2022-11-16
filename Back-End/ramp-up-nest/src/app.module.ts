@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, RequestMethod } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -7,6 +7,7 @@ import * as dotenv from 'dotenv';
 import { StudentModule } from './student/student.module';
 import { UserModule } from './user/user.module';
 import { User } from './entities/user.entity';
+import { VerifyLogout } from './middleware/loggedUser.middleware';
 
 dotenv.config();
 
@@ -28,4 +29,10 @@ dotenv.config();
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule {
+  configure(logoutConsumer: MiddlewareConsumer) {
+    logoutConsumer
+      .apply(VerifyLogout)
+      .forRoutes({ path: 'user/logout', method: RequestMethod.GET });
+  }
+}

@@ -1,10 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { LoginUserDto, RegisterUserDto } from '../dto/user.dto';
-import { User } from 'src/entities/user.entity';
+import { User } from '../entities/user.entity';
 import { Repository } from 'typeorm';
 import { UserInterface } from './user.interface';
 import * as bcrypt from 'bcrypt';
+import { config } from '../utils/config';
+import * as jwt from 'jsonwebtoken';
 
 @Injectable()
 export class UserService {
@@ -41,6 +43,53 @@ export class UserService {
           console.log('Password Not Match');
         } else {
           return findUser;
+        }
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  createToken(user: UserInterface) {
+    try {
+      const secret = config.jwt_secret_key;
+      const tokenData = {
+        email: user.email,
+        role: user.role,
+      };
+      return {
+        newAccessToken: jwt.sign(tokenData, secret, { expiresIn: '1h' }),
+        newRefreshToken: jwt.sign(tokenData, secret, { expiresIn: '24h' }),
+        tokenData,
+      };
+    } catch (err) {
+      console.log(err);
+    }
+  }
+  async refreshService(refreshToken, user: UserInterface) {
+    try {
+      const findUser = await this.userRepository.findOneBy({
+        email: user.email,
+      });
+      if (!findUser) {
+        console.log('Unauthorized');
+      } else {
+        const verifyRefToken = jwt.verify(refreshToken, config.jwt_secret_key);
+        if (!verifyRefToken) {
+          console.log('Unauthorized');
+        } else {
+          const secret = config.jwt_secret_key;
+          const tokenData = {
+            email: findUser.email,
+            role: findUser.role,
+          };
+          const newAccessToken = jwt.sign(tokenData, secret, {
+            expiresIn: '1h',
+          });
+          return {
+            newAccessToken,
+            tokenData,
+          };
         }
       }
     } catch (err) {

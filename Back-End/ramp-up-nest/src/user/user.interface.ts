@@ -7,3 +7,14 @@ export interface UserInterface {
   createdAt: Date;
   updatedAt: Date;
 }
+
+export interface TokenType {
+  newAccessToken: string;
+  newRefreshToken: string;
+  tokenData: TokenData;
+}
+
+export interface TokenData {
+  email: string;
+  role: string;
+}
