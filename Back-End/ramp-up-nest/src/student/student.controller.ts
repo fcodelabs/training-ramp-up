@@ -9,7 +9,7 @@ import {
   Res,
 } from '@nestjs/common';
 import { Request, Response } from 'express';
-import { StudentDto } from '../dto/student.dto';
+import { StudentAddDto, StudentUpdateDto } from '../dto/student.dto';
 import { StudentInterface } from './student.interface';
 import { StudentService } from './student.service';
 
@@ -18,7 +18,7 @@ export class StudentController {
   constructor(private studentService: StudentService) {}
 
   @Post()
-  async addStudent(@Body() newStudent: StudentDto, @Res() res: Response) {
+  async addStudent(@Body() newStudent: StudentAddDto, @Res() res: Response) {
     try {
       const student = await this.studentService.createStudentService(
         newStudent,
@@ -46,12 +46,14 @@ export class StudentController {
 
   @Put('/:studentId')
   async updateStudent(
-    @Body() studentData: StudentDto,
+    @Body() studentData: StudentUpdateDto,
     @Req() req: Request,
     @Res() res: Response,
   ) {
+    console.log({ req });
     try {
       const studentId = parseInt(req.params.studentId);
+      console.log('Sid', studentId);
       const result = await this.studentService.updateStudentService(
         studentData,
         studentId,

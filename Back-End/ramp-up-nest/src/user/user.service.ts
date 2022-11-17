@@ -66,31 +66,30 @@ export class UserService {
       console.log(err);
     }
   }
-  async refreshService(refreshToken, user: UserInterface) {
+  async refreshService(refreshToken) {
     try {
-      const findUser = await this.userRepository.findOneBy({
-        email: user.email,
-      });
-      if (!findUser) {
+      const verifyRefToken = jwt.verify(refreshToken, config.jwt_secret_key);
+      if (!verifyRefToken) {
         console.log('Unauthorized');
       } else {
-        const verifyRefToken = jwt.verify(refreshToken, config.jwt_secret_key);
-        if (!verifyRefToken) {
-          console.log('Unauthorized');
-        } else {
-          const secret = config.jwt_secret_key;
-          const tokenData = {
-            email: findUser.email,
-            role: findUser.role,
-          };
-          const newAccessToken = jwt.sign(tokenData, secret, {
-            expiresIn: '1h',
-          });
-          return {
-            newAccessToken,
-            tokenData,
-          };
-        }
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        //@ts-ignore
+        const userEmail = verifyRefToken.email;
+        const findUser = await this.userRepository.findOneBy({
+          email: userEmail,
+        });
+        const secret = config.jwt_secret_key;
+        const tokenData = {
+          email: findUser.email,
+          role: findUser.role,
+        };
+        const newAccessToken = jwt.sign(tokenData, secret, {
+          expiresIn: '1h',
+        });
+        return {
+          newAccessToken,
+          tokenData,
+        };
       }
     } catch (err) {
       console.log(err);

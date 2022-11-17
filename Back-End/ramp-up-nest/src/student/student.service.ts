@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { StudentDto } from '../dto/student.dto';
+import { StudentAddDto, StudentUpdateDto } from '../dto/student.dto';
 import { Repository } from 'typeorm';
 import { Student } from '../entities/student.entity';
 import { StudentInterface } from './student.interface';
@@ -12,7 +12,7 @@ export class StudentService {
     private studentRepository: Repository<StudentInterface>,
   ) {}
 
-  async createStudentService(newStudent: StudentDto) {
+  async createStudentService(newStudent: StudentAddDto) {
     try {
       const student = await this.studentRepository.save(newStudent);
       return student;
@@ -30,7 +30,7 @@ export class StudentService {
     }
   }
 
-  async updateStudentService(studentData: StudentDto, studentId: number) {
+  async updateStudentService(studentData: StudentUpdateDto, studentId: number) {
     try {
       const student = await this.studentRepository.findOneBy({ id: studentId });
       console.log('id ', student);

@@ -28,7 +28,7 @@ export class UserController {
           maxAge: 60 * 60 * 24 * 1000,
           httpOnly: true,
         });
-        res.cookie('LogedUser', newToken.tokenData, { maxAge: 60 * 60 * 1000 });
+        res.cookie('logedUser', newToken.tokenData, { maxAge: 60 * 60 * 1000 });
 
         res.status(200);
         res.json(user);
@@ -58,7 +58,7 @@ export class UserController {
           maxAge: 60 * 60 * 24 * 1000,
           httpOnly: true,
         });
-        res.cookie('LogedUser', newToken.tokenData, { maxAge: 60 * 60 * 1000 });
+        res.cookie('logedUser', newToken.tokenData, { maxAge: 60 * 60 * 1000 });
 
         res.status(200);
         res.json(user);
@@ -81,7 +81,7 @@ export class UserController {
         maxAge: -1,
         httpOnly: true,
       });
-      res.cookie('LogedUser', '', { maxAge: -1 });
+      res.cookie('logedUser', '', { maxAge: -1 });
       res.status(200);
       res.json({ msg: 'Successfully logged out' });
     } catch (err) {
@@ -94,16 +94,15 @@ export class UserController {
     try {
       const refToken = req.cookies.refreshToken;
       const userData = req.body;
-      const userToken = await this.userService.refreshService(
-        refToken,
-        userData,
-      );
+      console.log('refroken, ', refToken);
+      console.log('udta ', userData);
+      const userToken = await this.userService.refreshService(refToken);
       if (userToken) {
         res.cookie('accessToken', userToken.newAccessToken, {
           maxAge: 60 * 60 * 1000,
           httpOnly: true,
         });
-        res.cookie('LogedUser', userToken.tokenData, {
+        res.cookie('logedUser', userToken.tokenData, {
           maxAge: 60 * 60 * 1000,
         });
         res.status(200);

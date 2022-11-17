@@ -10,7 +10,35 @@ import {
   MinLength,
 } from 'class-validator';
 
-export class StudentDto {
+export class StudentAddDto {
+  @IsNotEmpty()
+  @IsString()
+  name: string;
+
+  @IsNotEmpty()
+  @IsEnum(['Male', 'Female'])
+  gender: string;
+
+  @IsNotEmpty()
+  @IsString()
+  address: string;
+
+  @IsNumberString()
+  @MinLength(9)
+  @MaxLength(10)
+  mobile: number;
+
+  @IsNotEmpty()
+  @IsDateString()
+  birthday: string;
+
+  @IsNotEmpty()
+  @IsInt()
+  @Min(1)
+  age: number;
+}
+
+export class StudentUpdateDto {
   @IsNotEmpty()
   @IsString()
   name: string;
@@ -24,9 +52,6 @@ export class StudentDto {
   address: string;
 
   @IsNotEmpty()
-  @IsNumberString()
-  @MinLength(9)
-  @MaxLength(10)
   mobile: number;
 
   @IsNotEmpty()

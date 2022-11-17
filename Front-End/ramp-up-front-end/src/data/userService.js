@@ -42,3 +42,18 @@ export const logoutUserService = async () => {
     console.log(err);
   }
 };
+
+export const newAccessTokenService = async () => {
+  try {
+    const response = await axios.post(
+      "http://localhost:8000/user/refresh",
+      {},
+      {
+        withCredentials: true,
+      }
+    );
+    return response;
+  } catch (err) {
+    console.log(err);
+  }
+};

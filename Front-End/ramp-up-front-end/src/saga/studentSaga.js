@@ -13,6 +13,8 @@ import {
 } from "../data/services";
 import { takeEvery, call, put } from "redux-saga/effects";
 
+import { newAccessTokenService } from "../data/userService";
+
 import { io } from "socket.io-client";
 const socket = io("http://localhost:8000/", {
   transports: ["websocket"],
@@ -26,9 +28,23 @@ function* addStudentGenerator({ payload }) {
       yield put(getStudentAction());
     }
   } catch (err) {
-    console.log(err);
-    alert("Your Session is Expired");
-    payload.navigate("/");
+    console.log("err ", err);
+
+    try {
+      const authorized = yield call(newAccessTokenService);
+      console.log("authorized", authorized);
+      if (authorized) {
+        const response = yield call(insertStudent, payload);
+        if (response) {
+          socket.emit("student_add", `Student Added`);
+          yield put(getStudentAction());
+        }
+      } else {
+        alert("Unauthorized");
+      }
+    } catch (err) {
+      console.log(err);
+    }
   }
 }
 
@@ -50,8 +66,20 @@ function* updateStudentGenerator({ payload }) {
     }
   } catch (err) {
     console.log(err);
-    alert("Your Session is Expired");
-    payload.navigate("/");
+    try {
+      const authorized = yield call(newAccessTokenService);
+      if (authorized) {
+        const response = yield call(updateStudent, payload);
+        if (response) {
+          socket.emit("student_update", `Student Updated`);
+          yield put(getStudentAction());
+        }
+      } else {
+        alert("Unauthorized");
+      }
+    } catch (err) {
+      console.log(err);
+    }
   }
 }
 
@@ -64,8 +92,21 @@ function* deleteStudentGenerator({ payload }) {
     }
   } catch (err) {
     console.log(err);
-    alert("Your Session is Expired");
-    payload.navigate("/");
+
+    try {
+      const authorized = yield call(newAccessTokenService);
+      if (authorized) {
+        const response = yield call(deleteStudent, payload);
+        if (response) {
+          socket.emit("student_delete", `Student Deleted`);
+          yield put(getStudentAction());
+        }
+      } else {
+        alert("Unauthorized");
+      }
+    } catch (err) {
+      console.log(err);
+    }
   }
 }
 

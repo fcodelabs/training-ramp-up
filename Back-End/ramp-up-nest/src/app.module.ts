@@ -8,6 +8,7 @@ import { StudentModule } from './student/student.module';
 import { UserModule } from './user/user.module';
 import { User } from './entities/user.entity';
 import { VerifyLogout } from './middleware/loggedUser.middleware';
+import { UserPermissions } from './middleware/authPermissions.middleware';
 
 dotenv.config();
 
@@ -30,9 +31,10 @@ dotenv.config();
   providers: [AppService],
 })
 export class AppModule {
-  configure(logoutConsumer: MiddlewareConsumer) {
-    logoutConsumer
+  configure(consumer: MiddlewareConsumer) {
+    consumer
       .apply(VerifyLogout)
       .forRoutes({ path: 'user/logout', method: RequestMethod.GET });
+    consumer.apply(UserPermissions).forRoutes('student');
   }
 }
