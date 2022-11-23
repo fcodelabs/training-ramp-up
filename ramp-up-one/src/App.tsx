@@ -1,30 +1,18 @@
 import React from 'react';
-import { Button } from '@progress/kendo-react-buttons';
-import kendoka from './kendoka.svg';
-import './App.css';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import DataGrid from './pages/DataGrid/DataGrid';
+// import './App.css';
 
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 function App() {
-    const handleClick = React.useCallback(() => {
-        window.open(
-            'https://www.telerik.com/kendo-react-ui/components/',
-            '_blank'
-        );
-    }, []);
-
-    return (
-        <div className="App">
-            <header className="App-header">
-                <img src={kendoka} className="App-logo" alt="kendoka" />
-                <p>lahiru & kendo</p>
-                <Button
-                    themeColor={'primary'}
-                    size={'large'}
-                    onClick={handleClick}
-                >
-                    Learn KendoReact
-                </Button>
-            </header>
-        </div>
-    );
+  return (
+    <div className="App">
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<DataGrid />} />
+        </Routes>
+      </BrowserRouter>
+    </div>
+  );
 }
 export default App;
