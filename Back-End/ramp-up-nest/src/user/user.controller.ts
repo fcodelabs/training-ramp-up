@@ -1,14 +1,19 @@
-import { Body, Controller, Get, Post, Req, Res } from '@nestjs/common';
+import { Body, Controller, Get, Inject, Post, Req, Res } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { LoginUserDto, RegisterUserDto } from '../dto/user.dto';
 import { UserService } from './user.service';
 
 @Controller('user')
 export class UserController {
-  constructor(private userService: UserService) {}
+  constructor(
+    @Inject('USER_SERVICE')
+    private readonly userService: UserService,
+  ) {}
 
   @Post('/register')
   async registerUser(@Body() newUser: RegisterUserDto, @Res() res: Response) {
+    console.log('user ', { newUser });
+    console.log('response', { res });
     try {
       const { name, password, email } = newUser;
 
@@ -18,7 +23,7 @@ export class UserController {
         password,
       });
 
-      if (user) {
+      if (!('err' in user)) {
         const newToken = this.userService.createToken(user);
         res.cookie('accessToken', newToken.newAccessToken, {
           maxAge: 60 * 60 * 1000,
@@ -41,6 +46,7 @@ export class UserController {
 
   @Post('/login')
   async loginUser(@Body() userData: LoginUserDto, @Res() res: Response) {
+    console.log('cookies ', res.cookie);
     try {
       const { email, password } = userData;
 
@@ -48,7 +54,7 @@ export class UserController {
         email: email.toLowerCase(),
         password,
       });
-      if (user) {
+      if (!('err' in user)) {
         const newToken = this.userService.createToken(user);
         res.cookie('accessToken', newToken.newAccessToken, {
           maxAge: 60 * 60 * 1000,
@@ -93,9 +99,7 @@ export class UserController {
   async refreshUser(@Req() req: Request, @Res() res: Response) {
     try {
       const refToken = req.cookies.refreshToken;
-      const userData = req.body;
       console.log('refroken, ', refToken);
-      console.log('udta ', userData);
       const userToken = await this.userService.refreshService(refToken);
       if (userToken) {
         res.cookie('accessToken', userToken.newAccessToken, {

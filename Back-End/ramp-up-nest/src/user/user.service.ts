@@ -23,7 +23,7 @@ export class UserService {
       user.password = newUser.password;
       return await this.userRepository.save(user);
     } catch (err) {
-      console.log(err);
+      return { err: 'Registration Failed' };
     }
   }
 
@@ -46,7 +46,8 @@ export class UserService {
         }
       }
     } catch (err) {
-      console.log(err);
+      console.log('loginService Error ', err);
+      return { err: 'Login Failed' };
     }
   }
 
@@ -66,7 +67,7 @@ export class UserService {
       console.log(err);
     }
   }
-  async refreshService(refreshToken) {
+  async refreshService(refreshToken: string) {
     try {
       const verifyRefToken = jwt.verify(refreshToken, config.jwt_secret_key);
       if (!verifyRefToken) {
@@ -92,7 +93,7 @@ export class UserService {
         };
       }
     } catch (err) {
-      console.log(err);
+      return { err: 'Cannot Get New Access Token' };
     }
   }
 }

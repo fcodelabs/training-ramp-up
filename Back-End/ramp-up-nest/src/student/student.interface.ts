@@ -7,3 +7,8 @@ export interface StudentInterface {
   birthday: string;
   age: number;
 }
+
+export interface GetStudentsType {
+  students: Array<StudentInterface>;
+  err: string;
+}

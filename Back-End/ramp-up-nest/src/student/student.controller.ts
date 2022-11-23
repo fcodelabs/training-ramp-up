@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  Inject,
   Post,
   Put,
   Req,
@@ -10,12 +11,14 @@ import {
 } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { StudentAddDto, StudentUpdateDto } from '../dto/student.dto';
-import { StudentInterface } from './student.interface';
 import { StudentService } from './student.service';
 
 @Controller('student')
 export class StudentController {
-  constructor(private studentService: StudentService) {}
+  constructor(
+    @Inject('STUDENT_SERVICE')
+    private readonly studentService: StudentService,
+  ) {}
 
   @Post()
   async addStudent(@Body() newStudent: StudentAddDto, @Res() res: Response) {
@@ -35,8 +38,7 @@ export class StudentController {
   @Get()
   async getAllStudents(@Res() res: Response) {
     try {
-      const students: Array<StudentInterface> =
-        await this.studentService.getAllStudentService();
+      const students = await this.studentService.getAllStudentService();
       res.status(200);
       res.json(students);
     } catch (err) {

@@ -17,7 +17,7 @@ export class StudentService {
       const student = await this.studentRepository.save(newStudent);
       return student;
     } catch (err) {
-      console.log(err);
+      return { err: 'Student adding Failed' };
     }
   }
 
@@ -26,7 +26,7 @@ export class StudentService {
       const allStudents = await this.studentRepository.find();
       return allStudents;
     } catch (err) {
-      console.log(err);
+      return { err: 'Students are not Found' };
     }
   }
 
@@ -38,7 +38,7 @@ export class StudentService {
       const result = await this.studentRepository.save(student);
       return result;
     } catch (err) {
-      console.log(err);
+      return { err: 'Cannot Update Student' };
     }
   }
 
@@ -47,7 +47,7 @@ export class StudentService {
       const result = await this.studentRepository.delete(studentId);
       return result;
     } catch (err) {
-      console.log(err);
+      return { err: 'Error with Deleting Student' };
     }
   }
 }
