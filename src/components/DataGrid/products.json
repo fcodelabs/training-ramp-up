@@ -1,0 +1,68 @@
+[
+    {
+        "ID": 1,
+        "Name": "Chai",
+        "Gender": "Male",
+        "Address": "Galle",
+        "MobileNo": "0771234567",
+        "DateOfBirth": "2000-09-10",
+        "Age": 39,
+        "inEdit": false,
+        "Discontinued": false
+    },
+    {
+        "ID": 2,
+        "Name": "Chai",
+        "Gender": "Male",
+        "Address": "Galle",
+        "MobileNo": "0771234567",
+        "DateOfBirth": "2000-09-10",
+        "Age": 39,
+        "inEdit": false,
+        "Discontinued": false
+    },
+    {
+        "ID": 3,
+        "Name": "Chai",
+        "Gender": "Male",
+        "Address": "Galle",
+        "MobileNo": "0771234567",
+        "DateOfBirth": "2000-09-10",
+        "Age": 39,
+        "inEdit": false,
+        "Discontinued": false
+    },
+    {
+        "ID": 4,
+        "Name": "Chai",
+        "Gender": "Male",
+        "Address": "Galle",
+        "MobileNo": "0771234567",
+        "DateOfBirth": "2000-09-10",
+        "Age": 39,
+        "inEdit": false,
+        "Discontinued": false
+    },
+    {
+        "ID": 5,
+        "Name": "Chai",
+        "Gender": "Male",
+        "Address": "Galle",
+        "MobileNo": "0771234567",
+        "DateOfBirth": "2000-09-10",
+        "Age": 39,
+        "inEdit": false,
+        "Discontinued": false
+    },
+    {
+        "ID": 6,
+        "Name": "Chai",
+        "Gender": "Male",
+        "Address": "Galle",
+        "MobileNo": "0771234567",
+        "DateOfBirth": "2000-09-10",
+        "Age": 39,
+        "inEdit": false,
+        "Discontinued": false
+    }
+]
