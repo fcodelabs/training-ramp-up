@@ -1,6 +1,6 @@
 import { Student } from '../entities/student.entity';
 import { Repository } from 'typeorm';
-import { StudentService } from './student.service';
+import { StudentService } from '../student.service';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Test, TestingModule } from '@nestjs/testing';
 

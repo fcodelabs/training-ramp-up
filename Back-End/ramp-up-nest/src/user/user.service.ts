@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { LoginUserDto, RegisterUserDto } from '../dto/user.dto';
-import { User } from '../entities/user.entity';
+import { LoginUserDto, RegisterUserDto } from './dto/user.dto';
+import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
-import { UserInterface } from './user.interface';
+import { UserInterface } from './interfaces/user.interface';
 import * as bcrypt from 'bcrypt';
 import { config } from '../utils/config';
 import * as jwt from 'jsonwebtoken';

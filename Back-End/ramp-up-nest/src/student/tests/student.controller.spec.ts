@@ -1,9 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { Request, Response } from 'express';
 import { DeleteResult } from 'typeorm';
-import { StudentController } from './student.controller';
-import { GetStudentsType } from './student.interface';
-import { StudentService } from './student.service';
+import { StudentController } from '../student.controller';
+import { GetStudentsType } from '../interfaces/student.interface';
+import { StudentService } from '../student.service';
 
 describe('StudentController', () => {
   let controller: StudentController;

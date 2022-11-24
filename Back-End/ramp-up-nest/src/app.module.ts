@@ -2,11 +2,11 @@ import { MiddlewareConsumer, Module, RequestMethod } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { Student } from './entities/student.entity';
+import { Student } from './student/entities/student.entity';
 import * as dotenv from 'dotenv';
 import { StudentModule } from './student/student.module';
 import { UserModule } from './user/user.module';
-import { User } from './entities/user.entity';
+import { User } from './user/entities/user.entity';
 import { VerifyLogout } from './middleware/loggedUser.middleware';
 import { UserPermissions } from './middleware/authPermissions.middleware';
 

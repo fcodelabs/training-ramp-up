@@ -10,7 +10,7 @@ import {
   Res,
 } from '@nestjs/common';
 import { Request, Response } from 'express';
-import { StudentAddDto, StudentUpdateDto } from '../dto/student.dto';
+import { StudentAddDto, StudentUpdateDto } from './dto/student.dto';
 import { StudentService } from './student.service';
 
 @Controller('student')

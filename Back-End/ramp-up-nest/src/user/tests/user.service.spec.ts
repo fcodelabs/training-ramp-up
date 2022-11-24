@@ -1,11 +1,11 @@
 import { User } from '../entities/user.entity';
 import { Repository } from 'typeorm';
-import { UserService } from './user.service';
+import { UserService } from '../user.service';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Test, TestingModule } from '@nestjs/testing';
 import * as bcrypt from 'bcrypt';
 import * as jwt from 'jsonwebtoken';
-import { config } from '../utils/config';
+import { config } from '../../utils/config';
 
 describe('UserService', () => {
   let service: UserService;
@@ -70,9 +70,8 @@ describe('UserService', () => {
 
     it('login user success', async () => {
       userRepository.findOneBy = jest.fn().mockResolvedValue(user);
-      jest
-        .spyOn(bcrypt, 'compare')
-        .mockImplementation(() => () => ({ verified: 'true' }));
+      const bcryptCompare = jest.fn().mockResolvedValue(true);
+      (bcrypt.compare as jest.Mock) = bcryptCompare;
       const res = await service.loginUserService(loginData);
       expect(res).toEqual(user);
     });
@@ -112,17 +111,15 @@ describe('UserService', () => {
     const refreshToken = 'refreshToken';
 
     it('get new accessToken success', async () => {
-      jest
-        .spyOn(jwt, 'verify')
-        .mockImplementation(() => () => ({ verified: 'true' }));
+      const jwtVerify = jest.fn().mockResolvedValue(true);
+      (jwt.verify as jest.Mock) = jwtVerify;
       userRepository.findOneBy = jest.fn().mockResolvedValue(user);
       const res = await service.refreshService(refreshToken);
       expect(res).toEqual(result);
     });
     it('get new accessToken fail', async () => {
-      jest
-        .spyOn(jwt, 'verify')
-        .mockImplementation(() => () => ({ verified: 'true' }));
+      const jwtVerify = jest.fn().mockResolvedValue(true);
+      (jwt.verify as jest.Mock) = jwtVerify;
       userRepository.findOneBy = jest.fn().mockResolvedValue(null);
       const res = await service.refreshService(refreshToken);
       expect(res).toEqual({ err: 'Cannot Get New Access Token' });

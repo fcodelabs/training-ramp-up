@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Inject, Post, Req, Res } from '@nestjs/common';
 import { Request, Response } from 'express';
-import { LoginUserDto, RegisterUserDto } from '../dto/user.dto';
+import { LoginUserDto, RegisterUserDto } from './dto/user.dto';
 import { UserService } from './user.service';
 
 @Controller('user')
