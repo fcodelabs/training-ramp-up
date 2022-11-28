@@ -14,10 +14,12 @@ describe('StudentController', () => {
     params: {},
   } as Request;
 
-  const resMock = {
-    status: jest.fn((x) => x),
-    json: jest.fn((x) => x),
-  } as unknown as Response;
+  const mockResponse = () => {
+    const res = {} as Response;
+    res.status = jest.fn().mockReturnValue(res);
+    res.json = jest.fn().mockReturnValue(res);
+    return res;
+  };
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -59,6 +61,8 @@ describe('StudentController', () => {
       ],
     } as GetStudentsType;
 
+    const resMock = mockResponse();
+
     it('should return all students', async () => {
       jest
         .spyOn(service, 'getAllStudentService')
@@ -96,6 +100,8 @@ describe('StudentController', () => {
       birthday: '1997-11-15',
       age: 25,
     };
+
+    const resMock = mockResponse();
 
     it('add new student', async () => {
       jest.spyOn(service, 'createStudentService').mockResolvedValue(newStudent);
@@ -137,6 +143,9 @@ describe('StudentController', () => {
     reqMock.params = {
       studentId: '1',
     };
+
+    const resMock = mockResponse();
+
     it('student updated successfully', async () => {
       jest
         .spyOn(service, 'updateStudentService')
@@ -174,6 +183,8 @@ describe('StudentController', () => {
     reqMock.params = {
       studentId: '1',
     };
+
+    const resMock = mockResponse();
 
     it('student deleted successfully', async () => {
       jest.spyOn(service, 'deleteStudentService').mockResolvedValue(deleteOne);

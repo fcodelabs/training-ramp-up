@@ -125,4 +125,31 @@ describe('UserService', () => {
       expect(res).toEqual({ err: 'Cannot Get New Access Token' });
     });
   });
+
+  describe('getLogedUser', () => {
+    const user = {
+      id: 1,
+      email: 'user@gmail.com',
+      password: 'User1234',
+      role: 'user',
+    };
+
+    const accessToken = 'accessToken';
+
+    it('get user success', async () => {
+      const jwtVerify = jest.fn().mockResolvedValue(true);
+      (jwt.verify as jest.Mock) = jwtVerify;
+      userRepository.findOneBy = jest.fn().mockResolvedValue(user);
+      const res = await service.getLogedUserService(accessToken);
+      expect(res).toEqual(user);
+    });
+
+    it('get loged user failed', async () => {
+      const jwtVerify = jest.fn().mockResolvedValue(true);
+      (jwt.verify as jest.Mock) = jwtVerify;
+      userRepository.findOneBy = jest.fn().mockRejectedValue(null);
+      const res = await service.getLogedUserService(accessToken);
+      expect(res).toEqual({ err: 'Cannot find User' });
+    });
+  });
 });

@@ -33,7 +33,6 @@ export class UserController {
           maxAge: 60 * 60 * 24 * 1000,
           httpOnly: true,
         });
-        res.cookie('logedUser', newToken.tokenData, { maxAge: 60 * 60 * 1000 });
 
         res.status(200);
         res.json(user);
@@ -64,7 +63,6 @@ export class UserController {
           maxAge: 60 * 60 * 24 * 1000,
           httpOnly: true,
         });
-        res.cookie('logedUser', newToken.tokenData, { maxAge: 60 * 60 * 1000 });
 
         res.status(200);
         res.json(user);
@@ -87,10 +85,23 @@ export class UserController {
         maxAge: -1,
         httpOnly: true,
       });
-      res.cookie('logedUser', '', { maxAge: -1 });
+
       res.status(200);
       res.json({ msg: 'Successfully logged out' });
     } catch (err) {
+      res.status(400);
+    }
+  }
+
+  @Get('/getUser')
+  async getLogedUser(@Req() req: Request, @Res() res: Response) {
+    try {
+      const userToken = req.cookies.accessToken;
+      const user = await this.userService.getLogedUserService(userToken);
+      res.status(200);
+      res.json(user);
+    } catch (err) {
+      console.log(err);
       res.status(400);
     }
   }
@@ -106,9 +117,7 @@ export class UserController {
           maxAge: 60 * 60 * 1000,
           httpOnly: true,
         });
-        res.cookie('logedUser', userToken.tokenData, {
-          maxAge: 60 * 60 * 1000,
-        });
+
         res.status(200);
         res.json(userToken);
       }

@@ -2,20 +2,18 @@ import {
   registerUserService,
   loginUserService,
   logoutUserService,
-} from "../data/userService";
+  getLogedUserService,
+} from "../../data/userService";
 import {
+  getUserAction,
   loginUserAction,
   logoutUserAction,
   refreshAction,
   registerUserAction,
   saveUserAction,
-} from "../slice/userSlice";
+} from "./userSlice";
 
 import { takeEvery, call, put } from "redux-saga/effects";
-
-import Cookies from "universal-cookie";
-
-const cookies = new Cookies();
 
 function* registerUserGenerator({ payload }) {
   console.log("payload", payload);
@@ -24,9 +22,6 @@ function* registerUserGenerator({ payload }) {
     console.log("response", response);
     alert("SuccessFully Created Account");
     if (response) {
-      const signedUser = cookies.get("logedUser");
-
-      yield put(saveUserAction(signedUser));
       payload.navigate("/homeRampUp");
     } else {
       alert("Registration Failed! Please Enter Valid Details");
@@ -41,14 +36,21 @@ function* loginUserGenerator({ payload }) {
   try {
     const response = yield call(loginUserService, payload);
     if (response) {
-      const signedUser = cookies.get("logedUser");
-      yield put(saveUserAction(signedUser));
       payload.navigate("/homeRampUp");
     } else {
       alert("Login Failed! Please Enter Valid Email & Password");
     }
   } catch (err) {
     alert("Login Failed! Please Enter Valid Email & Password");
+  }
+}
+
+function* getLogedUserGenerator() {
+  try {
+    const response = yield call(getLogedUserService);
+    yield put(saveUserAction(response));
+  } catch (err) {
+    console.log(err);
   }
 }
 
@@ -68,8 +70,8 @@ function* logoutUserGenerator({ payload }) {
 
 function* refreshGenerator() {
   try {
-    const signedUser = yield cookies.get("logedUser");
-    yield put(saveUserAction(signedUser));
+    const response = yield call(getLogedUserService);
+    yield put(saveUserAction(response));
   } catch (err) {
     console.log(err);
   }
@@ -78,6 +80,7 @@ function* refreshGenerator() {
 function* allUsers() {
   yield takeEvery(registerUserAction, registerUserGenerator);
   yield takeEvery(loginUserAction, loginUserGenerator);
+  yield takeEvery(getUserAction, getLogedUserGenerator);
   yield takeEvery(logoutUserAction, logoutUserGenerator);
   yield takeEvery(refreshAction, refreshGenerator);
 }

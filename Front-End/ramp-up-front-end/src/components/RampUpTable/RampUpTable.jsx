@@ -1,6 +1,6 @@
 import * as React from "react";
 import "@progress/kendo-theme-default/dist/all.css";
-import "../utils/rampUpTable.css";
+import "../../utils/rampUpTable.css";
 
 import {
   Grid,
@@ -8,8 +8,8 @@ import {
   GridToolbar,
 } from "@progress/kendo-react-grid";
 //import { StudentData } from "../data/studentDetails";
-import DropDownCell from "./DropDownCell";
-import CommandCell from "./CommandCell";
+import DropDownCell from "../DropDownCell/DropDownCell";
+import CommandCell from "../CommandCell/CommandCell";
 
 import { useState, useEffect } from "react";
 
@@ -20,10 +20,10 @@ import {
   getStudentAction,
   selectStudent,
   updateStudentAction,
-} from "../slice/studentSlice";
+} from "../../redux/student/studentSlice";
 
 import { io } from "socket.io-client";
-import { selectUser } from "../slice/userSlice";
+import { selectUser } from "../../redux/user/userSlice";
 import { useNavigate } from "react-router-dom";
 
 const socket = io("http://localhost:8000/", {

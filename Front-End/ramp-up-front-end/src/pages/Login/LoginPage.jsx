@@ -1,26 +1,26 @@
 import * as React from "react";
-import Stack from "@mui/material/Stack";
+import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
+import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
 
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as yup from "yup";
 
-import { useNavigate } from "react-router-dom";
-
 import styled from "styled-components";
 
-import { useDispatch } from "react-redux";
-import { registerUserAction } from "../slice/userSlice";
+import { useNavigate } from "react-router-dom";
 
-const RegisterBody = styled.div`
+import { useDispatch } from "react-redux";
+import { loginUserAction } from "../../redux/user/userSlice";
+
+const LoginBody = styled.div`
   background-image: linear-gradient(to bottom right, white, blue);
   min-height: 100vh;
   height: fit-content;
   width: 100%;
   align-items: center;
   justify-content: center;
-  /* padding-top: 50px; */
   display: flex;
 
   @media (max-width: 768px) {
@@ -49,7 +49,7 @@ const Title = styled.div`
   }
 `;
 
-const RegisterForm = styled.div`
+const LoginForm = styled.div`
   width: 500px;
   height: 500px;
   background-color: white;
@@ -73,101 +73,73 @@ const RegisterForm = styled.div`
   }
 `;
 
-const H1Register = styled.h1`
+const H1Login = styled.h1`
   margin-left: 32px;
   color: blue;
 `;
 
-const RegisterErrMsg = styled.span`
+const LogErrMsg = styled.span`
   color: red;
 `;
 
-function Register() {
+function Login() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const initialValues = {
-    name: "",
     email: "",
     password: "",
   };
   const validationSchema = yup.object().shape({
-    name: yup.string().required("Required"),
     email: yup.string().email("Please Enter Valid Email").required("Required"),
-    password: yup
-      .string()
-      .required("Required")
-      .min(8, "Password must be 8 Characters Long")
-      .matches(/[0-9]/, "Password Requires a Number")
-      .matches(/[a-z]/, "Password Requires a Lowercase Letter")
-      .matches(/[A-Z]/, "Password Rquires an Uppercase Letter"),
+    password: yup.string().required("Required"),
   });
   const onSubmit = (data) => {
-    const name = data.name;
     const email = data.email.toLowerCase();
     const password = data.password;
 
-    console.log("Name ", name);
     console.log("Email ", email);
     console.log("Password ", password);
 
-    dispatch(registerUserAction({ name, email, password, navigate }));
+    dispatch(loginUserAction({ email, password, navigate }));
   };
 
-  // const navigate = useNavigate();
-
-  const navigateToLogin = () => {
-    navigate("/");
+  const navigateToRegister = () => {
+    navigate("/register");
   };
+
   return (
-    <RegisterBody>
+    <LoginBody>
       <Title>
         <h1>Ramp Up Project</h1>
         <h2>Student Management System</h2>
       </Title>
-      <RegisterForm>
-        <H1Register>Register</H1Register>
+      <LoginForm>
+        <H1Login>Login</H1Login>
         <Formik
           initialValues={initialValues}
           onSubmit={onSubmit}
           validationSchema={validationSchema}
         >
           <Form>
-            <Stack
+            <Box
               component="form"
               sx={{
-                width: "50ch",
-                marginLeft: "35px",
+                "& > :not(style)": { m: 2, width: "50ch", marginLeft: "35px" },
               }}
-              spacing={2}
               noValidate
               autoComplete="off"
             >
-              <Field
-                as={TextField}
-                id="name"
-                name="name"
-                label="Name"
-                variant="filled"
-                size="small"
-                helperText={
-                  <ErrorMessage
-                    name="name"
-                    render={(msg) => <RegisterErrMsg>{msg}</RegisterErrMsg>}
-                  />
-                }
-              />
               <Field
                 as={TextField}
                 id="email"
                 name="email"
                 label="Email"
                 variant="filled"
-                size="small"
                 helperText={
                   <ErrorMessage
                     name="email"
-                    render={(msg) => <RegisterErrMsg>{msg}</RegisterErrMsg>}
+                    render={(msg) => <LogErrMsg>{msg}</LogErrMsg>}
                   />
                 }
               />
@@ -176,50 +148,49 @@ function Register() {
                 id="password"
                 name="password"
                 label="Password"
-                type="password"
                 variant="filled"
-                size="small"
+                type="password"
                 helperText={
                   <ErrorMessage
                     name="password"
-                    render={(msg) => <RegisterErrMsg>{msg}</RegisterErrMsg>}
+                    render={(msg) => <LogErrMsg>{msg}</LogErrMsg>}
                   />
                 }
               />
-            </Stack>
+            </Box>
             <Stack spacing={2} direction="row">
               <Button
                 variant="contained"
-                id="registerBtn"
+                id="loginBtn"
                 type="submit"
                 style={{
                   width: "432px",
                   marginLeft: "34px",
-                  marginTop: "30px",
+                  marginTop: "20px",
                 }}
               >
-                Sign Up
+                Sign In
               </Button>
             </Stack>
-            <Stack
-              spacing={2}
-              direction="row"
-              marginTop="10px"
-              marginLeft={51.5}
-            >
+            <Stack spacing={2} direction="row">
               <Button
-                variant="text"
-                id="redirectToLogin"
-                onClick={navigateToLogin}
+                variant="outlined"
+                id="redirectRegisterBtn"
+                onClick={navigateToRegister}
+                style={{
+                  width: "432px",
+                  marginLeft: "34px",
+                  marginTop: "20px",
+                }}
               >
-                Back
+                Create Account
               </Button>
             </Stack>
           </Form>
         </Formik>
-      </RegisterForm>
-    </RegisterBody>
+      </LoginForm>
+    </LoginBody>
   );
 }
 
-export default Register;
+export default Login;

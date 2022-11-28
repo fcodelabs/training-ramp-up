@@ -1,5 +1,5 @@
 import * as React from "react";
-import "../utils/commandCell.css";
+import "../../utils/commandCell.css";
 
 function CommandCell(prop) {
   const { dataItem, role } = prop;

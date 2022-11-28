@@ -1,9 +1,9 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 //import "./App.css";
 
-import HomeRampUp from "./pages/HomeRampUp";
-import Login from "./pages/LoginPage";
-import Register from "./pages/RegisterPage";
+import HomeRampUp from "./pages/HomeRampUp/HomeRampUp";
+import Login from "./pages/Login/LoginPage";
+import Register from "./pages/Register/RegisterPage";
 import PrivateRoutes from "./routes/privateRoutes";
 
 function App() {

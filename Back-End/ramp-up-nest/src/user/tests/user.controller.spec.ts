@@ -13,11 +13,13 @@ describe('userController', () => {
     cookies: {},
   } as Request;
 
-  let resMock = {
-    status: jest.fn((x) => x),
-    json: jest.fn((x) => x),
-    cookie: jest.fn((x) => x),
-  } as unknown as Response;
+  const mockResponse = () => {
+    const res = {} as Response;
+    res.status = jest.fn().mockReturnValue(res);
+    res.json = jest.fn().mockReturnValue(res);
+    res.cookie = jest.fn().mockReturnValue(res);
+    return res;
+  };
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -30,6 +32,7 @@ describe('userController', () => {
             loginUserService: jest.fn((x) => x),
             createToken: jest.fn((x) => x),
             refreshService: jest.fn((x) => x),
+            getLogedUserService: jest.fn((x) => x),
           },
         },
       ],
@@ -37,12 +40,6 @@ describe('userController', () => {
 
     service = module.get<UserService>('USER_SERVICE');
     controller = module.get<UserController>(UserController);
-
-    resMock = {
-      status: jest.fn((x) => x),
-      json: jest.fn((x) => x),
-      cookie: jest.fn((x) => x),
-    } as unknown as Response;
   });
 
   it('should be defind User Controller and service', () => {
@@ -76,12 +73,14 @@ describe('userController', () => {
       password: 'NewU1234',
     };
 
+    const resMock = mockResponse();
+
     it('register user success', async () => {
       jest.spyOn(service, 'createUserService').mockResolvedValue(newUser);
       jest.spyOn(service, 'createToken').mockReturnValue(token);
       await controller.registerUser(reqMock.body, resMock);
       expect(resMock.status).toHaveBeenCalledWith(200);
-      expect(resMock.cookie).toHaveBeenCalledTimes(3);
+      expect(resMock.cookie).toHaveBeenCalledTimes(2);
       expect(resMock.json).toHaveBeenCalledWith(newUser);
     });
 
@@ -118,12 +117,15 @@ describe('userController', () => {
       email: 'newUser@gmail.com',
       password: 'NewU1234',
     };
+
+    const resMock = mockResponse();
+
     it('login user success', async () => {
       jest.spyOn(service, 'loginUserService').mockResolvedValue(user);
       jest.spyOn(service, 'createToken').mockReturnValue(token);
       await controller.loginUser(reqMock.body, resMock);
       expect(resMock.status).toHaveBeenCalledWith(200);
-      expect(resMock.cookie).toHaveBeenCalledTimes(3);
+      expect(resMock.cookie).toHaveBeenCalledTimes(2);
       expect(resMock.json).toHaveBeenCalledWith(user);
     });
 
@@ -149,11 +151,13 @@ describe('userController', () => {
       refreshToken: 'newRefreshToken',
     };
 
+    const resMock = mockResponse();
+
     it('get new access token success', async () => {
       jest.spyOn(service, 'refreshService').mockResolvedValue(token);
       await controller.refreshUser(reqMock, resMock);
       expect(resMock.status).toHaveBeenCalledWith(200);
-      expect(resMock.cookie).toHaveBeenCalledTimes(2);
+      expect(resMock.cookie).toHaveBeenCalledTimes(1);
       expect(resMock.json).toHaveBeenCalledWith(token);
     });
 
@@ -167,10 +171,45 @@ describe('userController', () => {
   });
 
   describe('logoutUser', () => {
+    const resMock = mockResponse();
+
     it('successfully logout', () => {
       controller.logoutUser(resMock);
       expect(resMock.status).toHaveBeenCalledWith(200);
-      expect(resMock.cookie).toHaveBeenCalledTimes(3);
+      expect(resMock.cookie).toHaveBeenCalledTimes(2);
+    });
+  });
+
+  describe('getLogedUser', () => {
+    const user = {
+      id: 1,
+      name: 'newUser',
+      email: 'newUser@gmail.com',
+      password: 'NewU1234',
+      role: 'user',
+      createdAt: new Date('2022-10-24 16:59:02.751605'),
+      updatedAt: new Date('2022-10-24 16:59:02.751605'),
+    };
+
+    reqMock.cookies = {
+      accessToken: 'accessToken',
+    };
+
+    const resMock = mockResponse();
+
+    it('get loged user Success', async () => {
+      jest.spyOn(service, 'getLogedUserService').mockResolvedValue(user);
+      await controller.getLogedUser(reqMock, resMock);
+      expect(resMock.status).toHaveBeenCalledWith(200);
+      expect(resMock.json).toHaveBeenCalledWith(user);
+    });
+
+    it('get loged user failed', async () => {
+      jest
+        .spyOn(service, 'getLogedUserService')
+        .mockRejectedValue({ err: 'Cannot find User' });
+      await controller.getLogedUser(reqMock, resMock);
+      expect(resMock.status).toHaveBeenCalledWith(400);
     });
   });
 });

@@ -4,16 +4,16 @@ import {
   getStudentAction,
   saveStudentAction,
   updateStudentAction,
-} from "../slice/studentSlice";
+} from "./studentSlice";
 import {
   deleteStudent,
   getStudent,
   insertStudent,
   updateStudent,
-} from "../data/services";
+} from "../../data/services";
 import { takeEvery, call, put } from "redux-saga/effects";
 
-import { newAccessTokenService } from "../data/userService";
+import { newAccessTokenService } from "../../data/userService";
 
 import { io } from "socket.io-client";
 const socket = io("http://localhost:8000/", {

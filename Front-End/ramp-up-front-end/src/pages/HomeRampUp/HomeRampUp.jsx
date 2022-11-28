@@ -1,5 +1,5 @@
 //import React from "react";
-import "../utils/homeRampUp.css";
+import "../../utils/homeRampUp.css";
 import * as React from "react";
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
@@ -7,7 +7,7 @@ import CssBaseline from "@mui/material/CssBaseline";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 
-import RampUpTable from "../components/RampUpTable";
+import RampUpTable from "../../components/RampUpTable/RampUpTable";
 
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -15,11 +15,12 @@ import {
   logoutUserAction,
   refreshAction,
   selectUser,
-} from "../slice/userSlice";
+} from "../../redux/user/userSlice";
 import { useEffect } from "react";
 
 function HomeRampUp() {
   const user = useSelector(selectUser);
+  console.log("homeUser ", user.email);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();

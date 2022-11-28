@@ -8,6 +8,7 @@ export const userSlice = createSlice({
   reducers: {
     registerUserAction: () => {},
     loginUserAction: () => {},
+    getUserAction: () => {},
     saveUserAction: (state, action) => {
       state.user = action.payload;
     },
@@ -19,6 +20,7 @@ export const userSlice = createSlice({
 export const {
   registerUserAction,
   loginUserAction,
+  getUserAction,
   saveUserAction,
   logoutUserAction,
   refreshAction,

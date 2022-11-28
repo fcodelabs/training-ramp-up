@@ -23,6 +23,7 @@ export class UserService {
       user.password = newUser.password;
       return await this.userRepository.save(user);
     } catch (err) {
+      console.log('Register User Error ', err);
       return { err: 'Registration Failed' };
     }
   }
@@ -46,7 +47,7 @@ export class UserService {
         }
       }
     } catch (err) {
-      console.log('loginService Error ', err);
+      console.log('Login User Error ', err);
       return { err: 'Login Failed' };
     }
   }
@@ -93,7 +94,28 @@ export class UserService {
         };
       }
     } catch (err) {
+      console.log('Get New Access Token Eroor ', err);
       return { err: 'Cannot Get New Access Token' };
+    }
+  }
+
+  async getLogedUserService(accToken: string) {
+    try {
+      const verifyAccToken = jwt.verify(accToken, config.jwt_secret_key);
+      if (!verifyAccToken) {
+        console.log('Unauthorized');
+      } else {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        //@ts-ignore
+        const userEmail = verifyAccToken.email;
+        const findUser = await this.userRepository.findOneBy({
+          email: userEmail,
+        });
+        return findUser;
+      }
+    } catch (err) {
+      console.log('Get User Error ', err);
+      return { err: 'Cannot find User' };
     }
   }
 }

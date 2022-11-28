@@ -57,3 +57,15 @@ export const newAccessTokenService = async () => {
     console.log(err);
   }
 };
+
+export const getLogedUserService = async () => {
+  try {
+    const response = await axios.get("http://localhost:8000/user/getUser", {
+      withCredentials: true,
+    });
+    console.log("getuser ", response);
+    return response.data;
+  } catch (err) {
+    console.log(err);
+  }
+};
