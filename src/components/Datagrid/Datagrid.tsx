@@ -274,7 +274,6 @@ export default function Datagrid() {
       const newDataState = [...dataState];
       switch (options.operation) {
         case "remove":
-          //   console.log(options.rowIndex);
           newDataState.splice(options.rowIndex, 1);
           setDataState(newDataState);
           break;
