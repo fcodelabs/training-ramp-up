@@ -94,6 +94,26 @@ export default function HomePage() {
         setData([...data])
     }
 
+    const update = (dataItem: any) => {
+        if (validate(dataItem)) {
+            const temp = dataSet.find((item) => {
+                return item.id === dataItem.id
+            })
+            if (temp) {
+                const index = dataSet.indexOf(temp)
+                dataItem.inEdit = false
+                dataSet[index] = dataItem
+                setData(dataSet)
+            }
+        }
+    }
+
+    const remove = (dataItem: any) => {
+        const index = dataSet.indexOf(dataItem)
+        dataSet.splice(index, 1)
+        setData([...dataSet])
+    }
+
     const addNew = () => {
         const newDataItem: Person = {
             inEdit: true,
@@ -124,11 +144,11 @@ export default function HomePage() {
     const command = (props: GridCellProps) => (
         <CommandCell
             {...props}
-            //remove={remove}
+            remove={remove}
             add={add}
             discard={discard}
             edit={edit}
-            //update={update}
+            update={update}
             cancel={cancel}
             editField={editField}
         />
