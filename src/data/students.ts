@@ -6,7 +6,7 @@ export const students = [
         address: "Kohuwala",
         mobile: "0769099876",
         dateOfBirth: "1999-01-01",
-        age: 23,
+        // age : 21,
     },
     {
         id: 2,
@@ -15,7 +15,7 @@ export const students = [
         address: "Kottawa",
         mobile: "0765998373",
         dateOfBirth: "1998-11-11",
-        age: 24,
+        // age : 22,
     },
     {
         id: 3,
@@ -23,8 +23,8 @@ export const students = [
         gender: "male",
         address: "Kaduwela",
         mobile: "0760292372",
-        dateOfBirth: "1999-04-23",
-        age: 23,
+        dateOfBirth: "1990-04-23",
+        // age : 30,
     },
     {
         id: 4,
@@ -33,6 +33,6 @@ export const students = [
         address: "Kohuwala",
         mobile: "0769099876",
         dateOfBirth: "1998-12-04",
-        age: 24,
+        // age : 22,
     }
 ]
