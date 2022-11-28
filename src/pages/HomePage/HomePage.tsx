@@ -1,103 +1,142 @@
-import * as React from "react";
-//import * as ReactDOM from "react-dom";
+import * as React from 'react'
 import {
     Grid,
     GridCellProps,
     GridColumn,
     GridItemChangeEvent,
     GridToolbar,
-} from "@progress/kendo-react-grid";
-import { sampleData } from "./sampleData";
-import "@progress/kendo-theme-default/dist/all.css";
-import { CommandCell } from "../../components/CommandCell/CommandCell";
-import { Person } from "./interfaces";
+} from '@progress/kendo-react-grid'
+import { sampleData } from './sampleData'
+import '@progress/kendo-theme-default/dist/all.css'
+import { CommandCell } from '../../components/CommandCell/CommandCell'
+import { DropDownCell } from '../../components/DropDownCell/DropDownCell'
+import { Person } from './interfaces'
+
+const dataSet = [...sampleData]
 
 export default function HomePage() {
-    const editField = "inEdit";
-    const dataSet=[...sampleData];
-    const [data, setData] = React.useState<Person[]>(dataSet);
+    const editField = 'inEdit'
+    const [data, setData] = React.useState<Person[]>(sampleData)
 
+    const nameRegEx = new RegExp('^([A-z\\s.]{3,80})$')
 
-    const generateId = () =>data.reduce((acc, current:Person) => Math.max(acc, current.ID), 0) + 1;
+    const addressRegEx = new RegExp('^([A-z0-9/,\\s]{3,})$')
+
+    const mobileNumRegEx = new RegExp(
+        '^([0][0-9]{9}|[0][0-9]{2}[-\\s][0-9]{7})$'
+    )
+
+    const generateId = () =>
+        dataSet.reduce((acc, current: Person) => Math.max(acc, current.id), 0) +
+        1
 
     const discard = () => {
-        data.shift();
-        setData([...data]);
-    };
+        data.shift()
+        setData([...data])
+    }
 
-    // const cancel = (dataItem:any) => {
-    //     const temp=dataSet.find((item)=>{return item.ID===dataItem.ID;});
-    //     dataItem=temp;
-    //     dataItem.inEdit = false;
-    //     setData(dataSet);
-    // };
-     
+    const cancel = (dataItem: any) => {
+        const temp = dataSet.find((item) => {
+            return item.id === dataItem.id
+        })
+        dataItem = temp
+        dataItem.inEdit = false
+        setData(dataSet)
+    }
+
+    const validate = (item: any) => {
+        if (item.name && nameRegEx.test(item.name)) {
+            if (item.address && addressRegEx.test(item.address)) {
+                if (mobileNumRegEx.test(item.mobileNo)) {
+                    if (item.gender !== '') {
+                        if (
+                            item.dateOfBirth != null &&
+                            new Date().getTime() - item.dateOfBirth.getTime() >
+                                0
+                        ) {
+                            return true
+                        } else {
+                            alert('Please enter valid birthday')
+                            return false
+                        }
+                    } else {
+                        alert('Please select a gender')
+                        return false
+                    }
+                } else {
+                    alert('Please enter valid mobile number')
+                    return false
+                }
+            } else {
+                alert('Please enter valid address')
+                return false
+            }
+        } else {
+            alert('Please enter valid name')
+            return false
+        }
+    }
+
     const add = (dataItem: any) => {
-        const item=dataItem;
-        item.ID=generateId();
-        item.inEdit = false;
-        const today=new Date().getTime();        
-        const birthday=item.DateOfBirth.getTime();
-        const age =Math.floor((today-birthday)/(86400000*365));
-        item.Age=age;
-        dataSet.unshift(item);
-        setData(dataSet);
-    };
+        const item = dataItem
+        if (validate(item)) {
+            item.id = generateId()
+            item.inEdit = false
+            dataSet.unshift(item)
+            setData(dataSet)
+        }
+    }
 
-    // const edit = (dataItem: any) => {
-    //     const item=dataItem;
-    //     item.inEdit = true;
-    //     item.editField="";
-    //     setData([...data]);
-    // };
-
-    // const update = (dataItem:any) => {
-    //     const temp=dataSet.find((item)=>{return item.ID===dataItem.ID;});
-    //     if(temp){
-    //         const index=dataSet.indexOf(temp);  
-    //         dataItem.inEdit=false;
-    //         dataSet[index]=dataItem; 
-    //         setData(dataSet);            
-    //     }
-        
-    // };
+    const edit = (dataItem: any) => {
+        const item = dataItem
+        item.inEdit = true
+        item.editField = ''
+        setData([...data])
+    }
 
     const addNew = () => {
         const newDataItem: Person = {
             inEdit: true,
-            ID:0
-        };
-        setData([newDataItem, ...data]);      
-        
-    };
+            id: 0,
+        }
+        setData([newDataItem, ...data])
+    }
 
-    const itemChange = (event: GridItemChangeEvent) => {
+    const itemChange = (e: GridItemChangeEvent) => {
+        let age = e.dataItem.age
+
+        //Calculate Age
+        if (e.field === 'dateOfBirth') {
+            const today = new Date().getTime()
+            const birthday = e.value.getTime()
+            age = Math.floor((today - birthday) / (86400000 * 365))
+            console.log(age)
+        }
+
         const newData = data.map((item) =>
-            item.ID === event.dataItem.ID
-                ? { ...item, [event.field || ""]: event.value }
+            item.id === e.dataItem.id
+                ? { ...item, [e.field || '']: e.value, age: age }
                 : item
-        );
-    
-        setData(newData);
-    };
+        )
+        setData(newData)
+    }
 
     const command = (props: GridCellProps) => (
         <CommandCell
             {...props}
-           
             //remove={remove}
             add={add}
             discard={discard}
-            //edit={edit}
+            edit={edit}
             //update={update}
-            //cancel={cancel}
+            cancel={cancel}
             editField={editField}
         />
-    );
+    )
 
     return (
         <Grid
-            style={{ height: "650px", margin: "4vh" }}
+            style={{ height: '650px', margin: '4vh' }}
             data={data}
             editField={editField}
             onItemChange={itemChange}
@@ -111,20 +150,20 @@ export default function HomePage() {
                     Add new
                 </button>
             </GridToolbar>
-            <GridColumn field="ID" title="ID" width="40px" editable={false} />
+            <GridColumn field="id" title="ID" width="40px" editable={false} />
+            <GridColumn field="name" title="Name" width="250px" editor="text" />
+            <GridColumn field="gender" title="Gender" cell={DropDownCell} />
+            <GridColumn field="address" title="Address" editor="text" />
+            <GridColumn field="mobileNo" title="Mobile No" editor="text" />
             <GridColumn
-                field="Name"
-                title="Name"
-                width="250px"
-                editor="text"
+                field="dateOfBirth"
+                title="Date of Birth"
+                editor="date"
+                format="{0:D}"
+                width="210px"
             />
-            <GridColumn field="Gender" title="Gender"  editor="text"/>
-            <GridColumn field="Address" title="Address"  editor="text"/>
-            <GridColumn field="MobileNo" title="Mobile No"  editor="text" />
-            <GridColumn field="DateOfBirth" title="Date of Birth"  editor="date" format="{0:D}" width="210px"/>
-            <GridColumn field="Age" title="Age" editable={false}/>
+            <GridColumn field="age" title="Age" editable={false} />
             <GridColumn cell={command} title="Command" width="220px" />
         </Grid>
-    );
+    )
 }
-

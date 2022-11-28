@@ -1,9 +1,18 @@
-import * as React from "react";
+import * as React from 'react'
 
-export const CommandCell = (props: { editField?: any; add?: any; update?: any; discard?: any; cancel?: any; edit?:any;dataItem?: any; }) => {
-    const { dataItem } = props;
-    const inEdit = dataItem[props.editField];
-    const isNewItem = dataItem.ID === 0;
+export const CommandCell = (props: {
+    editField: string
+    add?: any
+    update?: any
+    discard?: any
+    cancel?: any
+    edit?: any
+    remove?: any
+    dataItem: any
+}) => {
+    const { dataItem } = props
+    const inEdit = dataItem[props.editField]
+    const isNewItem = dataItem.id === 0
 
     return inEdit ? (
         <td className="k-command-cell">
@@ -13,7 +22,7 @@ export const CommandCell = (props: { editField?: any; add?: any; update?: any; d
                     isNewItem ? props.add(dataItem) : props.update(dataItem)
                 }
             >
-                {(isNewItem)?"Add":"Update"}
+                {isNewItem ? 'Add' : 'Update'}
             </button>
             <button
                 className="k-button k-button-md k-rounded-md k-button-solid k-button-solid-base k-grid-cancel-command"
@@ -21,7 +30,7 @@ export const CommandCell = (props: { editField?: any; add?: any; update?: any; d
                     isNewItem ? props.discard(dataItem) : props.cancel(dataItem)
                 }
             >
-                {(isNewItem)?"Discard Changes":"Cancel"}
+                {isNewItem ? 'Discard Changes' : 'Cancel'}
             </button>
         </td>
     ) : (
@@ -30,17 +39,17 @@ export const CommandCell = (props: { editField?: any; add?: any; update?: any; d
                 className="k-button k-button-md k-rounded-md k-button-solid k-button-solid-primary k-grid-edit-command"
                 onClick={() => props.edit(dataItem)}
             >
-            Edit
+                Edit
             </button>
             <button
                 className="k-button k-button-md k-rounded-md k-button-solid k-button-solid-base k-grid-remove-command"
-            //     onClick={() =>
-            //         confirm("Confirm deleting: " + dataItem.ProductName) &&
-            //   props.remove(dataItem)
-            //     }
+                onClick={() =>
+                    confirm('Confirm Deleting : ' + dataItem.name) &&
+                    props.remove(dataItem)
+                }
             >
-            Remove
+                Remove
             </button>
         </td>
-    );
-};
+    )
+}

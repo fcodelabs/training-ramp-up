@@ -1,10 +1,10 @@
-export interface Person{
-    ID : number;
-    Name ? : string;
-    Gender ? : string;
-    Address ? : string;
-    MobileNo ?: string;
-    DateOfBirth ? : Date;
-    Age ?: number;
-    inEdit?: boolean;
+export interface Person {
+    id: number
+    name?: string
+    gender?: string
+    address?: string
+    mobileNo?: string
+    dateOfBirth?: Date
+    age?: number
+    inEdit?: boolean
 }
