@@ -21,21 +21,25 @@ import Person from '../../utils/interface'
 import CommandCell from '../CommandCell/CommandCell'
 import { durationInYears } from '@progress/kendo-date-math'
 import DropDownCell from '../DropDownCell/DropDownCell'
+import personTableViewValidation from './personTableViewValidation'
 
 const PersonTableView: React.FC = () => {
   const [data, setData] = useState<Person[]>(getPersons())
   const editField: string = 'inEdit'
 
   const add = (dataItem: Person): any => {
-    dataItem.inEdit = true
-    const newData = insertPerson(dataItem)
-    setData(newData)
+    if (personTableViewValidation(dataItem)) {
+      dataItem.inEdit = true
+      const newData = insertPerson(dataItem)
+      setData(newData)
+    }
   }
 
   const update = (dataItem: Person): void => {
-    dataItem.inEdit = false
-    const newData = updatePerson(dataItem)
-    setData(newData)
+    if (personTableViewValidation(dataItem)) {
+      const newData = updatePerson(dataItem)
+      setData(newData)
+    }
   }
 
   const discard = (): void => {
@@ -119,7 +123,8 @@ const PersonTableView: React.FC = () => {
   const calAge = (secondProps: GridCellProps) => {
     const current = new Date()
     const dob = secondProps.dataItem.dob
-    const age: number | undefined = durationInYears(dob, current)
+    let age: number | string = durationInYears(dob, current)
+    if (age < 0) { age = '' }
     return <td>{age}</td>
   }
 

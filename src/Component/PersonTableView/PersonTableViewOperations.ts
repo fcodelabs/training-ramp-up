@@ -16,6 +16,7 @@ export const insertPerson = (person: Person): Person[] => {
 }
 
 export const updatePerson = (person: Person): Person[] => {
+  person.inEdit = false
   const index: number = persons.findIndex(
     (record) => record.personID === person.personID
   )
