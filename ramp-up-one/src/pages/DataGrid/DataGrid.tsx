@@ -35,61 +35,51 @@ const dataGrid = () => {
     setuser([newUser, ...user]);
   }
 
-  function checkvalidate(value: any, field: string | undefined) {
-    const nameRegEx = /^[A-z ]{5,20}$/;
-    const genderRegEx = /^[A-z ]{4,6}$/;
-    const addressRegEx = /^[A-z ]{5,20}$/;
-    const mobileRegEx = /^[0-9]{5,10}$/;
-
-    switch (field) {
-    case 'name':
-      nameRegEx.test(value)
-        ? console.log('success')
-        : console.log('input error');
-      break;
-    case 'gender':
-      genderRegEx.test(value)
-        ? console.log('success')
-        : console.log('input error');
-      break;
-    case 'Address':
-      addressRegEx.test(value)
-        ? console.log('success')
-        : console.log('input error');
-      break;
-    case 'MobileNo':
-      mobileRegEx.test(value)
-        ? console.log('success')
-        : console.log('input error');
-      break;
-    }
-  }
 
   const itemChange = (event: GridItemChangeEvent) => {
-    checkvalidate(event.value, event.field);
     const newData = user.map((item) =>
       item.ID === event.dataItem.ID
         ? { ...item, [event.field || '']: event.value }
         : item
     );
-
     setuser(newData);
   };
 
   // add new user
   const add = (dataItem: Product) => {
     dataItem.inEdit = true;
-    if (
-      dataItem.name === undefined ||
-      dataItem.Address === undefined ||
-      dataItem.gender === undefined ||
-      dataItem.MobileNo === undefined ||
-      dataItem.birth === undefined
-    ) {
-      alert('cannot assign null');
+
+    // validations
+    const nameRegEx = /^[A-z ]{5,20}$/;
+    const addressRegEx = /^[A-z ]{5,20}$/;
+    const mobileRegEx = /^[0-9]{5,10}$/;
+    if (dataItem.name !== undefined && nameRegEx.test(dataItem.name)) {
+      if (
+        dataItem.Address !== undefined &&
+        addressRegEx.test(dataItem.Address)
+      ) {
+        if (dataItem.gender !== undefined) {
+          if (
+            dataItem.MobileNo !== undefined &&
+            mobileRegEx.test(dataItem.MobileNo)
+          ) {
+            if (dataItem.birth !== undefined) {
+              const newData: any = insertItem(dataItem);
+              setuser(newData);
+            } else {
+              alert('check date of birth....!');
+            }
+          } else {
+            alert('check MobileNo....!');
+          }
+        } else {
+          alert('check gender....!');
+        }
+      } else {
+        alert('check address....!');
+      }
     } else {
-      const newData: any = insertItem(dataItem);
-      setuser(newData);
+      alert('check name....!');
     }
   };
 
