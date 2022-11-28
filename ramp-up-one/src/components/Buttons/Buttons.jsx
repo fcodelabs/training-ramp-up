@@ -1,41 +1,59 @@
 import * as React from 'react';
 
-const Buttons = () => {
-  const editBtnStyle = {
-    'background-color': '#ff5722',
-    'height': '2rem',
-    'border': '1px solid white',
-    'border-radius': '6px',
-    'font-weight': 'bold',
-    'color': 'white',
-  };
-  const removeBtnStyle = {
-    'height': '2rem',
-    'border': '1px solid gray',
-    'border-radius': '6px',
-    'font-weight': 'bold',
-    'color': 'black',
-  };
+const Buttons = (props) => {
+  const { dataItem } = props;
+  const inEdit = dataItem[props.editField];
+  const isNewItem = dataItem.ID === undefined;
 
-  //    (<td className="k-command-cell">
-  //                 <button className="k-button k-grid-save-command" style={{backgroundColor: 'orange'}} >
-  //                     {isNewItem ? "Add" : "Update"}
-  //                 </button>
-  //                 <button className="k-button k-grid-cancel-command"  onClick={handleDiscardCancel}>
-  //                     {isNewItem ? "Discard" : "Cancel"}
-  //                 </button>
-  //             </td>) :
-  return (
+  return inEdit ? (
     <td className="k-command-cell">
+
       <button
-        className="k-primary k-button k-grid-edit-command" style={editBtnStyle}>
+        className="k-button k-button-md k-rounded-md k-button-solid k-button-solid-base k-grid-save-command"
+        onClick={() =>
+          isNewItem ? props.add(dataItem) : props.update(dataItem)
+        }
+      >
+        {isNewItem ? 'Add' : 'Update'}
+      </button>
+
+
+      <button
+        className="k-button k-button-md k-rounded-md k-button-solid k-button-solid-base k-grid-cancel-command"
+        onClick={() =>
+          isNewItem ? props.discard(dataItem) : props.cancel(dataItem)
+        }
+      >
+        {isNewItem ? 'Discard' : 'Cancel'}
+      </button>
+
+
+    </td>
+  ) : (
+    <td className="k-command-cell">
+
+      
+      <button
+        className="k-button k-button-md k-rounded-md k-button-solid k-button-solid-primary k-grid-edit-command"
+        onClick={() => props.edit(dataItem)}
+      >
         Edit
       </button>
-      <button className="k-button k-grid-remove-command" style={removeBtnStyle}>
+
+
+      <button
+        className="k-button k-button-md k-rounded-md k-button-solid k-button-solid-base k-grid-remove-command"
+        onClick={() =>
+          confirm('Confirm deleting: ' + dataItem.name) &&
+          props.remove(dataItem)
+        }
+      >
         Remove
       </button>
+
+
     </td>
   );
 };
-
 export default Buttons;
+ 
