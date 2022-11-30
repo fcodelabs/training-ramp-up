@@ -1,5 +1,5 @@
 import React from 'react'
-import PersonTableView from '../Component/PersonTableView/PersonTableView'
+import PersonTableView from '../../Component/PersonTableView/PersonTableView'
 
 const Home: React.FC = () => {
   return (
