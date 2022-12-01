@@ -15,3 +15,12 @@ export const getAllStudentsService = async () => {
   }
   return getAll();
 };
+
+export const updateStudentService = async (student: Student) => {
+  async function update(student: Student) {
+    const index = students.findIndex((s) => s.id === student.id);
+    students[index] = student;
+    return student;
+  }
+  return update(student);
+};
