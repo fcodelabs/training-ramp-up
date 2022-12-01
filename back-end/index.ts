@@ -1,14 +1,18 @@
-import express from "express";
-import dotenv from "dotenv";
+import express, { Express, Request, Response, NextFunction } from 'express'
+import dotenv from 'dotenv'
+import studentRoutes from './src/routes/Student/StudentRoutes'
 
-dotenv.config();
-const app = express();
+dotenv.config()
+const app: Express = express()
+const port: string | number = process.env.PORT ?? 3000
 
-app.get("/", (req, res, next) => {
+app.use(express.json())
+app.use('/student', studentRoutes)
+
+app.get('/', (req: Request, res: Response, next: NextFunction) => {
   res.status(200).json({
-    data: "abcdefghijklmnopqrstuvwxyz",
-  });
-});
-const port = process.env.PORT || 3000;
+    data: 'Hello'
+  })
+})
 
-app.listen(port, () => console.log(`Server is running on port ${port}`));
+app.listen(port, () => console.log(`Server is running on port ${port}`))

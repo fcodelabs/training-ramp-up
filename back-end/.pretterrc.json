@@ -1,15 +1,11 @@
 {
-  "prettier/prettier": [
-   "error",
-    {
-      "singleQuote": true,
-      "trailingComma": "es5",
-      "tabWidth": 2,
-      "semi": false,
-      "parser": "flow",
-      "arrowParens": "always",
-      "printWidth": 120
-    }
-  ]
+  "singleQuote": true,
+  "trailingComma": "es5",
+  "tabWidth": 2,
+  "semi": false,
+  "parser": "flow",
+  "arrowParens": "always",
+  "printWidth": 120
+   
 }
   
