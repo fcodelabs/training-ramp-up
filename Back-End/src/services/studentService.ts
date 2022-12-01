@@ -8,3 +8,10 @@ export const addStudentService = async (student: Student) => {
   }
   return add(student);
 };
+
+export const getAllStudentsService = async () => {
+  async function getAll() {
+    return students;
+  }
+  return getAll();
+};

@@ -9,15 +9,24 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.addStudentService = void 0;
+exports.getAllStudentsService = exports.addStudentService = void 0;
 const students = [];
 const addStudentService = (student) => __awaiter(void 0, void 0, void 0, function* () {
     function add(student) {
         return __awaiter(this, void 0, void 0, function* () {
             students.push(student);
-            return students;
+            return student;
         });
     }
     return add(student);
 });
 exports.addStudentService = addStudentService;
+const getAllStudentsService = () => __awaiter(void 0, void 0, void 0, function* () {
+    function getAll() {
+        return __awaiter(this, void 0, void 0, function* () {
+            return students;
+        });
+    }
+    return getAll();
+});
+exports.getAllStudentsService = getAllStudentsService;

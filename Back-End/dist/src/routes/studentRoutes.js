@@ -7,4 +7,5 @@ const express_1 = __importDefault(require("express"));
 const studentController_1 = require("../controllers/studentController");
 const router = express_1.default.Router();
 router.post('/', studentController_1.addStudent);
+router.get('/', studentController_1.getAllStudents);
 exports.default = router;
