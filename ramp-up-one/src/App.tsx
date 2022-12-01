@@ -1,7 +1,6 @@
-import React from 'react';
+/* eslint-disable react/react-in-jsx-scope */
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import DataGrid from './pages/DataGrid/DataGrid';
-// import './App.css';
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 function App() {
