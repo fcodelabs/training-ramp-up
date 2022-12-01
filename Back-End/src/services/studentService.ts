@@ -24,3 +24,12 @@ export const updateStudentService = async (student: Student) => {
   }
   return update(student);
 };
+
+export const deleteStudentService = async (student: Student) => {
+  async function remove(student: Student) {
+    const index = students.findIndex((s) => s.id === student.id);
+    students.splice(index, 1);
+    return students;
+  }
+  return remove(student);
+};

@@ -1,6 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Request, Response } from 'express';
-import { addStudentService, getAllStudentsService, updateStudentService } from '../services/studentService';
+import {
+  addStudentService,
+  getAllStudentsService,
+  updateStudentService,
+  deleteStudentService,
+} from '../services/studentService';
 
 export const addStudent = async (req: Request, res: Response) => {
   try {
@@ -41,6 +46,21 @@ export const updateStudent = async (req: Request, res: Response) => {
     });
     res.status(200);
     res.json(student);
+  } catch (err) {
+    res.status(500);
+    res.json(err);
+  }
+};
+
+export const deleteStudent = async (req: Request, res: Response) => {
+  try {
+    const students = await deleteStudentService(req.body).catch((err: any) => {
+      res.status(500);
+      res.json(err);
+      return;
+    });
+    res.status(200);
+    res.json(students);
   } catch (err) {
     res.status(500);
     res.json(err);
