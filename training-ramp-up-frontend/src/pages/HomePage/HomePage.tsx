@@ -10,14 +10,15 @@ import { sampleData } from './sampleData'
 import '@progress/kendo-theme-default/dist/all.css'
 import { CommandCell } from '../../components/CommandCell/CommandCell'
 import { DropDownCell } from '../../components/DropDownCell/DropDownCell'
-import { Person } from './interfaces'
+import { Person } from '../../utils/interfaces'
 
 const dataSet = [...sampleData]
 
 export default function HomePage() {
     const editField = 'inEdit'
-    const [data, setData] = React.useState<Person[]>(sampleData)
+    const [data, setData] = React.useState(sampleData)
 
+    //RegEx
     const nameRegEx = new RegExp('^([A-z\\s.]{3,80})$')
 
     const addressRegEx = new RegExp('^([A-z0-9/,\\s]{3,})$')
@@ -26,58 +27,66 @@ export default function HomePage() {
         '^([0][0-9]{9}|[0][0-9]{2}[-\\s][0-9]{7})$'
     )
 
+    //Validating -Start
+
+    const validateName = (name?: string): boolean => {
+        name && nameRegEx.test(name) ? true : alert('Please enter valid name')
+        return false
+    }
+
+    const validateGender = (gender?: string): boolean => {
+        gender !== '' ? true : alert('Please select a gender')
+        return false
+    }
+
+    const validateAddress = (address?: string): boolean => {
+        address && addressRegEx.test(address)
+            ? true
+            : alert('Please enter valid address')
+        return false
+    }
+
+    const validateMobileNo = (mobileNo?: string): boolean => {
+        mobileNo && mobileNumRegEx.test(mobileNo)
+            ? true
+            : alert('Please enter valid mobile No')
+        return false
+    }
+
+    const validateBirthDay = (birthday?: Date): boolean => {
+        birthday != null && new Date().getTime() - birthday.getTime() > 0
+            ? true
+            : alert('Please select a valid birthday')
+        return false
+    }
+
+    const validate = (item: Person): boolean => {
+        return (
+            validateName(item.name) &&
+            validateGender(item.gender) &&
+            validateAddress(item.address) &&
+            validateMobileNo(item.mobileNo) &&
+            validateBirthDay(item.dateOfBirth)
+        )
+    }
+
+    //validating -End
+
     const generateId = () =>
-        dataSet.reduce((acc, current: Person) => Math.max(acc, current.id), 0) +
+        dataSet.reduce((max, current: Person) => Math.max(max, current.id), 0) +
         1
 
-    const discard = () => {
-        data.shift()
-        setData([...data])
-    }
-
-    const cancel = (dataItem: any) => {
-        const temp = dataSet.find((item) => {
-            return item.id === dataItem.id
-        })
-        dataItem = temp
-        dataItem.inEdit = false
-        setData(dataSet)
-    }
-
-    const validate = (item: any) => {
-        if (item.name && nameRegEx.test(item.name)) {
-            if (item.address && addressRegEx.test(item.address)) {
-                if (mobileNumRegEx.test(item.mobileNo)) {
-                    if (item.gender !== '') {
-                        if (
-                            item.dateOfBirth != null &&
-                            new Date().getTime() - item.dateOfBirth.getTime() >
-                                0
-                        ) {
-                            return true
-                        } else {
-                            alert('Please enter valid birthday')
-                            return false
-                        }
-                    } else {
-                        alert('Please select a gender')
-                        return false
-                    }
-                } else {
-                    alert('Please enter valid mobile number')
-                    return false
-                }
-            } else {
-                alert('Please enter valid address')
-                return false
-            }
-        } else {
-            alert('Please enter valid name')
-            return false
+    //Add a new row for a new student
+    const addNew = () => {
+        const newDataItem: Person = {
+            inEdit: true,
+            id: 0,
         }
+        setData([newDataItem, ...data])
     }
 
-    const add = (dataItem: any) => {
+    //Add new student
+    const add = (dataItem: Person) => {
         const item = dataItem
         if (validate(item)) {
             item.id = generateId()
@@ -87,14 +96,21 @@ export default function HomePage() {
         }
     }
 
-    const edit = (dataItem: any) => {
-        const item = dataItem
-        item.inEdit = true
-        item.editField = ''
+    //Discard adding a new student
+    const discard = () => {
+        data.shift()
         setData([...data])
     }
 
-    const update = (dataItem: any) => {
+    //Enable edditing a student
+    const edit = (dataItem: Person): void => {
+        const item = dataItem
+        item.inEdit = true
+        setData([...data])
+    }
+
+    //update a student
+    const update = (dataItem: Person) => {
         if (validate(dataItem)) {
             const temp = dataSet.find((item) => {
                 return item.id === dataItem.id
@@ -108,19 +124,25 @@ export default function HomePage() {
         }
     }
 
-    const remove = (dataItem: any) => {
+    //cancel updating a new student
+    const cancel = (dataItem: Person): void => {
+        const temp = dataSet.find((item) => {
+            return item.id === dataItem.id
+        })
+        if (temp) {
+            dataItem = temp
+            dataItem.inEdit = false
+            setData(dataSet)
+        }
+    }
+
+    //remove a student
+    const remove = (dataItem: Person) => {
         const index = dataSet.indexOf(dataItem)
         dataSet.splice(index, 1)
         setData([...dataSet])
     }
 
-    const addNew = () => {
-        const newDataItem: Person = {
-            inEdit: true,
-            id: 0,
-        }
-        setData([newDataItem, ...data])
-    }
 
     const itemChange = (e: GridItemChangeEvent) => {
         let age = e.dataItem.age
@@ -141,6 +163,8 @@ export default function HomePage() {
         setData(newData)
     }
 
+    //command cell
+
     const command = (props: GridCellProps) => (
         <CommandCell
             {...props}
@@ -150,7 +174,6 @@ export default function HomePage() {
             edit={edit}
             update={update}
             cancel={cancel}
-            editField={editField}
         />
     )
 

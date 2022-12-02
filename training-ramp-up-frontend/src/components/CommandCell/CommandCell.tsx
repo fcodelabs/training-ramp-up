@@ -1,17 +1,17 @@
 import * as React from 'react'
+import { Person } from '../../utils/interfaces'
 
 export const CommandCell = (props: {
-    editField: string
-    add?: any
-    update?: any
-    discard?: any
-    cancel?: any
-    edit?: any
-    remove?: any
-    dataItem: any
+    add: (param: Person) => void
+    update: (param: Person) => void
+    discard: () => void
+    cancel: (param: Person) => void
+    edit: (param: Person) => void
+    remove: (param: Person) => void
+    dataItem: Person
 }) => {
     const { dataItem } = props
-    const inEdit = dataItem[props.editField]
+    const inEdit = dataItem.inEdit
     const isNewItem = dataItem.id === 0
 
     return inEdit ? (
@@ -27,7 +27,7 @@ export const CommandCell = (props: {
             <button
                 className="k-button k-button-md k-rounded-md k-button-solid k-button-solid-base k-grid-cancel-command"
                 onClick={() =>
-                    isNewItem ? props.discard(dataItem) : props.cancel(dataItem)
+                    isNewItem ? props.discard() : props.cancel(dataItem)
                 }
             >
                 {isNewItem ? 'Discard Changes' : 'Cancel'}

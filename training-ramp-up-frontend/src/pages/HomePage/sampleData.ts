@@ -1,4 +1,6 @@
-export const sampleData = [
+import { Person } from '../../utils/interfaces'
+
+export const sampleData: Person[] = [
     {
         id: 3,
         name: 'Chai',
