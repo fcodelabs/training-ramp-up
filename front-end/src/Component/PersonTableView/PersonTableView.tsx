@@ -11,21 +11,51 @@ import {
 import { Button } from '@progress/kendo-react-buttons'
 import '@progress/kendo-theme-default/dist/all.css'
 import {
-  deleteItem,
+  deletePerson,
   getPersons,
   insertPerson,
   updatePerson
-} from './PersonTableViewOperations'
+} from './services/PersonTableViewOperations'
 import Person from '../../utils/interface'
-// import DropDownCell from '../DropDownCell/DropDownCell'
 import CommandCell from '../CommandCell/CommandCell'
 import { durationInYears } from '@progress/kendo-date-math'
 import DropDownCell from '../DropDownCell/DropDownCell'
-import personTableViewValidation from './personTableViewValidation'
 
-const PersonTableView: React.FC = () => {
+const PersonTableView = () => {
   const [data, setData] = useState<Person[]>(getPersons())
   const editField: string = 'inEdit'
+
+  const personTableViewValidation = (person: Person) => {
+    const name = /^([A-z\s.]{3,20})$/
+
+    const address = /^([A-z0-9/,\s]{5,})$/
+
+    const mobileNo = /^([0][0-9]{9})$/
+
+    const dob: boolean = new Date() > person.dob
+
+    if (!name.test(person.personName)) {
+      alert('Enter valid name')
+      return false
+    }
+    if (person.gender === '') {
+      alert('Select valid gender')
+      return false
+    }
+    if (!address.test(person.address)) {
+      alert('Enter the address')
+      return false
+    }
+    if (!mobileNo.test(person.mobileNo)) {
+      alert('Enter Valid phone number')
+      return false
+    }
+    if (person.dob === null || !dob) {
+      alert('Enter Valid Date of birth')
+      return false
+    }
+    return true
+  }
 
   const add = (dataItem: Person): any => {
     if (personTableViewValidation(dataItem)) {
@@ -71,7 +101,7 @@ const PersonTableView: React.FC = () => {
   }
 
   const remove = (dataItem: Person): void => {
-    const newData = [...deleteItem(dataItem)]
+    const newData = [...deletePerson(dataItem)]
     setData(newData)
   }
 
@@ -124,7 +154,9 @@ const PersonTableView: React.FC = () => {
     const current = new Date()
     const dob = secondProps.dataItem.dob
     let age: number | string = durationInYears(dob, current)
-    if (age < 0) { age = '' }
+    if (age < 0) {
+      age = ''
+    }
     return <td>{age}</td>
   }
 
@@ -146,7 +178,12 @@ const PersonTableView: React.FC = () => {
       </GridToolbar>
       <GridColumn field="personID" title="ID" width="80px" editable={false} />
       <GridColumn field="personName" title="Name" width="200px" editor="text" />
-      <GridColumn field="gender" title="Gender" width="150px" cell={DropDownCell}/>
+      <GridColumn
+        field="gender"
+        title="Gender"
+        width="150px"
+        cell={DropDownCell}
+      />
       <GridColumn field="address" title="Address" width="200px" editor="text" />
       <GridColumn
         field="mobileNo"

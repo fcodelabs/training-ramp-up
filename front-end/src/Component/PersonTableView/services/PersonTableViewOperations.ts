@@ -1,5 +1,5 @@
-import Person from '../../utils/interface'
-import persons from '../../utils/persons'
+import Person from '../../../utils/interface'
+import persons from '../../../utils/persons'
 
 const generateId = (data: Person[]): number =>
   data.reduce((acc, current) => Math.max(acc, current.personID), 0) + 1
@@ -24,7 +24,7 @@ export const updatePerson = (person: Person): Person[] => {
   return persons
 }
 
-export const deleteItem = (person: Person): Person[] => {
+export const deletePerson = (person: Person): Person[] => {
   const index = persons.findIndex(
     (record) => record.personID === person.personID
   )

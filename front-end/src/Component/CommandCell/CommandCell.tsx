@@ -1,8 +1,7 @@
 import * as React from 'react'
 import '@progress/kendo-theme-default/dist/all.css'
-import { CellProps } from '../../utils/interface'
 
-const CommandCell: React.FC<CellProps> = (props: any) => {
+const CommandCell = (props: any) => {
   const { gridCellProps, edit, remove, add, discard, update, cancel } = props
   const inEdit: boolean = gridCellProps.dataItem.inEdit
   const isNewItem: boolean = gridCellProps.dataItem.personID === 0
@@ -45,7 +44,7 @@ const CommandCell: React.FC<CellProps> = (props: any) => {
         onClick={() => {
           const confirmStatus: boolean = confirm(
             `Do you want to remove ${String(
-              gridCellProps.dataItem.PersonName
+              gridCellProps.dataItem.personName
             )}?`
           )
           if (!confirmStatus) return

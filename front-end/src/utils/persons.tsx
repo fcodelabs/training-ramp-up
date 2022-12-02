@@ -6,7 +6,7 @@ const persons: Person[] = [
     personName: 'Shane',
     gender: 'Male',
     address: 'Matara',
-    mobileNo: '412456789',
+    mobileNo: '0412456789',
     dob: new Date(2000, 7, 12)
   },
   {
@@ -14,7 +14,7 @@ const persons: Person[] = [
     personName: 'Ishara',
     gender: 'Female',
     address: 'Galle',
-    mobileNo: '412456789',
+    mobileNo: '0412456789',
     dob: new Date(1996, 7, 12)
   },
   {
@@ -22,7 +22,7 @@ const persons: Person[] = [
     personName: 'Ashini',
     gender: 'Female',
     address: 'Colombo',
-    mobileNo: '114963258',
+    mobileNo: '0114963258',
     dob: new Date(1996, 7, 12)
   },
   {
@@ -30,7 +30,7 @@ const persons: Person[] = [
     personName: 'Nimali',
     gender: 'Female',
     address: 'Gampaha',
-    mobileNo: '778521475',
+    mobileNo: '0778521475',
     dob: new Date(1996, 7, 12)
   },
   {
@@ -38,7 +38,7 @@ const persons: Person[] = [
     personName: 'Jayani',
     gender: 'Female',
     address: 'Kurunegala',
-    mobileNo: '715463257',
+    mobileNo: '0715463257',
     dob: new Date(1996, 7, 12)
   },
   {
@@ -46,7 +46,7 @@ const persons: Person[] = [
     personName: 'Shane',
     gender: 'Male',
     address: 'Matara',
-    mobileNo: '112456789',
+    mobileNo: '0112456789',
     dob: new Date(1996, 7, 12)
   },
   {
@@ -62,7 +62,7 @@ const persons: Person[] = [
     personName: 'Ashini',
     gender: 'Female',
     address: 'Colombo',
-    mobileNo: '114963258',
+    mobileNo: '0114963258',
     dob: new Date(1996, 7, 12)
   },
   {
@@ -70,7 +70,7 @@ const persons: Person[] = [
     personName: 'Nimali',
     gender: 'Female',
     address: 'Gampaha',
-    mobileNo: '778521475',
+    mobileNo: '0778521475',
     dob: new Date(1996, 7, 12)
   },
   {
@@ -78,7 +78,7 @@ const persons: Person[] = [
     personName: 'Jayani',
     gender: 'Female',
     address: 'Kurunegala',
-    mobileNo: '715463527',
+    mobileNo: '0715463527',
     dob: new Date(1996, 7, 12)
   }
 ]

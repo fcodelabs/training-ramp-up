@@ -28,7 +28,7 @@ const DropDownCell = (prop: GridCellProps) => {
 
   const { dataItem } = prop
   const field = prop.field ?? ''
-  const dataValue = dataItem[field] === null ? '' : dataItem[field]
+  const dataValue = dataItem[field] ?? ''
   const inEdit: boolean = dataItem.inEdit
 
   return (
