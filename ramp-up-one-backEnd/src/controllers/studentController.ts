@@ -8,27 +8,27 @@ import {
 
 //get all student
 export const getAllCustomer = async (req: Request, res: Response) => {
-  const student = getAllCustomerService();
+  const student = await getAllCustomerService();
+  console.log('student demo');
+  console.log(student);
   res.send(student);
 };
 
 //save Student
 export const saveStudent = async (req: Request, res: Response) => {
-  const response = saveStudentService(req.body);
+  const response = await saveStudentService(req.body);
   res.send(response);
 };
 
 //update Student
 export const updateStudent = async (req: Request, res: Response) => {
-  const response = updateStudentService(req.body);
+  const response = await updateStudentService(req.body);
   res.send(response);
 };
 
 //delete Student
 export const deleteStudent = async (req: Request, res: Response) => {
   const studentId = parseInt(req.params.ID);
-  console.log('studentId');
-  console.log(studentId);
-  const response = deleteStudentService(studentId);
+  const response = await deleteStudentService(studentId);
   res.send(response);
 };

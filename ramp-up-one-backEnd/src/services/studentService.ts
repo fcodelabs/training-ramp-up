@@ -1,4 +1,6 @@
 //temp data array
+import { Student } from '../entities/studentEntity';
+import { AppDataSource } from '../dataSource';
 const tempArray = [
   {
     ID: 1,
@@ -21,51 +23,73 @@ const tempArray = [
 ];
 
 //get all student
-export const getAllCustomerService = () => {
-  return tempArray;
+export const getAllCustomerService = async () => {
+  // return tempArray;
+  try {
+    const studentsRepo = AppDataSource.getRepository(Student);
+    const allStudent = await studentsRepo.find();
+
+    return allStudent ;
+  } catch (error) {
+    return { error };
+  }
 };
 
 //save Student
-export const saveStudentService = (
-  data:any
-) => {
-  tempArray.push({
-    ID: data.ID,
-    name: data.name,
-    gender: data.gender,
-    Address: data.Address,
-    MobileNo: data.MobileNo,
-    birth: data.birth,
-    Age: data.Age,
-  });
-  return tempArray;
+export const saveStudentService = async (data: any) => {
+  const student = new Student();
+  student.id = data.id;
+  student.name = data.name;
+  student.gender = data.gender;
+  student.address = data.address;
+  student.mobileNo = data.mobileNo;
+  student.birth = data.birth;
+  student.age = data.age;
+  const studentRepository = AppDataSource.getRepository(Student);
+
+  const newStudent = await studentRepository.save(student);
+  if (!newStudent) {
+    return { message: 'Faild to add student !' };
+  }
+  return newStudent;
+  // tempArray.push({
+  //   ID: data.ID,
+  //   name: data.name,
+  //   gender: data.gender,
+  //   Address: data.Address,
+  //   MobileNo: data.MobileNo,
+  //   birth: data.birth,
+  //   Age: data.Age,
+  // });
+  // return tempArray;
 };
 
 //update Student
-export const updateStudentService = (
-  data:any
-) => {
-  for (let i = 0; i < tempArray.length; i++) {
-    
-    if (tempArray[i].ID === data.ID) {
-      tempArray[i].name = data.name;
-      tempArray[i].Address = data.Address;
-      tempArray[i].gender = data.gender;
-      tempArray[i].MobileNo = data.MobileNo;
-      tempArray[i].birth = data.birth;
-      tempArray[i].Age = data.Age;
-    }
+export const updateStudentService = async (data: any) => {
+  const student = new Student();
+  student.id = data.id;
+  student.name = data.name;
+  student.gender = data.gender;
+  student.address = data.address;
+  student.mobileNo = data.mobileNo;
+  student.birth = data.birth;
+  student.age = data.age;
+  const studentRepository = AppDataSource.getRepository(Student);
+
+  const newStudent = await studentRepository.save(student);
+  if (!newStudent) {
+    return { message: 'Faild to add student !' };
   }
-  return tempArray;
+  return newStudent;
 };
 
 //delete Student
-export const deleteStudentService = (ID: number) => {
-  for (let i = 0; i < tempArray.length; i++) {
-    console.log(ID);
-    if (tempArray[i].ID === ID) {
-      tempArray.splice(i, 1);
-    }
+export const deleteStudentService = async (id: number) => {
+  const student = AppDataSource.getRepository(Student);
+  const studentToRemove = await student.findOneBy({ id });
+  if (!studentToRemove) {
+    return { message: 'Student doesn\'t exist !' };
   }
-  return tempArray;
+  await student.remove(studentToRemove);
+  return { message: 'Student removed successfully !' };
 };
