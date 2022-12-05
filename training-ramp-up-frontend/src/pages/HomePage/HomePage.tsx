@@ -6,13 +6,13 @@ import {
     GridItemChangeEvent,
     GridToolbar,
 } from '@progress/kendo-react-grid'
-import { DatePicker } from '@progress/kendo-react-dateinputs'
 import '@progress/kendo-theme-default/dist/all.css'
 import { sampleData } from '../../utils/sampleData'
 import { CommandCell } from '../../components/CommandCell/CommandCell'
 import { DropDownCell } from '../../components/DropDownCell/DropDownCell'
 import { Person } from '../../utils/interfaces'
-import { DatePickerCell } from '../../components/DatePicker/DatePickerCell'
+import { DatePickerCell } from '../../components/DatePickerCell/DatePickerCell'
+
 
 const dataSet = [...sampleData]
 
@@ -20,26 +20,17 @@ export default function HomePage() {
     const editField = 'inEdit'
     const [data, setData] = React.useState(sampleData)
 
-    //RegEx
-    const nameRegEx = new RegExp('^([A-z\\s.]{3,80})$')
-
-    const addressRegEx = new RegExp('^([A-z0-9/,\\s]{3,})$')
-
-    const mobileNumRegEx = new RegExp(
-        '^([0][0-9]{9}|[0][0-9]{2}[-\\s][0-9]{7})$'
-    )
-
     const validations = new Map([
         ['name', new RegExp('^([A-z\\s.]{3,80})$')],
         ['address', new RegExp('^([A-z0-9/,\\s]{3,})$')],
         ['mobileNo', new RegExp('^([0][0-9]{9}|[0][0-9]{2}[-\\s][0-9]{7})$')],
     ])
 
-    //Validating -Start
+    //Validation
 
     const validateFields = (inputValue: any, field: string): boolean => {
         if (!inputValue) {
-            alert('Please enter valid ' + field);
+            alert('Please enter valid ' + field)
             return false
         }
         validations.forEach(function (value, key) {
@@ -52,13 +43,6 @@ export default function HomePage() {
         return true
     }
 
-    const validateBirthDay = (birthday?: Date): boolean => {
-        if (birthday != null && new Date().getTime() - birthday.getTime() > 0) {
-            return true
-        }
-        alert('Please select a valid birthday')
-        return false
-    }
 
     const validate = (item: Person): boolean => {
         return (
@@ -66,11 +50,11 @@ export default function HomePage() {
             validateFields(item.gender, 'gender') &&
             validateFields(item.address, 'address') &&
             validateFields(item.mobileNo, 'mobileNo') &&
-            validateBirthDay(item.dateOfBirth)
+            validateFields(item.dateOfBirth, 'dateOfBirth')
         )
     }
 
-    //validating -End
+    //Generate Id
 
     const generateId = () =>
         dataSet.reduce((max, current: Person) => Math.max(max, current.id), 0) +
@@ -146,6 +130,8 @@ export default function HomePage() {
     }
 
     const itemChange = (e: GridItemChangeEvent) => {
+        console.log(e);
+        
         let age = e.dataItem.age
 
         //Calculate Age
@@ -153,7 +139,7 @@ export default function HomePage() {
             const today = new Date().getTime()
             const birthday = e.value.getTime()
             const tempAge = Math.floor((today - birthday) / (86400000 * 365))
-            age=(tempAge>=0)?tempAge:''
+            age = tempAge >= 0 ? tempAge : ''
         }
 
         const newData = data.map((item) =>
@@ -177,6 +163,7 @@ export default function HomePage() {
             cancel={cancel}
         />
     )
+
 
     return (
         <Grid
@@ -210,8 +197,7 @@ export default function HomePage() {
                 title="Date of Birth"
                 format="{0:D}"
                 width="210px"
-                //cell={DatePickerCell}
-                editor="date"
+                cell={DatePickerCell}
             />
             <GridColumn field="age" title="Age" editable={false} />
             <GridColumn cell={command} title="Command" width="220px" />
