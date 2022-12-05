@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-// import { Error } from '@progress/kendo-react-labels';
 import {
   Grid,
   GridCellProps,
@@ -9,20 +8,22 @@ import {
 } from '@progress/kendo-react-grid';
 
 import {
-  insertItem,
-  getItems,
-  updateItem,
-  deleteItem,
+  insertUser,
+  getUser,
+  updateUser,
+  deleteUser,
 } from '../../Services/services';
 import Command from '../../components/Buttons/Buttons';
-import { Product } from '../../utils/interfaces';
+import { StudentModel } from '../../utils/interfaces';
 import DropDownCell from '../../components/dropdown/DropDownCell';
+import ValidatedDate from '../../components/validatedDate/validatedDate';
 const editField: string = 'inEdit';
 
 const dataGrid = () => {
-  const [user, setuser] = useState<Product[]>([]);
+  const [user, setuser] = useState<StudentModel[]>([]);
+
   useEffect(() => {
-    const newUser = getItems();
+    const newUser = getUser();
     setuser(newUser);
   }, []);
 
@@ -35,52 +36,105 @@ const dataGrid = () => {
     setuser([newUser, ...user]);
   }
 
-
   const itemChange = (event: GridItemChangeEvent) => {
     const newData = user.map((item) =>
-      item.ID === event.dataItem.ID
+      item.id === event.dataItem.id
         ? { ...item, [event.field || '']: event.value }
         : item
     );
     setuser(newData);
   };
 
-  // add new user
-  const add = (dataItem: Product) => {
-    dataItem.inEdit = true;
-
-    // validations
+  // alidations
+  function checkValidation(dataItem: StudentModel) {
     const nameRegEx = /^[A-z ]{5,20}$/;
     const addressRegEx = /^[A-z ]{5,20}$/;
     const mobileRegEx = /^[0-9]{5,10}$/;
+    let fieldStatus: boolean = false;
+
     if (dataItem.name !== undefined && nameRegEx.test(dataItem.name)) {
-      if (
-        dataItem.Address !== undefined &&
-        addressRegEx.test(dataItem.Address)
-      ) {
-        if (dataItem.gender !== undefined) {
-          if (
-            dataItem.MobileNo !== undefined &&
-            mobileRegEx.test(dataItem.MobileNo)
-          ) {
-            if (dataItem.birth !== undefined) {
-              const newData: any = insertItem(dataItem);
-              setuser(newData);
-            } else {
-              alert('check date of birth....!');
-            }
-          } else {
-            alert('check MobileNo....!');
-          }
-        } else {
-          alert('check gender....!');
-        }
-      } else {
-        alert('check address....!');
-      }
+      fieldStatus = true;
     } else {
-      alert('check name....!');
+      fieldStatus = false;
+      alert('check name field....!');
+      return;
     }
+
+    if (dataItem.address !== undefined && addressRegEx.test(dataItem.address)) {
+      fieldStatus = true;
+    } else {
+      fieldStatus = false;
+      alert('check address field....!');
+      return;
+    }
+
+    if (dataItem.gender !== undefined) {
+      fieldStatus = true;
+    } else {
+      fieldStatus = false;
+      alert('check gender field....!');
+      return;
+    }
+
+    if (
+      dataItem.mobileNo !== undefined &&
+      mobileRegEx.test(dataItem.mobileNo)
+    ) {
+      fieldStatus = true;
+    } else {
+      fieldStatus = false;
+      alert('check mobileNo field....!');
+      return;
+    }
+
+    if (dataItem.birth !== undefined) {
+      fieldStatus = true;
+    } else {
+      fieldStatus = false;
+      alert('check birth field....!');
+      return;
+    }
+
+    return fieldStatus;
+  }
+
+  // add new user
+  const add = (dataItem: StudentModel) => {
+    dataItem.inEdit = true;
+
+    if (checkValidation(dataItem)) {
+      const newData: any = insertUser(dataItem);
+      setuser(newData);
+    }
+
+    // if (dataItem.name !== undefined && nameRegEx.test(dataItem.name)) {
+    //   if (
+    //     dataItem.address !== undefined &&
+    //     addressRegEx.test(dataItem.address)
+    //   ) {
+    //     if (dataItem.gender !== undefined) {
+    //       if (
+    //         dataItem.mobileNo !== undefined &&
+    //         mobileRegEx.test(dataItem.mobileNo)
+    //       ) {
+    //         if (dataItem.birth !== undefined) {
+    //           const newData: any = insertUser(dataItem);
+    //           setuser(newData);
+    //         } else {
+    //           alert('check date of birth....!');
+    //         }
+    //       } else {
+    //         alert('check MobileNo....!');
+    //       }
+    //     } else {
+    //       alert('check gender....!');
+    //     }
+    //   } else {
+    //     alert('check address....!');
+    //   }
+    // } else {
+    //   alert('check name....!');
+    // }
   };
 
   // discard fields
@@ -91,33 +145,33 @@ const dataGrid = () => {
   };
 
   // update field
-  const update = (dataItem: Product) => {
+  const update = (dataItem: StudentModel) => {
     dataItem.inEdit = false;
-    const newData = updateItem(dataItem);
+    const newData = updateUser(dataItem);
     setuser(newData);
   };
 
   // remove user
-  const remove = (dataItem: Product) => {
-    const newData = [...deleteItem(dataItem)];
+  const remove = (dataItem: StudentModel) => {
+    const newData = [...deleteUser(dataItem)];
     setuser(newData);
   };
 
   // cancel update
-  const cancel = (dataItem: Product) => {
-    const originalItem: any = getItems().find((p) => p.ID === dataItem.ID);
+  const cancel = (dataItem: StudentModel) => {
+    const originalItem: any = getUser().find((p) => p.id === dataItem.id);
     const newData = user.map((item: any) =>
-      item.ID === originalItem.ID ? originalItem : item
+      item.id === originalItem.id ? originalItem : item
     );
 
     setuser(newData);
   };
 
   // enable edit
-  const enterEdit = (dataItem: Product) => {
+  const enterEdit = (dataItem: StudentModel) => {
     setuser(
       user.map((item) =>
-        item.ID === dataItem.ID ? { ...item, inEdit: true } : item
+        item.id === dataItem.id ? { ...item, inEdit: true } : item
       )
     );
   };
@@ -161,23 +215,24 @@ const dataGrid = () => {
           </div>
         </GridToolbar>
 
-        <Column field="ID" title="ID" editable={false} />
+        <Column field="id" title="ID" editable={false} />
 
         <Column id="p2" className="nameField" field="name" title="Name" />
 
         <Column field="gender" title="Gender" cell={DropDownCell} />
 
-        <Column field="Address" title="Address" />
+        <Column field="address" title="Address" />
 
-        <Column field="MobileNo" title="Mobile No" />
+        <Column field="mobileNo" title="Mobile No" />
 
         <Column
           field="birth"
           title="Date of birth"
-          format="{0:d}"
-          editor="date"
+          // format="{0:d}"
+          cell={ValidatedDate}
+          // editor="date"
         />
-        <Column field="Age" title="Age" editable={false} />
+        <Column field="age" title="Age" editable={false} />
         <Column title="Command" cell={Buttons} width="200px" />
       </Grid>
     </>

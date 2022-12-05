@@ -1,11 +1,11 @@
-export interface Product {
-  ID?: number;
+export interface StudentModel {
+  id?: number;
   name?: string;
   gender?: string;
-  Address?: string;
-  MobileNo?: string;
-  birth?: string;
-  Age?: number;
+  address?: string;
+  mobileNo?: string;
+  birth?:  Date |string;
+  age?: number;
   inEdit?: boolean | string;
   Discontinued?: boolean;
 }

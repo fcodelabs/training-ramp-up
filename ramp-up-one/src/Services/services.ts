@@ -1,12 +1,13 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 /* eslint-disable @typescript-eslint/restrict-plus-operands */
 import { products } from '../utils/products';
+import { StudentModel } from '../utils/interfaces';
 
-const data = [...products];
+const data: StudentModel[] = [...products];
 
 const generateId = (data: any[]) =>
   data.reduce(
-    (acc: number, current: { ID: number }) => Math.max(acc, current.ID),
+    (acc: number, current: { id: number }) => Math.max(acc, current.id),
     0
   ) + 1;
 
@@ -17,27 +18,36 @@ function getAge(dob: Date) {
   return Math.abs(agedt.getUTCFullYear() - 1970);
 }
 
-export const insertItem = (item: any) => {
-  item.ID = generateId(data);
-  item.Age = getAge(new Date(item.birth));
-  // item.birth = new Date(item.birth).toDateString();
-  item.inEdit = false;
-  data.unshift(item);
+function setDateFormat(birth:Date){
+  const dateObj = birth;
+  const month = dateObj.getUTCMonth() + 1; 
+  const day = dateObj.getUTCDate();
+  const year = dateObj.getUTCFullYear();
+  const newdate = month + '/' + day + '/' + year;
+  return newdate;
+}
+
+export const getUser = () => {
   return data;
 };
 
-export const getItems = () => {
+export const insertUser = (user: any) => {
+  user.id = generateId(data);
+  user.age = getAge(new Date(user.birth));
+  user.birth = setDateFormat(user.birth);
+  user.inEdit = false;
+  data.unshift(user);
   return data;
 };
 
-export const updateItem = (item: any) => {
-  const index = data.findIndex((record) => record.ID === item.ID);
-  data[index] = item;
+export const updateUser = (user: StudentModel) => {
+  const index = data.findIndex((record) => record.id === user.id);
+  data[index] = user;
   return data;
 };
 
-export const deleteItem = (item: any) => {
-  const index = data.findIndex((record) => record.ID === item.ID);
+export const deleteUser = (user: StudentModel) => {
+  const index = data.findIndex((record) => record.id === user.id);
   data.splice(index, 1);
   return data;
 };
