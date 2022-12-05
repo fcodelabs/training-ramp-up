@@ -6,11 +6,13 @@ import {
     GridItemChangeEvent,
     GridToolbar,
 } from '@progress/kendo-react-grid'
-import { sampleData } from './sampleData'
+import { DatePicker } from '@progress/kendo-react-dateinputs'
 import '@progress/kendo-theme-default/dist/all.css'
+import { sampleData } from '../../utils/sampleData'
 import { CommandCell } from '../../components/CommandCell/CommandCell'
 import { DropDownCell } from '../../components/DropDownCell/DropDownCell'
 import { Person } from '../../utils/interfaces'
+import { DatePickerCell } from '../../components/DatePicker/DatePickerCell'
 
 const dataSet = [...sampleData]
 
@@ -27,45 +29,43 @@ export default function HomePage() {
         '^([0][0-9]{9}|[0][0-9]{2}[-\\s][0-9]{7})$'
     )
 
+    const validations = new Map([
+        ['name', new RegExp('^([A-z\\s.]{3,80})$')],
+        ['address', new RegExp('^([A-z0-9/,\\s]{3,})$')],
+        ['mobileNo', new RegExp('^([0][0-9]{9}|[0][0-9]{2}[-\\s][0-9]{7})$')],
+    ])
+
     //Validating -Start
 
-    const validateName = (name?: string): boolean => {
-        name && nameRegEx.test(name) ? true : alert('Please enter valid name')
-        return false
-    }
+    const validateFields = (inputValue: any, field: string): boolean => {
+        if (!inputValue) {
+            alert('Please enter valid ' + field);
+            return false
+        }
+        validations.forEach(function (value, key) {
+            if (key == field && !value.test(inputValue)) {
+                alert('Please enter valid ' + field)
+                return false
+            }
+        })
 
-    const validateGender = (gender?: string): boolean => {
-        gender !== '' ? true : alert('Please select a gender')
-        return false
-    }
-
-    const validateAddress = (address?: string): boolean => {
-        address && addressRegEx.test(address)
-            ? true
-            : alert('Please enter valid address')
-        return false
-    }
-
-    const validateMobileNo = (mobileNo?: string): boolean => {
-        mobileNo && mobileNumRegEx.test(mobileNo)
-            ? true
-            : alert('Please enter valid mobile No')
-        return false
+        return true
     }
 
     const validateBirthDay = (birthday?: Date): boolean => {
-        birthday != null && new Date().getTime() - birthday.getTime() > 0
-            ? true
-            : alert('Please select a valid birthday')
+        if (birthday != null && new Date().getTime() - birthday.getTime() > 0) {
+            return true
+        }
+        alert('Please select a valid birthday')
         return false
     }
 
     const validate = (item: Person): boolean => {
         return (
-            validateName(item.name) &&
-            validateGender(item.gender) &&
-            validateAddress(item.address) &&
-            validateMobileNo(item.mobileNo) &&
+            validateFields(item.name, 'name') &&
+            validateFields(item.gender, 'gender') &&
+            validateFields(item.address, 'address') &&
+            validateFields(item.mobileNo, 'mobileNo') &&
             validateBirthDay(item.dateOfBirth)
         )
     }
@@ -111,6 +111,8 @@ export default function HomePage() {
 
     //update a student
     const update = (dataItem: Person) => {
+        console.log(validate(dataItem))
+
         if (validate(dataItem)) {
             const temp = dataSet.find((item) => {
                 return item.id === dataItem.id
@@ -143,7 +145,6 @@ export default function HomePage() {
         setData([...dataSet])
     }
 
-
     const itemChange = (e: GridItemChangeEvent) => {
         let age = e.dataItem.age
 
@@ -151,8 +152,8 @@ export default function HomePage() {
         if (e.field === 'dateOfBirth') {
             const today = new Date().getTime()
             const birthday = e.value.getTime()
-            age = Math.floor((today - birthday) / (86400000 * 365))
-            console.log(age)
+            const tempAge = Math.floor((today - birthday) / (86400000 * 365))
+            age=(tempAge>=0)?tempAge:''
         }
 
         const newData = data.map((item) =>
@@ -193,7 +194,13 @@ export default function HomePage() {
                     Add new
                 </button>
             </GridToolbar>
-            <GridColumn field="id" title="ID" width="40px" editable={false} />
+            <GridColumn
+                field="id"
+                title="ID"
+                width="40px"
+                editable={false}
+                className="k-grid-textbox"
+            />
             <GridColumn field="name" title="Name" width="250px" editor="text" />
             <GridColumn field="gender" title="Gender" cell={DropDownCell} />
             <GridColumn field="address" title="Address" editor="text" />
@@ -201,9 +208,10 @@ export default function HomePage() {
             <GridColumn
                 field="dateOfBirth"
                 title="Date of Birth"
-                editor="date"
                 format="{0:D}"
                 width="210px"
+                //cell={DatePickerCell}
+                editor="date"
             />
             <GridColumn field="age" title="Age" editable={false} />
             <GridColumn cell={command} title="Command" width="220px" />

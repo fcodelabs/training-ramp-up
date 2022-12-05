@@ -1,4 +1,4 @@
-import { Person } from '../../utils/interfaces'
+import { Person } from './interfaces'
 
 export const sampleData: Person[] = [
     {

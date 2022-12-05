@@ -5,7 +5,7 @@ import {
 } from '@progress/kendo-react-dropdowns'
 import { GridCellProps } from '@progress/kendo-react-grid'
 
-export const DropDownCell = (props: GridCellProps) => {
+export const DropDownCell = (props: GridCellProps) => {  
     const localizedData = [
         { text: 'Male', value: 'Male' },
         { text: 'Female', value: 'Female' },

@@ -1,6 +1,18 @@
-import express, { Express, Request, Response } from 'express'
+import 'reflect-metadata'
+import * as express from 'express'
+import { Express, Request, Response } from 'express'
+import { Student } from './src/models/Student'
+import { appDataSource } from './src/configs/dataSourceConfig'
+import student from './src/controllers/StudentController'
 
-import student from './src/controllers/Student/StudentController'
+appDataSource
+    .initialize()
+    .then(() => {
+        console.log('Data Source has been initialized!')
+    })
+    .catch((err) => {
+        console.error('Error during Data Source initialization:', err)
+    })
 
 const app: Express = express()
 const port = 3000
@@ -8,14 +20,10 @@ const port = 3000
 app.use(express.json())
 app.use('/student', student)
 
-app.get('/', (req: Request, res: Response) => {
-	res.send('Express + TypeScript Server!!')
-})
-
-app.get('/hello', (req: Request, res: Response) => {
-	res.send('Hello TypeScript Server!!')
+app.get('/', async (req: Request, res: Response) => {
+    res.send('Express + TypeScript Server!!')
 })
 
 app.listen(port, () => {
-	console.log(`⚡️[server]: Server is running at https://localhost:${port}`)
+    console.log(`⚡️[server]: Server is running at https://localhost:${port}`)
 })
