@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getAllStudentsService = exports.addStudentService = void 0;
+exports.deleteStudentService = exports.updateStudentService = exports.getAllStudentsService = exports.addStudentService = void 0;
 const students = [];
 const addStudentService = (student) => __awaiter(void 0, void 0, void 0, function* () {
     function add(student) {
@@ -30,3 +30,25 @@ const getAllStudentsService = () => __awaiter(void 0, void 0, void 0, function* 
     return getAll();
 });
 exports.getAllStudentsService = getAllStudentsService;
+const updateStudentService = (student) => __awaiter(void 0, void 0, void 0, function* () {
+    function update(student) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const index = students.findIndex((s) => s.id === student.id);
+            students[index] = student;
+            return student;
+        });
+    }
+    return update(student);
+});
+exports.updateStudentService = updateStudentService;
+const deleteStudentService = (student) => __awaiter(void 0, void 0, void 0, function* () {
+    function remove(student) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const index = students.findIndex((s) => s.id === student.id);
+            students.splice(index, 1);
+            return students;
+        });
+    }
+    return remove(student);
+});
+exports.deleteStudentService = deleteStudentService;

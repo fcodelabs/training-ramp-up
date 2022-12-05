@@ -8,4 +8,6 @@ const studentController_1 = require("../controllers/studentController");
 const router = express_1.default.Router();
 router.post('/', studentController_1.addStudent);
 router.get('/', studentController_1.getAllStudents);
+router.put('/:id', studentController_1.updateStudent);
+router.delete('/:id', studentController_1.deleteStudent);
 exports.default = router;
