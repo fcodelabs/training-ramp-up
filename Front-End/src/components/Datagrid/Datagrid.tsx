@@ -25,7 +25,7 @@ const requiredMobileValidator = (value: string) =>
 const requiredDateValidator = (value: any) =>
   value ? "" : "The field is required";
 
-const TextInputWithValidation = (fieldRenderProps: FieldRenderProps) => {
+const textInputWithValidation = (fieldRenderProps: FieldRenderProps) => {
   const { validationMessage, visited, ...others } = fieldRenderProps;
   return (
     <div>
@@ -83,7 +83,7 @@ const GridInlineFormRow = (props: { children: any; dataItem: any }) => {
   return props.children;
 };
 
-const TextCell = (props: GridCellProps) => {
+const textCell = (props: GridCellProps) => {
   const { editIndex } = React.useContext(GridEditContext);
   const isInEdit = props.dataItem[FORM_DATA_INDEX] === editIndex;
 
@@ -91,7 +91,7 @@ const TextCell = (props: GridCellProps) => {
     <td>
       {isInEdit ? (
         <Field
-          component={TextInputWithValidation}
+          component={textInputWithValidation}
           name={`${props.field}`}
           validator={requiredTextValidator}
         />
@@ -102,7 +102,7 @@ const TextCell = (props: GridCellProps) => {
   );
 };
 
-const DropDownCell = (props: GridCellProps) => {
+const dropDownCell = (props: GridCellProps) => {
   const { editIndex } = React.useContext(GridEditContext);
   const isInEdit = props.dataItem[FORM_DATA_INDEX] === editIndex;
 
@@ -122,7 +122,7 @@ const DropDownCell = (props: GridCellProps) => {
   );
 };
 
-const MobileCell = (props: GridCellProps) => {
+const mobileCell = (props: GridCellProps) => {
   const { editIndex } = React.useContext(GridEditContext);
   const isInEdit = props.dataItem[FORM_DATA_INDEX] === editIndex;
 
@@ -130,7 +130,7 @@ const MobileCell = (props: GridCellProps) => {
     <td>
       {isInEdit ? (
         <Field
-          component={TextInputWithValidation}
+          component={textInputWithValidation}
           name={`${props.field}`}
           validator={requiredMobileValidator}
           placeholder="0771457890"
@@ -142,7 +142,7 @@ const MobileCell = (props: GridCellProps) => {
   );
 };
 
-const AgeCell = (props: GridCellProps) => {
+const ageCell = (props: GridCellProps) => {
   if (Number(props.dataItem.dateOfBirth.split("-")[0]) === 0) {
     return <td></td>;
   } else {
@@ -153,7 +153,7 @@ const AgeCell = (props: GridCellProps) => {
   }
 };
 
-const DateCell = (props: GridCellProps) => {
+const dateCell = (props: GridCellProps) => {
   const { editIndex } = React.useContext(GridEditContext);
   const isInEdit = props.dataItem[FORM_DATA_INDEX] === editIndex;
 
@@ -161,7 +161,7 @@ const DateCell = (props: GridCellProps) => {
     <td>
       {isInEdit ? (
         <Field
-          component={TextInputWithValidation}
+          component={textInputWithValidation}
           name={`${props.field}`}
           validator={requiredDateValidator}
           type="date"
@@ -174,7 +174,7 @@ const DateCell = (props: GridCellProps) => {
   );
 };
 
-const CommandCell = (props: GridCellProps) => {
+const commandCell = (props: GridCellProps) => {
   const onSubmit = React.useContext(FormSubmitContext);
   const { onRowAction, setEditIndex, editIndex } =
     React.useContext(GridEditContext);
@@ -286,7 +286,7 @@ export default function Datagrid() {
           setEditIndex(undefined);
           break;
         case "add":
-          newDataState.push({
+          newDataState.unshift({
             name: "",
             [FORM_DATA_INDEX]: options.rowIndex,
             [DATA_ITEM_KEY]: Math.max(...dataState.map((s) => s.id)) + 1,
@@ -321,28 +321,28 @@ export default function Datagrid() {
           </button>
         </GridToolbar>
         <GridColumn title="Id" field="id" />
-        <GridColumn title="Name" field="name" cell={TextCell} editor="text" />
+        <GridColumn title="Name" field="name" cell={textCell} editor="text" />
         <GridColumn
           title="Gender"
           field="gender"
-          cell={DropDownCell}
+          cell={dropDownCell}
           editor="text"
         />
         <GridColumn
           title="Address"
           field="address"
-          cell={TextCell}
+          cell={textCell}
           editor="text"
         />
         <GridColumn
           title="Mobile No"
           field="mobile"
-          cell={MobileCell}
+          cell={mobileCell}
           editor="text"
         />
-        <GridColumn title="Date of Birth" field="dateOfBirth" cell={DateCell} />
-        <GridColumn title="Age" cell={AgeCell} />
-        <GridColumn title="Command" cell={CommandCell} />
+        <GridColumn title="Date of Birth" field="dateOfBirth" cell={dateCell} />
+        <GridColumn title="Age" cell={ageCell} />
+        <GridColumn title="Command" cell={commandCell} />
       </Grid>
     </GridEditContext.Provider>
   );

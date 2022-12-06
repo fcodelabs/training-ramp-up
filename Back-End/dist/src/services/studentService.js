@@ -8,47 +8,43 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteStudentService = exports.updateStudentService = exports.getAllStudentsService = exports.addStudentService = void 0;
-const students = [];
-const addStudentService = (student) => __awaiter(void 0, void 0, void 0, function* () {
-    function add(student) {
-        return __awaiter(this, void 0, void 0, function* () {
-            students.push(student);
-            return student;
-        });
-    }
-    return add(student);
-});
-exports.addStudentService = addStudentService;
+exports.deleteStudentService = exports.upsertStudentService = exports.getAllStudentsService = void 0;
+const studentEntity_1 = require("../entities/studentEntity");
+const dataSource_1 = __importDefault(require("../dataSource"));
 const getAllStudentsService = () => __awaiter(void 0, void 0, void 0, function* () {
-    function getAll() {
-        return __awaiter(this, void 0, void 0, function* () {
-            return students;
-        });
+    try {
+        const studentRepository = dataSource_1.default.getRepository(studentEntity_1.Student);
+        const students = yield studentRepository.find();
+        return students;
     }
-    return getAll();
+    catch (err) {
+        console.log(err);
+        return { err: 'Student fetching failed' };
+    }
 });
 exports.getAllStudentsService = getAllStudentsService;
-const updateStudentService = (student) => __awaiter(void 0, void 0, void 0, function* () {
-    function update(student) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const index = students.findIndex((s) => s.id === student.id);
-            students[index] = student;
-            return student;
-        });
+const upsertStudentService = (student) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const studentRepository = dataSource_1.default.getRepository(studentEntity_1.Student);
+        const result = yield studentRepository.upsert(student, ['id']);
+        return result;
     }
-    return update(student);
+    catch (err) {
+        console.log(err);
+        return { err: 'Student upserting failed' };
+    }
 });
-exports.updateStudentService = updateStudentService;
-const deleteStudentService = (student) => __awaiter(void 0, void 0, void 0, function* () {
-    function remove(student) {
+exports.upsertStudentService = upsertStudentService;
+const deleteStudentService = (id) => __awaiter(void 0, void 0, void 0, function* () {
+    function remove(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            const index = students.findIndex((s) => s.id === student.id);
-            students.splice(index, 1);
-            return students;
+            return yield studentEntity_1.Student.delete({ id: id });
         });
     }
-    return remove(student);
+    return remove(id);
 });
 exports.deleteStudentService = deleteStudentService;

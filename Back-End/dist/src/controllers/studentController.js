@@ -9,24 +9,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteStudent = exports.updateStudent = exports.getAllStudents = exports.addStudent = void 0;
+exports.deleteStudent = exports.upsertStudent = exports.getAllStudents = void 0;
 const studentService_1 = require("../services/studentService");
-const addStudent = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const student = yield (0, studentService_1.addStudentService)(req.body).catch((err) => {
-            res.status(500);
-            res.json(err);
-            return;
-        });
-        res.status(200);
-        res.json(student);
-    }
-    catch (err) {
-        res.status(500);
-        res.json(err);
-    }
-});
-exports.addStudent = addStudent;
 const getAllStudents = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const students = yield (0, studentService_1.getAllStudentsService)().catch((err) => {
@@ -43,31 +27,23 @@ const getAllStudents = (req, res) => __awaiter(void 0, void 0, void 0, function*
     }
 });
 exports.getAllStudents = getAllStudents;
-const updateStudent = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const upsertStudent = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const student = yield (0, studentService_1.updateStudentService)(req.body).catch((err) => {
-            res.status(500);
-            res.json(err);
-            return;
-        });
+        const studentRepository = yield (0, studentService_1.upsertStudentService)(req.body);
         res.status(200);
-        res.json(student);
+        res.json(studentRepository);
     }
     catch (err) {
         res.status(500);
         res.json(err);
     }
 });
-exports.updateStudent = updateStudent;
+exports.upsertStudent = upsertStudent;
 const deleteStudent = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const students = yield (0, studentService_1.deleteStudentService)(req.body).catch((err) => {
-            res.status(500);
-            res.json(err);
-            return;
-        });
+        const result = yield (0, studentService_1.deleteStudentService)(req.params.id);
         res.status(200);
-        res.json(students);
+        res.json(result);
     }
     catch (err) {
         res.status(500);

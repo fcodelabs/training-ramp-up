@@ -7,14 +7,17 @@ dotenv.config();
 
 const dataSource = new DataSource({
   type: 'postgres',
-  host: process.env.DB_HOST,
-  port: Number(process.env.DB_PORT),
-  username: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME,
+  host: 'nomadbuddy-postgres-db.postgres.database.azure.com',
+  port: 5432,
+  username: 'nomad_admin',
+  password: 'Digital1234*',
+  database: 'rampup',
   entities: [Student],
   synchronize: true,
   logging: false,
+  subscribers: [],
+  migrations: [],
+  ssl: true,
 });
 
 export default dataSource;

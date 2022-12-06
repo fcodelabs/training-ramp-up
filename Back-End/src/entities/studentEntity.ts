@@ -3,20 +3,20 @@ import { Entity, Column, PrimaryColumn, BaseEntity } from 'typeorm';
 @Entity()
 export class Student extends BaseEntity {
   @PrimaryColumn()
-  id: number;
+  id!: string;
 
   @Column()
-  name: string;
+  name!: string;
 
   @Column()
-  gender: string;
+  gender!: string;
 
   @Column()
-  address: string;
+  address!: string;
 
   @Column()
-  mobile: string;
+  mobile!: string;
 
-  @Column({ type: 'date' })
-  birthday: string;
+  @Column()
+  birthday!: string;
 }
