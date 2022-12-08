@@ -4,7 +4,7 @@ import studentRoutes from './src/routes/Student/StudentRoutes'
 
 dotenv.config()
 const app: Express = express()
-const port: string | number = process.env.PORT ?? 3000
+const port: number = Number(process.env.PORT)
 
 app.use(express.json())
 app.use('/student', studentRoutes)

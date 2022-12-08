@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const students = [
+var students = [
     {
         personID: 1,
         personName: 'Shane',
@@ -83,3 +83,4 @@ const students = [
     }
 ];
 exports.default = students;
+//# sourceMappingURL=students.js.map

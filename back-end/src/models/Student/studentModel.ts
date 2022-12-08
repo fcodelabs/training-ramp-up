@@ -1,6 +1,6 @@
-export default interface Student {
-  personID: number
-  personName: string
+export default interface StudentModel {
+  id?: number
+  name: string
   gender: string
   address: string
   mobileNo: string

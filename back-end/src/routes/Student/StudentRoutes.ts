@@ -9,7 +9,7 @@ import {
 const StudentRoute = express.Router()
 StudentRoute.get('/', getAllStudents)
 StudentRoute.post('/', addStudent)
-StudentRoute.put('/:Id', updateStudent)
+StudentRoute.put('/', updateStudent)
 StudentRoute.delete('/:Id', deleteStudent)
 
 export default StudentRoute
