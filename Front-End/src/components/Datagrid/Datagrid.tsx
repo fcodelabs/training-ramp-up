@@ -253,7 +253,6 @@ const rowRender = (row: any, props: { dataItem: any }) => {
 };
 
 export default function Datagrid() {
-  // Form data index is used as an alternative to ID for rows after data operations
   const [dataState, setDataState] = React.useState(
     students.map((dataItem, idx) => ({
       ...dataItem,
