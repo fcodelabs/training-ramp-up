@@ -7,23 +7,33 @@ import {
     GridToolbar,
 } from '@progress/kendo-react-grid'
 import '@progress/kendo-theme-default/dist/all.css'
-import { sampleData } from '../../utils/sampleData'
 import { CommandCell } from '../../components/CommandCell/CommandCell'
 import { DropDownCell } from '../../components/DropDownCell/DropDownCell'
 import { Person } from '../../utils/interfaces'
 import { DatePickerCell } from '../../components/DatePickerCell/DatePickerCell'
+import { getStudents,addStudent, setStudents, deleteStudent, updateStudent} from './HomePageSlice'
+import { useAppSelector, useAppDispatch } from '../../hooks'
 
-
-const dataSet = [...sampleData]
 
 export default function HomePage() {
+  
     const editField = 'inEdit'
-    const [data, setData] = React.useState(sampleData)
+    const students = useAppSelector((state) => state.home.students)
+    const dispatch = useAppDispatch()
+   
+    
+    
+    React.useEffect(() => {
+        dispatch(getStudents())  
+        //setData(students)  
+        //console.log(data);
+              
+    },[])
 
     const validations = new Map([
         ['name', new RegExp('^([A-z\\s.]{3,80})$')],
         ['address', new RegExp('^([A-z0-9/,\\s]{3,})$')],
-        ['mobileNo', new RegExp('^([0][0-9]{9}|[0][0-9]{2}[-\\s][0-9]{7})$')],
+        ['mobileNo', new RegExp('^([0][0-9]{9}|[0][0-9]{2}[-\\s][0-9]{7})$')],    
     ])
 
     //Validation
@@ -43,7 +53,6 @@ export default function HomePage() {
         return true
     }
 
-
     const validate = (item: Person): boolean => {
         return (
             validateFields(item.name, 'name') &&
@@ -54,84 +63,70 @@ export default function HomePage() {
         )
     }
 
-    //Generate Id
-
-    const generateId = () =>
-        dataSet.reduce((max, current: Person) => Math.max(max, current.id), 0) +
-        1
 
     //Add a new row for a new student
-    const addNew = () => {
+    const addNew = () => {        
         const newDataItem: Person = {
             inEdit: true,
-            id: 0,
+            dateOfBirth:undefined
         }
-        setData([newDataItem, ...data])
+        
+        dispatch(setStudents([newDataItem,...students]));
     }
 
     //Add new student
     const add = (dataItem: Person) => {
-        const item = dataItem
-        if (validate(item)) {
-            item.id = generateId()
-            item.inEdit = false
-            dataSet.unshift(item)
-            setData(dataSet)
+        const student :Person= {
+            name:dataItem.name,
+            gender:dataItem.gender,
+            address:dataItem.address,
+            dateOfBirth:dataItem.dateOfBirth,
+            age:dataItem.age,
+            mobileNo:dataItem.mobileNo,
+            inEdit:false
+        }
+        if (validate(student)) {
+            dispatch(addStudent(student))
         }
     }
 
     //Discard adding a new student
     const discard = () => {
-        data.shift()
-        setData([...data])
+        const tempArray =[...students]
+        tempArray.shift()
+        dispatch(setStudents(tempArray))
     }
 
     //Enable edditing a student
     const edit = (dataItem: Person): void => {
-        const item = dataItem
-        item.inEdit = true
-        setData([...data])
+        const tempArray=[...students]
+        const temp={...dataItem}
+        temp.inEdit=true;
+        const index=tempArray.indexOf(dataItem)
+        tempArray[index]=temp
+        dispatch(setStudents(tempArray))
     }
 
     //update a student
     const update = (dataItem: Person) => {
-        console.log(validate(dataItem))
-
         if (validate(dataItem)) {
-            const temp = dataSet.find((item) => {
-                return item.id === dataItem.id
-            })
-            if (temp) {
-                const index = dataSet.indexOf(temp)
-                dataItem.inEdit = false
-                dataSet[index] = dataItem
-                setData(dataSet)
-            }
+
+            dispatch(updateStudent(dataItem))
         }
     }
 
     //cancel updating a new student
     const cancel = (dataItem: Person): void => {
-        const temp = dataSet.find((item) => {
-            return item.id === dataItem.id
-        })
-        if (temp) {
-            dataItem = temp
-            dataItem.inEdit = false
-            setData(dataSet)
-        }
+        dispatch(getStudents())
     }
 
     //remove a student
     const remove = (dataItem: Person) => {
-        const index = dataSet.indexOf(dataItem)
-        dataSet.splice(index, 1)
-        setData([...dataSet])
+        const id = dataItem.id
+        dispatch(deleteStudent(id))
     }
 
     const itemChange = (e: GridItemChangeEvent) => {
-        console.log(e);
-        
         let age = e.dataItem.age
 
         //Calculate Age
@@ -139,15 +134,15 @@ export default function HomePage() {
             const today = new Date().getTime()
             const birthday = e.value.getTime()
             const tempAge = Math.floor((today - birthday) / (86400000 * 365))
-            age = tempAge >= 0 ? tempAge : ''
+            age = tempAge >= 18 ? tempAge : ''
         }
 
-        const newData = data.map((item) =>
+        const newData = students.map((item) =>
             item.id === e.dataItem.id
                 ? { ...item, [e.field || '']: e.value, age: age }
                 : item
         )
-        setData(newData)
+        dispatch(setStudents(newData));
     }
 
     //command cell
@@ -164,11 +159,10 @@ export default function HomePage() {
         />
     )
 
-
     return (
         <Grid
             style={{ height: '650px', margin: '4vh' }}
-            data={data}
+            data={students}
             editField={editField}
             onItemChange={itemChange}
         >
@@ -198,6 +192,7 @@ export default function HomePage() {
                 format="{0:D}"
                 width="210px"
                 cell={DatePickerCell}
+               
             />
             <GridColumn field="age" title="Age" editable={false} />
             <GridColumn cell={command} title="Command" width="220px" />

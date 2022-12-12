@@ -2,7 +2,6 @@ import 'reflect-metadata'
 import { DataSource } from 'typeorm'
 import { Student } from '../models/Student'
 
-
 export const appDataSource = new DataSource({
     type: 'postgres',
     host: 'localhost',
@@ -14,5 +13,5 @@ export const appDataSource = new DataSource({
     logging: false,
     entities: [Student],
     migrations: [],
-    subscribers: []
+    subscribers: [],
 })

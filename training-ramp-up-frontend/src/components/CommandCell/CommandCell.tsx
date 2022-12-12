@@ -12,7 +12,7 @@ export const CommandCell = (props: {
 }) => {
     const { dataItem } = props
     const inEdit = dataItem.inEdit
-    const isNewItem = dataItem.id === 0
+    const isNewItem = dataItem.id == undefined
 
     return inEdit ? (
         <td className="k-command-cell">
