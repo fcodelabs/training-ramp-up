@@ -35,85 +35,119 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteStudent = exports.updateStudent = exports.addStudent = exports.getAllStudents = void 0;
-var Student_1 = __importDefault(require("../../entity/Student"));
-var DatabaseService_1 = __importDefault(require("../../services/DatabaseService"));
-// import {
-//   getAllStudentsService,
-//   addStudentService,
-//   updateStudentService,
-//   deleteStudentService
-// } from '../../services/Student/StudentService'
-DatabaseService_1.default.initialize().then(function () {
-    console.log('Data Source has been initialized!');
-})
-    .catch(function (err) {
-    console.error('Error during Data Source initialization:', err);
-});
+var StudentService_1 = require("../../services/Student/StudentService");
+var validate = function (person) {
+    var name = /^([A-z\s.]{3,20})$/;
+    var address = /^([A-z0-9/,\s]{5,})$/;
+    var mobileNo = /^([0][0-9]{9})$/;
+    var age = Math.round((new Date().getTime() - new Date(person.dob).getTime()) / (1000 * 60 * 60 * 24 * 365));
+    var validateAge = age >= 18;
+    if (!name.test(person.name)) {
+        return false;
+    }
+    if (person.gender === '') {
+        return false;
+    }
+    if (!address.test(person.address)) {
+        return false;
+    }
+    if (!mobileNo.test(person.mobileNo)) {
+        return false;
+    }
+    if (person.dob === null || !validateAge) {
+        return false;
+    }
+    return true;
+};
 var getAllStudents = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var students;
+    var students, err_1;
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4 /*yield*/, DatabaseService_1.default.getRepository(Student_1.default).find()];
+            case 0:
+                _a.trys.push([0, 2, , 3]);
+                return [4 /*yield*/, (0, StudentService_1.getAllStudentsService)()];
             case 1:
                 students = _a.sent();
-                res.status(200).json(students);
-                return [2 /*return*/];
+                res.status(200).send(students);
+                return [3 /*break*/, 3];
+            case 2:
+                err_1 = _a.sent();
+                res.send("Error: ".concat(err_1));
+                return [3 /*break*/, 3];
+            case 3: return [2 /*return*/];
         }
     });
 }); };
 exports.getAllStudents = getAllStudents;
 var addStudent = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var student, results;
+    var result, err_2;
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4 /*yield*/, DatabaseService_1.default.getRepository(Student_1.default).create(req.body)];
+            case 0:
+                _a.trys.push([0, 4, , 5]);
+                if (!validate(req.body)) return [3 /*break*/, 2];
+                return [4 /*yield*/, (0, StudentService_1.addStudentService)(req.body)];
             case 1:
-                student = _a.sent();
-                return [4 /*yield*/, DatabaseService_1.default.getRepository(Student_1.default).save(student)];
+                result = _a.sent();
+                res.status(201).send(result);
+                return [3 /*break*/, 3];
             case 2:
-                results = _a.sent();
-                return [2 /*return*/, res.status(201).send(results)];
+                res.send('Can not add student. Enter Valid Data');
+                _a.label = 3;
+            case 3: return [3 /*break*/, 5];
+            case 4:
+                err_2 = _a.sent();
+                res.send("Error: ".concat(err_2));
+                return [3 /*break*/, 5];
+            case 5: return [2 /*return*/];
         }
     });
 }); };
 exports.addStudent = addStudent;
 var updateStudent = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var studentId, student, results;
+    var result, err_3;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                studentId = parseInt(req.params.Id);
-                return [4 /*yield*/, DatabaseService_1.default.getRepository(Student_1.default).findOneBy({
-                        id: studentId
-                    })];
+                _a.trys.push([0, 4, , 5]);
+                if (!validate(req.body)) return [3 /*break*/, 2];
+                return [4 /*yield*/, (0, StudentService_1.updateStudentService)(req.body)];
             case 1:
-                student = _a.sent();
-                if (!(student !== null)) return [3 /*break*/, 3];
-                DatabaseService_1.default.getRepository(Student_1.default).merge(student, req.body);
-                return [4 /*yield*/, DatabaseService_1.default.getRepository(Student_1.default).save(student)];
+                result = _a.sent();
+                res.status(200).send(result);
+                return [3 /*break*/, 3];
             case 2:
-                results = _a.sent();
-                return [2 /*return*/, res.status(200).send(results)];
-            case 3: return [2 /*return*/];
+                res.send('Can not update student. Enter Valid Data');
+                _a.label = 3;
+            case 3: return [3 /*break*/, 5];
+            case 4:
+                err_3 = _a.sent();
+                res.send("Error: ".concat(err_3));
+                return [3 /*break*/, 5];
+            case 5: return [2 /*return*/];
         }
     });
 }); };
 exports.updateStudent = updateStudent;
 var deleteStudent = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var studentId, results;
+    var studentId, result, err_4;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
+                _a.trys.push([0, 2, , 3]);
                 studentId = parseInt(req.params.Id);
-                return [4 /*yield*/, DatabaseService_1.default.getRepository(Student_1.default).delete(studentId)];
+                return [4 /*yield*/, (0, StudentService_1.deleteStudentService)(studentId)];
             case 1:
-                results = _a.sent();
-                return [2 /*return*/, res.status(200).send(results)];
+                result = _a.sent();
+                res.status(200).send(result);
+                return [3 /*break*/, 3];
+            case 2:
+                err_4 = _a.sent();
+                res.send("Error: ".concat(err_4));
+                return [3 /*break*/, 3];
+            case 3: return [2 /*return*/];
         }
     });
 }); };

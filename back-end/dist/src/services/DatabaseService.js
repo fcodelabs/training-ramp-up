@@ -22,30 +22,25 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 var typeorm_1 = require("typeorm");
 require("reflect-metadata");
 var dotenv = __importStar(require("dotenv"));
+var Student_1 = __importDefault(require("../entity/Student"));
 dotenv.config();
 var DatabaseService = new typeorm_1.DataSource({
     type: 'postgres',
-    host: 'localhost',
-    port: 5432,
-    username: 'postgres',
-    password: 'root',
-    database: 'rampUpDB',
-    entities: ['src/entity/*.ts'],
-    logging: true,
-    synchronize: true
-    // type: 'postgres',
-    // host: process.env.DB_HOST,
-    // port: Number(process.env.DB_PORT),
-    // username: process.env.DB_USER,
-    // password: process.env.DB_PASSWORD,
-    // database: process.env.DB_NAME,
-    // entities: ['src/entity/*.ts'],
-    // synchronize: true,
-    // logging: false
+    host: process.env.DB_HOST,
+    port: Number(process.env.DB_PORT),
+    username: process.env.DB_USERNAME,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME,
+    entities: [Student_1.default],
+    synchronize: true,
+    logging: false
 });
 exports.default = DatabaseService;
 //# sourceMappingURL=DatabaseService.js.map

@@ -1,6 +1,6 @@
 export default interface Person {
-  personID: number
-  personName: string
+  id: number
+  name: string
   gender: string
   address: string
   mobileNo: string

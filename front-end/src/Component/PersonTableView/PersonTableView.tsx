@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 // import * as ReactDOM from 'react-dom'
 import {
   Grid,
@@ -10,20 +10,33 @@ import {
 } from '@progress/kendo-react-grid'
 import { Button } from '@progress/kendo-react-buttons'
 import '@progress/kendo-theme-default/dist/all.css'
-import {
-  deletePerson,
-  getPersons,
-  insertPerson,
-  updatePerson
-} from './services/PersonTableViewOperations'
 import Person from '../../utils/interface'
 import CommandCell from '../CommandCell/CommandCell'
-import { durationInYears } from '@progress/kendo-date-math'
+import { durationInYears, addYears } from '@progress/kendo-date-math'
 import DropDownCell from '../DropDownCell/DropDownCell'
+import { useDispatch, useSelector } from 'react-redux/es/exports'
+import {
+  addStudent,
+  editStudent,
+  getAllStudents,
+  removeStudent
+} from '../../pages/Home/HomeSlice'
 
 const PersonTableView = () => {
-  const [data, setData] = useState<Person[]>(getPersons())
+  const students = useSelector((state: any) => state.students.students)
+  // const error = useSelector((state: any) => state.students.error)
   const editField: string = 'inEdit'
+
+  const dispatch = useDispatch()
+  const [data, setData] = useState(students)
+
+  useEffect(() => {
+    dispatch(getAllStudents())
+  }, [])
+
+  useEffect(() => {
+    setData(students)
+  }, [students])
 
   const personTableViewValidation = (person: Person) => {
     const name = /^([A-z\s.]{3,20})$/
@@ -32,9 +45,9 @@ const PersonTableView = () => {
 
     const mobileNo = /^([0][0-9]{9})$/
 
-    const dob: boolean = new Date() > person.dob
+    const dob: boolean = new Date() >= addYears(person.dob, 18)
 
-    if (!name.test(person.personName)) {
+    if (!name.test(person.name)) {
       alert('Enter valid name')
       return false
     }
@@ -51,7 +64,7 @@ const PersonTableView = () => {
       return false
     }
     if (person.dob === null || !dob) {
-      alert('Enter Valid Date of birth')
+      alert('Enter Valid Date of birth\nAge need to be more than 18 years!!!!')
       return false
     }
     return true
@@ -59,16 +72,14 @@ const PersonTableView = () => {
 
   const add = (dataItem: Person): any => {
     if (personTableViewValidation(dataItem)) {
-      dataItem.inEdit = true
-      const newData = insertPerson(dataItem)
-      setData(newData)
+      console.log(dataItem)
+      dispatch(addStudent(dataItem))
     }
   }
 
   const update = (dataItem: Person): void => {
     if (personTableViewValidation(dataItem)) {
-      const newData = updatePerson(dataItem)
-      setData(newData)
+      dispatch(editStudent(dataItem))
     }
   }
 
@@ -79,30 +90,23 @@ const PersonTableView = () => {
   }
 
   const cancel = (dataItem: Person): void => {
-    const originalItem: Person[] = getPersons().filter(
-      (p) => p.personID === dataItem.personID
+    const originalItem = students.find((person: Person) => person.id === dataItem.id)
+    const newData = data.map((item: Person) =>
+      item.id === originalItem.id ? originalItem : item
     )
-    if (originalItem.length <= 0) return
-    const newData = data.map((person) =>
-      person.personID === originalItem[0].personID ? originalItem[0] : person
-    )
-
     setData(newData)
   }
 
   const enterEdit = (dataItem: Person): void => {
     setData(
-      data.map((person) =>
-        person.personID === dataItem.personID
-          ? { ...person, inEdit: true }
-          : person
+      data.map((person: Person) =>
+        person.id === dataItem.id ? { ...person, inEdit: true } : person
       )
     )
   }
 
   const remove = (dataItem: Person): void => {
-    const newData = [...deletePerson(dataItem)]
-    setData(newData)
+    dispatch(removeStudent(dataItem))
   }
 
   const command = (props: GridCellProps): any => (
@@ -128,8 +132,8 @@ const PersonTableView = () => {
   )
 
   const itemChange = (event: GridItemChangeEvent): void => {
-    const newData = data.map((person) =>
-      person.personID === event.dataItem.personID
+    const newData = data.map((person: Person) =>
+      person.id === event.dataItem.id
         ? { ...person, [event.field ?? '']: event.value }
         : person
     )
@@ -139,14 +143,13 @@ const PersonTableView = () => {
   const addNew = (): void => {
     const newDataItem: Person = {
       inEdit: true,
-      personID: 0,
+      id: 0,
       dob: new Date(),
-      personName: '',
+      name: '',
       gender: '',
       address: '',
       mobileNo: ''
     }
-
     setData([newDataItem, ...data])
   }
 
@@ -176,8 +179,8 @@ const PersonTableView = () => {
           Add New
         </Button>
       </GridToolbar>
-      <GridColumn field="personID" title="ID" width="80px" editable={false} />
-      <GridColumn field="personName" title="Name" width="200px" editor="text" />
+      <GridColumn field="id" title="ID" width="80px" editable={false} />
+      <GridColumn field="name" title="Name" width="200px" editor="text" />
       <GridColumn
         field="gender"
         title="Gender"

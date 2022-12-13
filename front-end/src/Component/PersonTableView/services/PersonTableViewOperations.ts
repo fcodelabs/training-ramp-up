@@ -1,33 +1,35 @@
 import Person from '../../../utils/interface'
-import persons from '../../../utils/persons'
+import axios from 'axios'
 
-const generateId = (data: Person[]): number =>
-  data.reduce((acc, current) => Math.max(acc, current.personID), 0) + 1
+const baseURL: string = 'http://localhost:8000'
 
-export const getPersons = (): Person[] => {
-  return persons
+export const getPersons = async () => {
+  const response = await axios.get(baseURL + '/student')
+  // eslint-disable-next-line no-return-assign
+  response.data.map((person: Person) => person.dob = new Date(person.dob))
+  return response.data
 }
 
-export const insertPerson = (person: Person): Person[] => {
-  person.personID = generateId(persons)
+export const insertPerson = async (person: Person) => {
   person.inEdit = false
-  persons.push(person)
-  return persons
+  const response = await axios.post(baseURL + '/student',
+    person
+  )
+  return response
 }
 
-export const updatePerson = (person: Person): Person[] => {
+export const updatePerson = async (person: Person) => {
   person.inEdit = false
-  const index: number = persons.findIndex(
-    (record) => record.personID === person.personID
+  const response = await axios.put(
+    baseURL + '/student',
+    person
   )
-  persons[index] = person
-  return persons
+  return response
 }
 
-export const deletePerson = (person: Person): Person[] => {
-  const index = persons.findIndex(
-    (record) => record.personID === person.personID
+export const deletePerson = async (person: Person) => {
+  const response = axios.delete(
+    baseURL + `/student/${person.id}`
   )
-  persons.splice(index, 1)
-  return persons
+  return await response
 }

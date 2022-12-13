@@ -10,7 +10,7 @@ DatabaseService.initialize().then(() => {
   })
 
 export const getAllStudentsService = async () => {
-  const students = await DatabaseService.getRepository(Student).find()
+  const students = await DatabaseService.getRepository(Student).find({ order: { id: 'ASC' } })
   return students
 }
 
