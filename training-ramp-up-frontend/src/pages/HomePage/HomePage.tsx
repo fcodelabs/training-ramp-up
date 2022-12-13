@@ -11,46 +11,44 @@ import { CommandCell } from '../../components/CommandCell/CommandCell'
 import { DropDownCell } from '../../components/DropDownCell/DropDownCell'
 import { Person } from '../../utils/interfaces'
 import { DatePickerCell } from '../../components/DatePickerCell/DatePickerCell'
-import { getStudents,addStudent, setStudents, deleteStudent, updateStudent} from './HomePageSlice'
+import {
+    getStudents,
+    addStudent,
+    setStudents,
+    deleteStudent,
+    updateStudent,
+} from './HomePageSlice'
 import { useAppSelector, useAppDispatch } from '../../hooks'
 
-
 export default function HomePage() {
-  
+    
+
     const editField = 'inEdit'
     const students = useAppSelector((state) => state.home.students)
     const dispatch = useAppDispatch()
-   
-    
-    
+
     React.useEffect(() => {
-        dispatch(getStudents())  
-        //setData(students)  
-        //console.log(data);
-              
-    },[])
+        dispatch(getStudents())
+    }, [])
 
     const validations = new Map([
         ['name', new RegExp('^([A-z\\s.]{3,80})$')],
         ['address', new RegExp('^([A-z0-9/,\\s]{3,})$')],
-        ['mobileNo', new RegExp('^([0][0-9]{9}|[0][0-9]{2}[-\\s][0-9]{7})$')],    
+        ['mobileNo', new RegExp('^([0][0-9]{9}|[0][0-9]{2}[-\\s][0-9]{7})$')],
+        ['gender', new RegExp('^(MALE|FEMALE)$', 'i')]
     ])
 
     //Validation
 
     const validateFields = (inputValue: any, field: string): boolean => {
-        if (!inputValue) {
+        const keyOb=validations.get(field)
+        const valid = (keyOb)?keyOb.test(inputValue):true
+        if (inputValue && valid) {
+            return true
+        }else{
             alert('Please enter valid ' + field)
             return false
         }
-        validations.forEach(function (value, key) {
-            if (key == field && !value.test(inputValue)) {
-                alert('Please enter valid ' + field)
-                return false
-            }
-        })
-
-        return true
     }
 
     const validate = (item: Person): boolean => {
@@ -63,54 +61,54 @@ export default function HomePage() {
         )
     }
 
-
     //Add a new row for a new student
-    const addNew = () => {        
+    const addNew = () => {
         const newDataItem: Person = {
             inEdit: true,
-            dateOfBirth:undefined
+            dateOfBirth: undefined,
         }
-        
-        dispatch(setStudents([newDataItem,...students]));
+
+        dispatch(setStudents([newDataItem, ...students]))
     }
 
     //Add new student
     const add = (dataItem: Person) => {
-        const student :Person= {
-            name:dataItem.name,
-            gender:dataItem.gender,
-            address:dataItem.address,
-            dateOfBirth:dataItem.dateOfBirth,
-            age:dataItem.age,
-            mobileNo:dataItem.mobileNo,
-            inEdit:false
+        const student: Person = {
+            name: dataItem.name,
+            gender: dataItem.gender,
+            address: dataItem.address,
+            dateOfBirth: dataItem.dateOfBirth,
+            age: dataItem.age,
+            mobileNo: dataItem.mobileNo,
+            inEdit: false,
         }
         if (validate(student)) {
+            console.log("validated");
+            
             dispatch(addStudent(student))
         }
     }
 
     //Discard adding a new student
     const discard = () => {
-        const tempArray =[...students]
+        const tempArray = [...students]
         tempArray.shift()
         dispatch(setStudents(tempArray))
     }
 
     //Enable edditing a student
     const edit = (dataItem: Person): void => {
-        const tempArray=[...students]
-        const temp={...dataItem}
-        temp.inEdit=true;
-        const index=tempArray.indexOf(dataItem)
-        tempArray[index]=temp
+        const tempArray = [...students]
+        const temp = { ...dataItem }
+        temp.inEdit = true
+        const index = tempArray.indexOf(dataItem)
+        tempArray[index] = temp
         dispatch(setStudents(tempArray))
     }
 
     //update a student
     const update = (dataItem: Person) => {
         if (validate(dataItem)) {
-
             dispatch(updateStudent(dataItem))
         }
     }
@@ -142,7 +140,7 @@ export default function HomePage() {
                 ? { ...item, [e.field || '']: e.value, age: age }
                 : item
         )
-        dispatch(setStudents(newData));
+        dispatch(setStudents(newData))
     }
 
     //command cell
@@ -192,7 +190,6 @@ export default function HomePage() {
                 format="{0:D}"
                 width="210px"
                 cell={DatePickerCell}
-               
             />
             <GridColumn field="age" title="Age" editable={false} />
             <GridColumn cell={command} title="Command" width="220px" />

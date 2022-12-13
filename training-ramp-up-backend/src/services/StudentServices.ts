@@ -19,7 +19,7 @@ export const getAllStudents = async (): Promise<Array<Student>> => {
     }
 }
 
-export const addStudent = async (input: Student): Promise<InsertResult> => {
+export const addStudent = async (input: Student): Promise<Student> => {
     try {
         if (validate(input)) {
             const student = new Student()
@@ -29,9 +29,13 @@ export const addStudent = async (input: Student): Promise<InsertResult> => {
             student.dateOfBirth = input.dateOfBirth
             student.age = input.age
             student.mobileNo = input.mobileNo
-            const res = await appDataSource.manager.insert(Student, student)
-
+            const tempRes = await appDataSource.manager.insert(Student, student)
+            const res=await appDataSource.manager.getRepository(Student).findOne({
+                where:tempRes.identifiers
+            })
             return res
+
+            
         }
     } catch (err) {
         return err.message

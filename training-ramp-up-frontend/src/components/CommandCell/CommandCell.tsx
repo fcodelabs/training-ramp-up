@@ -10,6 +10,8 @@ export const CommandCell = (props: {
     remove: (param: Person) => void
     dataItem: Person
 }) => {
+    
+    
     const { dataItem } = props
     const inEdit = dataItem.inEdit
     const isNewItem = dataItem.id == undefined

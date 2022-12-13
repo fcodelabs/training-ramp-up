@@ -38,7 +38,7 @@ export const DropDownCell = (props: GridCellProps) => {
                     textField="text"
                 />
             ) : (
-                dataValue.toString()
+                dataValue
             )}
         </td>
     )

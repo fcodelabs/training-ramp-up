@@ -3,12 +3,15 @@ import * as express from 'express'
 import { Express, Request, Response } from 'express'
 import { appDataSource } from './src/configs/dataSourceConfig'
 import studentRoutes from './src/routes/StudentRoutes'
-import { Server } from 'socket.io'
-import http = require('http')
+
+import { createServer } from 'http'
+import { Server, Socket } from 'socket.io'
+import { DefaultEventsMap } from 'socket.io/dist/typed-events'
 
 const app: Express = express()
+const httpServer = createServer(app)
 const port = 4000
-const server = http.createServer(app)
+
 
 appDataSource
     .initialize()
@@ -46,10 +49,24 @@ app.use(function (req, res, next) {
 app.use(express.json())
 app.use('/student', studentRoutes)
 
-app.get('/', async (req: Request, res: Response) => {
-    res.send('Express + TypeScript Server!!')
+// app.get('/', async (req: Request, res: Response) => {
+//     res.send('Express + TypeScript Server!!')
+// })
+
+// app.listen(port, () => {
+//     console.log(`⚡️[server]: Server is running at https://localhost:${port}`)
+// })
+
+export const io = new Server(httpServer, {
+    cors: {
+        origin: 'http://localhost:3000/',
+        methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    },
+})
+io.on('connection', (socket) => {
+    console.log(`connect ${socket.id}`)
 })
 
-app.listen(port, () => {
-    console.log(`⚡️[server]: Server is running at https://localhost:${port}`)
+httpServer.listen(port, () => {
+    console.log('Application started on port ' + port + '!')
 })
