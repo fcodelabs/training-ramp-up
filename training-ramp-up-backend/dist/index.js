@@ -40,10 +40,8 @@ require("reflect-metadata");
 var express = require("express");
 var dataSourceConfig_1 = require("./src/configs/dataSourceConfig");
 var StudentRoutes_1 = require("./src/routes/StudentRoutes");
-var http = require("http");
 var app = express();
 var port = 4000;
-var server = http.createServer(app);
 dataSourceConfig_1.appDataSource
     .initialize()
     .then(function () {

@@ -27,7 +27,7 @@ export const requestAddStudent = async (
         const students = await addStudent(req.body)
         res.send(students)
     } catch (err) {
-        res.send('Error' + err)
+        res.send('Error : ' +err.message)
     }
 }
 
@@ -39,7 +39,7 @@ export const requestUpdateStudent = async (
         const students = await updateStudent(req.body)
         res.send(students)
     } catch (err) {
-        res.send('Error' + err)
+        res.send('Error : ' +err.message)
     }
 }
 
@@ -51,6 +51,6 @@ export const requestDeleteStudent = async (
         const students = await deleteStudent(req.params.id)
         res.send(students)
     } catch (err) {
-        res.send('Error' + err)
+        res.send('Error : ' +err.message)
     }
 }

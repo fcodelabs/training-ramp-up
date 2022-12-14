@@ -11,7 +11,7 @@ const route = express.Router()
 
 route.get('/', requestGetAllStudents)
 route.post('/', requestAddStudent)
-route.put('/', requestUpdateStudent)
+route.patch('/', requestUpdateStudent)
 route.delete('/:id', requestDeleteStudent)
 
 export default route

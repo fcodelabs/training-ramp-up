@@ -3,12 +3,11 @@ import * as express from 'express'
 import { Express, Request, Response } from 'express'
 import { appDataSource } from './src/configs/dataSourceConfig'
 import studentRoutes from './src/routes/StudentRoutes'
-import { Server } from 'socket.io'
-import http = require('http')
+
 
 const app: Express = express()
 const port = 4000
-const server = http.createServer(app)
+
 
 appDataSource
     .initialize()

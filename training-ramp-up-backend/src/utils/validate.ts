@@ -8,14 +8,12 @@ const validations = new Map([
     ['age', new RegExp('^([0-9]{1,2})$')],
 ])
 
-const validateFields = (inputValue: any, field: string): boolean => {
-    if (!inputValue) {
-        throw new Error('Please enter all the details')
-    }
-
+const validateFields = (input: Student): boolean => {
     validations.forEach(function (value, key) {
-        if (key == field && !value.test(inputValue)) {
-            throw new Error('Please enter valid ' + field)
+        if (input[key] != undefined) {
+            if (!value.test(input[key])) {               
+                throw new Error('Please enter valid ' + key)
+            }
         }
     })
 
@@ -37,12 +35,7 @@ const validateBirthdayAndAge = (dateOfBirth: Date, age: number): boolean => {
 }
 
 export const validate = (item: Student): boolean => {
-    return (
-        validateFields(item.name, 'name') &&
-        validateFields(item.gender, 'gender') &&
-        validateFields(item.address, 'address') &&
-        validateFields(item.mobileNo, 'mobileNo') &&
-        validateFields(item.dateOfBirth, 'dateOfBirth') &&
-        validateBirthdayAndAge(item.dateOfBirth, item.age)
-    )
+    return validateFields(item) && item.dateOfBirth != undefined
+        ? validateBirthdayAndAge(item.dateOfBirth, item.age)
+        : true
 }
