@@ -14,8 +14,8 @@ const typeorm_1 = require("typeorm");
 let Student = class Student extends typeorm_1.BaseEntity {
 };
 __decorate([
-    (0, typeorm_1.PrimaryColumn)(),
-    __metadata("design:type", String)
+    (0, typeorm_1.PrimaryGeneratedColumn)(),
+    __metadata("design:type", Number)
 ], Student.prototype, "id", void 0);
 __decorate([
     (0, typeorm_1.Column)(),
@@ -35,8 +35,12 @@ __decorate([
 ], Student.prototype, "mobile", void 0);
 __decorate([
     (0, typeorm_1.Column)(),
-    __metadata("design:type", String)
+    __metadata("design:type", Date)
 ], Student.prototype, "birthday", void 0);
+__decorate([
+    (0, typeorm_1.Column)(),
+    __metadata("design:type", Number)
+], Student.prototype, "age", void 0);
 Student = __decorate([
     (0, typeorm_1.Entity)()
 ], Student);

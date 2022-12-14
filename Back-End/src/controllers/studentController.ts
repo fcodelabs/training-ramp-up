@@ -1,6 +1,15 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Request, Response } from 'express';
-import { getAllStudentsService, deleteStudentService, upsertStudentService } from '../services/studentService';
+import {
+  getAllStudentsService,
+  deleteStudentService,
+  findStudentService,
+  mergeStudentService,
+  saveStudentService,
+  addStudentService,
+} from '../services/StudentService';
+
+// get all students controller
 
 export const getAllStudents = async (req: Request, res: Response) => {
   try {
@@ -17,22 +26,60 @@ export const getAllStudents = async (req: Request, res: Response) => {
   }
 };
 
-export const upsertStudent = async (req: Request, res: Response) => {
+// add student controller
+
+export const addStudent = async (req: Request, res: Response) => {
   try {
-    const studentRepository = await upsertStudentService(req.body);
+    await addStudentService(req.body);
     res.status(200);
-    res.json(studentRepository);
+    res.json({ message: 'Student added successfully' });
   } catch (err) {
     res.status(500);
     res.json(err);
   }
 };
 
+// update student controller
+
+export const updateStudent = async (req: Request, res: Response) => {
+  try {
+    const studentId = parseInt(req.params.id);
+    const student = await findStudentService(studentId);
+    if (student) {
+      mergeStudentService(student, req.body);
+      const results = await saveStudentService(student);
+      return res.send(results);
+    }
+  } catch (err) {
+    res.status(500);
+    res.json(err);
+  }
+};
+
+// patch student controller
+export const patchStudent = async (req: Request, res: Response) => {
+  try {
+    const studentId = parseInt(req.params.id);
+    const student = await findStudentService(studentId);
+    if (student) {
+      mergeStudentService(student, req.body);
+      const results = await saveStudentService(student);
+      return res.send(results);
+    }
+  } catch (err) {
+    res.status(500);
+    res.json(err);
+  }
+};
+
+// delete student controller
+
 export const deleteStudent = async (req: Request, res: Response) => {
   try {
-    const result = await deleteStudentService(req.params.id);
+    const studentId = parseInt(req.params.id);
+    await deleteStudentService(studentId);
     res.status(200);
-    res.json(result);
+    res.json({ message: 'Student deleted successfully' });
   } catch (err) {
     res.status(500);
     res.json(err);

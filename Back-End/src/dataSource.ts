@@ -1,17 +1,17 @@
 import 'reflect-metadata';
 import { DataSource } from 'typeorm';
-import { Student } from './entities/studentEntity';
+import { Student } from './entities/StudentEntity';
 import * as dotenv from 'dotenv';
 
 dotenv.config();
 
 const dataSource = new DataSource({
   type: 'postgres',
-  host: 'nomadbuddy-postgres-db.postgres.database.azure.com',
+  host: process.env.DB_HOST,
   port: 5432,
-  username: 'nomad_admin',
-  password: 'Digital1234*',
-  database: 'rampup',
+  username: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
   entities: [Student],
   synchronize: true,
   logging: false,

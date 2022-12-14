@@ -1,5 +1,4 @@
 interface StudentType {
-  id: string;
   name: string;
   gender: string;
   address: string;

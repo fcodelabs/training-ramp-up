@@ -1,5 +1,5 @@
 import express, { Express, Request, Response } from 'express';
-import routes from './src/routes/studentRoutes';
+import routes from './src/routes/StudentRoutes';
 import dataSource from './src/dataSource';
 import cors from 'cors';
 import { createServer } from 'http';
@@ -34,12 +34,12 @@ const io = new Server(httpServer, {
 io.on('connection', (socket) => {
   console.log(`connect ${socket.id}`);
 
-  // socket.on('student_add', (data) => {
-  //   socket.broadcast.emit('student_added', data);
-  // });
+  socket.on('student_add', (data) => {
+    socket.broadcast.emit('student_added', data);
+  });
 
-  socket.on('student_upsert', (data) => {
-    socket.broadcast.emit('student_added_or_updated', data);
+  socket.on('student_update', (data) => {
+    socket.broadcast.emit('student_updated', data);
   });
 
   socket.on('student_delete', (data) => {

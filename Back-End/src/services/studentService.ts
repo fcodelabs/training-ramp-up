@@ -1,6 +1,9 @@
-import { Student } from '../entities/studentEntity';
+import { Student } from '../entities/StudentEntity';
+import { BaseEntity, DeepPartial } from 'typeorm';
 import dataSource from '../dataSource';
-import StudentType from '../interfaces/studentType';
+import StudentType from '../interfaces/StudentType';
+
+// get all students
 
 export const getAllStudentsService = async () => {
   try {
@@ -13,20 +16,37 @@ export const getAllStudentsService = async () => {
   }
 };
 
-export const upsertStudentService = async (student: StudentType) => {
+// add student
+
+export const addStudentService = async (student: StudentType) => {
   try {
     const studentRepository = dataSource.getRepository(Student);
-    const result = await studentRepository.upsert(student, ['id']);
-    return result;
+    await studentRepository.insert(student);
   } catch (err) {
     console.log(err);
-    return { err: 'Student upserting failed' };
+    return { err: 'Student adding failed into the database' };
   }
 };
 
-export const deleteStudentService = async (id: string) => {
-  async function remove(id: string) {
-    return await Student.delete({ id: id });
+// update or patch student
+
+export const findStudentService = async (studentId: number) => {
+  return await Student.findOneBy({ id: studentId });
+};
+
+export const mergeStudentService = async (student: Student, body: DeepPartial<BaseEntity>) => {
+  return Student.merge(student, body);
+};
+
+export const saveStudentService = async (student: Student) => {
+  return await Student.save(student);
+};
+
+// delete student
+
+export const deleteStudentService = async (id: number) => {
+  async function remove(id: number) {
+    await Student.delete({ id: id });
   }
   return remove(id);
 };

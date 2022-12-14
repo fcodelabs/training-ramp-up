@@ -9,11 +9,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteStudent = exports.upsertStudent = exports.getAllStudents = void 0;
-const studentService_1 = require("../services/studentService");
+exports.deleteStudent = exports.patchStudent = exports.updateStudent = exports.addStudent = exports.getAllStudents = void 0;
+const StudentService_1 = require("../services/StudentService");
+// get all students controller
 const getAllStudents = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const students = yield (0, studentService_1.getAllStudentsService)().catch((err) => {
+        const students = yield (0, StudentService_1.getAllStudentsService)().catch((err) => {
             res.status(500);
             res.json(err);
             return;
@@ -27,23 +28,60 @@ const getAllStudents = (req, res) => __awaiter(void 0, void 0, void 0, function*
     }
 });
 exports.getAllStudents = getAllStudents;
-const upsertStudent = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+// add student controller
+const addStudent = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const studentRepository = yield (0, studentService_1.upsertStudentService)(req.body);
+        yield (0, StudentService_1.addStudentService)(req.body);
         res.status(200);
-        res.json(studentRepository);
+        res.json({ message: 'Student added successfully' });
     }
     catch (err) {
         res.status(500);
         res.json(err);
     }
 });
-exports.upsertStudent = upsertStudent;
+exports.addStudent = addStudent;
+// update student controller
+const updateStudent = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const studentId = parseInt(req.params.id);
+        const student = yield (0, StudentService_1.findStudentService)(studentId);
+        if (student) {
+            (0, StudentService_1.mergeStudentService)(student, req.body);
+            const results = yield (0, StudentService_1.saveStudentService)(student);
+            return res.send(results);
+        }
+    }
+    catch (err) {
+        res.status(500);
+        res.json(err);
+    }
+});
+exports.updateStudent = updateStudent;
+// patch student controller
+const patchStudent = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const studentId = parseInt(req.params.id);
+        const student = yield (0, StudentService_1.findStudentService)(studentId);
+        if (student) {
+            (0, StudentService_1.mergeStudentService)(student, req.body);
+            const results = yield (0, StudentService_1.saveStudentService)(student);
+            return res.send(results);
+        }
+    }
+    catch (err) {
+        res.status(500);
+        res.json(err);
+    }
+});
+exports.patchStudent = patchStudent;
+// delete student controller
 const deleteStudent = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const result = yield (0, studentService_1.deleteStudentService)(req.params.id);
+        const studentId = parseInt(req.params.id);
+        yield (0, StudentService_1.deleteStudentService)(studentId);
         res.status(200);
-        res.json(result);
+        res.json({ message: 'Student deleted successfully' });
     }
     catch (err) {
         res.status(500);

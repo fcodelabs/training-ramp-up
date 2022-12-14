@@ -1,8 +1,8 @@
 import * as React from "react";
-import HomePage from "./pages/Home/Home";
+import Datagrid from "./pages/Home/Home";
 
 const App = () => {
-  return <HomePage />;
+  return <Datagrid />;
 };
 
 export default App;

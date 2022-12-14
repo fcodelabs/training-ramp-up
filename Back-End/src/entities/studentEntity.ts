@@ -1,9 +1,9 @@
-import { Entity, Column, PrimaryColumn, BaseEntity } from 'typeorm';
+import { Entity, Column, BaseEntity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class Student extends BaseEntity {
-  @PrimaryColumn()
-  id!: string;
+  @PrimaryGeneratedColumn()
+  id!: number;
 
   @Column()
   name!: string;
@@ -18,5 +18,8 @@ export class Student extends BaseEntity {
   mobile!: string;
 
   @Column()
-  birthday!: string;
+  birthday!: Date;
+
+  @Column()
+  age!: number;
 }

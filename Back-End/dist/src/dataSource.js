@@ -25,17 +25,17 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 require("reflect-metadata");
 const typeorm_1 = require("typeorm");
-const studentEntity_1 = require("./entities/studentEntity");
+const StudentEntity_1 = require("./entities/StudentEntity");
 const dotenv = __importStar(require("dotenv"));
 dotenv.config();
 const dataSource = new typeorm_1.DataSource({
     type: 'postgres',
-    host: 'nomadbuddy-postgres-db.postgres.database.azure.com',
+    host: process.env.DB_HOST,
     port: 5432,
-    username: 'nomad_admin',
-    password: 'Digital1234*',
-    database: 'rampup',
-    entities: [studentEntity_1.Student],
+    username: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME,
+    entities: [StudentEntity_1.Student],
     synchronize: true,
     logging: false,
     subscribers: [],
