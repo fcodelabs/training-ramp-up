@@ -1,5 +1,4 @@
 import { call, put, takeEvery } from 'redux-saga/effects'
-// import { eventChannel } from 'redux-saga'
 import {
   setAllStudents,
   getAllStudents,
@@ -15,15 +14,7 @@ import {
   updatePerson
 } from '../../Component/PersonTableView/services/PersonTableViewOperations'
 import { AnyAction } from '@reduxjs/toolkit'
-
-export interface ResponseGenerator {
-  config?: any
-  data?: any
-  headers?: any
-  request?: any
-  status?: number
-  statusText?: string
-}
+import { ResponseGenerator } from '../../utils/interface'
 
 function * getStudents () {
   try {

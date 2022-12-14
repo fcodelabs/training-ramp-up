@@ -7,3 +7,12 @@ export default interface Person {
   dob: Date
   inEdit?: boolean
 }
+
+export interface ResponseGenerator {
+  config?: any
+  data?: any
+  headers?: any
+  request?: any
+  status?: number
+  statusText?: string
+}

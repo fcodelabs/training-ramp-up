@@ -5,6 +5,19 @@ import App from './App'
 import reportWebVitals from './reportWebVitals'
 import { store } from './store'
 import { Provider } from 'react-redux'
+import { io } from 'socket.io-client'
+
+const socket = io('http://localhost:8000/', {
+  transports: ['websocket']
+})
+
+socket.on('connect', () => {
+  console.log(`connect client ${socket.id}`)
+})
+
+socket.on('notification', (data: string) => {
+  alert(data)
+})
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 root.render(

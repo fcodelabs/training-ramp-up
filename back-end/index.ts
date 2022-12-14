@@ -1,19 +1,27 @@
 import express, { Express, Request, Response, NextFunction } from 'express'
 import dotenv from 'dotenv'
 import studentRoutes from './src/routes/Student/StudentRoutes'
-// const ioProm = require('express-socket.io')
-// const server = ioProm.init(app)
-
+import * as http from 'http'
+import * as socketio from 'socket.io'
 import cors from 'cors'
-// use cors middleware to enable CORS with various options
 
 dotenv.config()
 const app: Express = express()
+const httpServer: http.Server = new http.Server(app)
+export const io: any = new socketio.Server(httpServer)
 const port: number = Number(process.env.PORT)
 app.use(cors({ origin: '*' }))
 
 app.use(express.json())
 app.use('/student', studentRoutes)
+
+io.on('connection', (socket: any) => {
+  console.log(`connect server ${socket.id}`)
+})
+
+httpServer.listen(port, () => {
+  console.log(`Server is running on port ${port}`)
+})
 
 app.get('/', (req: Request, res: Response, next: NextFunction) => {
   res.status(200).json({
@@ -21,4 +29,4 @@ app.get('/', (req: Request, res: Response, next: NextFunction) => {
   })
 })
 
-app.listen(port, () => console.log(`Server is running on port ${port}`))
+// app.listen(port, () => console.log(`App is running on port ${port}`))

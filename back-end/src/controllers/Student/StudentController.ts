@@ -1,4 +1,5 @@
 import { Request, Response } from 'express'
+import { io } from '../../..'
 import StudentModel from '../../models/Student/studentModel'
 import {
   getAllStudentsService,
@@ -49,6 +50,10 @@ export const addStudent = async (req: Request, res: Response) => {
     if (validate(req.body)) {
       const result = await addStudentService(req.body)
       res.status(201).send(result)
+      io.emit(
+        'notification',
+        'Student has been added'
+      )
     } else {
       res.send('Can not add student. Enter Valid Data')
     }
@@ -62,6 +67,10 @@ export const updateStudent = async (req: Request, res: Response) => {
     if (validate(req.body)) {
       const result = await updateStudentService(req.body)
       res.status(200).send(result)
+      io.emit(
+        'notification',
+        'Student has been updated'
+      )
     } else {
       res.send('Can not update student. Enter Valid Data')
     }
@@ -75,6 +84,10 @@ export const deleteStudent = async (req: Request, res: Response) => {
     const studentId = parseInt(req.params.Id)
     const result = await deleteStudentService(studentId)
     res.status(200).send(result)
+    io.emit(
+      'notification',
+      'Student has been deleted'
+    )
   } catch (err) {
     res.send(`Error: ${err}`)
   }

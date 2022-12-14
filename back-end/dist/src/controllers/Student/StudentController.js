@@ -37,6 +37,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteStudent = exports.updateStudent = exports.addStudent = exports.getAllStudents = void 0;
+var __1 = require("../../..");
 var StudentService_1 = require("../../services/Student/StudentService");
 var validate = function (person) {
     var name = /^([A-z\s.]{3,20})$/;
@@ -92,6 +93,7 @@ var addStudent = function (req, res) { return __awaiter(void 0, void 0, void 0, 
             case 1:
                 result = _a.sent();
                 res.status(201).send(result);
+                __1.io.emit('notification', 'Student has been added');
                 return [3 /*break*/, 3];
             case 2:
                 res.send('Can not add student. Enter Valid Data');
@@ -117,6 +119,7 @@ var updateStudent = function (req, res) { return __awaiter(void 0, void 0, void 
             case 1:
                 result = _a.sent();
                 res.status(200).send(result);
+                __1.io.emit('notification', 'Student has been updated');
                 return [3 /*break*/, 3];
             case 2:
                 res.send('Can not update student. Enter Valid Data');
@@ -142,6 +145,7 @@ var deleteStudent = function (req, res) { return __awaiter(void 0, void 0, void 
             case 1:
                 result = _a.sent();
                 res.status(200).send(result);
+                __1.io.emit('notification', 'Student has been deleted');
                 return [3 /*break*/, 3];
             case 2:
                 err_4 = _a.sent();

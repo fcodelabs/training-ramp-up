@@ -141,10 +141,12 @@ const PersonTableView = () => {
   }
 
   const addNew = (): void => {
+    const date = new Date()
+    const newDate = addYears(date, -18)
     const newDataItem: Person = {
       inEdit: true,
       id: 0,
-      dob: new Date(),
+      dob: newDate,
       name: '',
       gender: '',
       address: '',
