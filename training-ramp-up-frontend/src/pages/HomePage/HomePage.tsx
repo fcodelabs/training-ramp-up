@@ -21,12 +21,12 @@ import {
 import { useAppSelector, useAppDispatch } from '../../hooks'
 
 export default function HomePage() {
-    
-
     const editField = 'inEdit'
     const students = useAppSelector((state) => state.home.students)
     const dispatch = useAppDispatch()
-
+    const [changedFields, setChangedFields] = React.useState<
+        Array<{ id: number; value: Map<string, any> }>
+    >([])
     React.useEffect(() => {
         dispatch(getStudents())
     }, [])
@@ -35,17 +35,19 @@ export default function HomePage() {
         ['name', new RegExp('^([A-z\\s.]{3,80})$')],
         ['address', new RegExp('^([A-z0-9/,\\s]{3,})$')],
         ['mobileNo', new RegExp('^([0][0-9]{9}|[0][0-9]{2}[-\\s][0-9]{7})$')],
-        ['gender', new RegExp('^(MALE|FEMALE)$', 'i')]
+        ['gender', new RegExp('^(MALE|FEMALE)$', 'i')],
     ])
 
     //Validation
 
     const validateFields = (inputValue: any, field: string): boolean => {
-        const keyOb=validations.get(field)
-        const valid = (keyOb)?keyOb.test(inputValue):true
+       
+
+        const keyOb = validations.get(field)
+        const valid = keyOb ? keyOb.test(inputValue) : true
         if (inputValue && valid) {
             return true
-        }else{
+        } else {
             alert('Please enter valid ' + field)
             return false
         }
@@ -59,6 +61,7 @@ export default function HomePage() {
             validateFields(item.mobileNo, 'mobileNo') &&
             validateFields(item.dateOfBirth, 'dateOfBirth')
         )
+        
     }
 
     //Add a new row for a new student
@@ -83,8 +86,8 @@ export default function HomePage() {
             inEdit: false,
         }
         if (validate(student)) {
-            console.log("validated");
-            
+            console.log('validated')
+
             dispatch(addStudent(student))
         }
     }
@@ -108,8 +111,20 @@ export default function HomePage() {
 
     //update a student
     const update = (dataItem: Person) => {
+        const fieldsToBeUpdated = changedFields.filter(
+            (item) => item.id == dataItem.id
+        )[0]
+
+        const data ={}
+        Object.defineProperty(data,'id',{value:fieldsToBeUpdated.id})
+        fieldsToBeUpdated.value.forEach((value,key) => {
+            Object.defineProperty(data,key,{value:value})
+        })
+
+        console.log(data);
+
         if (validate(dataItem)) {
-            dispatch(updateStudent(dataItem))
+            dispatch(updateStudent(data))
         }
     }
 
@@ -140,6 +155,29 @@ export default function HomePage() {
                 ? { ...item, [e.field || '']: e.value, age: age }
                 : item
         )
+
+        //add changed fields
+        if (e.field) {
+            const ob = changedFields.filter(
+                (item) => item.id == e.dataItem.id
+            )[0]
+
+            if (ob != undefined) {
+                ob.value.set(e.field, e.value)
+            } else {
+                const map = new Map<string, any>()
+                map.set(e.field, e.value)
+                const changedOb = {
+                    id: e.dataItem.id,
+                    value: map,
+                }
+
+                changedFields.unshift(changedOb)
+            }
+
+            setChangedFields([...changedFields])
+        }
+
         dispatch(setStudents(newData))
     }
 

@@ -12,7 +12,7 @@ import axios from '../../axios'
 import { Person } from '../../utils/interfaces'
 
 
-function* handleGetStudents(): any {
+function* handleGetStudents():any {
     try {
         const res = yield call(() => axios.get('student'))
         const students: Person[] = res.data.map((temp: Person) => ({
@@ -45,7 +45,7 @@ function* handleDeleteStudent(action: any): any {
 
 function* handleUpdateStudent(action: any): any {
     try {
-        const res = yield call(() => axios.put('student', action.payload))
+        const res = yield call(() => axios.patch('student', action.payload))
         yield put(getStudents())
     } catch (error: any) {
         //yield put(getStudentsFailed(error))

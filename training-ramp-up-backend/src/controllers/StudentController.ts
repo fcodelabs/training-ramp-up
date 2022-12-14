@@ -25,14 +25,14 @@ export const requestAddStudent = async (
     res: Response
 ): Promise<void> => {
     try {
-        const students = await addStudent(req.body)
-        res.send(students)
+        const student = await addStudent(req.body)
+        res.send(student)
         io.emit(
             'notification',
             'A student has been added with name :' + req.body.name
         )
     } catch (err) {
-        res.send('Error' + err)
+        res.send('Error : ' +err.message)
     }
 }
 
@@ -48,7 +48,7 @@ export const requestUpdateStudent = async (
             'The with id ' + req.body.id + ' student has been updated'
         )
     } catch (err) {
-        res.send('Error' + err)
+        res.send('Error' + err.message)
     }
 }
 
@@ -64,6 +64,6 @@ export const requestDeleteStudent = async (
             'The with id ' + req.params.id + ' student has been deleted'
         )
     } catch (err) {
-        res.send('Error' + err)
+        res.send('Error' + err.message)
     }
 }

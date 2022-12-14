@@ -15,53 +15,38 @@ export const getAllStudents = async (): Promise<Array<Student>> => {
             })
         return students
     } catch (err) {
-        return err.message
+        throw err
     }
 }
 
 export const addStudent = async (input: Student): Promise<Student> => {
     try {
         if (validate(input)) {
-            const student = new Student()
-            student.name = input.name
-            student.address = input.address
-            student.gender = input.gender
-            student.dateOfBirth = input.dateOfBirth
-            student.age = input.age
-            student.mobileNo = input.mobileNo
+            const student = {...input}
             const tempRes = await appDataSource.manager.insert(Student, student)
             const res=await appDataSource.manager.getRepository(Student).findOne({
                 where:tempRes.identifiers
             })
-            return res
-
-            
+            return res  
         }
     } catch (err) {
-        return err.message
+        throw err
     }
 }
 
-export const updateStudent = async (input: Student): Promise<UpdateResult> => {
-    try {
+export const updateStudent = async (input:Student): Promise<UpdateResult> => {
+    try {      
         if (validate(input)) {
-            const student = new Student()
-            student.id = input.id
-            student.name = input.name
-            student.address = input.address
-            student.gender = input.gender
-            student.dateOfBirth = input.dateOfBirth
-            student.age = input.age
-            student.mobileNo = input.mobileNo
+            const student={...input}
             const students = await appDataSource.manager.update(
                 Student,
-                student.id,
+                input.id,
                 student
             )
             return students
         }
     } catch (err) {
-        return err.message
+        throw err
     }
 }
 
@@ -70,6 +55,6 @@ export const deleteStudent = async (id: string): Promise<DeleteResult> => {
         const students = await appDataSource.manager.delete(Student, id)
         return students
     } catch (err) {
-        return err.message
+        throw err
     }
 }
