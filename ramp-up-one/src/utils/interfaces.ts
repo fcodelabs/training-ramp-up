@@ -1,4 +1,5 @@
 export interface StudentModel {
+  // [x: string]: any;
   id?: number;
   name?: string;
   gender?: string;

@@ -1,71 +1,46 @@
 //temp data array
 import { Student } from '../entities/studentEntity';
 import { AppDataSource } from '../dataSource';
-const tempArray = [
-  {
-    ID: 1,
-    name: 'kamal',
-    gender: 'male',
-    Address: 'colombo',
-    MobileNo: '01124455874',
-    birth: '1/14/2002',
-    Age: 22,
-  },
-  {
-    ID: 2,
-    name: 'nimal',
-    gender: 'male',
-    Address: 'colombo',
-    MobileNo: '01124455874',
-    birth: '2/24/2003',
-    Age: 22,
-  },
-];
+import { StudentModel } from '../utils/interfaces';
 
 //get all student
 export const getAllCustomerService = async () => {
   // return tempArray;
   try {
     const studentsRepo = AppDataSource.getRepository(Student);
-    const allStudent = await studentsRepo.find();
-
-    return allStudent ;
+    const allStudent = await studentsRepo.find(
+      {order:{id:'DESC'}}
+    );
+    return allStudent;
   } catch (error) {
     return { error };
   }
 };
 
 //save Student
-export const saveStudentService = async (data: any) => {
+export const saveStudentService = async (data: StudentModel) => {
   const student = new Student();
-  student.id = data.id;
   student.name = data.name;
   student.gender = data.gender;
   student.address = data.address;
   student.mobileNo = data.mobileNo;
   student.birth = data.birth;
   student.age = data.age;
-  const studentRepository = AppDataSource.getRepository(Student);
 
+  const studentRepository = AppDataSource.getRepository(Student);
   const newStudent = await studentRepository.save(student);
   if (!newStudent) {
     return { message: 'Faild to add student !' };
   }
-  return newStudent;
-  // tempArray.push({
-  //   ID: data.ID,
-  //   name: data.name,
-  //   gender: data.gender,
-  //   Address: data.Address,
-  //   MobileNo: data.MobileNo,
-  //   birth: data.birth,
-  //   Age: data.Age,
-  // });
-  // return tempArray;
+  return { message: 'Student added successfully !', newStudent };
 };
 
 //update Student
-export const updateStudentService = async (data: any) => {
+export const findStudent = async (studentId: number) => {
+  return await Student.findOneBy({ id: studentId });
+};
+
+export const updateStudentService = async (data: StudentModel) => {
   const student = new Student();
   student.id = data.id;
   student.name = data.name;
@@ -75,12 +50,11 @@ export const updateStudentService = async (data: any) => {
   student.birth = data.birth;
   student.age = data.age;
   const studentRepository = AppDataSource.getRepository(Student);
-
   const newStudent = await studentRepository.save(student);
   if (!newStudent) {
     return { message: 'Faild to add student !' };
   }
-  return newStudent;
+  return { message: 'Student updated successfully !', newStudent };
 };
 
 //delete Student
