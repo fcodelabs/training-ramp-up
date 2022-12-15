@@ -10,14 +10,9 @@
 /coverage
 
 # production
-/build
-/.idea
-/.vscode
-node_modules
-
+/node_modules
 /dist
-/tmp
-/temp
+
 
 # misc
 .DS_Store
