@@ -7,6 +7,7 @@ import {
   findStudent,
 } from '../services/studentService';
 import { StudentModel } from '../utils/interfaces';
+import { io } from '../../index';
 let validationStatus = '';
 
 function checkValidation(dataItem: StudentModel) {
@@ -63,47 +64,83 @@ function checkValidation(dataItem: StudentModel) {
     return;
   }
 
+  // if (dataItem.age > 18) {
+  //   fieldStatus = true;
+  // }else{
+  //   fieldStatus = false;
+  //   validationStatus =
+  //     'check birth day field,age needs to be more than 18 years....!';
+  //   console.log('check birth day field,age needs to be more than 18 years....!');
+  //   return;
+  // }
   return fieldStatus;
 }
 
 //get all student
-export const getAllCustomer = async (req: Request, res: Response) => {
-  const student = await getAllCustomerService();
-  res.send(student);
+export const getAllCustomer = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const student = await getAllCustomerService();
+    res.send(student);
+  } catch (err) {
+    res.send('Error' + err);
+  }
 };
 
 //save Student
-export const saveStudent = async (req: Request, res: Response) => {
-  if (checkValidation(req.body)) {
-    const response = await saveStudentService(req.body);
-    res.send(response);
-  } else {
-    res.send(validationStatus);
+export const saveStudent = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    if (checkValidation(req.body)) {
+      const response = await saveStudentService(req.body);
+      res.send(response);
+      io.emit('notification', 'Student has been added');
+    } else {
+      res.send(validationStatus);
+    }
+  } catch (err) {
+    res.send('Error' + err);
   }
 };
 
 //update Student
-export const updateStudent = async (req: Request, res: Response) => {
+export const updateStudent = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   try {
     if (checkValidation(req.body)) {
       const studentStatus = await findStudent(req.body.id);
       if (studentStatus) {
         const response = await updateStudentService(req.body);
         res.send(response);
-      }else{
+        io.emit('notification', 'Student has been updated');
+      } else {
         res.send('There is no such student..!');
       }
     } else {
       res.send(validationStatus);
     }
   } catch (err) {
-    console.log(err);
+    res.send('Error' + err);
   }
 };
 
 //delete Student
-export const deleteStudent = async (req: Request, res: Response) => {
-  const studentId = parseInt(req.params.ID);
-  const response = await deleteStudentService(studentId);
-  res.send(response);
+export const deleteStudent = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const studentId = parseInt(req.params.ID);
+    const response = await deleteStudentService(studentId);
+    res.send(response);
+    io.emit('notification', 'Student has been deleted');
+  } catch (err) {
+    res.send('Error' + err);
+  }
 };

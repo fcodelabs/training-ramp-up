@@ -1,4 +1,4 @@
-import express, { Express, Request, Response } from 'express';
+import express, { Express } from 'express';
 import dotenv from 'dotenv';
 import { AppDataSource } from './src/dataSource';
 import studentRoutes from './src/routes/studentRoute';
@@ -8,17 +8,19 @@ import cors from 'cors';
 
 dotenv.config();
 const app: Express = express();
+const httpServer = createServer(app);
 const port = process.env.PORT;
+
 app.use(express.json());
-app.use(cors());
+app.use(cors({ origin: '*' }));
 app.use(express.urlencoded({ extended: true }));
 
 //routes
 app.use('/student', studentRoutes);
 
 // socket.io
-const httpServer = createServer(app);
-const io = new Server(httpServer, {
+
+export const io = new Server(httpServer, {
   cors: {
     origin: 'http://localhost:3000',
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
@@ -26,16 +28,13 @@ const io = new Server(httpServer, {
 });
 
 io.on('connection', (socket) => {
-  socket.emit('greeting-from-server', {
-    greeting: 'Hello Client',
-  });
-  socket.on('greeting-from-client', function (message) {
-    console.log('client message');
-  });
-}); 
+  console.log('socketId');
+  console.log(`connect ${socket.id}`);
+
+});
 
 // express  api 
-app.listen(port, () => {
+httpServer.listen(port, () => {
   console.log(`application is running on port ${port}.`);
 });
 
@@ -44,6 +43,6 @@ AppDataSource.initialize()
   .then(() => {
     console.log('Data Source has been initialized!');
   })
-  .catch((error: any) => {
+  .catch((error) => {
     console.error('Error during Data Source initialization:', error);
-  });
+  }); 
