@@ -1,4 +1,3 @@
-
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 # dependencies
@@ -11,13 +10,6 @@
 
 # production
 /build
-/.idea
-/.vscode
-/node_modules
-
-/dist
-/tmp
-/temp
 
 # misc
 .DS_Store
@@ -29,4 +21,3 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-
