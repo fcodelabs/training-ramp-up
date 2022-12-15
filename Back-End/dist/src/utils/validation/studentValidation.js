@@ -1,8 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.studentValidation = exports.studentPatchValidationRules = exports.studentAddOrUpdateValidationRules = void 0;
+exports.studentValidation = exports.studentPatchValidationRules = exports.studentAddValidationRules = void 0;
 const express_validator_1 = require("express-validator");
-const studentAddOrUpdateValidationRules = () => {
+const studentAddValidationRules = () => {
     return [
         (0, express_validator_1.body)('name', 'Name is required').notEmpty(),
         (0, express_validator_1.body)('gender', 'Gender is required').not().isEmpty().isIn(['Male', 'Female']),
@@ -11,7 +11,7 @@ const studentAddOrUpdateValidationRules = () => {
         (0, express_validator_1.body)('birthday', 'Birthday is required & Couldnt be a future date').not().isEmpty().toDate().isBefore(),
     ];
 };
-exports.studentAddOrUpdateValidationRules = studentAddOrUpdateValidationRules;
+exports.studentAddValidationRules = studentAddValidationRules;
 const studentPatchValidationRules = () => {
     return [
         (0, express_validator_1.body)('name', 'Name is required').optional().notEmpty(),

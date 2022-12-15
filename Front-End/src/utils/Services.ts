@@ -21,7 +21,7 @@ export const addStudent = (student: any) => {
 
 export const updateStudent = (student: any) => {
   try {
-    return axios.put(baseURL + "/student/" + student.id, student);
+    return axios.patch(baseURL + "/student/" + student.id, student);
   } catch (error) {
     console.log(error);
   }

@@ -30,9 +30,6 @@ const io = new socket_io_1.Server(httpServer, {
 });
 io.on('connection', (socket) => {
     console.log(`connect ${socket.id}`);
-    // socket.on('student_add', (data) => {
-    //   socket.broadcast.emit('student_added', data);
-    // });
     socket.on('student_add', (data) => {
         socket.broadcast.emit('student_added', data);
     });

@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteStudent = exports.patchStudent = exports.updateStudent = exports.addStudent = exports.getAllStudents = void 0;
+exports.deleteStudent = exports.patchStudent = exports.addStudent = exports.getAllStudents = void 0;
 const StudentService_1 = require("../services/StudentService");
 // get all students controller
 const getAllStudents = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -41,23 +41,6 @@ const addStudent = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     }
 });
 exports.addStudent = addStudent;
-// update student controller
-const updateStudent = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const studentId = parseInt(req.params.id);
-        const student = yield (0, StudentService_1.findStudentService)(studentId);
-        if (student) {
-            (0, StudentService_1.mergeStudentService)(student, req.body);
-            const results = yield (0, StudentService_1.saveStudentService)(student);
-            return res.send(results);
-        }
-    }
-    catch (err) {
-        res.status(500);
-        res.json(err);
-    }
-});
-exports.updateStudent = updateStudent;
 // patch student controller
 const patchStudent = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {

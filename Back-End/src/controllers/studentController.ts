@@ -39,24 +39,8 @@ export const addStudent = async (req: Request, res: Response) => {
   }
 };
 
-// update student controller
-
-export const updateStudent = async (req: Request, res: Response) => {
-  try {
-    const studentId = parseInt(req.params.id);
-    const student = await findStudentService(studentId);
-    if (student) {
-      mergeStudentService(student, req.body);
-      const results = await saveStudentService(student);
-      return res.send(results);
-    }
-  } catch (err) {
-    res.status(500);
-    res.json(err);
-  }
-};
-
 // patch student controller
+
 export const patchStudent = async (req: Request, res: Response) => {
   try {
     const studentId = parseInt(req.params.id);

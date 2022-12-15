@@ -1,7 +1,7 @@
 import { body, validationResult } from 'express-validator';
 import { Request, Response, NextFunction } from 'express';
 
-export const studentAddOrUpdateValidationRules = () => {
+export const studentAddValidationRules = () => {
   return [
     body('name', 'Name is required').notEmpty(),
     body('gender', 'Gender is required').not().isEmpty().isIn(['Male', 'Female']),

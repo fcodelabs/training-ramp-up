@@ -28,7 +28,6 @@ function* getStudentsSaga(): any {
       inEdit: false,
       ...temp,
     }));
-    console.log(students);
     yield put(setStudentsAction(students));
   } catch (error) {
     console.log(error);
