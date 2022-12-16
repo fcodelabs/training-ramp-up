@@ -37,6 +37,7 @@ export const addStudent = async (input: Student): Promise<Student> => {
 export const updateStudent = async (input:Student): Promise<UpdateResult> => {
     try {      
         if (validate(input)) {
+            
             const student={...input}
             const students = await appDataSource.manager.update(
                 Student,

@@ -43,12 +43,17 @@ function* handleDeleteStudent(action: any): any {
     }
 }
 
-function* handleUpdateStudent(action: any): any {
+function* handleUpdateStudent(action:any): any {
     try {
+        // console.log(Object.create(action.payload)); 
+        // const ob =Object.assign({},action.payload)
+        // console.log(ob); 
+        console.log(action.payload); 
         const res = yield call(() => axios.patch('student', action.payload))
+      
         yield put(getStudents())
     } catch (error: any) {
-        //yield put(getStudentsFailed(error))
+        yield put(getStudentsFailed(error))
     }
 }
 

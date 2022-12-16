@@ -27,7 +27,7 @@ export default function HomePage() {
     const [changedFields, setChangedFields] = React.useState<
         Array<{ id: number; value: Map<string, any> }>
     >([])
-    
+
     React.useEffect(() => {
         dispatch(getStudents())
     }, [])
@@ -84,8 +84,6 @@ export default function HomePage() {
             inEdit: false,
         }
         if (validate(student)) {
-            console.log('validated')
-
             dispatch(addStudent(student))
         }
     }
@@ -113,21 +111,26 @@ export default function HomePage() {
             (item) => item.id == dataItem.id
         )[0]
 
-        const data = {}
-        Object.defineProperty(data, 'id', { value: fieldsToBeUpdated.id })
-        fieldsToBeUpdated.value.forEach((value, key) => {
-            Object.defineProperty(data, key, { value: value })
-        })
+        if (fieldsToBeUpdated != undefined) {
+            //create an object carrying the updted fields
+            const data: any = { id: fieldsToBeUpdated.id }
+            fieldsToBeUpdated.value.forEach((value, key) => {
+                data[key] = value
+            })
 
-        console.log(data)
-
-        if (validate(dataItem)) {
-            dispatch(updateStudent(data))
+            if (validate(dataItem)) {
+                //calling update methid
+                dispatch(updateStudent(data))
+                const index = changedFields.indexOf(fieldsToBeUpdated)
+                changedFields.splice(index, 1)
+            }
+        } else {
+            alert('None of thefields has been changed')
         }
     }
 
     //cancel updating a new student
-    const cancel = (dataItem: Person): void => {
+    const cancel = (): void => {
         dispatch(getStudents())
     }
 
@@ -155,7 +158,7 @@ export default function HomePage() {
         )
 
         //add changed fields
-        if (e.field) {
+        if (e.dataItem.id != undefined && e.field) {
             const ob = changedFields.filter(
                 (item) => item.id == e.dataItem.id
             )[0]

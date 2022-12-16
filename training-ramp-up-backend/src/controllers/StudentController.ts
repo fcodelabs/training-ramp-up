@@ -39,6 +39,7 @@ export const requestUpdateStudent = async (
         const students = await updateStudent(req.body)
         res.send(students)
     } catch (err) {
+        //throw err
         res.send('Error : ' +err.message)
     }
 }
