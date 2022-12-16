@@ -115,16 +115,21 @@ export default function HomePage() {
             (item) => item.id == dataItem.id
         )[0]
 
-        const data ={}
-        Object.defineProperty(data,'id',{value:fieldsToBeUpdated.id})
-        fieldsToBeUpdated.value.forEach((value,key) => {
-            Object.defineProperty(data,key,{value:value})
-        })
+        if (fieldsToBeUpdated != undefined) {
+            //create an object carrying the updted fields
+            const data: any = { id: fieldsToBeUpdated.id }
+            fieldsToBeUpdated.value.forEach((value, key) => {
+                data[key] = value
+            })
 
-        console.log(data);
-
-        if (validate(dataItem)) {
-            dispatch(updateStudent(data))
+            if (validate(dataItem)) {
+                //calling update methid
+                dispatch(updateStudent(data))
+                const index = changedFields.indexOf(fieldsToBeUpdated)
+                changedFields.splice(index, 1)
+            }
+        } else {
+            alert('None of thefields has been changed')
         }
     }
 
