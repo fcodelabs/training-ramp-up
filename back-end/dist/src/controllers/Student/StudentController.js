@@ -39,7 +39,30 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteStudent = exports.updateStudent = exports.addStudent = exports.getAllStudents = void 0;
 var __1 = require("../../..");
 var StudentService_1 = require("../../services/Student/StudentService");
-var validate = function (person) {
+var validateUpdate = function (person) {
+    var name = /^([A-z\s.]{3,20})$/;
+    var address = /^([A-z0-9/,\s]{5,})$/;
+    var mobileNo = /^([0][0-9]{9})$/;
+    var age = Math.round((new Date().getTime() - new Date(person.dob).getTime()) / (1000 * 60 * 60 * 24 * 365));
+    var validateAge = age >= 18;
+    if (person.name !== undefined && !name.test(person.name)) {
+        return false;
+    }
+    if (person.gender !== undefined && person.gender === '') {
+        return false;
+    }
+    if (person.address !== undefined && !address.test(person.address)) {
+        return false;
+    }
+    if (person.mobileNo !== undefined && !mobileNo.test(person.mobileNo)) {
+        return false;
+    }
+    if (person.dob !== undefined && !validateAge) {
+        return false;
+    }
+    return true;
+};
+var validateInsert = function (person) {
     var name = /^([A-z\s.]{3,20})$/;
     var address = /^([A-z0-9/,\s]{5,})$/;
     var mobileNo = /^([0][0-9]{9})$/;
@@ -57,7 +80,7 @@ var validate = function (person) {
     if (!mobileNo.test(person.mobileNo)) {
         return false;
     }
-    if (person.dob === null || !validateAge) {
+    if (person.dob == null || !validateAge) {
         return false;
     }
     return true;
@@ -88,7 +111,7 @@ var addStudent = function (req, res) { return __awaiter(void 0, void 0, void 0, 
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 4, , 5]);
-                if (!validate(req.body)) return [3 /*break*/, 2];
+                if (!validateInsert(req.body)) return [3 /*break*/, 2];
                 return [4 /*yield*/, (0, StudentService_1.addStudentService)(req.body)];
             case 1:
                 result = _a.sent();
@@ -114,7 +137,7 @@ var updateStudent = function (req, res) { return __awaiter(void 0, void 0, void 
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 4, , 5]);
-                if (!validate(req.body)) return [3 /*break*/, 2];
+                if (!validateUpdate(req.body)) return [3 /*break*/, 2];
                 return [4 /*yield*/, (0, StudentService_1.updateStudentService)(req.body)];
             case 1:
                 result = _a.sent();

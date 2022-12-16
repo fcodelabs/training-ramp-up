@@ -11,9 +11,7 @@ const StudentRoute = express.Router()
 
 StudentRoute.get('/', getAllStudents)
 StudentRoute.post('/', addStudent)
-StudentRoute.put('/', updateStudent)
+StudentRoute.patch('/', updateStudent)
 StudentRoute.delete('/:Id', deleteStudent)
-
-// StudentRoute.options('*', cors(options))
 
 export default StudentRoute

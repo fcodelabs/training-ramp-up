@@ -36,9 +36,14 @@ var cors_1 = __importDefault(require("cors"));
 dotenv_1.default.config();
 var app = (0, express_1.default)();
 var httpServer = new http.Server(app);
-exports.io = new socketio.Server(httpServer);
-var port = Number(process.env.PORT);
 app.use((0, cors_1.default)({ origin: '*' }));
+exports.io = new socketio.Server(httpServer, {
+    cors: {
+        origin: '*',
+        methods: ['GET', 'POST', 'PATCH', 'DELETE']
+    }
+});
+var port = Number(process.env.PORT);
 app.use(express_1.default.json());
 app.use('/student', StudentRoutes_1.default);
 exports.io.on('connection', function (socket) {

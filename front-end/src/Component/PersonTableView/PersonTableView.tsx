@@ -10,7 +10,6 @@ import {
 } from '@progress/kendo-react-grid'
 import { Button } from '@progress/kendo-react-buttons'
 import '@progress/kendo-theme-default/dist/all.css'
-import Person from '../../utils/interface'
 import CommandCell from '../CommandCell/CommandCell'
 import { durationInYears, addYears } from '@progress/kendo-date-math'
 import DropDownCell from '../DropDownCell/DropDownCell'
@@ -21,6 +20,7 @@ import {
   getAllStudents,
   removeStudent
 } from '../../pages/Home/HomeSlice'
+import Person, { UpdatedPerson } from '../../utils/interface'
 
 const PersonTableView = () => {
   const students = useSelector((state: any) => state.students.students)
@@ -38,14 +38,17 @@ const PersonTableView = () => {
     setData(students)
   }, [students])
 
-  const personTableViewValidation = (person: Person) => {
+  const [changes, setChanges] = useState<UpdatedPerson[]>([])
+
+  const validateAdd = (person: Person) => {
     const name = /^([A-z\s.]{3,20})$/
 
     const address = /^([A-z0-9/,\s]{5,})$/
 
     const mobileNo = /^([0][0-9]{9})$/
 
-    const dob: boolean = new Date() >= addYears(person.dob, 18)
+    const dob: boolean =
+      person.dob !== null && new Date() >= addYears(person.dob, 18)
 
     if (!name.test(person.name)) {
       alert('Enter valid name')
@@ -63,7 +66,40 @@ const PersonTableView = () => {
       alert('Enter Valid phone number')
       return false
     }
-    if (person.dob === null || !dob) {
+    if (!dob) {
+      alert('Enter Valid Date of birth\nAge need to be more than 18 years!!!!')
+      return false
+    }
+    return true
+  }
+
+  const validateUpdate = (person: UpdatedPerson) => {
+    const name = /^([A-z\s.]{3,20})$/
+
+    const address = /^([A-z0-9/,\s]{5,})$/
+
+    const mobileNo = /^([0][0-9]{9})$/
+
+    const dob: boolean =
+      person.dob !== undefined && new Date() >= addYears(person.dob, 18)
+
+    if (person.name !== undefined && !name.test(person.name)) {
+      alert('Enter valid name')
+      return false
+    }
+    if (person.gender !== undefined && person.gender === '') {
+      alert('Select valid gender')
+      return false
+    }
+    if (person.address !== undefined && !address.test(person.address)) {
+      alert('Enter the address')
+      return false
+    }
+    if (person.mobileNo !== undefined && !mobileNo.test(person.mobileNo)) {
+      alert('Enter Valid phone number')
+      return false
+    }
+    if (person.dob !== undefined && !dob) {
       alert('Enter Valid Date of birth\nAge need to be more than 18 years!!!!')
       return false
     }
@@ -71,15 +107,45 @@ const PersonTableView = () => {
   }
 
   const add = (dataItem: Person): any => {
-    if (personTableViewValidation(dataItem)) {
+    if (validateAdd(dataItem)) {
       console.log(dataItem)
       dispatch(addStudent(dataItem))
     }
   }
 
   const update = (dataItem: Person): void => {
-    if (personTableViewValidation(dataItem)) {
-      dispatch(editStudent(dataItem))
+    const updatePerson = changes.find(
+      (person: UpdatedPerson) => person.id === dataItem.id
+    )
+
+    if (updatePerson == null) return
+    const temp: UpdatedPerson = {
+      id: updatePerson?.id
+    }
+    if (updatePerson?.mobileNo !== '') {
+      temp.mobileNo = updatePerson?.mobileNo
+    }
+    if (updatePerson?.name !== '') {
+      temp.name = updatePerson?.name
+    }
+    if (updatePerson?.gender !== '') {
+      temp.gender = updatePerson?.gender
+    }
+    if (updatePerson?.address !== '') {
+      temp.address = updatePerson?.address
+    }
+    if (updatePerson?.dob !== undefined) {
+      temp.dob = updatePerson?.dob
+    }
+
+    if (validateUpdate(temp)) {
+      dispatch(editStudent(temp))
+
+      const index = changes.findIndex(
+        (record: UpdatedPerson) => record.id === updatePerson.id
+      )
+      changes.slice(index, 1)
+      setChanges(changes)
     }
   }
 
@@ -90,7 +156,9 @@ const PersonTableView = () => {
   }
 
   const cancel = (dataItem: Person): void => {
-    const originalItem = students.find((person: Person) => person.id === dataItem.id)
+    const originalItem = students.find(
+      (person: Person) => person.id === dataItem.id
+    )
     const newData = data.map((item: Person) =>
       item.id === originalItem.id ? originalItem : item
     )
@@ -138,6 +206,31 @@ const PersonTableView = () => {
         : person
     )
     setData(newData)
+
+    if (event.field != null) {
+      const match: UpdatedPerson = changes.filter(
+        (item) => item.id === event.dataItem.id
+      )[0]
+      if (match != null) {
+        const newPersons = changes.map((person: UpdatedPerson) =>
+          person.id === event.dataItem.id
+            ? { ...person, [event.field ?? '']: event.value }
+            : person
+        )
+        setChanges(newPersons)
+      } else {
+        const newDataItem: UpdatedPerson = {
+          id: event.dataItem.id,
+          dob: undefined,
+          name: '',
+          gender: '',
+          address: '',
+          mobileNo: ''
+        }
+        const newPerson = { ...newDataItem, [event.field]: event.value }
+        setChanges([...changes, newPerson])
+      }
+    }
   }
 
   const addNew = (): void => {

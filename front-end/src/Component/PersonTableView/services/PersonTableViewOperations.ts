@@ -20,7 +20,7 @@ export const insertPerson = async (person: Person) => {
 
 export const updatePerson = async (person: Person) => {
   person.inEdit = false
-  const response = await axios.put(
+  const response = await axios.patch(
     baseURL + '/student',
     person
   )

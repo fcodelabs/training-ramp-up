@@ -8,9 +8,14 @@ import cors from 'cors'
 dotenv.config()
 const app: Express = express()
 const httpServer: http.Server = new http.Server(app)
-export const io: any = new socketio.Server(httpServer)
-const port: number = Number(process.env.PORT)
 app.use(cors({ origin: '*' }))
+export const io: any = new socketio.Server(httpServer, {
+  cors: {
+    origin: '*',
+    methods: ['GET', 'POST', 'PATCH', 'DELETE']
+  }
+})
+const port: number = Number(process.env.PORT)
 
 app.use(express.json())
 app.use('/student', studentRoutes)

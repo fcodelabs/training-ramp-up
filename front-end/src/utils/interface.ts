@@ -8,6 +8,15 @@ export default interface Person {
   inEdit?: boolean
 }
 
+export interface UpdatedPerson {
+  id: number
+  name?: string
+  gender?: string
+  address?: string
+  mobileNo?: string
+  dob?: Date | undefined
+}
+
 export interface ResponseGenerator {
   config?: any
   data?: any
@@ -16,3 +25,13 @@ export interface ResponseGenerator {
   status?: number
   statusText?: string
 }
+
+// export interface ChangeField {
+//   field: string
+//   value: any
+// }
+
+// export interface Changes {
+//   id: number
+//   fields: string[]
+// }

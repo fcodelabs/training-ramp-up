@@ -9,8 +9,7 @@ var StudentController_1 = require("../../controllers/Student/StudentController")
 var StudentRoute = express_1.default.Router();
 StudentRoute.get('/', StudentController_1.getAllStudents);
 StudentRoute.post('/', StudentController_1.addStudent);
-StudentRoute.put('/', StudentController_1.updateStudent);
+StudentRoute.patch('/', StudentController_1.updateStudent);
 StudentRoute.delete('/:Id', StudentController_1.deleteStudent);
-// StudentRoute.options('*', cors(options))
 exports.default = StudentRoute;
 //# sourceMappingURL=StudentRoutes.js.map
