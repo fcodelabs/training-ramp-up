@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import * as React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -29,6 +30,10 @@ export default function Datagrid() {
   const editField = "inEdit";
   const students = useSelector(selectStudent);
   const dispatch = useDispatch();
+
+  const [editedFeilds, setEditedFields] = React.useState(
+    Array<{ id: number; value: Map<string, any> }>()
+  );
 
   React.useEffect(() => {
     dispatch(getStudentsAction());
@@ -70,7 +75,6 @@ export default function Datagrid() {
     ["gender", new RegExp("^(MALE|FEMALE)$", "i")],
   ]);
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const validateFields = (inputValue: any, field: string): boolean => {
     const key = validations.get(field);
     const valid = key ? key.test(inputValue) : true;
@@ -101,9 +105,7 @@ export default function Datagrid() {
     dispatch(setStudentsAction([newDataItem, ...students]));
   };
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const add = (dataItem: any) => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const student: any = {
       name: dataItem.name,
       gender: dataItem.gender,
@@ -130,11 +132,27 @@ export default function Datagrid() {
     temp.inEdit = true;
     const index = tempArray.indexOf(dataItem);
     tempArray[index] = temp;
+    console.log("edit");
     dispatch(setStudentsAction(tempArray));
   };
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const update = (dataItem: any) => {
+    const fieldsToBeUpdated = editedFeilds.filter(
+      (item: { id: number }) => item.id == dataItem.id
+    )[0];
+
+    if (fieldsToBeUpdated != undefined) {
+      const data: any = { id: fieldsToBeUpdated.id };
+      fieldsToBeUpdated.value.forEach((value: any, key: string | number) => {
+        data[key] = value;
+      });
+      console.log(data);
+
+      if (validate(dataItem)) {
+        console.log("update");
+        dispatch(updateStudentAction(data));
+      }
+    }
     if (validate(dataItem)) {
       dispatch(updateStudentAction(dataItem));
     }
@@ -165,6 +183,24 @@ export default function Datagrid() {
         ? { ...student, [e.field || ""]: e.value, age: age }
         : student
     );
+
+    if (e.field) {
+      const studentObj = editedFeilds.filter(
+        (student) => student.id === e.dataItem.id
+      )[0];
+
+      if (studentObj != undefined) {
+        studentObj.value.set(e.field, e.value);
+      } else {
+        const changedStudent = {
+          id: e.dataItem.id,
+          value: new Map([[e.field, e.value]]),
+        };
+        editedFeilds.push(changedStudent);
+      }
+      setEditedFields([...editedFeilds]);
+    }
+
     dispatch(setStudentsAction(newData));
   };
 
@@ -173,12 +209,12 @@ export default function Datagrid() {
   const command = (props: GridCellProps) => (
     <CommandCell
       {...props}
-      remove={remove}
       add={add}
-      discard={discard}
       edit={edit}
       update={update}
+      discard={discard}
       cancel={cancel}
+      remove={remove}
     />
   );
 

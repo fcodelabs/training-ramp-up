@@ -6,7 +6,7 @@ import {
 import { GridCellProps } from "@progress/kendo-react-grid";
 
 export const DropDownCell = (props: GridCellProps) => {
-  const localizedData = [
+  const data = [
     { text: "Male", value: "Male" },
     { text: "Female", value: "Female" },
   ];
@@ -33,8 +33,8 @@ export const DropDownCell = (props: GridCellProps) => {
         <DropDownList
           style={{ width: "100px" }}
           onChange={handleChange}
-          value={localizedData.find((c) => c.value === dataValue)}
-          data={localizedData}
+          value={data.find((c) => c.value === dataValue)}
+          data={data}
           textField="text"
         />
       ) : (

@@ -2,13 +2,13 @@ import * as React from "react";
 import { Student } from "../../utils/Interfaces/Student";
 
 export const CommandCell = (props: {
+  dataItem: Student;
   add: (param: Student) => void;
+  edit: (param: Student) => void;
   update: (param: Student) => void;
   discard: () => void;
   cancel: (param: Student) => void;
-  edit: (param: Student) => void;
   remove: (param: Student) => void;
-  dataItem: Student;
 }) => {
   const { dataItem } = props;
   const inEdit = dataItem.inEdit;
