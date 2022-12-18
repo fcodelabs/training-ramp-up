@@ -1,4 +1,5 @@
 import { call, put, takeEvery } from 'redux-saga/effects';
+import { AnyAction } from '@reduxjs/toolkit';
 import {
   getStudentAction,
   saveStudentAction,
@@ -12,6 +13,7 @@ import {
   updateStudentService,
   deleteStudentService,
 } from '../services/services';
+import { StudentModel } from '../../src/utils/interfaces';
 
 export default function* studentSaga() {
   yield takeEvery(getStudentAction, getStudent);
@@ -21,21 +23,19 @@ export default function* studentSaga() {
 }
 export function* getStudent() {
   try {
-    const response = yield call(getStudentService);
+    const response: StudentModel = yield call(getStudentService);
     yield put(saveStudentAction(response.data));
   } catch (error) {
     console.log(error);
   }
 }
 
-function* saveStudent({ payload }) {
+function* saveStudent(action: AnyAction) {
   try {
-    const response = yield call(insertStudentService, payload);
-    if (response.status===200) {
-      //  socket.emit('student_add', 'Student Added');
-      alert(response.data.message);
+    const response: StudentModel = yield call(insertStudentService, action.payload);
+    if (response.status === 200) {
       yield put(getStudentAction());
-    }else{
+    } else {
       alert(response.data.message);
     }
   } catch (error) {
@@ -43,14 +43,16 @@ function* saveStudent({ payload }) {
   }
 }
 
-function* updateStudent({ payload }) {
+function* updateStudent(action: AnyAction) {
   try {
-    const response = yield call(updateStudentService, payload);
-    if (response.status===200) {
-      //  socket.emit('student_update', 'Student updated');
-      alert(response.data.message);
+    console.log(action.payload);
+    const response: StudentModel = yield call(
+      updateStudentService,
+      action.payload
+    );
+    if (response.status === 200) {
       yield put(getStudentAction());
-    }else{
+    } else {
       alert(response.data.message);
     }
   } catch (error) {
@@ -58,14 +60,15 @@ function* updateStudent({ payload }) {
   }
 }
 
-function* deleteStudent({ payload }) {
+function* deleteStudent(action: AnyAction ) {
   try {
-    const response = yield call(deleteStudentService, payload);
-    if (response.status===200) {
-      // socket.emit('student_delete', 'Student Deleted');
-      alert(response.data.message);
+    const response: StudentModel = yield call(
+      deleteStudentService,
+      action.payload
+    );
+    if (response.status === 200) {
       yield put(getStudentAction());
-    }else{
+    } else {
       alert(response.data.message);
     }
   } catch (error) {

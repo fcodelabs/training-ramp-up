@@ -1,5 +1,3 @@
-/* eslint-disable no-useless-return */
-/* eslint-disable @typescript-eslint/no-floating-promises */
 import React, { useEffect, useState } from 'react';
 import {
   Grid,
@@ -13,7 +11,6 @@ import Command from '../../components/Buttons/Buttons';
 import { StudentModel } from '../../utils/interfaces';
 import DropDownCell from '../../components/Dropdown/DropDownCell';
 import ValidatedDate from '../../components/ValidatedDate/ValidatedDate';
-// import { io } from 'socket.io-client';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   getStudentAction,
@@ -21,11 +18,20 @@ import {
   updateStudentAction,
   deleteStudentAction,
 } from '../../slice/studentSlice';
-// const socket = io('http://localhost:8000');
+import { checkValidation } from '../../utils/validation';
+
 const editField: string = 'inEdit';
 
 const dataGrid = () => {
   const [user, setuser] = useState<StudentModel[]>([]);
+
+  const [updateField, setupdateField] = React.useState<
+    Array<{
+      id: number;
+      value: Map<string, any>;
+    }>
+  >([]);
+
   const selectStudent = useSelector((state: any) => state.studentSlice.student);
   const dispatch = useDispatch();
 
@@ -37,12 +43,6 @@ const dataGrid = () => {
     setuser(selectStudent);
   }, [selectStudent]);
 
-  // useEffect(() => {
-  //   socket.on('refetch_data', () => {
-  //     dispatch(getStudentAction());
-  //   });
-  // }, [socket]);
-
   function addNewUserField() {
     const newUser = {
       inEdit: true,
@@ -50,75 +50,88 @@ const dataGrid = () => {
     };
     setuser([newUser, ...user]);
   }
-
+  function getAge(dob: Date) {
+    const diffms = Date.now() - dob.getTime();
+    const agedt = new Date(diffms);
+    return Math.abs(agedt.getUTCFullYear() - 1970);
+  }
   const itemChange = (event: GridItemChangeEvent) => {
+    // set age
+    let age = event.dataItem.age;
+    if (event.field === 'birth') {
+      const tempAge = getAge(event.value);
+      if (tempAge > 18) {
+        age = tempAge;
+      } else {
+        age = 0;
+        alert('age needs to be more than 18 years....!');
+      }
+    }
+
+    // set editable field
     const newData = user.map((item) =>
       item.id === event.dataItem.id
-        ? { ...item, [event.field || '']: event.value }
+        ? { ...item, [event.field || '']: event.value, age }
         : item
     );
+
+    // set updated field
+    if (event.field) {
+      const dataOb = updateField.filter(
+        (Item) => Item.id === event.dataItem.id
+      )[0];
+
+      if (dataOb !== undefined) {
+        dataOb.value.set(event.field, event.value);
+      } else {
+        const map = new Map<string, any>();
+        map.set(event.field, event.value);
+        const newOb = {
+          id: event.dataItem.id,
+          value: map,
+        };
+        updateField.unshift(newOb);
+      }
+      setupdateField([...updateField]);
+    }
+
     setuser(newData);
   };
-
-  // validations
-  function checkValidation(dataItem: StudentModel) {
-    const nameRegEx = /^[A-z ]{5,20}$/;
-    const addressRegEx = /^[A-z ]{5,20}$/;
-    const mobileRegEx = /^[0-9]{5,10}$/;
-    let fieldStatus: boolean = false;
-
-    if (dataItem.name !== undefined && nameRegEx.test(dataItem.name)) {
-      fieldStatus = true;
-    } else {
-      fieldStatus = false;
-      alert('check name field....!');
-      return;
-    }
-
-    if (dataItem.address !== undefined && addressRegEx.test(dataItem.address)) {
-      fieldStatus = true;
-    } else {
-      fieldStatus = false;
-      alert('check address field....!');
-      return;
-    }
-
-    if (dataItem.gender !== undefined) {
-      fieldStatus = true;
-    } else {
-      fieldStatus = false;
-      alert('check gender field....!');
-      return;
-    }
-
-    if (
-      dataItem.mobileNo !== undefined &&
-      mobileRegEx.test(dataItem.mobileNo)
-    ) {
-      fieldStatus = true;
-    } else {
-      fieldStatus = false;
-      alert('check mobileNo field....!');
-      return;
-    }
-
-    if (dataItem.birth !== undefined) {
-      fieldStatus = true;
-    } else {
-      fieldStatus = false;
-      alert('check birth field....!');
-      return;
-    }
-
-    return fieldStatus;
-  }
 
   // add new user
   const add = (dataItem: StudentModel) => {
     if (checkValidation(dataItem)) {
       dataItem.inEdit = true;
       dispatch(addStudent(dataItem));
-    } 
+    }
+  };
+  // update field
+
+  const update = (dataItem: StudentModel) => {
+    const field = updateField.filter(
+      (Item) => Item.id === dataItem.id
+    )[0];
+
+    if (field !== undefined) {
+      const data: any = { id: field.id };
+      field.value.forEach((value, key) => {
+        data[key] = value;
+      });
+
+      if (checkValidation(dataItem)) {
+        dataItem.inEdit = false;
+        dispatch(updateStudentAction(data));
+        const index = updateField.indexOf(field);
+        updateField.splice(index, 1);
+      }
+    } else {
+      alert('no field');
+    }
+  };
+
+  // remove user
+  const remove = (dataItem: StudentModel) => {
+    dispatch(deleteStudentAction(dataItem.id));
   };
 
   // discard fields
@@ -126,19 +139,6 @@ const dataGrid = () => {
     const newData = [...user];
     newData.splice(0, 1);
     setuser(newData);
-  };
-
-  // update field
-  const update = (dataItem: StudentModel) => {
-    if (checkValidation(dataItem)) {
-      dataItem.inEdit = false;
-      dispatch(updateStudentAction(dataItem));
-    }
-  };
-
-  // remove user
-  const remove = (dataItem: StudentModel) => {
-    dispatch(deleteStudentAction(dataItem.id));
   };
 
   // cancel update

@@ -1,12 +1,23 @@
 export interface StudentModel {
+  [x: string]: any;
+  status?: number;
+  data?: any;
   // [x: string]: any;
   id?: number;
   name?: string;
   gender?: string;
   address?: string;
   mobileNo?: string;
-  birth?:  Date |string;
+  birth?:  Date   ;
   age?: number;
-  inEdit?: boolean | string;
+  inEdit?: boolean | string ;
   Discontinued?: boolean;
+}
+export interface UpdatedPerson {
+  id: number;
+  name?: string;
+  gender?: string;
+  address?: string;
+  mobileNo?: string;
+  dob?: Date | undefined;
 }
