@@ -8,79 +8,69 @@ import {
 } from '../services/studentService';
 import { StudentModel } from '../utils/interfaces';
 import { io } from '../../index';
-let validationStatus = '';
+import { checkValidation } from '../../../ramp-up-one/src/utils/validation';
+import { validationStatus } from '../utils/validation';
+// let validationStatus = '';
 
-function checkValidation(dataItem: StudentModel) {
-  const nameRegEx = /^[A-z ]{5,20}$/;
-  const addressRegEx = /^[A-z ]{5,20}$/;
-  const mobileRegEx = /^[0-9]{5,11}$/;
+// function checkValidation(dataItem: StudentModel) {
+//   const nameRegEx = /^[A-z ]{5,20}$/;
+//   const addressRegEx = /^[A-z ]{5,20}$/;
+//   const mobileRegEx = /^[0-9]{5,11}$/;
 
-  let fieldStatus = false;
-  if (dataItem.name !== undefined && nameRegEx.test(dataItem.name)) {
-    fieldStatus = true;
-  } else {
-    fieldStatus = false;
-    validationStatus = 'check name field....!';
-    console.log('check name field....!');
-    return;
-  }
+//   let fieldStatus = false;
+//   if (dataItem.name !== undefined && nameRegEx.test(dataItem.name)) {
+//     fieldStatus = true;
+//   } else {
+//     fieldStatus = false;
+//     validationStatus = 'check name field....!';
+//     console.log('check name field....!');
+//     return;
+//   }
 
-  if (dataItem.address !== undefined && addressRegEx.test(dataItem.address)) {
-    fieldStatus = true;
-  } else {
-    fieldStatus = false;
-    validationStatus = 'check address field....!';
-    console.log('check address field....!');
-    return;
-  }
+//   if (dataItem.address !== undefined && addressRegEx.test(dataItem.address)) {
+//     fieldStatus = true;
+//   } else {
+//     fieldStatus = false;
+//     validationStatus = 'check address field....!';
+//     console.log('check address field....!');
+//     return;
+//   }
 
-  if (
-    (dataItem.gender !== undefined && dataItem.gender == 'Male') ||
-    dataItem.gender == 'Female'
-  ) {
-    fieldStatus = true;
-  } else {
-    fieldStatus = false;
-    validationStatus = 'check gender field....!';
-    console.log('check gender field....!');
-    return;
-  }
+//   if (
+//     (dataItem.gender !== undefined && dataItem.gender == 'Male') ||
+//     dataItem.gender == 'Female'
+//   ) {
+//     fieldStatus = true;
+//   } else {
+//     fieldStatus = false;
+//     validationStatus = 'check gender field....!';
+//     console.log('check gender field....!');
+//     return;
+//   }
 
-  if (dataItem.mobileNo !== undefined && mobileRegEx.test(dataItem.mobileNo)) {
-    fieldStatus = true;
-  } else {
-    fieldStatus = false;
-    validationStatus = 'check mobileNo field....!';
-    console.log('check mobileNo field....!');
-    return;
-  }
+//   if (dataItem.mobileNo !== undefined && mobileRegEx.test(dataItem.mobileNo)) {
+//     fieldStatus = true;
+//   } else {
+//     fieldStatus = false;
+//     validationStatus = 'check mobileNo field....!';
+//     console.log('check mobileNo field....!');
+//     return;
+//   }
 
-  if (dataItem.birth !== undefined) {
-    fieldStatus = true;
-  } else {
-    fieldStatus = false;
-    validationStatus = 'check birth day field....!';
-    console.log('check birth day field....!');
-    return;
-  }
+//   if (dataItem.birth !== undefined) {
+//     fieldStatus = true;
+//   } else {
+//     fieldStatus = false;
+//     validationStatus = 'check birth day field....!';
+//     console.log('check birth day field....!');
+//     return;
+//   }
 
-  // if (dataItem.age > 18) {
-  //   fieldStatus = true;
-  // }else{
-  //   fieldStatus = false;
-  //   validationStatus =
-  //     'check birth day field,age needs to be more than 18 years....!';
-  //   console.log('check birth day field,age needs to be more than 18 years....!');
-  //   return;
-  // }
-  return fieldStatus;
-}
+//   return fieldStatus;
+// }
 
 //get all student
-export const getAllCustomer = async (
-  req: Request,
-  res: Response
-): Promise<void> => {
+export const getAllCustomer = async (req: Request, res: Response) => {
   try {
     const student = await getAllCustomerService();
     res.send(student);
@@ -90,15 +80,15 @@ export const getAllCustomer = async (
 };
 
 //save Student
-export const saveStudent = async (
-  req: Request,
-  res: Response
-): Promise<void> => {
+export const saveStudent = async (req: Request, res: Response) => {
   try {
     if (checkValidation(req.body)) {
       const response = await saveStudentService(req.body);
       res.send(response);
-      io.emit('notification', 'Student has been added');
+      io.emit(
+        'notification',
+        'Student added successfully. Student:- ' + response.newStudent?.name
+      );
     } else {
       res.send(validationStatus);
     }
@@ -108,22 +98,18 @@ export const saveStudent = async (
 };
 
 //update Student
-export const updateStudent = async (
-  req: Request,
-  res: Response
-): Promise<void> => {
+export const updateStudent = async (req: Request, res: Response) => {
   try {
-    if (checkValidation(req.body)) {
-      const studentStatus = await findStudent(req.body.id);
-      if (studentStatus) {
-        const response = await updateStudentService(req.body);
-        res.send(response);
-        io.emit('notification', 'Student has been updated');
-      } else {
-        res.send('There is no such student..!');
-      }
+    const studentStatus = await findStudent(req.body.id);
+    if (studentStatus) {
+      const response = await updateStudentService(req.body);
+      res.send(response);
+      io.emit(
+        'notification',
+        'Student has been updated, Student:- ' + response.newStudent?.name
+      );
     } else {
-      res.send(validationStatus);
+      res.send('There is no such student..!');
     }
   } catch (err) {
     res.send('Error' + err);
@@ -131,10 +117,7 @@ export const updateStudent = async (
 };
 
 //delete Student
-export const deleteStudent = async (
-  req: Request,
-  res: Response
-): Promise<void> => {
+export const deleteStudent = async (req: Request, res: Response) => {
   try {
     const studentId = parseInt(req.params.ID);
     const response = await deleteStudentService(studentId);

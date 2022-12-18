@@ -9,7 +9,7 @@ import {
 const route = express.Router();
 route.get('/', getAllCustomer);
 route.post('/', saveStudent);
-route.put('/', updateStudent);
+route.patch('/', updateStudent);
 route.delete('/:ID', deleteStudent);
 
 export default route;

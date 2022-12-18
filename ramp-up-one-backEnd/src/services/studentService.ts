@@ -5,7 +5,6 @@ import { StudentModel } from '../utils/interfaces';
 
 //get all student
 export const getAllCustomerService = async () => {
-  // return tempArray;
   try {
     const studentsRepo = AppDataSource.getRepository(Student);
     const allStudent = await studentsRepo.find(
@@ -19,14 +18,7 @@ export const getAllCustomerService = async () => {
 
 //save Student
 export const saveStudentService = async (data: StudentModel) => {
-  const student = new Student();
-  student.name = data.name;
-  student.gender = data.gender;
-  student.address = data.address;
-  student.mobileNo = data.mobileNo;
-  student.birth = data.birth;
-  student.age = data.age;
-
+  const student = data;
   const studentRepository = AppDataSource.getRepository(Student);
   const newStudent = await studentRepository.save(student);
   if (!newStudent) {
@@ -41,14 +33,7 @@ export const findStudent = async (studentId: number) => {
 };
 
 export const updateStudentService = async (data: StudentModel) => {
-  const student = new Student();
-  student.id = data.id;
-  student.name = data.name;
-  student.gender = data.gender;
-  student.address = data.address;
-  student.mobileNo = data.mobileNo;
-  student.birth = data.birth;
-  student.age = data.age;
+  const student = data;
   const studentRepository = AppDataSource.getRepository(Student);
   const newStudent = await studentRepository.save(student);
   if (!newStudent) {
