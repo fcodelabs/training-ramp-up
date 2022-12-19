@@ -40,40 +40,7 @@ const PersonTableView = () => {
 
   const [changes, setChanges] = useState<UpdatedPerson[]>([])
 
-  const validateAdd = (person: Person) => {
-    const name = /^([A-z\s.]{3,20})$/
-
-    const address = /^([A-z0-9/,\s]{5,})$/
-
-    const mobileNo = /^([0][0-9]{9})$/
-
-    const dob: boolean =
-      person.dob !== null && new Date() >= addYears(person.dob, 18)
-
-    if (!name.test(person.name)) {
-      alert('Enter valid name')
-      return false
-    }
-    if (person.gender === '') {
-      alert('Select valid gender')
-      return false
-    }
-    if (!address.test(person.address)) {
-      alert('Enter the address')
-      return false
-    }
-    if (!mobileNo.test(person.mobileNo)) {
-      alert('Enter Valid phone number')
-      return false
-    }
-    if (!dob) {
-      alert('Enter Valid Date of birth\nAge need to be more than 18 years!!!!')
-      return false
-    }
-    return true
-  }
-
-  const validateUpdate = (person: UpdatedPerson) => {
+  const validate = (person: UpdatedPerson) => {
     const name = /^([A-z\s.]{3,20})$/
 
     const address = /^([A-z0-9/,\s]{5,})$/
@@ -107,8 +74,7 @@ const PersonTableView = () => {
   }
 
   const add = (dataItem: Person): any => {
-    if (validateAdd(dataItem)) {
-      console.log(dataItem)
+    if (validate(dataItem)) {
       dispatch(addStudent(dataItem))
     }
   }
@@ -120,25 +86,25 @@ const PersonTableView = () => {
 
     if (updatePerson == null) return
     const temp: UpdatedPerson = {
-      id: updatePerson?.id
+      id: updatePerson.id
     }
-    if (updatePerson?.mobileNo !== '') {
-      temp.mobileNo = updatePerson?.mobileNo
+    if (updatePerson.mobileNo !== '') {
+      temp.mobileNo = updatePerson.mobileNo
     }
-    if (updatePerson?.name !== '') {
-      temp.name = updatePerson?.name
+    if (updatePerson.name !== '') {
+      temp.name = updatePerson.name
     }
-    if (updatePerson?.gender !== '') {
-      temp.gender = updatePerson?.gender
+    if (updatePerson.gender !== '') {
+      temp.gender = updatePerson.gender
     }
-    if (updatePerson?.address !== '') {
-      temp.address = updatePerson?.address
+    if (updatePerson.address !== '') {
+      temp.address = updatePerson.address
     }
-    if (updatePerson?.dob !== undefined) {
-      temp.dob = updatePerson?.dob
+    if (updatePerson.dob !== undefined) {
+      temp.dob = updatePerson.dob
     }
 
-    if (validateUpdate(temp)) {
+    if (validate(temp)) {
       dispatch(editStudent(temp))
 
       const index = changes.findIndex(
