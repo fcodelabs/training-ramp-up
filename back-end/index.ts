@@ -8,7 +8,10 @@ import cors from 'cors'
 dotenv.config()
 const app: Express = express()
 const httpServer: http.Server = new http.Server(app)
-app.use(cors({ origin: '*' }))
+app.use(cors({
+  origin: '*',
+  methods: ['GET', 'POST', 'PATCH', 'DELETE']
+}))
 export const io: any = new socketio.Server(httpServer, {
   cors: {
     origin: '*',

@@ -36,7 +36,10 @@ var cors_1 = __importDefault(require("cors"));
 dotenv_1.default.config();
 var app = (0, express_1.default)();
 var httpServer = new http.Server(app);
-app.use((0, cors_1.default)({ origin: '*' }));
+app.use((0, cors_1.default)({
+    origin: '*',
+    methods: ['GET', 'POST', 'PATCH', 'DELETE']
+}));
 exports.io = new socketio.Server(httpServer, {
     cors: {
         origin: '*',
