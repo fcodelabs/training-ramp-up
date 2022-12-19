@@ -17,7 +17,7 @@ import {
     setStudents,
     deleteStudent,
     updateStudent,
-} from './HomePageSlice'
+} from './slice/HomePageSlice'
 import { useAppSelector, useAppDispatch } from '../../hooks'
 import { validate } from '../../utils/validations'
 
@@ -25,7 +25,7 @@ export default function HomePage() {
     const editField = 'inEdit'
     const students = useAppSelector((state) => state.home.students)
     const dispatch = useAppDispatch()
-    const [changedFields, setChangedFields] = React.useState<Array<any>>([])
+    const [changedFields, setChangedFields] = React.useState<Array<Person>>([])
     React.useEffect(() => {
         dispatch(getStudents())
     }, [])
@@ -92,7 +92,7 @@ export default function HomePage() {
     }
 
     //cancel updating a new student
-    const cancel = (dataItem: Person): void => {
+    const cancel = (): void => {
         dispatch(getStudents())
     }
 
@@ -105,8 +105,9 @@ export default function HomePage() {
     const itemChange = (e: GridItemChangeEvent) => {
         let age = e.dataItem.age
 
+        const bdField = 'dateOfBirth'
         //Calculate Age
-        if (e.field === 'dateOfBirth') {
+        if (e.field === bdField) {
             const today = new Date().getTime()
             const birthday = e.value.getTime()
             const tempAge = Math.floor((today - birthday) / (86400000 * 365))
@@ -119,18 +120,18 @@ export default function HomePage() {
                 : item
         )
 
-        if (e.field) {
-            const ob = changedFields.filter(
+        if (e.dataItem.id != undefined && e.field) {
+            const ob: Person = changedFields.filter(
                 (item) => item.id == e.dataItem.id
             )[0]
 
             if (ob != undefined) {
-                ob[e.field] = e.value
+                ob[e.field as keyof Person] = e.value
             } else {
-                const changedOb: any = {
+                const changedOb: Person = {
                     id: e.dataItem.id,
                 }
-                changedOb[e.field] = e.value
+                changedOb[e.field as keyof Person] = e.value
 
                 changedFields.unshift(changedOb)
             }

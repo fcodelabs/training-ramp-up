@@ -4,15 +4,14 @@ import {
     setStudents,
     getStudentsFailed,
     addStudent,
-    addStudentSuccess,
     addStudentFailed,
     deleteStudent,
     deleteStudentFailed,
     updateStudent,
-    updateStudentFailed
-} from './HomePageSlice'
-import axios from '../../axios'
-import { Person } from '../../utils/interfaces'
+    updateStudentFailed,
+} from '../slice/HomePageSlice'
+import axios from '../../../axios'
+import { Person } from '../../../utils/interfaces'
 
 function* handleGetStudents(): any {
     try {
@@ -30,7 +29,7 @@ function* handleGetStudents(): any {
 function* handleAddStudent(action: any): any {
     try {
         const res = yield call(() => axios.post('student', action.payload))
-        yield put(addStudentSuccess(res.data))
+        yield put(getStudents())
     } catch (error: any) {
         yield put(addStudentFailed(error))
     }

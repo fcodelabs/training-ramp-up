@@ -7,6 +7,7 @@ import {
     updateStudent,
     deleteStudent,
 } from '../services/StudentServices'
+import { validate } from '../utils/validate'
 
 export const requestGetAllStudents = async (
     req: Request,
@@ -25,14 +26,16 @@ export const requestAddStudent = async (
     res: Response
 ): Promise<void> => {
     try {
-        const student = await addStudent(req.body)
-        res.send(student)
-        io.emit(
-            'notification',
-            'A student has been added with name :' + req.body.name
-        )
+        if (validate(req.body)) {
+            const student = await addStudent(req.body)
+            res.send(student)
+            io.emit(
+                'notification',
+                'A student has been added with name :' + req.body.name
+            )
+        }
     } catch (err) {
-        res.send('Error : ' +err.message)
+        res.send('Error : ' + err.message)
     }
 }
 
@@ -41,12 +44,14 @@ export const requestUpdateStudent = async (
     res: Response
 ): Promise<void> => {
     try {
-        const students = await updateStudent(req.body)
-        res.send(students)
-        io.emit(
-            'notification',
-            'The with id ' + req.body.id + ' student has been updated'
-        )
+        if (validate(req.body)) {
+            const students = await updateStudent(req.body)
+            res.send(students)
+            io.emit(
+                'notification',
+                'The with id ' + req.body.id + ' student has been updated'
+            )
+        }
     } catch (err) {
         res.send('Error' + err.message)
     }

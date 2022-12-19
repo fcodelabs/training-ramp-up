@@ -7,8 +7,6 @@ const validations = new Map([
     ['mobileNo', new RegExp('^([0][0-9]{9}|[0][0-9]{2}[-\\s][0-9]{7})$')],
 ])
 
-//Validation
-//inputValue: any, field: string,
 
 const validateFields = (input: any): boolean => {
     validations.forEach(function (value, key) {

@@ -1,8 +1,8 @@
 import { configureStore } from '@reduxjs/toolkit'
 import createSagaMiddleware from 'redux-saga'
-import homeReducer from './pages/HomePage/HomePageSlice'
+import homeReducer from './pages/HomePage/slice/HomePageSlice'
 //import signInReducer from './pages/SignInPage/SignInSlice'
-import { HomePageSaga } from './pages/HomePage/HomePageSaga'
+import { HomePageSaga } from './pages/HomePage/saga/HomePageSaga'
 
 const sagaMiddleware = createSagaMiddleware()
 
@@ -10,7 +10,7 @@ const middleware = [sagaMiddleware]
 
 const store = configureStore({
     reducer: {
-        home: homeReducer
+        home: homeReducer,
     },
     middleware: middleware,
 })
