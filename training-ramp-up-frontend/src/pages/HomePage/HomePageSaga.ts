@@ -5,14 +5,16 @@ import {
     getStudentsFailed,
     addStudent,
     addStudentSuccess,
+    addStudentFailed,
     deleteStudent,
+    deleteStudentFailed,
     updateStudent,
+    updateStudentFailed
 } from './HomePageSlice'
 import axios from '../../axios'
 import { Person } from '../../utils/interfaces'
 
-
-function* handleGetStudents():any {
+function* handleGetStudents(): any {
     try {
         const res = yield call(() => axios.get('student'))
         const students: Person[] = res.data.map((temp: Person) => ({
@@ -30,7 +32,7 @@ function* handleAddStudent(action: any): any {
         const res = yield call(() => axios.post('student', action.payload))
         yield put(addStudentSuccess(res.data))
     } catch (error: any) {
-        //yield put(getStudentsFailed(error))
+        yield put(addStudentFailed(error))
     }
 }
 
@@ -39,7 +41,7 @@ function* handleDeleteStudent(action: any): any {
         const res = yield call(() => axios.delete('student/' + action.payload))
         yield put(getStudents())
     } catch (error: any) {
-        //yield put(getStudentsFailed(error))
+        yield put(deleteStudentFailed(error))
     }
 }
 
@@ -48,7 +50,7 @@ function* handleUpdateStudent(action: any): any {
         const res = yield call(() => axios.patch('student', action.payload))
         yield put(getStudents())
     } catch (error: any) {
-        //yield put(getStudentsFailed(error))
+        yield put(updateStudentFailed(error))
     }
 }
 

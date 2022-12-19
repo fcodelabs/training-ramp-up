@@ -4,14 +4,14 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { Person } from '../../utils/interfaces'
 
 interface HomePageState {
-    students: Person[],
-    error:string
+    students: Person[]
+    error: string
 }
 
 // Define the initial state using that type
 const initialState: HomePageState = {
-    students:[],
-    error:''
+    students: [],
+    error: '',
 }
 
 export const homeSlice = createSlice({
@@ -20,28 +20,33 @@ export const homeSlice = createSlice({
     reducers: {
         getStudents: () => {},
         setStudents: (state, action: PayloadAction<Array<Person>>) => {
-            state.students = action.payload          
+            state.students = action.payload
         },
         getStudentsFailed: (state, action: PayloadAction<string>) => {
             state.error = action.payload
         },
-        addStudent: (state,action) => {},
-        addStudentSuccess:(state, action: PayloadAction<Person>) => {
+        addStudent: (state, action) => {},
+        addStudentSuccess: (state, action: PayloadAction<Person>) => {
             state.students.shift()
             state.students.unshift(action.payload)
         },
         addStudentFailed: (state, action: PayloadAction<string>) => {
             state.error = action.payload
         },
-        updateStudent:(state,action)=>{},
-        deleteStudent:(state,action)=>{},
+        updateStudent: (state, action) => {},
+        updateStudentFailed: (state, action: PayloadAction<string>) => {
+            state.error = action.payload
+        },
+        deleteStudent: (state, action) => {},
+        deleteStudentFailed: (state, action: PayloadAction<string>) => {
+            state.error = action.payload
+        }
         //deleteSuccess:
     },
 })
 
 // Action creators are generated for each case reducer function
 export const {
-    
     getStudents,
     setStudents,
     getStudentsFailed,
@@ -49,7 +54,9 @@ export const {
     addStudentSuccess,
     addStudentFailed,
     deleteStudent,
-    updateStudent
+    deleteStudentFailed,
+    updateStudent,
+    updateStudentFailed
 } = homeSlice.actions
 
 export default homeSlice.reducer

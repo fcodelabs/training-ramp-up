@@ -19,50 +19,16 @@ import {
     updateStudent,
 } from './HomePageSlice'
 import { useAppSelector, useAppDispatch } from '../../hooks'
+import { validate } from '../../utils/validations'
 
 export default function HomePage() {
     const editField = 'inEdit'
     const students = useAppSelector((state) => state.home.students)
     const dispatch = useAppDispatch()
-    const [changedFields, setChangedFields] = React.useState<
-        Array<{ id: number; value: Map<string, any> }>
-    >([])
+    const [changedFields, setChangedFields] = React.useState<Array<any>>([])
     React.useEffect(() => {
         dispatch(getStudents())
     }, [])
-
-    const validations = new Map([
-        ['name', new RegExp('^([A-z\\s.]{3,80})$')],
-        ['address', new RegExp('^([A-z0-9/,\\s]{3,})$')],
-        ['mobileNo', new RegExp('^([0][0-9]{9}|[0][0-9]{2}[-\\s][0-9]{7})$')],
-        ['gender', new RegExp('^(MALE|FEMALE)$', 'i')],
-    ])
-
-    //Validation
-
-    const validateFields = (inputValue: any, field: string): boolean => {
-       
-
-        const keyOb = validations.get(field)
-        const valid = keyOb ? keyOb.test(inputValue) : true
-        if (inputValue && valid) {
-            return true
-        } else {
-            alert('Please enter valid ' + field)
-            return false
-        }
-    }
-
-    const validate = (item: Person): boolean => {
-        return (
-            validateFields(item.name, 'name') &&
-            validateFields(item.gender, 'gender') &&
-            validateFields(item.address, 'address') &&
-            validateFields(item.mobileNo, 'mobileNo') &&
-            validateFields(item.dateOfBirth, 'dateOfBirth')
-        )
-        
-    }
 
     //Add a new row for a new student
     const addNew = () => {
@@ -86,8 +52,6 @@ export default function HomePage() {
             inEdit: false,
         }
         if (validate(student)) {
-            console.log('validated')
-
             dispatch(addStudent(student))
         }
     }
@@ -116,15 +80,9 @@ export default function HomePage() {
         )[0]
 
         if (fieldsToBeUpdated != undefined) {
-            //create an object carrying the updted fields
-            const data: any = { id: fieldsToBeUpdated.id }
-            fieldsToBeUpdated.value.forEach((value, key) => {
-                data[key] = value
-            })
-
             if (validate(dataItem)) {
                 //calling update methid
-                dispatch(updateStudent(data))
+                dispatch(updateStudent(fieldsToBeUpdated))
                 const index = changedFields.indexOf(fieldsToBeUpdated)
                 changedFields.splice(index, 1)
             }
@@ -152,7 +110,7 @@ export default function HomePage() {
             const today = new Date().getTime()
             const birthday = e.value.getTime()
             const tempAge = Math.floor((today - birthday) / (86400000 * 365))
-            age = tempAge >= 18 ? tempAge : ''
+            age = tempAge >= 0 ? tempAge : ''
         }
 
         const newData = students.map((item) =>
@@ -161,21 +119,18 @@ export default function HomePage() {
                 : item
         )
 
-        //add changed fields
         if (e.field) {
             const ob = changedFields.filter(
                 (item) => item.id == e.dataItem.id
             )[0]
 
             if (ob != undefined) {
-                ob.value.set(e.field, e.value)
+                ob[e.field] = e.value
             } else {
-                const map = new Map<string, any>()
-                map.set(e.field, e.value)
-                const changedOb = {
+                const changedOb: any = {
                     id: e.dataItem.id,
-                    value: map,
                 }
+                changedOb[e.field] = e.value
 
                 changedFields.unshift(changedOb)
             }
