@@ -25,7 +25,7 @@ export default function HomePage() {
     const students = useAppSelector((state) => state.home.students)
     const dispatch = useAppDispatch()
     const [changedFields, setChangedFields] = React.useState<
-        Array<{ id: number; value: Map<string, any> }>
+        Array<any>
     >([])
 
     React.useEffect(() => {
@@ -113,14 +113,9 @@ export default function HomePage() {
 
         if (fieldsToBeUpdated != undefined) {
             //create an object carrying the updted fields
-            const data: any = { id: fieldsToBeUpdated.id }
-            fieldsToBeUpdated.value.forEach((value, key) => {
-                data[key] = value
-            })
-
             if (validate(dataItem)) {
                 //calling update methid
-                dispatch(updateStudent(data))
+                dispatch(updateStudent(fieldsToBeUpdated))
                 const index = changedFields.indexOf(fieldsToBeUpdated)
                 changedFields.splice(index, 1)
             }
@@ -164,15 +159,12 @@ export default function HomePage() {
             )[0]
 
             if (ob != undefined) {
-                ob.value.set(e.field, e.value)
+                ob[e.field]= e.value
             } else {
-                const map = new Map<string, any>()
-                map.set(e.field, e.value)
-                const changedOb = {
+                const changedOb :any= {
                     id: e.dataItem.id,
-                    value: map,
                 }
-
+                changedOb[e.field]= e.value
                 changedFields.unshift(changedOb)
             }
 
