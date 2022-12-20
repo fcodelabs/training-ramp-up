@@ -17,23 +17,21 @@ import {
   addStudent,
   updateStudentAction,
   deleteStudentAction,
-} from '../../slice/studentSlice';
+} from './studentSlice';
 import { checkValidation } from '../../utils/validation';
 
 const editField: string = 'inEdit';
 
 const dataGrid = () => {
   const [user, setuser] = useState<StudentModel[]>([]);
-
+  const selectStudent = useSelector((state: any) => state.studentSlice.student);
+  const dispatch = useDispatch();
   const [updateField, setupdateField] = React.useState<
     Array<{
       id: number;
       value: Map<string, any>;
     }>
   >([]);
-
-  const selectStudent = useSelector((state: any) => state.studentSlice.student);
-  const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(getStudentAction());
@@ -105,12 +103,10 @@ const dataGrid = () => {
       dispatch(addStudent(dataItem));
     }
   };
-  // update field
 
+  // update field
   const update = (dataItem: StudentModel) => {
-    const field = updateField.filter(
-      (Item) => Item.id === dataItem.id
-    )[0];
+    const field = updateField.filter((Item) => Item.id === dataItem.id)[0];
 
     if (field !== undefined) {
       const data: any = { id: field.id };

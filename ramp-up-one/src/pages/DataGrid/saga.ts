@@ -6,14 +6,14 @@ import {
   updateStudentAction,
   deleteStudentAction,
   addStudent,
-} from '../slice/studentSlice';
+} from './studentSlice';
 import {
   insertStudentService,
   getStudentService,
   updateStudentService,
   deleteStudentService,
-} from '../services/services';
-import { StudentModel } from '../../src/utils/interfaces';
+} from '../../services/services';
+import { StudentModel } from '../../utils/interfaces';
 
 export default function* studentSaga() {
   yield takeEvery(getStudentAction, getStudent);
@@ -32,7 +32,10 @@ export function* getStudent() {
 
 function* saveStudent(action: AnyAction) {
   try {
-    const response: StudentModel = yield call(insertStudentService, action.payload);
+    const response: StudentModel = yield call(
+      insertStudentService,
+      action.payload
+    );
     if (response.status === 200) {
       yield put(getStudentAction());
     } else {
@@ -60,7 +63,7 @@ function* updateStudent(action: AnyAction) {
   }
 }
 
-function* deleteStudent(action: AnyAction ) {
+function* deleteStudent(action: AnyAction) {
   try {
     const response: StudentModel = yield call(
       deleteStudentService,

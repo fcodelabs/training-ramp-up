@@ -1,7 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit';
 import createSagaMiddleware from 'redux-saga';
-import studentReducer from './slice/studentSlice';
-import studentSaga from './saga/saga';
+import studentReducer from './pages/DataGrid/studentSlice';
+import studentSaga from './pages/DataGrid/saga';
 
 const sagaMiddleware = createSagaMiddleware();
 
