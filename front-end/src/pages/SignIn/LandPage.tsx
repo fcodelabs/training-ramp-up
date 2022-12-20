@@ -8,8 +8,6 @@ import SignUp from '../../Component/SignUp/SignUp'
 const LandPage = () => {
   const [tabVal, setTabVal] = useState('signin')
 
-  // const [text, setText] = useState('Create New Account')
-
   return (
     <Grid
       container
@@ -24,11 +22,11 @@ const LandPage = () => {
     >
       <Grid
         item
-        xs={8}
-        sm={7}
-        md={5}
-        lg={4}
-        xl={3}
+        xs={9}
+        sm={8}
+        md={6}
+        lg={5}
+        xl={4}
         style={{
           backgroundColor: 'white',
           minHeight: '370px',

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import {
   Button,
   TextField,
@@ -6,17 +6,23 @@ import {
   InputAdornment,
   IconButton,
   InputLabel,
-  FormControl
+  FormControl,
+  FormHelperText,
+  Grid
 } from '@mui/material'
 import Visibility from '@mui/icons-material/Visibility'
 import VisibilityOff from '@mui/icons-material/VisibilityOff'
 
 const SignIn = () => {
-  const [email, setEmail] = React.useState('')
+  const [email, setEmail] = useState('')
 
-  const [password, setPassword] = React.useState('')
+  const [password, setPassword] = useState('')
 
-  const [showPassword, setShowPassword] = React.useState(false)
+  const [emailError, setEmailError] = useState('')
+
+  const [passwordError, setPasswordError] = useState('')
+
+  const [showPassword, setShowPassword] = useState(false)
 
   const handleClickShowPassword = () => setShowPassword((show) => !show)
 
@@ -26,8 +32,35 @@ const SignIn = () => {
     event.preventDefault()
   }
 
+  const validate = () => {
+    let valid: boolean = true
+    const emailReg = /^([\w-.]+@([\w-]+\.)+[\w-]{2,4})$/
+    const validPw: boolean = password.length >= 8 && /[0-9]/.test(password)
+
+    setEmailError('')
+    setPasswordError('')
+
+    if (!emailReg.test(email)) {
+      setEmailError('Enter valid email')
+      valid = false
+    }
+    if (!validPw) {
+      setPasswordError(
+        'Enter valid password'
+      )
+      valid = false
+    }
+    return valid
+  }
+
   return (
-    <div
+    <Grid
+        item
+        xs={8}
+        sm={7}
+        md={5}
+        lg={4}
+        xl={3}
       style={{
         display: 'flex',
         flexDirection: 'column',
@@ -41,11 +74,8 @@ const SignIn = () => {
         onChange={(e) => {
           setEmail(e.target.value)
         }}
-        onBlur={() => {
-          // setIsTouched(true)
-        }}
-        //   error={isTouched && ranName === ''}
-        //   helperText={isTouched && ranName === '' ? 'Required' : ''}
+        error={emailError !== ''}
+        helperText={emailError}
         id="reddit-input"
         style={{
           width: '420px',
@@ -55,7 +85,7 @@ const SignIn = () => {
         }}
       />
       <FormControl variant="outlined">
-        <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
+        <InputLabel htmlFor="outlined-adornment-password" style={{ color: passwordError !== '' ? '#d32f2f' : '' }}>Password</InputLabel>
         <OutlinedInput
           id="outlined-adornment-password"
           type={showPassword ? 'text' : 'password'}
@@ -64,10 +94,10 @@ const SignIn = () => {
           onChange={(e) => {
             setPassword(e.target.value)
           }}
+          error={passwordError !== ''}
           style={{
             width: '420px',
-            backgroundColor: 'white',
-            marginBottom: '30px'
+            backgroundColor: 'white'
           }}
           endAdornment={
             <InputAdornment position="end">
@@ -82,24 +112,30 @@ const SignIn = () => {
             </InputAdornment>
           }
         />
+        <FormHelperText error id="accountId-error">
+          {passwordError}
+        </FormHelperText>
       </FormControl>
       <Button
         variant="contained"
-        // disabled={ranName === '' || ranName.length < 3}
         onClick={() => {
-          //   dispatch(setNickname(ranName))
-          //   navigate('/home')
+          if (validate()) {
+            //   dispatch(setNickname(ranName))
+            //   navigate('/home')
+          }
         }}
         style={{
           borderRadius: '40px',
           padding: '8px 30px',
-          fontSize: '.95em'
+          fontSize: '.95em',
+          marginTop: '30px'
+
         }}
       >
         {' '}
         SIGN IN{' '}
       </Button>
-    </div>
+    </Grid>
   )
 }
 
