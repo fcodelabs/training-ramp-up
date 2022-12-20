@@ -20,7 +20,7 @@ import {
   selectStudent,
   setStudentsAction,
   updateStudentAction,
-} from "./HomeSlice";
+} from "../../slice/HomeSlice";
 import { io } from "socket.io-client";
 const socket = io("http://localhost:8000/", {
   transports: ["websocket"],
@@ -44,17 +44,7 @@ export default function Datagrid() {
       console.log("Socket Id ", socket.id);
     });
 
-    socket.on("student_added", (data) => {
-      alert(data);
-      dispatch(getStudentsAction());
-    });
-
-    socket.on("student_updated", (data) => {
-      alert(data);
-      dispatch(getStudentsAction());
-    });
-
-    socket.on("student_deleted", (data) => {
+    socket.on("message", (data) => {
       alert(data);
       dispatch(getStudentsAction());
     });

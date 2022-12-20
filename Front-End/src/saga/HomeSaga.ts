@@ -5,21 +5,21 @@ import {
   getStudentsAction,
   setStudentsAction,
   deleteStudentAction,
-} from "./HomeSlice";
+} from "../slice/HomeSlice";
 
 import { call, put, takeLatest } from "redux-saga/effects";
-import { io } from "socket.io-client";
+// import { io } from "socket.io-client";
 import {
   getStudents,
   addStudent,
   updateStudent,
   deleteStudent,
-} from "../../utils/Services";
-import { Student } from "../../utils/Interfaces/Student";
+} from "../utils/Services";
+import { Student } from "../utils/Interfaces/Student";
 
-const socket = io("http://localhost:8000/", {
-  transports: ["websocket"],
-});
+// const socket = io("http://localhost:8000/", {
+//   transports: ["websocket"],
+// });
 
 function* getStudentsSaga(): any {
   try {
@@ -38,7 +38,7 @@ function* addStudentSaga(action: any): any {
   try {
     const response = yield call(addStudent, action.payload);
     if (response) {
-      socket.emit("student_add", "Student added");
+      // socket.emit("student_add", "Student added");
       yield put(getStudentsAction());
     }
   } catch (error) {
@@ -50,7 +50,7 @@ function* updateStudentSaga(action: any): any {
   try {
     const response = yield call(updateStudent, action.payload);
     if (response) {
-      socket.emit("student_update", "Student updated");
+      // socket.emit("student_update", "Student updated");
       yield put(getStudentsAction());
     }
   } catch (error) {
@@ -62,7 +62,7 @@ function* deleteStudentSaga(action: any): any {
   try {
     const response = yield call(deleteStudent, action.payload);
     if (response) {
-      socket.emit("student_delete", "Student deleted");
+      // socket.emit("student_delete", "Student deleted");
       yield put(getStudentsAction());
     }
   } catch (error) {

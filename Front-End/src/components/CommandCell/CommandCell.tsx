@@ -42,8 +42,7 @@ export const CommandCell = (props: {
       <button
         className="k-button k-button-md k-rounded-md k-button-solid k-button-solid-base k-grid-remove-command"
         onClick={() =>
-          confirm("Confirm Deleting : " + dataItem.name) &&
-          props.remove(dataItem)
+          confirm("Confirm : " + dataItem.name) && props.remove(dataItem)
         }
       >
         Remove

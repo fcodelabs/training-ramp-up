@@ -3,6 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@emotion/react": "^11.10.5",
+    "@emotion/styled": "^11.10.5",
+    "@hookform/resolvers": "^2.9.10",
+    "@mui/lab": "^5.0.0-alpha.112",
+    "@mui/material": "^5.11.0",
     "@progress/kendo-data-query": "^1.6.0",
     "@progress/kendo-drawing": "^1.17.2",
     "@progress/kendo-licensing": "^1.2.2",
@@ -31,12 +36,15 @@
     "axios": "^1.2.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-hook-form": "^7.41.0",
     "react-redux": "^8.0.5",
+    "react-router-dom": "^6.5.0",
     "react-scripts": "5.0.1",
     "redux-saga": "^1.2.1",
     "socket.io-client": "^4.5.4",
     "typescript": "^4.9.3",
-    "web-vitals": "^2.1.4"
+    "web-vitals": "^2.1.4",
+    "zod": "^3.20.2"
   },
   "scripts": {
     "start": "react-scripts start",

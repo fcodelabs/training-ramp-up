@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-empty-function */
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { Student } from "../../utils/Interfaces/Student";
+import { Student } from "../utils/Interfaces/Student";
 
 type HomeState = {
   students: Student[];
