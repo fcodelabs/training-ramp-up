@@ -7,7 +7,7 @@ import {
     updateStudent,
     deleteStudent,
 } from '../services/StudentServices'
-import { validate } from '../utils/validate'
+import { validate } from '../utils/validateStudent'
 
 export const requestGetAllStudents = async (
     req: Request,

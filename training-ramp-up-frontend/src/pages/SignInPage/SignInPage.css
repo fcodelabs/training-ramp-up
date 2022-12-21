@@ -1,0 +1,42 @@
+.containerGrid {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #c6d2eb;
+}
+
+.container {
+    background-color: #ffffff;
+    box-shadow: 5px 5px 5px rgb(149, 149, 149);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-top: 3vh;
+    padding-bottom: 3vh;
+    padding-left: 1vh;
+    padding-right: 1vh;
+    border-radius: 15px;
+}
+
+.txtContainer {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 2vh;
+}
+
+.txt {
+    margin: 1vh !important;
+    margin-bottom: 0vh !important;
+}
+
+.btnContainer {
+    display: flex;
+    justify-content: center;
+}
+
+.btn {
+    border-radius: 30px !important;
+    margin: 2vh !important;
+}

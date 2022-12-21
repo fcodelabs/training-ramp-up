@@ -38,7 +38,7 @@ export const CommandCell = (props: {
     ) : (
         <td className="k-command-cell">
             <button
-                className="k-button k-button-md k-rounded-md k-button-solid k-button-solid-primary k-grid-edit-command"
+                className="k-button k-button-md k-rounded-md k-button-solid k-button-solid-tertiary k-grid-edit-command"
                 onClick={() => props.edit(dataItem)}
             >
                 Edit

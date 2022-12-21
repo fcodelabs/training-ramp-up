@@ -19,7 +19,7 @@ import {
     updateStudent,
 } from './slice/HomePageSlice'
 import { useAppSelector, useAppDispatch } from '../../hooks'
-import { validate } from '../../utils/validations'
+import { validate } from '../../utils/homePageValidations'
 
 export default function HomePage() {
     const editField = 'inEdit'
@@ -166,7 +166,7 @@ export default function HomePage() {
             <GridToolbar>
                 <button
                     title="Add new"
-                    className="k-button k-button-md k-rounded-md k-button-solid k-button-solid-primary"
+                    className="k-button k-button-md k-rounded-md k-button-solid k-button-solid-tertiary"
                     onClick={addNew}
                 >
                     Add new

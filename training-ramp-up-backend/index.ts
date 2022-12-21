@@ -3,6 +3,7 @@ import * as express from 'express'
 import { Express } from 'express'
 import { appDataSource } from './src/configs/dataSourceConfig'
 import studentRoutes from './src/routes/StudentRoutes'
+import userRoutes from './src/routes/UserRoutes'
 import { createServer } from 'http'
 import { Server } from 'socket.io'
 
@@ -24,6 +25,7 @@ appDataSource
 app.use(cors())
 app.use(express.json())
 app.use('/student', studentRoutes)
+app.use('/user', userRoutes)
 
 export const io = new Server(httpServer, {
     cors: {

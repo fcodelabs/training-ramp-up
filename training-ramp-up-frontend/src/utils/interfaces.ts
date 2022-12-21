@@ -8,3 +8,9 @@ export interface Person {
     age?: number
     inEdit?: boolean
 }
+
+export interface User {
+    name?: string
+    username?: string
+    password?: string
+}
