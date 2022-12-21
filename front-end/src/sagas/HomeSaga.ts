@@ -6,15 +6,15 @@ import {
   editStudent,
   removeStudent,
   setError
-} from './HomeSlice'
+} from '../slices/HomeSlice'
 import {
   deletePerson,
   getPersons,
   insertPerson,
   updatePerson
-} from '../../Component/PersonTableView/services/PersonTableViewOperations'
+} from '../Component/PersonTableView/services/PersonTableViewOperations'
 import { AnyAction } from '@reduxjs/toolkit'
-import { ResponseGenerator } from '../../utils/interface'
+import { ResponseGenerator } from '../utils/interface'
 
 function * getStudents () {
   try {

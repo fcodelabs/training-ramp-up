@@ -12,6 +12,7 @@ import {
 } from '@mui/material'
 import Visibility from '@mui/icons-material/Visibility'
 import VisibilityOff from '@mui/icons-material/VisibilityOff'
+import { useNavigate } from 'react-router-dom'
 
 const SignIn = () => {
   const [email, setEmail] = useState('')
@@ -31,6 +32,7 @@ const SignIn = () => {
   ) => {
     event.preventDefault()
   }
+  const navigate = useNavigate()
 
   const validate = () => {
     let valid: boolean = true
@@ -45,9 +47,7 @@ const SignIn = () => {
       valid = false
     }
     if (!validPw) {
-      setPasswordError(
-        'Enter valid password'
-      )
+      setPasswordError('Enter valid password')
       valid = false
     }
     return valid
@@ -55,12 +55,12 @@ const SignIn = () => {
 
   return (
     <Grid
-        item
-        xs={8}
-        sm={7}
-        md={5}
-        lg={4}
-        xl={3}
+      item
+      xs={8}
+      sm={7}
+      md={5}
+      lg={4}
+      xl={3}
       style={{
         display: 'flex',
         flexDirection: 'column',
@@ -85,7 +85,12 @@ const SignIn = () => {
         }}
       />
       <FormControl variant="outlined">
-        <InputLabel htmlFor="outlined-adornment-password" style={{ color: passwordError !== '' ? '#d32f2f' : '' }}>Password</InputLabel>
+        <InputLabel
+          htmlFor="outlined-adornment-password"
+          style={{ color: passwordError !== '' ? '#d32f2f' : '' }}
+        >
+          Password
+        </InputLabel>
         <OutlinedInput
           id="outlined-adornment-password"
           type={showPassword ? 'text' : 'password'}
@@ -119,9 +124,11 @@ const SignIn = () => {
       <Button
         variant="contained"
         onClick={() => {
+          console.log(validate())
+
           if (validate()) {
             //   dispatch(setNickname(ranName))
-            //   navigate('/home')
+            navigate('/home')
           }
         }}
         style={{
@@ -129,7 +136,6 @@ const SignIn = () => {
           padding: '8px 30px',
           fontSize: '.95em',
           marginTop: '30px'
-
         }}
       >
         {' '}
