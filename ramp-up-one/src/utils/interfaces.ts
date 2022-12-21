@@ -21,3 +21,9 @@ export interface UpdatedPerson {
   mobileNo?: string;
   dob?: Date | undefined;
 }
+
+export interface LoginDetails {
+  email: string;
+  name?: string;
+  password?: string;
+}

@@ -1,0 +1,44 @@
+.mainPage {
+  background: radial-gradient(
+    592px at 48.2% 50%,
+    rgba(255, 255, 249, 0.6) 0%,
+    rgb(160, 199, 254) 74.6%
+  );
+  display: flex;
+  position: relative;
+  height: 102vh;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+}
+.fieldsArea {
+  width: 28rem;
+  height: 37rem;
+  border-radius: 10px;
+  background-color: white;
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px,
+    rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  column-gap: 3rem;
+}
+.txtField {
+  width: 80%;
+  border-radius: 10px;
+  margin-bottom: 1rem !important
+}
+
+.btn {
+  width: 80%;
+  border-radius: 10px;
+  margin-bottom: 1rem !important
+}
+.signInBtn{
+    margin-top: 2rem!important;
+}
+
+.emailField{
+        margin-top: 5rem !important
+}
