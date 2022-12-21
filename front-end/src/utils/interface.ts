@@ -26,12 +26,11 @@ export interface ResponseGenerator {
   statusText?: string
 }
 
-// export interface ChangeField {
-//   field: string
-//   value: any
-// }
-
-// export interface Changes {
-//   id: number
-//   fields: string[]
-// }
+export interface User {
+  id?: number
+  userName?: string
+  email: string
+  role?: string
+  password?: string
+  confirmPassword?: string
+}

@@ -1,11 +1,10 @@
 import express from 'express'
-// import * as cors from 'cors'
 import {
   getAllStudents,
   addStudent,
   updateStudent,
   deleteStudent
-} from '../../controllers/Student/StudentController'
+} from '../controllers/StudentController'
 
 const StudentRoute = express.Router()
 

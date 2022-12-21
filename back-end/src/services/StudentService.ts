@@ -1,6 +1,6 @@
-import Student from '../../entity/Student'
-import StudentModel from '../../models/Student/studentModel'
-import DatabaseService from '../../services/DatabaseService'
+import Student from '../entity/Student'
+import StudentModel from '../models/studentModel'
+import DatabaseService from './DatabaseService'
 
 DatabaseService.initialize().then(() => {
   console.log('Data Source has been initialized!')

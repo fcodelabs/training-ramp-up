@@ -1,12 +1,12 @@
 import { Request, Response } from 'express'
-import { io } from '../../..'
-import StudentModel from '../../models/Student/studentModel'
+import { io } from '../..'
+import StudentModel from '../models/studentModel'
 import {
   getAllStudentsService,
   addStudentService,
   updateStudentService,
   deleteStudentService
-} from '../../services/Student/StudentService'
+} from '../services/StudentService'
 
 const validate = (person: StudentModel) => {
   const name = /^([A-z\s.]{3,20})$/

@@ -5,7 +5,7 @@ const initialState = {
   error: ''
 }
 
-export const DiaryHomeSlice = createSlice({
+export const HomeSlice = createSlice({
   name: 'students',
   initialState,
   reducers: {
@@ -29,6 +29,6 @@ export const {
   editStudent,
   removeStudent,
   setError
-} = DiaryHomeSlice.actions
+} = HomeSlice.actions
 
-export default DiaryHomeSlice.reducer
+export default HomeSlice.reducer

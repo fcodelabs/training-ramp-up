@@ -1,3 +1,4 @@
+import bg from './signInBg.jpg'
 import React, { useState } from 'react'
 import {
   Button,
@@ -14,7 +15,7 @@ import Visibility from '@mui/icons-material/Visibility'
 import VisibilityOff from '@mui/icons-material/VisibilityOff'
 import { useNavigate } from 'react-router-dom'
 
-const SignIn = () => {
+const SignIn: React.FC = () => {
   const [email, setEmail] = useState('')
 
   const [password, setPassword] = useState('')
@@ -55,6 +56,52 @@ const SignIn = () => {
 
   return (
     <Grid
+      container
+      style={{
+        minHeight: '100vh',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundImage: `url(${bg})`,
+        backgroundSize: 'cover'
+      }}
+    >
+      <Grid
+        item
+        xs={9}
+        sm={8}
+        md={6}
+        lg={5}
+        xl={4}
+        style={{
+          backgroundColor: 'white',
+          minHeight: '370px',
+          borderRadius: '15px',
+          boxShadow: '1px 1px 5px 2px rgba(0, 0, 0, 0.16)',
+          padding: '25px 15px'
+        }}
+      >
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center'
+          }}
+        >
+          <div
+            className="signin-form-title"
+            style={{
+              color: '#039BE5',
+              fontSize: '2.125rem',
+              fontWeight: '400',
+              lineHeight: '1.17',
+              paddingBottom: '30px'
+            }}
+          >
+            {' '}
+            Sign In{' '}
+          </div>
+          <Grid
       item
       xs={8}
       sm={7}
@@ -76,7 +123,7 @@ const SignIn = () => {
         }}
         error={emailError !== ''}
         helperText={emailError}
-        id="reddit-input"
+        id="sign-in-email"
         style={{
           width: '420px',
           backgroundColor: 'white',
@@ -92,7 +139,7 @@ const SignIn = () => {
           Password
         </InputLabel>
         <OutlinedInput
-          id="outlined-adornment-password"
+          id="sign-in-pw"
           type={showPassword ? 'text' : 'password'}
           label="Password"
           value={password}
@@ -141,6 +188,12 @@ const SignIn = () => {
         {' '}
         SIGN IN{' '}
       </Button>
+    </Grid>
+          <Button size="small" onClick={() => { navigate('/signup') }}>
+            <u>Create New Account</u>
+          </Button>
+        </div>
+      </Grid>
     </Grid>
   )
 }

@@ -2,6 +2,7 @@ import { DataSource } from 'typeorm'
 import 'reflect-metadata'
 import * as dotenv from 'dotenv'
 import Student from '../entity/Student'
+import User from '../entity/User'
 
 dotenv.config()
 
@@ -12,7 +13,7 @@ const DatabaseService = new DataSource({
   username: process.env.DB_USERNAME,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
-  entities: [Student],
+  entities: [Student, User],
   synchronize: true,
   logging: false
 })

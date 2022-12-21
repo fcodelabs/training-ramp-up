@@ -12,7 +12,7 @@ import {
   getPersons,
   insertPerson,
   updatePerson
-} from '../Component/PersonTableView/services/PersonTableViewOperations'
+} from '../services/PersonTableViewOperations'
 import { AnyAction } from '@reduxjs/toolkit'
 import { ResponseGenerator } from '../utils/interface'
 
@@ -31,6 +31,7 @@ function * saveStudent (action: AnyAction) {
     const response: ResponseGenerator = yield call(insertPerson, action.payload)
     if (response !== null) {
       yield put(getAllStudents())
+      return response
     }
   } catch (err) {
     console.error('socket error:', err)
