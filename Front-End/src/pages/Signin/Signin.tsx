@@ -151,7 +151,12 @@ const LoginPage: FC = () => {
                         marginInline: "auto",
                       }}
                     >
-                      Login
+                      <LinkItem
+                        to="/"
+                        style={{ textDecoration: "none", color: "#fff" }}
+                      >
+                        Login
+                      </LinkItem>
                     </LoadingButton>
                   </Box>
                 </Grid>

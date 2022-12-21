@@ -141,7 +141,12 @@ const SignupPage: FC = () => {
                         marginInline: "auto",
                       }}
                     >
-                      Sign Up
+                      <LinkItem
+                        to="/signin"
+                        style={{ textDecoration: "none", color: "#fff" }}
+                      >
+                        Signup
+                      </LinkItem>
                     </LoadingButton>
                   </Box>
                 </Grid>
