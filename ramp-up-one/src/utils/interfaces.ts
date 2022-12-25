@@ -23,6 +23,8 @@ export interface UpdatedPerson {
 }
 
 export interface LoginDetails {
+  data?: any;
+  status?: number;
   email: string;
   name?: string;
   password?: string;

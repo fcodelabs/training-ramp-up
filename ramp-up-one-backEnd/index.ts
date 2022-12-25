@@ -2,6 +2,7 @@ import express, { Express } from 'express';
 import dotenv from 'dotenv';
 import { AppDataSource } from './src/dataSource';
 import studentRoutes from './src/routes/studentRoute';
+import userRoutes from './src/routes/userRoutes';
 import { createServer } from 'http';
 import { Server } from 'socket.io';
 import cors from 'cors';
@@ -17,6 +18,7 @@ app.use(express.urlencoded({ extended: true }));
 
 //routes
 app.use('/student', studentRoutes);
+app.use('/user', userRoutes);
 
 // socket.io
 

@@ -7,17 +7,26 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import { useNavigate } from 'react-router-dom';
 import { LoginDetails } from '../../utils/interfaces';
-// import { checkLogInValidation } from '../../utils/logInValidations';
+import { loginUserAction } from './SignInSlice';
+import { useDispatch, useSelector } from 'react-redux';
 
 const SignInPage = () => {
   const [emailError, setEmailError] = React.useState('');
   const [passwordError, setpasswordError] = React.useState('');
-
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
+  const pageName = 'signInPage';
 
+  const user = useSelector((state: any) => state.signIn.user);
+  const dispatch = useDispatch();
   const navigate = useNavigate();
- 
+
+  React.useEffect(() => {
+    if (user === true) {
+      navigate('/Home');
+    }
+  });
+
   function checkInputValidation(dataItem: LoginDetails) {
     const email = /^[A-z2-9]+@[A-z2-9]+\.[A-z2-9]+$/;
     const password = /^[A-z,0-9 _]{4,10}$/;
@@ -42,11 +51,10 @@ const SignInPage = () => {
     return fieldStatus;
   }
   function logInFunction() {
-    const loginPerson={email,password};
+    const loginPerson = { email, password, pageName };
     if (checkInputValidation(loginPerson)) {
-      navigate('/Home');
+      dispatch(loginUserAction(loginPerson));
     }
-  
   }
   const openSignInPage = () => {
     navigate('/register');

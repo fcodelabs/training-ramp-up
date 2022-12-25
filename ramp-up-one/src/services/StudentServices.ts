@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { StudentModel } from '../../src/utils/interfaces';
+import { StudentModel } from '../utils/interfaces';
 
 // CRUD operations
 

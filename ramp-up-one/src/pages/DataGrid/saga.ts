@@ -12,7 +12,7 @@ import {
   getStudentService,
   updateStudentService,
   deleteStudentService,
-} from '../../services/services';
+} from '../../services/StudentServices';
 import { StudentModel } from '../../utils/interfaces';
 
 export default function* studentSaga() {

@@ -6,6 +6,9 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import { useNavigate } from 'react-router-dom';
 import { LoginDetails } from '../../utils/interfaces';
+import { useDispatch, useSelector } from 'react-redux';
+import { registerUserAction } from './SignUpSlice';
+
 const SignUpPage = () => {
   const [emailError, setEmailError] = React.useState('');
   const [nameError, setNameError] = React.useState('');
@@ -14,9 +17,16 @@ const SignUpPage = () => {
   const [email, setEmail] = React.useState('');
   const [name, setName] = React.useState('');
   const [password, setPassword] = React.useState('');
-
+  const pageName = 'signUpPage';
+  const user = useSelector((state: any) => state.signUp.user);
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   
+  React.useEffect(() => {
+    if (user === true) {
+      navigate('/Home');
+    }
+  });
   const openSignInPage= () => {
     navigate('/');
   };
@@ -53,9 +63,9 @@ const SignUpPage = () => {
     return fieldStatus;
   }
   function SignUpFunction(){
-    const loginPerson = { email,name, password };
+    const loginPerson = { email, name, password, pageName };
     if (checkInputValidation(loginPerson)) {
-      navigate('/Home');
+      dispatch(registerUserAction(loginPerson));
     }
   }
   function checkValidation(field: string, value: string) {

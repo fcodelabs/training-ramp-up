@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 const initialState = {
   student: [],
 };
-export const studentSlice = createSlice({
+export const studentSlice:any = createSlice({
   name: 'studentSlice',
   initialState,
   reducers: {
@@ -15,6 +15,7 @@ export const studentSlice = createSlice({
     addStudent: (state, action) => {},
   },
 });
+
 export const studentActions=studentSlice.actions;
 export const {
   getStudentAction,

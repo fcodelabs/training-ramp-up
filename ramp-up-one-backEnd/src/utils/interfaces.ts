@@ -7,3 +7,10 @@ export interface StudentModel {
   birth: Date ;
   age: number;
 }
+export interface UserModel {
+  id: number;
+  email: string;
+  name: string;
+  password: string;
+  pageName: string;
+}
