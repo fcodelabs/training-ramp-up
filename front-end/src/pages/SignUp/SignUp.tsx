@@ -1,3 +1,4 @@
+/* eslint-disable object-shorthand */
 import bg from './signUpBg.jpg'
 import React, { useState } from 'react'
 import {
@@ -14,6 +15,9 @@ import {
 import Visibility from '@mui/icons-material/Visibility'
 import VisibilityOff from '@mui/icons-material/VisibilityOff'
 import { useNavigate } from 'react-router-dom'
+import { useDispatch } from 'react-redux/es/exports'
+import { addUser } from '../../slices/UserSlice'
+import { User } from '../../utils/interface'
 
 const SignUp: React.FC = () => {
   const [userName, setUserName] = useState('')
@@ -41,6 +45,8 @@ const SignUp: React.FC = () => {
   ) => {
     event.preventDefault()
   }
+
+  const dispatch = useDispatch()
 
   const navigate = useNavigate()
 
@@ -251,6 +257,13 @@ const SignUp: React.FC = () => {
               variant="contained"
               onClick={() => {
                 if (validate()) {
+                  const newUser: User = {
+                    userName: userName,
+                    email: email,
+                    password: password,
+                    confirmPassword: confirmPassword
+                  }
+                  dispatch(addUser(newUser))
                   navigate('/')
                 }
               }}
@@ -265,7 +278,12 @@ const SignUp: React.FC = () => {
               SIGN UP{' '}
             </Button>
           </Grid>
-          <Button size="small" onClick={() => { navigate('/') }}>
+          <Button
+            size="small"
+            onClick={() => {
+              navigate('/')
+            }}
+          >
             <u>Already have an Account ?</u>
           </Button>
         </div>

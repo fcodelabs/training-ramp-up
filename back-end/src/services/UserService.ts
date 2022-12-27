@@ -1,24 +1,27 @@
 import User from '../entity/User'
 import UserModel from '../models/userModel'
 import DatabaseService from './DatabaseService'
+import bcrypt from 'bcrypt'
 
-DatabaseService.initialize().then(() => {
-  console.log('Data Source has been initialized!')
-})
-  .catch((err) => {
-    console.error('Error during Data Source initialization:', err)
+const checkUserValid = async (userEmail: string) => {
+  const founduser = await DatabaseService.getRepository(User).findOneBy({
+    email: userEmail
   })
+  if (founduser === null) {
+    return true
+  }
+  return false
+}
 
 export const getUserService = async (user: UserModel) => {
   try {
     const useremail = user.email
-    const userpassword = user.password
     const founduser = await DatabaseService.getRepository(User).findOneBy({
-      email: useremail,
-      password: userpassword
+      email: useremail
     })
     if (founduser !== null) {
-      return founduser
+      const pwValid = await bcrypt.compare(user.password, founduser.password)
+      if (pwValid) return founduser
     }
   } catch (err) {
     return err
@@ -27,13 +30,20 @@ export const getUserService = async (user: UserModel) => {
 
 export const addUserService = async (user: UserModel) => {
   try {
-    const newUser = new User()
-    newUser.userName = user.userName
-    newUser.email = user.email
-    newUser.password = user.password
-    newUser.role = user.role
-    const result = await DatabaseService.getRepository(User).save(newUser)
-    return result
+    if (await checkUserValid(user.email)) {
+      const salt = await bcrypt.genSalt(10)
+      const hashpw = await bcrypt.hash(user.password, salt)
+
+      const newUser = new User()
+      newUser.userName = user.userName
+      newUser.email = user.email
+      newUser.password = hashpw
+      newUser.role = user.role
+      const result = await DatabaseService.getRepository(User).save(newUser)
+      return result
+    } else {
+      return false
+    }
   } catch (err) {
     return err
   }

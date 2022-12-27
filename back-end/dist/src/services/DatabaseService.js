@@ -30,6 +30,7 @@ var typeorm_1 = require("typeorm");
 require("reflect-metadata");
 var dotenv = __importStar(require("dotenv"));
 var Student_1 = __importDefault(require("../entity/Student"));
+var User_1 = __importDefault(require("../entity/User"));
 dotenv.config();
 var DatabaseService = new typeorm_1.DataSource({
     type: 'postgres',
@@ -38,7 +39,7 @@ var DatabaseService = new typeorm_1.DataSource({
     username: process.env.DB_USERNAME,
     password: process.env.DB_PASSWORD,
     database: process.env.DB_NAME,
-    entities: [Student_1.default],
+    entities: [Student_1.default, User_1.default],
     synchronize: true,
     logging: false
 });

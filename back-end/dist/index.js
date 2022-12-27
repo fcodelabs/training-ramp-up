@@ -29,10 +29,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.io = void 0;
 var express_1 = __importDefault(require("express"));
 var dotenv_1 = __importDefault(require("dotenv"));
-var StudentRoutes_1 = __importDefault(require("./src/routes/Student/StudentRoutes"));
+var StudentRoutes_1 = __importDefault(require("./src/routes/StudentRoutes"));
+var UserRoutes_1 = __importDefault(require("./src/routes/UserRoutes"));
 var http = __importStar(require("http"));
 var socketio = __importStar(require("socket.io"));
 var cors_1 = __importDefault(require("cors"));
+var DatabaseService_1 = __importDefault(require("./src/services/DatabaseService"));
 dotenv_1.default.config();
 var app = (0, express_1.default)();
 var httpServer = new http.Server(app);
@@ -49,6 +51,7 @@ exports.io = new socketio.Server(httpServer, {
 var port = Number(process.env.PORT);
 app.use(express_1.default.json());
 app.use('/student', StudentRoutes_1.default);
+app.use('/user', UserRoutes_1.default);
 exports.io.on('connection', function (socket) {
     console.log("connect server ".concat(socket.id));
 });
@@ -59,6 +62,12 @@ app.get('/', function (req, res, next) {
     res.status(200).json({
         data: 'Hello'
     });
+});
+DatabaseService_1.default.initialize().then(function () {
+    console.log('Data Source has been initialized!');
+})
+    .catch(function (err) {
+    console.error('Error during Data Source initialization:', err);
 });
 // app.listen(port, () => console.log(`App is running on port ${port}`))
 //# sourceMappingURL=index.js.map

@@ -7,8 +7,10 @@ import { ResponseGenerator } from '../utils/interface'
 function * findUser (action: AnyAction) {
   try {
     const response: ResponseGenerator = yield call(getAUser, action.payload)
-    if (response.data !== null) {
-      yield put(setUser(response))
+    if (response.status === 200) {
+      yield put(setUser(response.data))
+    } else {
+      alert(response)
     }
   } catch (err) {
     console.error('error:', err)
@@ -20,6 +22,11 @@ function * saveUser (action: AnyAction) {
   try {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const response: ResponseGenerator = yield call(insertUser, action.payload)
+    if (response.status === 200) {
+      alert('Successfully Registered')
+    } else {
+      alert(response)
+    }
   } catch (err) {
     console.error('socket error:', err)
     yield put(setError(err))

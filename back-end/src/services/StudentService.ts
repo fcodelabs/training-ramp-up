@@ -2,13 +2,6 @@ import Student from '../entity/Student'
 import StudentModel from '../models/studentModel'
 import DatabaseService from './DatabaseService'
 
-DatabaseService.initialize().then(() => {
-  console.log('Data Source has been initialized!')
-})
-  .catch((err) => {
-    console.error('Error during Data Source initialization:', err)
-  })
-
 export const getAllStudentsService = async () => {
   try {
     const students = await DatabaseService.getRepository(Student).find({ order: { id: 'ASC' } })

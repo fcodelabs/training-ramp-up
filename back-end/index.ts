@@ -5,6 +5,7 @@ import userRoutes from './src/routes/UserRoutes'
 import * as http from 'http'
 import * as socketio from 'socket.io'
 import cors from 'cors'
+import DatabaseService from './src/services/DatabaseService'
 
 dotenv.config()
 const app: Express = express()
@@ -38,5 +39,12 @@ app.get('/', (req: Request, res: Response, next: NextFunction) => {
     data: 'Hello'
   })
 })
+
+DatabaseService.initialize().then(() => {
+  console.log('Data Source has been initialized!')
+})
+  .catch((err) => {
+    console.error('Error during Data Source initialization:', err)
+  })
 
 // app.listen(port, () => console.log(`App is running on port ${port}`))
