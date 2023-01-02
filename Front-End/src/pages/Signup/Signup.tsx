@@ -6,11 +6,13 @@ import { useForm, SubmitHandler, FormProvider } from "react-hook-form";
 import { object, string, TypeOf } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import FormInput from "../../components/FormInput/FormInput";
-import { LinkItem } from "../Signin/Signin";
+import { ReactComponent as GoogleLogo } from "../../assets/Google/Google.svg";
+import { ReactComponent as GitHubLogo } from "../../assets/Github/Github.svg";
+import { LinkItem, OauthMuiLink } from "../Signin/Signin";
 
 // ? SignUp Schema with Zod
 const signupSchema = object({
-  name: string().min(1, "Name is required").max(70),
+  // name: string().min(1, "Name is required").max(70),
   email: string().min(1, "Email is required").email("Email is invalid"),
   password: string()
     .min(1, "Password is required")
@@ -28,7 +30,7 @@ type ISignUp = TypeOf<typeof signupSchema>;
 const SignupPage: FC = () => {
   // ? Default Values
   const defaultValues: ISignUp = {
-    name: "",
+    // name: "",
     email: "",
     password: "",
     passwordConfirm: "",
@@ -49,10 +51,7 @@ const SignupPage: FC = () => {
   return (
     <Container
       maxWidth={false}
-      sx={{
-        maxHeight: "100vh",
-        backgroundColor: { xs: "#fff", md: "#f4f4f4" },
-      }}
+      sx={{ height: "100vh", backgroundColor: { xs: "#fff", md: "#f4f4f4" } }}
     >
       <Grid
         container
@@ -73,6 +72,18 @@ const SignupPage: FC = () => {
             }}
           >
             <FormProvider {...methods}>
+              <Typography
+                variant="h4"
+                component="h1"
+                sx={{
+                  textAlign: "center",
+                  width: "100%",
+                  mb: "1.5rem",
+                  pb: { sm: "3rem" },
+                }}
+              >
+                Welcome To Fcode Labs!
+              </Typography>
               <Grid
                 item
                 container
@@ -83,7 +94,12 @@ const SignupPage: FC = () => {
                   marginInline: "auto",
                 }}
               >
-                <Grid item xs={12} sm={6}>
+                <Grid
+                  item
+                  xs={12}
+                  sm={6}
+                  sx={{ borderRight: { sm: "1px solid #ddd" } }}
+                >
                   <Box
                     display="flex"
                     flexDirection="column"
@@ -98,16 +114,16 @@ const SignupPage: FC = () => {
                       component="h1"
                       sx={{ textAlign: "center", mb: "1.5rem" }}
                     >
-                      Create Your Account
+                      Create new your account
                     </Typography>
 
-                    <FormInput
+                    {/* <FormInput
                       label="Name"
                       type="text"
                       name="name"
                       focused
                       required
-                    />
+                    /> */}
                     <FormInput
                       label="Enter your email"
                       type="email"
@@ -141,26 +157,36 @@ const SignupPage: FC = () => {
                         marginInline: "auto",
                       }}
                     >
-                      <LinkItem
-                        to="/signin"
-                        style={{ textDecoration: "none", color: "#fff" }}
-                      >
-                        Signup
-                      </LinkItem>
+                      Sign Up
                     </LoadingButton>
                   </Box>
                 </Grid>
                 <Grid item xs={12} sm={6} sx={{}}>
-                  <img
-                    src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTd8fFN0dWRlbnR8ZW58MHx8MHx8&auto=format&fit=crop&w=800&q=60"
-                    alt="signup"
-                    style={{
-                      width: "100%",
-                      height: "80%",
-                      objectFit: "cover",
-                      objectPosition: "center",
+                  <Typography
+                    variant="h6"
+                    component="p"
+                    sx={{
+                      paddingLeft: { sm: "3rem" },
+                      mb: "1.5rem",
+                      textAlign: "center",
                     }}
-                  />
+                  >
+                    Sign up using another provider:
+                  </Typography>
+                  <Box
+                    display="flex"
+                    flexDirection="column"
+                    sx={{ paddingLeft: { sm: "3rem" }, rowGap: "1rem" }}
+                  >
+                    <OauthMuiLink href="">
+                      <GoogleLogo style={{ height: "2rem" }} />
+                      Google
+                    </OauthMuiLink>
+                    <OauthMuiLink href="">
+                      <GitHubLogo style={{ height: "2rem" }} />
+                      GitHub
+                    </OauthMuiLink>
+                  </Box>
                 </Grid>
               </Grid>
               <Grid container justifyContent="center">

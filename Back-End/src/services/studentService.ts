@@ -1,4 +1,4 @@
-import { Student } from '../entities/StudentEntity';
+import { Student } from '../entities/Student';
 import { BaseEntity, DeepPartial } from 'typeorm';
 import dataSource from '../dataSource';
 import StudentType from '../interfaces/StudentType';

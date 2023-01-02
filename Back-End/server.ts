@@ -1,5 +1,6 @@
 import express, { Express, Request, Response } from 'express';
-import routes from './src/routes/StudentRoutes';
+import studentRoutes from './src/routes/StudentRoutes';
+import userRoutes from './src/routes/UserRoutes';
 import dataSource from './src/dataSource';
 import cors from 'cors';
 import { createServer } from 'http';
@@ -17,14 +18,15 @@ app.use(
 );
 app.use(cors());
 
-app.use('/student', routes);
+app.use('/student', studentRoutes);
+app.use('/user', userRoutes);
 const httpServer = createServer(app);
 
 app.get('/', (req: Request, res: Response) => {
   res.send('Express, TypeScript Server');
 });
 
-const io = new Server(httpServer, {
+export const io = new Server(httpServer, {
   cors: {
     origin: 'http://localhost:3000/',
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
@@ -34,16 +36,8 @@ const io = new Server(httpServer, {
 io.on('connection', (socket) => {
   console.log(`connect ${socket.id}`);
 
-  socket.on('student_add', (data) => {
-    socket.broadcast.emit('student_added', data);
-  });
-
-  socket.on('student_update', (data) => {
-    socket.broadcast.emit('student_updated', data);
-  });
-
-  socket.on('student_delete', (data) => {
-    socket.broadcast.emit('student_deleted', data);
+  socket.on('disconnect', (reason) => {
+    console.log('Got disconnect due to ' + reason + '!');
   });
 });
 

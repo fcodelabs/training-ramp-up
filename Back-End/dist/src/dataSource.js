@@ -25,7 +25,8 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 require("reflect-metadata");
 const typeorm_1 = require("typeorm");
-const StudentEntity_1 = require("./entities/StudentEntity");
+const Student_1 = require("./entities/Student");
+const User_1 = require("./entities/User");
 const dotenv = __importStar(require("dotenv"));
 dotenv.config();
 const dataSource = new typeorm_1.DataSource({
@@ -35,7 +36,7 @@ const dataSource = new typeorm_1.DataSource({
     username: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
     database: process.env.DB_NAME,
-    entities: [StudentEntity_1.Student],
+    entities: [Student_1.Student, User_1.User],
     synchronize: true,
     logging: false,
     subscribers: [],

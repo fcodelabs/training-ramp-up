@@ -1,5 +1,14 @@
 /* eslint-disable react/react-in-jsx-scope */
-import { Container, Grid, Box, Typography, Stack } from "@mui/material";
+import {
+  Container,
+  Grid,
+  Box,
+  Typography,
+  Stack,
+  Link as MuiLink,
+  // FormControlLabel,
+  // Checkbox,
+} from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { FC } from "react";
 import { useForm, SubmitHandler, FormProvider } from "react-hook-form";
@@ -7,8 +16,8 @@ import { Link } from "react-router-dom";
 import { literal, object, string, TypeOf } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import FormInput from "../../components/FormInput/FormInput";
-// import { ReactComponent as GoogleLogo } from "../assets/google.svg";
-// import { ReactComponent as GitHubLogo } from "../assets/github.svg";
+// import { ReactComponent as GoogleLogo } from "../../assets/Google/Google.svg";
+// import { ReactComponent as GitHubLogo } from "../../assets/Github/Github.svg";
 import styled from "@emotion/styled";
 
 // ? Styled React Route Dom Link Component
@@ -22,24 +31,24 @@ export const LinkItem = styled(Link)`
 `;
 
 // ? Styled Material UI Link Component
-// export const OauthMuiLink = styled(MuiLink)`
-//   display: flex;
-//   justify-content: center;
-//   align-items: center;
-//   background-color: #f5f6f7;
-//   border-radius: 1;
-//   padding: 0.6rem 0;
-//   column-gap: 1rem;
-//   text-decoration: none;
-//   color: #393e45;
-//   font-weight: 500;
-//   cursor: pointer;
+export const OauthMuiLink = styled(MuiLink)`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f5f6f7;
+  border-radius: 1;
+  padding: 0.6rem 0;
+  column-gap: 1rem;
+  text-decoration: none;
+  color: #393e45;
+  font-weight: 500;
+  cursor: pointer;
 
-//   &:hover {
-//     background-color: #fff;
-//     box-shadow: 0 1px 13px 0 rgb(0 0 0 / 15%);
-//   }
-// `;
+  &:hover {
+    background-color: #fff;
+    box-shadow: 0 1px 13px 0 rgb(0 0 0 / 15%);
+  }
+`;
 
 // ? Login Schema with Zod
 const loginSchema = object({
@@ -107,7 +116,12 @@ const LoginPage: FC = () => {
                   marginInline: "auto",
                 }}
               >
-                <Grid item xs={12} sm={6}>
+                <Grid
+                  item
+                  xs={12}
+                  sm={6}
+                  sx={{ borderRight: { sm: "1px solid #ddd" } }}
+                >
                   <Box
                     display="flex"
                     flexDirection="column"
@@ -140,6 +154,29 @@ const LoginPage: FC = () => {
                       focused
                     />
 
+                    {/* <FormControlLabel
+                      control={
+                        <Checkbox
+                          size="small"
+                          aria-label="trust this device checkbox"
+                          required
+                          {...methods.register("persistUser")}
+                        />
+                      }
+                      label={
+                        <Typography
+                          variant="body2"
+                          sx={{
+                            fontSize: "0.8rem",
+                            fontWeight: 400,
+                            color: "#5e5b5d",
+                          }}
+                        >
+                          Trust this device
+                        </Typography>
+                      }
+                    /> */}
+
                     <LoadingButton
                       loading={false}
                       type="submit"
@@ -151,33 +188,49 @@ const LoginPage: FC = () => {
                         marginInline: "auto",
                       }}
                     >
-                      <LinkItem
-                        to="/"
-                        style={{ textDecoration: "none", color: "#fff" }}
-                      >
-                        Login
-                      </LinkItem>
+                      Login
                     </LoadingButton>
                   </Box>
                 </Grid>
-                <Grid item xs={12} sm={6}>
-                  <img
-                    src="https://media.istockphoto.com/id/1419146053/photo/university-group-project.jpg?b=1&s=170667a&w=0&k=20&c=kDcAzQ5izeDjrybgNveopTx_tKdOZzvikY7hnIIX3dw="
-                    alt="signup"
-                    style={{
-                      width: "100%",
-                      height: "80%",
-                      objectFit: "cover",
-                      objectPosition: "center",
+                {/* <Grid item xs={12} sm={6}>
+                  <Typography
+                    variant="h6"
+                    component="p"
+                    sx={{
+                      paddingLeft: { sm: "3rem" },
+                      mb: "1.5rem",
+                      textAlign: "center",
                     }}
-                  />
-                </Grid>
+                  >
+                    Log in with another provider:
+                  </Typography>
+                  <Box
+                    display="flex"
+                    flexDirection="column"
+                    sx={{ paddingLeft: { sm: "3rem" }, rowGap: "1rem" }}
+                  >
+                    <OauthMuiLink href="">
+                      <GoogleLogo style={{ height: "2rem" }} />
+                      Google
+                    </OauthMuiLink>
+                    <OauthMuiLink href="">
+                      <GitHubLogo style={{ height: "2rem" }} />
+                      GitHub
+                    </OauthMuiLink>
+                  </Box>
+                </Grid> */}
               </Grid>
               <Grid container justifyContent="center">
                 <Stack sx={{ mt: "3rem", textAlign: "center" }}>
                   <Typography sx={{ fontSize: "0.9rem", mb: "1rem" }}>
                     Need an account?{" "}
                     <LinkItem to="/signup">Sign up here</LinkItem>
+                  </Typography>
+                  <Typography sx={{ fontSize: "0.9rem" }}>
+                    {/* Forgot your{" "} */}
+                    <LinkItem to="/forgotPassword">
+                      Forgot your password?
+                    </LinkItem>
                   </Typography>
                 </Stack>
               </Grid>

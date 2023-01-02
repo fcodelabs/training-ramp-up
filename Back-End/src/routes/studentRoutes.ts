@@ -5,11 +5,14 @@ import {
   studentValidation,
   studentPatchValidationRules,
 } from '../utils/Validation/StudentValidation';
-const router = express.Router();
+import isAuthenticated from '../utils/Authentication';
+import RoleCheck from '../utils/RoleCheck';
 
-router.post('/', studentAddValidationRules(), studentValidation, addStudent);
-router.get('/', getAllStudents);
-router.patch('/:id', studentPatchValidationRules(), studentValidation, patchStudent);
-router.delete('/:id', deleteStudent);
+const studentRouter = express.Router();
 
-export default router;
+studentRouter.post('/', studentAddValidationRules(), studentValidation, isAuthenticated, RoleCheck, addStudent);
+studentRouter.get('/', isAuthenticated, RoleCheck, getAllStudents);
+studentRouter.patch('/:id', studentPatchValidationRules(), isAuthenticated, RoleCheck, studentValidation, patchStudent);
+studentRouter.delete('/:id', isAuthenticated, RoleCheck, deleteStudent);
+
+export default studentRouter;

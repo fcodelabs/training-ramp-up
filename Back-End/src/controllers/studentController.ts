@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Request, Response } from 'express';
+import { io } from '../../server';
 import {
   getAllStudentsService,
   deleteStudentService,
@@ -31,6 +32,7 @@ export const getAllStudents = async (req: Request, res: Response) => {
 export const addStudent = async (req: Request, res: Response) => {
   try {
     await addStudentService(req.body);
+    io.emit('message', 'Student ' + req.body.name + ' added');
     res.status(200);
     res.json({ message: 'Student added successfully' });
   } catch (err) {
@@ -48,6 +50,7 @@ export const patchStudent = async (req: Request, res: Response) => {
     if (student) {
       mergeStudentService(student, req.body);
       const results = await saveStudentService(student);
+      io.emit('message', 'Student Id : ' + req.body.id + ' updated');
       return res.send(results);
     }
   } catch (err) {
@@ -62,6 +65,7 @@ export const deleteStudent = async (req: Request, res: Response) => {
   try {
     const studentId = parseInt(req.params.id);
     await deleteStudentService(studentId);
+    io.emit('message', 'Student Id : ' + studentId + ' deleted');
     res.status(200);
     res.json({ message: 'Student deleted successfully' });
   } catch (err) {
