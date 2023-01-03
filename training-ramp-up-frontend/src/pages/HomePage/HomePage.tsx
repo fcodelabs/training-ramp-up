@@ -20,15 +20,27 @@ import {
 } from './slice/HomePageSlice'
 import { useAppSelector, useAppDispatch } from '../../hooks'
 import { validate } from '../../utils/homePageValidations'
+import { signOut } from '../SignInPage/slice/SignInPageSlice'
+import { Box, Container } from '@mui/material'
+import { useNavigate } from 'react-router-dom'
 
 export default function HomePage() {
     const editField = 'inEdit'
+    const navigate = useNavigate()
     const students = useAppSelector((state) => state.home.students)
     const dispatch = useAppDispatch()
     const [changedFields, setChangedFields] = React.useState<Array<Person>>([])
     React.useEffect(() => {
         dispatch(getStudents())
     }, [])
+
+
+    const handleSignOut = () => {
+        console.log("sign out!");
+        dispatch(signOut())
+        navigate('/')
+    }
+
 
     //Add a new row for a new student
     const addNew = () => {
@@ -157,41 +169,59 @@ export default function HomePage() {
     )
 
     return (
-        <Grid
-            style={{ height: '650px', margin: '4vh' }}
-            data={students}
-            editField={editField}
-            onItemChange={itemChange}
-        >
-            <GridToolbar>
+        <Box>
+            <Container>
                 <button
                     title="Add new"
-                    className="k-button k-button-md k-rounded-md k-button-solid k-button-solid-tertiary"
-                    onClick={addNew}
+                    style={{margin:'2vh'}}
+                    className="k-button k-button-md k-rounded-md k-button-solid k-button-solid-secondary"
+                    onClick={handleSignOut}
                 >
-                    Add new
+                    Sign Out
                 </button>
-            </GridToolbar>
-            <GridColumn
-                field="id"
-                title="ID"
-                width="40px"
-                editable={false}
-                className="k-grid-textbox"
-            />
-            <GridColumn field="name" title="Name" width="250px" editor="text" />
-            <GridColumn field="gender" title="Gender" cell={DropDownCell} />
-            <GridColumn field="address" title="Address" editor="text" />
-            <GridColumn field="mobileNo" title="Mobile No" editor="text" />
-            <GridColumn
-                field="dateOfBirth"
-                title="Date of Birth"
-                format="{0:D}"
-                width="210px"
-                cell={DatePickerCell}
-            />
-            <GridColumn field="age" title="Age" editable={false} />
-            <GridColumn cell={command} title="Command" width="220px" />
-        </Grid>
+            </Container>
+
+            <Grid
+                style={{ height: '650px', margin: '4vh' }}
+                data={students}
+                editField={editField}
+                onItemChange={itemChange}
+            >
+                <GridToolbar>
+                    <button
+                        title="Add new"
+                        className="k-button k-button-md k-rounded-md k-button-solid k-button-solid-tertiary"
+                        onClick={addNew}
+                    >
+                        Add new
+                    </button>
+                </GridToolbar>
+                <GridColumn
+                    field="id"
+                    title="ID"
+                    width="40px"
+                    editable={false}
+                    className="k-grid-textbox"
+                />
+                <GridColumn
+                    field="name"
+                    title="Name"
+                    width="250px"
+                    editor="text"
+                />
+                <GridColumn field="gender" title="Gender" cell={DropDownCell} />
+                <GridColumn field="address" title="Address" editor="text" />
+                <GridColumn field="mobileNo" title="Mobile No" editor="text" />
+                <GridColumn
+                    field="dateOfBirth"
+                    title="Date of Birth"
+                    format="{0:D}"
+                    width="210px"
+                    cell={DatePickerCell}
+                />
+                <GridColumn field="age" title="Age" editable={false} />
+                <GridColumn cell={command} title="Command" width="220px" />
+            </Grid>
+        </Box>
     )
 }

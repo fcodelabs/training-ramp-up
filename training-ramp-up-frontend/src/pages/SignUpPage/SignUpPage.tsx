@@ -20,7 +20,6 @@ export default function SignUpPage() {
     const validSignUp = useAppSelector((state) => state.signUp.validSignUp)
     const [name, setName] = React.useState('')
     const [username, setUsername] = React.useState('')
-    const [helperTextUsername, setHelperTextUsernam] = React.useState('')
     const [password, setPassword] = React.useState('')
 
     const handleRegister = async () => {
@@ -36,7 +35,7 @@ export default function SignUpPage() {
 
     React.useEffect(()=>{
         if(validSignUp){
-            navigate('/home')
+            navigate('/')
         }
     })
     return (
@@ -60,7 +59,6 @@ export default function SignUpPage() {
                             label="Name"
                             variant="outlined"
                             className="txt"
-                            helperText={helperTextUsername}
                             onChange={(e) => {
                                 setName(e.target.value)
                             }}

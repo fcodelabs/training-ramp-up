@@ -1,5 +1,5 @@
 import { User } from '../models/User'
-import { getUser } from '../services/UserServices'
+import { isUserAlreadyExist } from '../services/UserServices'
 
 
 const validations = new Map([
@@ -29,14 +29,14 @@ const validateFields = (input: User): boolean => {
     return true
 }
 
-const doesUserAlreadyExist=async(username:string){
-    const user= await getUser(username);
-    if(user==null){
+const doesUserAlreadyExist=async(username:string)=>{
+    const userExists= await isUserAlreadyExist(username);
+    if(!userExists){
         return true
     }else {
        throw new Error('User Already exists.Please use a different username')
     }
-    return false
+    
 }
 
 export const validate = async(item: User): Promise<boolean> => {

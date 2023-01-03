@@ -1,21 +1,31 @@
 import { call, put, takeEvery } from 'redux-saga/effects'
-import { logIn, logInSuccess } from '../slice/SignInPageSlice'
+import { logIn, logInSuccess, signOut, signOutSuccess } from '../slice/SignInPageSlice'
 import axios from '../../../axios'
 
-
 function* handleLogIn(action: any): any {
-
     try {
         const res = yield call(() =>
-            axios.get('user/' + action.payload.username)
+            axios.get(
+                'user/' +
+                    action.payload.username +
+                    '/' +
+                    action.payload.password
+            )
         )
-        if (res.data != '') {
-            action.payload.password == res.data.password
-                ? yield put(logInSuccess(true))
-                : alert('Incorrect Password')
-        } else {
-            alert('User not found')
-        }
+        res.data.auth == true ? yield put(signOutSuccess()) : alert(res.data)
+    } catch (error: any) {
+        alert(error)
+    }
+}
+
+function* handleSignOut(action: any): any {
+    try {
+        const res = yield call(() =>
+            axios.delete(
+                'user/'
+            )
+        )
+        res.data.logOut == false ? yield put(logInSuccess(res.data)) : alert(res.data)
     } catch (error: any) {
         alert(error)
     }
@@ -23,4 +33,6 @@ function* handleLogIn(action: any): any {
 
 export function* SignInPageSaga() {
     yield takeEvery(logIn, handleLogIn)
+   
+    yield takeEvery(signOut, handleSignOut)
 }

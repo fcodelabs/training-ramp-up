@@ -6,6 +6,8 @@ import studentRoutes from './src/routes/StudentRoutes'
 import userRoutes from './src/routes/UserRoutes'
 import { createServer } from 'http'
 import { Server } from 'socket.io'
+import * as dotenv from 'dotenv' 
+dotenv.config()
 
 import cors = require('cors')
 
@@ -27,6 +29,7 @@ app.use(express.json())
 app.use('/student', studentRoutes)
 app.use('/user', userRoutes)
 
+
 export const io = new Server(httpServer, {
     cors: {
         origin: 'http://localhost:3000/',
@@ -34,9 +37,10 @@ export const io = new Server(httpServer, {
     },
 })
 io.on('connection', (socket) => {
-    console.log(`connect ${socket.id}`)
+    console.log('connected on ' + socket.id + '!')
     socket.on('disconnect', (reason) => {
-        console.log('Got disconnect due to ' + reason + '!')
+        
+        console.log(socket.id+'Got disconnect due to ' + reason + '!')
     })
 })
 

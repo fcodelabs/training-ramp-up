@@ -1,16 +1,17 @@
 import * as express from 'express'
 
+
 import {
-    requestGetUser,
-    requestAddUser,
-    requestGetAllUser
+    requestGetAllUser,requestSignUp,requestSignIn,requestSignOut
 } from '../controllers/UserController'
 
 const route = express.Router()
 
-route.get('/:username', requestGetUser)
+route.get('/:username/:password', requestSignIn)
 route.get('/', requestGetAllUser)
-route.post('/', requestAddUser)
+route.post('/', requestSignUp)
+route.delete('/', requestSignOut)
+
 
 
 export default route
