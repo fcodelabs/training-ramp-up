@@ -5,10 +5,10 @@ import {
 } from '../controllers/UserController'
 import { refreshUser } from '../services/AuthService'
 
-const StudentRoute = express.Router()
+const UserRoute = express.Router()
 
-StudentRoute.post('/signin', getUser)
-StudentRoute.post('/signup', addUser)
-StudentRoute.post('/refresh', refreshUser)
+UserRoute.post('/signin', getUser)
+UserRoute.post('/signup', addUser)
+UserRoute.post('/refresh', refreshUser)
 
-export default StudentRoute
+export default UserRoute

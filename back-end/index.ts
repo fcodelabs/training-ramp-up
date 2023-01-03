@@ -1,12 +1,11 @@
 import express, { Express, Request, Response, NextFunction } from 'express'
 import dotenv from 'dotenv'
-import studentRoutes from './src/routes/StudentRoutes'
-import userRoutes from './src/routes/UserRoutes'
+import StudentRoute from './src/routes/StudentRoutes'
+import UserRoute from './src/routes/UserRoutes'
 import * as http from 'http'
 import * as socketio from 'socket.io'
 import cors from 'cors'
 import DatabaseService from './src/services/DatabaseService'
-import { authService } from './src/services/AuthService'
 
 dotenv.config()
 const app: Express = express()
@@ -28,8 +27,8 @@ export const io: any = new socketio.Server(httpServer, {
 const port: number = Number(process.env.PORT)
 
 app.use(express.json())
-app.use('/student', authService, studentRoutes)
-app.use('/user', userRoutes)
+app.use('/student', StudentRoute)
+app.use('/user', UserRoute)
 
 io.on('connection', (socket: any) => {
   console.log(`connect server ${socket.id}`)

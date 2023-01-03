@@ -5,12 +5,13 @@ import {
   updateStudent,
   deleteStudent
 } from '../controllers/StudentController'
+import { authService } from '../services/AuthService'
 
 const StudentRoute = express.Router()
 
-StudentRoute.get('/', getAllStudents)
-StudentRoute.post('/', addStudent)
-StudentRoute.patch('/', updateStudent)
-StudentRoute.delete('/:Id', deleteStudent)
+StudentRoute.get('/', authService, getAllStudents)
+StudentRoute.post('/', authService, addStudent)
+StudentRoute.patch('/', authService, updateStudent)
+StudentRoute.delete('/:Id', authService, deleteStudent)
 
 export default StudentRoute
