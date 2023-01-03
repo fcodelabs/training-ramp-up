@@ -15,11 +15,21 @@ import {
 } from '../services/PersonTableViewOperations'
 import { AnyAction } from '@reduxjs/toolkit'
 import { ResponseGenerator } from '../utils/interface'
+import { refreshUser } from '../slices/UserSlice'
+
+const accessToken = localStorage.getItem('accessToken') ?? ''
 
 function * getStudents () {
   try {
-    const response: ResponseGenerator = yield call(getPersons)
-    yield put(setAllStudents(response))
+    const response: ResponseGenerator = yield call(getPersons, accessToken)
+    if (response.status === 200) {
+      yield put(setAllStudents(response))
+    } else if (response.status === 401) {
+      alert(response)
+    } else {
+      yield put(refreshUser())
+      yield put(getAllStudents())
+    }
   } catch (err) {
     console.error('error:', err)
     yield put(setError(err))
@@ -28,10 +38,14 @@ function * getStudents () {
 
 function * saveStudent (action: AnyAction) {
   try {
-    const response: ResponseGenerator = yield call(insertPerson, action.payload)
-    if (response !== null) {
+    const response: ResponseGenerator = yield call(insertPerson, action.payload, accessToken)
+    if (response.status === 201) {
       yield put(getAllStudents())
-      return response
+    } else if (response.status === 401) {
+      alert(response)
+    } else {
+      yield put(refreshUser())
+      yield put(addStudent(action.payload))
     }
   } catch (err) {
     console.error('socket error:', err)
@@ -41,9 +55,14 @@ function * saveStudent (action: AnyAction) {
 
 function * updateStudent (action: AnyAction) {
   try {
-    const response: ResponseGenerator = yield call(updatePerson, action.payload)
-    if (response !== null) {
+    const response: ResponseGenerator = yield call(updatePerson, action.payload, accessToken)
+    if (response.status === 200) {
       yield put(getAllStudents())
+    } else if (response.status === 401) {
+      alert(response)
+    } else {
+      yield put(refreshUser())
+      yield put(editStudent(action.payload))
     }
   } catch (err) {
     console.error('socket error:', err)
@@ -53,9 +72,14 @@ function * updateStudent (action: AnyAction) {
 
 function * deleteStudent (action: AnyAction) {
   try {
-    const response: ResponseGenerator = yield call(deletePerson, action.payload)
-    if (response !== null) {
+    const response: ResponseGenerator = yield call(deletePerson, action.payload, accessToken)
+    if (response.status === 200) {
       yield put(getAllStudents())
+    } else if (response.status === 401) {
+      alert(response)
+    } else {
+      yield put(refreshUser())
+      yield put(removeStudent(action.payload))
     }
   } catch (err) {
     console.error('socket error:', err)

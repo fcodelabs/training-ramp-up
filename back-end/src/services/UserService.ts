@@ -16,13 +16,16 @@ const checkUserValid = async (userEmail: string) => {
 export const getUserService = async (user: UserModel) => {
   try {
     const useremail = user.email
-    const founduser = await DatabaseService.getRepository(User).findOneBy({
+    const founduser: UserModel | null = await DatabaseService.getRepository(User).findOneBy({
       email: useremail
     })
+
     if (founduser !== null) {
       const pwValid = await bcrypt.compare(user.password, founduser.password)
       if (pwValid) return founduser
+      return null
     }
+    return null
   } catch (err) {
     return err
   }

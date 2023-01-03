@@ -1,8 +1,16 @@
-export default interface StudentModel {
+export default interface UserModel {
   id?: number
   userName: string
   email: string
   password: string
-  confirmPassword: string
+  confirmPassword?: string
+  role: string
+}
+
+export interface JwtPayload {
+  id?: number
+  userName: string
+  email: string
+  password: string
   role: string
 }

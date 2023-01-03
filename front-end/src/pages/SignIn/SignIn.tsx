@@ -1,5 +1,6 @@
+/* eslint-disable object-shorthand */
 import bg from './signInBg.jpg'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   Button,
   TextField,
@@ -14,11 +15,17 @@ import {
 import Visibility from '@mui/icons-material/Visibility'
 import VisibilityOff from '@mui/icons-material/VisibilityOff'
 import { useNavigate } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux/es/exports'
+import { getUser } from '../../slices/UserSlice'
 
 const SignIn: React.FC = () => {
-  const [email, setEmail] = useState('')
+  const dispatch = useDispatch()
 
-  const [password, setPassword] = useState('')
+  const accessToken = useSelector((state: any) => state.user.accessToken)
+
+  const [email, setEmail] = useState('risinni@gmail.com')
+
+  const [password, setPassword] = useState('Risini123')
 
   const [emailError, setEmailError] = useState('')
 
@@ -33,7 +40,14 @@ const SignIn: React.FC = () => {
   ) => {
     event.preventDefault()
   }
+
   const navigate = useNavigate()
+
+  useEffect(() => {
+    if (accessToken !== null) {
+      navigate('/home')
+    }
+  }, [accessToken])
 
   const validate = () => {
     let valid: boolean = true
@@ -171,11 +185,9 @@ const SignIn: React.FC = () => {
       <Button
         variant="contained"
         onClick={() => {
-          console.log(validate())
-
           if (validate()) {
-            //   dispatch(setNickname(ranName))
-            navigate('/home')
+            const user = { email: email, password: password }
+            dispatch(getUser(user))
           }
         }}
         style={{
@@ -189,7 +201,9 @@ const SignIn: React.FC = () => {
         SIGN IN{' '}
       </Button>
     </Grid>
-          <Button size="small" onClick={() => { navigate('/signup') }}>
+          <Button size="small"
+          onClick={() => { navigate('/signup') }}
+          >
             <u>Create New Account</u>
           </Button>
         </div>

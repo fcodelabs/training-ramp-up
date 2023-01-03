@@ -35,22 +35,27 @@ var http = __importStar(require("http"));
 var socketio = __importStar(require("socket.io"));
 var cors_1 = __importDefault(require("cors"));
 var DatabaseService_1 = __importDefault(require("./src/services/DatabaseService"));
+var AuthService_1 = require("./src/services/AuthService");
 dotenv_1.default.config();
 var app = (0, express_1.default)();
 var httpServer = new http.Server(app);
 app.use((0, cors_1.default)({
     origin: '*',
-    methods: ['GET', 'POST', 'PATCH', 'DELETE']
+    methods: ['GET', 'POST', 'PATCH', 'DELETE'],
+    allowedHeaders: ['Accept-Version', 'Authorization', 'Credentials', 'Content-Type'],
+    exposedHeaders: ['accesskey', 'refreshkey']
 }));
 exports.io = new socketio.Server(httpServer, {
     cors: {
         origin: '*',
-        methods: ['GET', 'POST', 'PATCH', 'DELETE']
+        methods: ['GET', 'POST', 'PATCH', 'DELETE'],
+        allowedHeaders: ['Accept-Version', 'Authorization', 'Credentials', 'Content-Type'],
+        exposedHeaders: ['accesskey', 'refreshkey']
     }
 });
 var port = Number(process.env.PORT);
 app.use(express_1.default.json());
-app.use('/student', StudentRoutes_1.default);
+app.use('/student', AuthService_1.authService, StudentRoutes_1.default);
 app.use('/user', UserRoutes_1.default);
 exports.io.on('connection', function (socket) {
     console.log("connect server ".concat(socket.id));

@@ -15,11 +15,13 @@ import {
 import Visibility from '@mui/icons-material/Visibility'
 import VisibilityOff from '@mui/icons-material/VisibilityOff'
 import { useNavigate } from 'react-router-dom'
-import { useDispatch } from 'react-redux/es/exports'
-import { addUser } from '../../slices/UserSlice'
+import { useDispatch, useSelector } from 'react-redux/es/exports'
+import { addUser, setAddStatus } from '../../slices/UserSlice'
 import { User } from '../../utils/interface'
 
 const SignUp: React.FC = () => {
+  const isAdd = useSelector((state: any) => state.user.isAdd)
+
   const [userName, setUserName] = useState('')
 
   const [email, setEmail] = useState('')
@@ -264,7 +266,8 @@ const SignUp: React.FC = () => {
                     confirmPassword: confirmPassword
                   }
                   dispatch(addUser(newUser))
-                  navigate('/')
+                  if (isAdd === true) navigate('/')
+                  dispatch(setAddStatus(false))
                 }
               }}
               style={{
