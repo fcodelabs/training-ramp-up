@@ -2,13 +2,7 @@ import * as express from 'express'
 import { Express, Request, Response } from 'express'
 import { Socket } from 'socket.io'
 import { io } from '../..'
-import {
-    getUser,
-    addUser,
-    getUsers,
-    
-   
-} from '../services/UserServices'
+import { getUser, addUser, getUsers } from '../services/UserServices'
 import { validate } from '../utils/validateUser'
 import jwt = require('jsonwebtoken')
 import { User } from '../models/User'
@@ -46,27 +40,24 @@ export const requestSignIn = async (
             const accessKey = process.env.ACCESS_KEY
             const refreshKey = process.env.REFRESH_KEY
 
-            const acessToken = jwt.sign(payload, accessKey, { expiresIn: '5m' })
+            const acessToken = jwt.sign(payload, accessKey, { expiresIn: '5s' })
             const refreshToken = jwt.sign(payload, refreshKey, {
                 expiresIn: '24h',
             })
-            const result = {
-                auth: true,
-                tokens: { accessToken: acessToken, refreshToken: refreshToken },
-            }
-            res.cookie("accessToken", acessToken, {
-                maxAge: 60 * 5 * 1000,
-                httpOnly: true,
-              });
-              res.cookie("refreshToken", refreshToken, {
+
+            res.cookie('refreshToken', refreshToken, {
                 maxAge: 60 * 60 * 24 * 1000,
                 httpOnly: true,
-              });
-            
-              res.status(200).send({auth:true,user:payload});
-             
+            })
+            res.cookie('accessToken', acessToken, {
+                maxAge: 1000 * 5,
+                httpOnly: true,
+            })
+            res.send({ auth: true, user: payload })
         }
     } catch (err) {
+        console.log('error')
+
         res.send('Error : ' + err.message)
     }
 }
@@ -74,16 +65,16 @@ export const requestSignIn = async (
 export const requestNewAccessToken = async (
     req: Request,
     res: Response
-): Promise<void> => {
+): Promise<boolean> => {
     try {
-        const refreshToken = req.body.refreshToken
+        const refreshToken = req.cookies.refreshToken
         if (!refreshToken) res.sendStatus(401)
 
         jwt.verify(
             refreshToken,
-            process.env.RE_TOKEN_KEY,
+            process.env.REFRESH_KEY,
             (err: Error, user: User) => {
-                if (err) res.sendStatus(403)
+                if (err) throw err
                 const payload = {
                     id: user.id,
                     name: user.name,
@@ -93,18 +84,19 @@ export const requestNewAccessToken = async (
                 const accessKey = process.env.ACCESS_KEY
 
                 const acessToken = jwt.sign(payload, accessKey, {
-                    expiresIn: '5m',
+                    expiresIn: '5s',
                 })
-                res.cookie("accessToken", acessToken, {
-                    maxAge: 60 * 60 * 1000,
+                res.cookie('accessToken', acessToken, {
+                    maxAge: 1000 * 5,
                     httpOnly: true,
-                  })
-                res.send('New Access token created')
+                })
+                return true
             }
         )
     } catch (err) {
-        res.send('Error : ' + err.message)
+        throw err
     }
+    return false
 }
 
 export const requestSignOut = async (
@@ -112,11 +104,17 @@ export const requestSignOut = async (
     res: Response
 ): Promise<void> => {
     try {
-        res.clearCookie("accessToken");
-        res.clearCookie("refreshToken");
-          res.status(200).json({
+        res.cookie('accessToken', '', {
+            maxAge: 0,
+            httpOnly: true,
+        })
+        res.cookie('refreshToken', '', {
+            maxAge: 0,
+            httpOnly: true,
+        })
+        res.status(200).json({
             logOut: true,
-          });
+        })
     } catch (err) {
         res.status(201).send(err.message)
     }

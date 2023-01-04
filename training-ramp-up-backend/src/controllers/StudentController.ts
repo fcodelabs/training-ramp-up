@@ -13,6 +13,7 @@ export const requestGetAllStudents = async (
     req: Request,
     res: Response
 ): Promise<void> => {
+   
     try {
         const students = await getAllStudents()
         res.send(students)
@@ -26,6 +27,7 @@ export const requestAddStudent = async (
     res: Response
 ): Promise<void> => {
     try {
+        
         if (validate(req.body)) {
             const student = await addStudent(req.body)
             res.send(student)

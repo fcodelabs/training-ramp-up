@@ -19,7 +19,7 @@ export const signInSlice = createSlice({
     reducers: {
         logIn: (state, action) => {},
         logInSuccess: (state, action) => {
-            state.validLogIn = action.payload.auth
+            state.validLogIn = action.payload
             
         },
         signOut: (state) => {},

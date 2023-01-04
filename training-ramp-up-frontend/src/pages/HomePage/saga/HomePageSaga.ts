@@ -15,7 +15,11 @@ import { Person } from '../../../utils/interfaces'
 
 function* handleGetStudents(): any {
     try {
-        const res = yield call(() => axios.get('student'))
+        const res = yield call(() =>
+            axios.get('student', {
+                withCredentials: true,
+            })
+        )
         const students: Person[] = res.data.map((temp: Person) => ({
             inEdit: false,
             ...temp,
@@ -28,7 +32,11 @@ function* handleGetStudents(): any {
 
 function* handleAddStudent(action: any): any {
     try {
-        const res = yield call(() => axios.post('student', action.payload))
+        const res = yield call(() =>
+            axios.post('student', action.payload, {
+                withCredentials: true,
+            })
+        )
         yield put(getStudents())
     } catch (error: any) {
         yield put(addStudentFailed(error))
@@ -37,7 +45,11 @@ function* handleAddStudent(action: any): any {
 
 function* handleDeleteStudent(action: any): any {
     try {
-        const res = yield call(() => axios.delete('student/' + action.payload))
+        const res = yield call(() =>
+            axios.delete('student/' + action.payload, {
+                withCredentials: true,
+            })
+        )
         yield put(getStudents())
     } catch (error: any) {
         yield put(deleteStudentFailed(error))
@@ -46,7 +58,11 @@ function* handleDeleteStudent(action: any): any {
 
 function* handleUpdateStudent(action: any): any {
     try {
-        const res = yield call(() => axios.patch('student', action.payload))
+        const res = yield call(() =>
+            axios.patch('student', action.payload, {
+                withCredentials: true,
+            })
+        )
         yield put(getStudents())
     } catch (error: any) {
         yield put(updateStudentFailed(error))

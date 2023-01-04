@@ -10,6 +10,7 @@ import * as dotenv from 'dotenv'
 dotenv.config()
 
 import cors = require('cors')
+import cookieParser = require('cookie-parser')
 
 const app: Express = express()
 const httpServer = createServer(app)
@@ -24,14 +25,19 @@ appDataSource
         console.error('Error during Data Source initialization:', err)
     })
 
-app.use(cors())
+app.use(cors({
+    credentials: true,
+    origin: ["http://localhost:3000", "your-production-domain"],
+  }))
 app.use(express.json())
+app.use(cookieParser())
 app.use('/student', studentRoutes)
 app.use('/user', userRoutes)
 
 
 export const io = new Server(httpServer, {
     cors: {
+        
         origin: 'http://localhost:3000/',
         methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
     },

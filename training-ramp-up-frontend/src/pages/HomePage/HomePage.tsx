@@ -28,17 +28,20 @@ export default function HomePage() {
     const editField = 'inEdit'
     const navigate = useNavigate()
     const students = useAppSelector((state) => state.home.students)
+    const validLogIn = useAppSelector((state) => state.signIn.validLogIn)
     const dispatch = useAppDispatch()
     const [changedFields, setChangedFields] = React.useState<Array<Person>>([])
+
     React.useEffect(() => {
         dispatch(getStudents())
     }, [])
 
+    React.useEffect(() => {
+        if(!validLogIn)navigate('/')
+    }, [validLogIn])
 
     const handleSignOut = () => {
-        console.log("sign out!");
         dispatch(signOut())
-        navigate('/')
     }
 
 
