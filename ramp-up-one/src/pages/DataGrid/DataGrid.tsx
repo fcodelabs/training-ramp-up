@@ -6,7 +6,7 @@ import {
   GridItemChangeEvent,
   GridToolbar,
 } from '@progress/kendo-react-grid';
-
+import { useNavigate } from 'react-router-dom';
 import Command from '../../components/Buttons/Buttons';
 import { StudentModel } from '../../utils/interfaces';
 import DropDownCell from '../../components/Dropdown/DropDownCell';
@@ -18,6 +18,7 @@ import {
   updateStudentAction,
   deleteStudentAction,
 } from './studentSlice';
+import {logOutUserAction} from '../SignInPage/SignInSlice';
 import { checkValidation } from '../../utils/validation';
 
 const editField: string = 'inEdit';
@@ -25,7 +26,9 @@ const editField: string = 'inEdit';
 const dataGrid = () => {
   const [user, setuser] = useState<StudentModel[]>([]);
   const selectStudent = useSelector((state: any) => state.studentSlice.student);
+  const user2 = useSelector((state: any) => state.signIn.user);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [updateField, setupdateField] = React.useState<
     Array<{
       id: number;
@@ -48,6 +51,15 @@ const dataGrid = () => {
     };
     setuser([newUser, ...user]);
   }
+  function logOutFunction() {
+    dispatch(logOutUserAction());
+  }
+
+  React.useEffect(() => {
+    if (user2 === false) {
+      navigate('/');
+    }
+  });
   function getAge(dob: Date) {
     const diffms = Date.now() - dob.getTime();
     const agedt = new Date(diffms);
@@ -179,6 +191,14 @@ const dataGrid = () => {
     fontSize: '16px',
     fontWeight: 'bold',
   };
+  const LogOutBtnStyle = {
+    border: '2px solid black',
+    borderRadius: '6px',
+    height: '2rem',
+    fontSize: '16px',
+    fontWeight: 'bold',
+    left: '80rem'
+  };
 
   return (
     <>
@@ -192,6 +212,14 @@ const dataGrid = () => {
               onClick={addNewUserField}
             >
               Add new
+            </button>
+            <button
+              title="Log Out"
+              style={LogOutBtnStyle}
+              className="k-button k-primary"
+              onClick={logOutFunction}
+            >
+              Log out
             </button>
           </div>
         </GridToolbar>

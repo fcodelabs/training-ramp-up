@@ -11,11 +11,10 @@ import { io } from '../../index';
 import { checkValidation } from '../../../ramp-up-one/src/utils/validation';
 import { validationStatus } from '../utils/validation';
 
-
 //get all student
 export const getAllCustomer = async (req: Request, res: Response) => {
   try {
-    const student = await getAllCustomerService();
+    const student = await getAllCustomerService(); 
     res.send(student);
   } catch (err) {
     res.send('Error' + err);
@@ -24,6 +23,7 @@ export const getAllCustomer = async (req: Request, res: Response) => {
 
 //save Student
 export const saveStudent = async (req: Request, res: Response) => {
+  
   try {
     if (checkValidation(req.body)) {
       const response = await saveStudentService(req.body);

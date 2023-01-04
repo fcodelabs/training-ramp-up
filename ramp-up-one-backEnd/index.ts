@@ -6,14 +6,18 @@ import userRoutes from './src/routes/userRoutes';
 import { createServer } from 'http';
 import { Server } from 'socket.io';
 import cors from 'cors';
+import cookieParser from 'cookie-parser';
 
 dotenv.config();
 const app: Express = express();
 const httpServer = createServer(app);
 const port = process.env.PORT;
 
+app.use(cookieParser());
 app.use(express.json());
-app.use(cors({ origin: '*' }));
+app.use(cors({
+  credentials: true, 
+  origin: 'http://localhost:3000' }));
 app.use(express.urlencoded({ extended: true }));
 
 //routes

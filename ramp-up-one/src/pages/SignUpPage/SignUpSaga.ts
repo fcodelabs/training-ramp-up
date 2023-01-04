@@ -21,7 +21,7 @@ function* registerUser(action: AnyAction) {
         insertUserService,
         action.payload
       );
-      if (response) {
+      if (response) { 
         yield put(saveUserAction(true));
       } else {
         alert('Registration Failed!');

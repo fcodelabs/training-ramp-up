@@ -28,4 +28,5 @@ export interface LoginDetails {
   email: string;
   name?: string;
   password?: string;
+  
 }

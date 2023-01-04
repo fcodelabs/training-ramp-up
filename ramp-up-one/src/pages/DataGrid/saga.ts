@@ -13,6 +13,7 @@ import {
   updateStudentService,
   deleteStudentService,
 } from '../../services/StudentServices';
+import { newAccessTokenService } from '../../services/userServices';
 import { StudentModel } from '../../utils/interfaces';
 
 export default function* studentSaga() {
@@ -21,17 +22,32 @@ export default function* studentSaga() {
   yield takeEvery(updateStudentAction, updateStudent);
   yield takeEvery(deleteStudentAction, deleteStudent);
 }
-export function* getStudent() {
+export function* getStudent():any {
   try {
     const response: StudentModel = yield call(getStudentService);
     yield put(saveStudentAction(response.data));
   } catch (error) {
-    console.log(error);
+
+    try {
+      const authorized: any = yield call(newAccessTokenService);
+      if (authorized) {
+        const response: StudentModel = yield call(getStudentService);
+        yield put(saveStudentAction(response.data));
+      } else {
+        alert('Unauthorized');
+      }
+    } catch (err) {
+      console.log(err);
+    }
+
+
   }
 }
 
-function* saveStudent(action: AnyAction) {
+function* saveStudent(action: AnyAction):any {
   try {
+
+
     const response: StudentModel = yield call(
       insertStudentService,
       action.payload
@@ -41,8 +57,34 @@ function* saveStudent(action: AnyAction) {
     } else {
       alert(response.data.message);
     }
+
+
   } catch (error) {
-    console.log(error);
+
+
+    try {
+      const authorized:any = yield call(newAccessTokenService);
+      console.log('authorized', authorized);
+      if (authorized) {
+        const response: StudentModel = yield call(
+          insertStudentService,
+          action.payload
+        );
+        if (response.status === 200) {
+          yield put(getStudentAction());
+        } else {
+          alert(response.data.message);
+        }
+      } else {
+        alert('Unauthorized');
+      }
+
+
+    } catch (err) {
+      console.log(err);
+    }
+
+
   }
 }
 
