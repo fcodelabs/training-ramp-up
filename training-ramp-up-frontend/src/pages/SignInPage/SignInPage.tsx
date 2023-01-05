@@ -24,8 +24,7 @@ export default function SignUpPage() {
            
         }
     }
-
-    
+ 
     React.useEffect(()=>{
         if(validLogIn){
             navigate('/home')

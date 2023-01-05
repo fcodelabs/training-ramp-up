@@ -24,21 +24,23 @@ import { signOut } from '../SignInPage/slice/SignInPageSlice'
 import { Box, Container } from '@mui/material'
 import { useNavigate } from 'react-router-dom'
 
+
 export default function HomePage() {
     const editField = 'inEdit'
-    const navigate = useNavigate()
+
     const students = useAppSelector((state) => state.home.students)
-    const validLogIn = useAppSelector((state) => state.signIn.validLogIn)
+    const signedOut = useAppSelector((state) => state.signIn.signedOut)
     const dispatch = useAppDispatch()
     const [changedFields, setChangedFields] = React.useState<Array<Person>>([])
+    const navigate=useNavigate()
 
     React.useEffect(() => {
         dispatch(getStudents())
     }, [])
 
     React.useEffect(() => {
-        if(!validLogIn)navigate('/')
-    }, [validLogIn])
+        if(signedOut)navigate('/')
+    }, [signedOut])
 
     const handleSignOut = () => {
         dispatch(signOut())

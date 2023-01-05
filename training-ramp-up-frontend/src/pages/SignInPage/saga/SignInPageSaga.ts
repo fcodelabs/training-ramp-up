@@ -5,20 +5,17 @@ import {
     signOut,
     signOutSuccess,
 } from '../slice/SignInPageSlice'
-import axios from '../../../axios'
+import axios from 'axios'
+import axiosInstance from '../../../utils/authorization'
 
 function* handleLogIn(action: any): any {
     try {
         const res = yield call(() =>
-            axios.get(
-                'user/' +
-                    action.payload.username +
-                    '/' +
-                    action.payload.password,
-                {
-                    withCredentials: true,
-                }
-            )
+            axios.post('http://localhost:4000/user/', {
+                username: action.payload.username,
+
+                password: action.payload.password,
+            },{withCredentials:true})
         )
         console.log(res.data)
 
@@ -31,7 +28,7 @@ function* handleLogIn(action: any): any {
 function* handleSignOut(action: any): any {
     try {
         const res = yield call(() =>
-            axios.delete('user/', {
+            axiosInstance.delete('user/', {
                 withCredentials: true,
             })
         )

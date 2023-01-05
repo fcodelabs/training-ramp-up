@@ -10,7 +10,7 @@ import {
     updateStudent,
     updateStudentFailed,
 } from '../slice/HomePageSlice'
-import axios from '../../../axios'
+import axios from '../../../utils/authorization'
 import { Person } from '../../../utils/interfaces'
 
 function* handleGetStudents(): any {

@@ -28,7 +28,7 @@ export const requestSignIn = async (
     res: Response
 ): Promise<void> => {
     try {
-        const user = await getUser(req.params.username, req.params.password)
+        const user = await getUser(req.body.username, req.body.password)
 
         if (user) {
             const payload = {
@@ -40,20 +40,28 @@ export const requestSignIn = async (
             const accessKey = process.env.ACCESS_KEY
             const refreshKey = process.env.REFRESH_KEY
 
-            const acessToken = jwt.sign(payload, accessKey, { expiresIn: '5s' })
+            const acessToken = jwt.sign(payload, accessKey, {
+                expiresIn: '5m',
+            })
             const refreshToken = jwt.sign(payload, refreshKey, {
                 expiresIn: '24h',
             })
 
+            res.cookie('accessToken', acessToken, {
+                maxAge: 1000 * 60 * 5,
+                httpOnly: true,
+            })
             res.cookie('refreshToken', refreshToken, {
                 maxAge: 60 * 60 * 24 * 1000,
                 httpOnly: true,
             })
-            res.cookie('accessToken', acessToken, {
-                maxAge: 1000 * 5,
+
+            res.cookie('user', payload, {
+                maxAge: 60 * 60 * 24 * 1000,
                 httpOnly: true,
             })
-            res.send({ auth: true, user: payload })
+
+            res.send({ auth: true })
         }
     } catch (err) {
         console.log('error')
@@ -65,16 +73,19 @@ export const requestSignIn = async (
 export const requestNewAccessToken = async (
     req: Request,
     res: Response
-): Promise<boolean> => {
+): Promise<void> => {
     try {
         const refreshToken = req.cookies.refreshToken
-        if (!refreshToken) res.sendStatus(401)
-
-        jwt.verify(
-            refreshToken,
-            process.env.REFRESH_KEY,
-            (err: Error, user: User) => {
-                if (err) throw err
+        const user = req.cookies.user
+        
+        if (!refreshToken) {
+            res.sendStatus(401)
+        } else {
+            
+            const payload = jwt.verify(refreshToken, process.env.REFRESH_KEY)
+            const validRefereshToken = (payload as any).id == user.id
+            
+            if (validRefereshToken) {
                 const payload = {
                     id: user.id,
                     name: user.name,
@@ -84,19 +95,20 @@ export const requestNewAccessToken = async (
                 const accessKey = process.env.ACCESS_KEY
 
                 const acessToken = jwt.sign(payload, accessKey, {
-                    expiresIn: '5s',
+                    expiresIn: '5m',
                 })
                 res.cookie('accessToken', acessToken, {
-                    maxAge: 1000 * 5,
+                    maxAge: 1000 * 60 * 5,
                     httpOnly: true,
                 })
-                return true
+                res.sendStatus(200)
+            } else {
+                res.sendStatus(401)
             }
-        )
+        }
     } catch (err) {
-        throw err
+        res.sendStatus(401)
     }
-    return false
 }
 
 export const requestSignOut = async (
@@ -104,11 +116,16 @@ export const requestSignOut = async (
     res: Response
 ): Promise<void> => {
     try {
+        console.log('here at signout')
         res.cookie('accessToken', '', {
             maxAge: 0,
             httpOnly: true,
         })
         res.cookie('refreshToken', '', {
+            maxAge: 0,
+            httpOnly: true,
+        })
+        res.cookie('user', '', {
             maxAge: 0,
             httpOnly: true,
         })
