@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable react/react-in-jsx-scope */
 import { Container, Grid, Box, Typography, Stack } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
@@ -9,6 +10,8 @@ import FormInput from "../../components/FormInput/FormInput";
 import { ReactComponent as GoogleLogo } from "../../assets/Google/Google.svg";
 import { ReactComponent as GitHubLogo } from "../../assets/Github/Github.svg";
 import { LinkItem, OauthMuiLink } from "../Signin/Signin";
+import { useDispatch } from "react-redux";
+import { registerUserAction } from "../../slice/UserSlice";
 
 // ? SignUp Schema with Zod
 const signupSchema = object({
@@ -28,6 +31,7 @@ const signupSchema = object({
 type ISignUp = TypeOf<typeof signupSchema>;
 
 const SignupPage: FC = () => {
+  const dispatch = useDispatch();
   // ? Default Values
   const defaultValues: ISignUp = {
     // name: "",
@@ -43,8 +47,10 @@ const SignupPage: FC = () => {
   });
 
   // ? Form Handler
-  const onSubmitHandler: SubmitHandler<ISignUp> = (values: ISignUp) => {
-    console.log(values);
+  const onSubmitHandler: SubmitHandler<ISignUp> = async (values: ISignUp) => {
+    const { email, password } = values;
+    const userData: any = { email: email, password: password, role: "user" };
+    dispatch(registerUserAction(userData));
   };
 
   // ? Returned JSX

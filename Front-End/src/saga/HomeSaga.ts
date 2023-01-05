@@ -24,6 +24,7 @@ import { Student } from "../utils/Interfaces/Student";
 function* getStudentsSaga(): any {
   try {
     const result = yield call(getStudents);
+    console.log(result);
     const students: Student[] = result.data.map((temp: Student) => ({
       inEdit: false,
       ...temp,
@@ -70,7 +71,7 @@ function* deleteStudentSaga(action: any): any {
   }
 }
 
-export default function* homeSaga() {
+export default function* HomeSaga() {
   yield takeLatest(getStudentsAction.type, getStudentsSaga);
   yield takeLatest(updateStudentAction.type, updateStudentSaga);
   yield takeLatest(addStudentAction.type, addStudentSaga);

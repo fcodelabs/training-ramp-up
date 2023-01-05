@@ -12,13 +12,18 @@ const cors_1 = __importDefault(require("cors"));
 const http_1 = require("http");
 const body_parser_1 = __importDefault(require("body-parser"));
 const socket_io_1 = require("socket.io");
+const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const app = (0, express_1.default)();
 app.use(express_1.default.json());
 app.use(body_parser_1.default.json());
 app.use(body_parser_1.default.urlencoded({
     extended: true,
 }));
-app.use((0, cors_1.default)());
+app.use((0, cookie_parser_1.default)());
+app.use((0, cors_1.default)({
+    credentials: true,
+    origin: ['http://localhost:3000', 'your-production-domain'],
+}));
 app.use('/student', StudentRoutes_1.default);
 app.use('/user', UserRoutes_1.default);
 const httpServer = (0, http_1.createServer)(app);

@@ -10,9 +10,23 @@ import RoleCheck from '../utils/RoleCheck';
 
 const studentRouter = express.Router();
 
-studentRouter.post('/', studentAddValidationRules(), studentValidation, isAuthenticated, RoleCheck, addStudent);
-studentRouter.get('/', isAuthenticated, RoleCheck, getAllStudents);
-studentRouter.patch('/:id', studentPatchValidationRules(), isAuthenticated, RoleCheck, studentValidation, patchStudent);
-studentRouter.delete('/:id', isAuthenticated, RoleCheck, deleteStudent);
+studentRouter.post(
+  '/',
+  studentAddValidationRules(),
+  studentValidation,
+  isAuthenticated,
+  RoleCheck(['admin']),
+  addStudent
+);
+studentRouter.get('/', isAuthenticated, RoleCheck(['admin', 'user']), getAllStudents);
+studentRouter.patch(
+  '/:id',
+  studentPatchValidationRules(),
+  isAuthenticated,
+  RoleCheck(['admin']),
+  studentValidation,
+  patchStudent
+);
+studentRouter.delete('/:id', isAuthenticated, RoleCheck(['admin', 'user']), deleteStudent);
 
 export default studentRouter;

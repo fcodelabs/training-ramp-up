@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable react/react-in-jsx-scope */
 import {
   Container,
@@ -19,6 +20,8 @@ import FormInput from "../../components/FormInput/FormInput";
 // import { ReactComponent as GoogleLogo } from "../../assets/Google/Google.svg";
 // import { ReactComponent as GitHubLogo } from "../../assets/Github/Github.svg";
 import styled from "@emotion/styled";
+import { useDispatch } from "react-redux";
+import { loginUserAction } from "../../slice/UserSlice";
 
 // ? Styled React Route Dom Link Component
 export const LinkItem = styled(Link)`
@@ -64,6 +67,8 @@ const loginSchema = object({
 type ILogin = TypeOf<typeof loginSchema>;
 
 const LoginPage: FC = () => {
+  const dispatch = useDispatch();
+  // const navigate = useNavigate();
   // ? Default Values
   const defaultValues: ILogin = {
     email: "",
@@ -77,8 +82,10 @@ const LoginPage: FC = () => {
   });
 
   // ? Submit Handler
-  const onSubmitHandler: SubmitHandler<ILogin> = (values: ILogin) => {
-    console.log(values);
+  const onSubmitHandler: SubmitHandler<ILogin> = async (values: ILogin) => {
+    const { email, password } = values;
+    const userData: any = { email, password };
+    dispatch(loginUserAction(userData));
   };
 
   // ? JSX to be rendered

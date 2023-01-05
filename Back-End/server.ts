@@ -6,6 +6,7 @@ import cors from 'cors';
 import { createServer } from 'http';
 import bodyParser from 'body-parser';
 import { Server } from 'socket.io';
+import cookieParser from 'cookie-parser';
 
 const app: Express = express();
 
@@ -16,7 +17,14 @@ app.use(
     extended: true,
   })
 );
-app.use(cors());
+app.use(cookieParser());
+
+app.use(
+  cors({
+    credentials: true,
+    origin: ['http://localhost:3000', 'your-production-domain'],
+  })
+);
 
 app.use('/student', studentRoutes);
 app.use('/user', userRoutes);

@@ -21,6 +21,7 @@ import {
   setStudentsAction,
   updateStudentAction,
 } from "../../slice/HomeSlice";
+import { logoutUserAction } from "../../slice/UserSlice";
 import { io } from "socket.io-client";
 const socket = io("http://localhost:8000/", {
   transports: ["websocket"],
@@ -194,6 +195,10 @@ export default function Datagrid() {
     dispatch(setStudentsAction(newData));
   };
 
+  const logout = () => {
+    dispatch(logoutUserAction());
+  };
+
   //command cell
 
   const command = (props: GridCellProps) => (
@@ -209,41 +214,59 @@ export default function Datagrid() {
   );
 
   return (
-    <Grid
-      style={{ margin: "3vh" }}
-      data={students}
-      editField={editField}
-      onItemChange={itemChange}
-    >
-      <GridToolbar>
-        <button
-          title="Add new"
-          className="k-button k-button-md k-rounded-md k-button-solid k-button-solid-primary"
-          onClick={addNew}
-        >
-          Add new
-        </button>
-      </GridToolbar>
-      <GridColumn
-        field="id"
-        title="ID"
-        width="50px"
-        editable={false}
-        className="k-grid-textbox"
-      />
-      <GridColumn field="name" title="Name" editor="text" />
-      <GridColumn field="gender" title="Gender" cell={DropDownCell} />
-      <GridColumn field="address" title="Address" editor="text" />
-      <GridColumn field="mobile" title="Mobile No" editor="text" />
-      <GridColumn
-        field="birthday"
-        title="Date of Birth"
-        format="{0:D}"
-        width="210px"
-        cell={DatePickerCell}
-      />
-      <GridColumn field="age" title="Age" editable={false} />
-      <GridColumn cell={command} title="Command" width="220px" />
-    </Grid>
+    <>
+      {/* logout button */}
+      <button
+        title="Logout"
+        className="k-button k-button-md k-rounded-md k-button-solid k-button-solid-primary"
+        onClick={logout}
+      >
+        Logout
+      </button>
+
+      {/* email */}
+      {/* <div className="k-form-field">
+        <label className="k-form-field">
+          <span>{user.email}</span>
+        </label>
+      </div> */}
+      {/* grid */}
+      <Grid
+        style={{ margin: "3vh" }}
+        data={students}
+        editField={editField}
+        onItemChange={itemChange}
+      >
+        <GridToolbar>
+          <button
+            title="Add new"
+            className="k-button k-button-md k-rounded-md k-button-solid k-button-solid-primary"
+            onClick={addNew}
+          >
+            Add new
+          </button>
+        </GridToolbar>
+        <GridColumn
+          field="id"
+          title="ID"
+          width="50px"
+          editable={false}
+          className="k-grid-textbox"
+        />
+        <GridColumn field="name" title="Name" editor="text" />
+        <GridColumn field="gender" title="Gender" cell={DropDownCell} />
+        <GridColumn field="address" title="Address" editor="text" />
+        <GridColumn field="mobile" title="Mobile No" editor="text" />
+        <GridColumn
+          field="birthday"
+          title="Date of Birth"
+          format="{0:D}"
+          width="210px"
+          cell={DatePickerCell}
+        />
+        <GridColumn field="age" title="Age" editable={false} />
+        <GridColumn cell={command} title="Command" width="220px" />
+      </Grid>
+    </>
   );
 }

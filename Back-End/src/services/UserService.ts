@@ -17,7 +17,6 @@ export const createUserService = async (user: DeepPartial<UserType>) => {
     await userRepository.save(userRepository.create(user as any));
     return user;
   } catch (err) {
-    console.log(err);
     return { err: 'New user adding failed into the database' };
   }
 };
@@ -26,12 +25,11 @@ export const createUserService = async (user: DeepPartial<UserType>) => {
 
 export const loginService = async (email: string, password: string) => {
   try {
-    // localStorage.setItem('email', email);
     const userRepository = dataSource.getRepository(User);
     const userFound = await userRepository.findOneBy({ email: email });
     if (userFound) {
       const isMatch = bcrypt.compare(password, userFound.password);
-      return isMatch;
+      return { isMatch, userFound };
     }
   } catch (err) {
     console.log(err);
