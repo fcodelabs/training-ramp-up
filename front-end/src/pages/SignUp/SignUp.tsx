@@ -24,15 +24,15 @@ import { User } from '../../utils/interface'
 const SignUp: React.FC = () => {
   const isAdd = useSelector((state: any) => state.user.isAdd)
 
-  const [userName, setUserName] = useState('Risi')
+  const [userName, setUserName] = useState('')
 
-  const [email, setEmail] = useState('risi@gmail.com')
+  const [email, setEmail] = useState('')
 
-  const [password, setPassword] = useState('risi123.')
+  const [password, setPassword] = useState('')
 
-  const [confirmPassword, setConfirmPassword] = useState('risi123.')
+  const [confirmPassword, setConfirmPassword] = useState('')
 
-  const [role, setRole] = useState('Guest')
+  const [role, setRole] = useState('')
 
   const [userNameError, setUserNameError] = useState('')
 

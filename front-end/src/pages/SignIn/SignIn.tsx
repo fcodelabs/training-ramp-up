@@ -23,9 +23,9 @@ const SignIn: React.FC = () => {
 
   const loggedin = useSelector((state: any) => state.user.loggedin)
 
-  const [email, setEmail] = useState('risini123@gmail.com')
+  const [email, setEmail] = useState('')
 
-  const [password, setPassword] = useState('Risini123.')
+  const [password, setPassword] = useState('')
 
   const [emailError, setEmailError] = useState('')
 
