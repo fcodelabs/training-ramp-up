@@ -5,11 +5,10 @@ import {
   addUser,
   setError,
   setAddStatus,
-  refreshUser,
   unSetUser,
-  setAccessToken
+  logoutUser
 } from '../slices/UserSlice'
-import { getAUser, insertUser, refreshUserToken } from '../services/UserOperations'
+import { getAUser, insertUser, logoutUserSession } from '../services/UserOperations'
 import { AnyAction } from '@reduxjs/toolkit'
 import { ResponseGenerator } from '../utils/interface'
 
@@ -17,7 +16,7 @@ function * findUser (action: AnyAction) {
   try {
     const response: ResponseGenerator = yield call(getAUser, action.payload)
     if (response.status === 200) {
-      yield put(setUser(response))
+      yield put(setUser(response.data))
     } else {
       alert(response)
     }
@@ -37,29 +36,38 @@ function * saveUser (action: AnyAction) {
       alert(response)
     }
   } catch (err) {
-    console.error('socket error:', err)
+    console.error('error:', err)
     yield put(setError(err))
   }
 }
 
-function * getNewToken () {
+function * signoutUser (action: AnyAction) {
   try {
-    const accessToken = localStorage.getItem('accessToken') ?? ''
-    const user = localStorage.getItem('email') ?? ''
-    const response: ResponseGenerator = yield call(refreshUserToken, user, accessToken)
+    const response: ResponseGenerator = yield call(logoutUserSession)
     if (response.status === 200) {
-      yield put(setAccessToken(response.headers.accesskey))
-    } else {
       yield put(unSetUser())
     }
   } catch (err) {
-    console.error('socket error:', err)
+    console.error('error:', err)
     yield put(setError(err))
   }
 }
+
+// function * getNewToken () {
+//   try {
+//     const response: ResponseGenerator = yield call(refreshUserToken)
+//     if (response.status === 401) {
+//       yield put(unSetUser())
+//     }
+//   } catch (err) {
+//     console.error('error:', err)
+//     yield put(setError(err))
+//   }
+// }
 
 export function * UserSaga () {
   yield takeEvery(getUser.type, findUser)
   yield takeEvery(addUser.type, saveUser)
-  yield takeEvery(refreshUser.type, getNewToken)
+  yield takeEvery(logoutUser.type, signoutUser)
+  // yield takeEvery(refreshUser.type, getNewToken)
 }

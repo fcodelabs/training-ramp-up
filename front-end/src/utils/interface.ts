@@ -1,3 +1,5 @@
+import { AxiosRequestTransformer, AxiosResponseTransformer, Method } from 'axios'
+
 export default interface Person {
   id: number
   name: string
@@ -24,13 +26,32 @@ export interface ResponseGenerator {
   request?: any
   status?: number
   statusText?: string
+  payload?: any
 }
 
 export interface User {
   id?: number
-  userName?: string
+  userName: string
   email: string
-  role?: string
+  role: string
   password?: string
   confirmPassword?: string
+}
+
+export interface AxiosRequestConfig {
+  url?: string
+  method?: Method
+  data?: any
+  headers?: any
+  baseURL?: string
+  transformRequest?: AxiosRequestTransformer
+  transformResponse?: AxiosResponseTransformer
+  params?: any
+  paramSerializer?: (params: any) => string
+  timeout?: number
+  withCredentials?: boolean
+}
+
+export interface PropType {
+  component: React.FC
 }

@@ -1,6 +1,6 @@
 /* eslint-disable object-shorthand */
 import bg from './signUpBg.jpg'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   Button,
   TextField,
@@ -10,7 +10,9 @@ import {
   InputLabel,
   FormControl,
   FormHelperText,
-  Grid
+  Grid,
+  Select,
+  MenuItem
 } from '@mui/material'
 import Visibility from '@mui/icons-material/Visibility'
 import VisibilityOff from '@mui/icons-material/VisibilityOff'
@@ -22,13 +24,15 @@ import { User } from '../../utils/interface'
 const SignUp: React.FC = () => {
   const isAdd = useSelector((state: any) => state.user.isAdd)
 
-  const [userName, setUserName] = useState('')
+  const [userName, setUserName] = useState('Risi')
 
-  const [email, setEmail] = useState('')
+  const [email, setEmail] = useState('risi@gmail.com')
 
-  const [password, setPassword] = useState('')
+  const [password, setPassword] = useState('risi123.')
 
-  const [confirmPassword, setConfirmPassword] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('risi123.')
+
+  const [role, setRole] = useState('Guest')
 
   const [userNameError, setUserNameError] = useState('')
 
@@ -37,6 +41,8 @@ const SignUp: React.FC = () => {
   const [passwordError, setPasswordError] = useState('')
 
   const [confirmPasswordError, setConfirmPasswordError] = useState('')
+
+  const [roleError, setRoleError] = useState('')
 
   const [showPassword1, setShowPassword1] = useState(false)
 
@@ -82,8 +88,19 @@ const SignUp: React.FC = () => {
       setConfirmPasswordError('Password does not match')
       valid = false
     }
+    if (role === '') {
+      setRoleError('Select your role')
+      valid = false
+    }
     return valid
   }
+
+  useEffect(() => {
+    if (isAdd === true) {
+      navigate('/')
+      dispatch(setAddStatus(false))
+    }
+  }, [isAdd])
 
   return (
     <Grid
@@ -177,6 +194,34 @@ const SignUp: React.FC = () => {
                 marginBottom: '10px'
               }}
             />
+            <FormControl>
+              <InputLabel
+                htmlFor="outlined-role"
+                style={{ color: roleError !== '' ? '#d32f2f' : '' }}
+              >
+                Role
+              </InputLabel>
+              <Select
+                labelId="select-label"
+                id="simple-select"
+                value={role}
+                label="Role"
+                onChange={(e) => {
+                  setRole(e.target.value)
+                }}
+                error={roleError !== ''}
+                style={{
+                  width: '420px',
+                  backgroundColor: 'white'
+                }}
+              >
+                <MenuItem value={'Admin'}>Admin</MenuItem>
+                <MenuItem value={'Guest'}>Guest</MenuItem>
+              </Select>
+              <FormHelperText error id="role-error">
+                {roleError}
+              </FormHelperText>
+            </FormControl>
             <FormControl variant="outlined">
               <InputLabel
                 htmlFor="outlined-adornment-password"
@@ -195,7 +240,9 @@ const SignUp: React.FC = () => {
                 error={passwordError !== ''}
                 style={{
                   width: '420px',
-                  backgroundColor: 'white'
+                  backgroundColor: 'white',
+                  marginTop: '10px'
+
                 }}
                 endAdornment={
                   <InputAdornment position="end">
@@ -263,11 +310,13 @@ const SignUp: React.FC = () => {
                     userName: userName,
                     email: email,
                     password: password,
-                    confirmPassword: confirmPassword
+                    confirmPassword: confirmPassword,
+                    role: role
                   }
                   dispatch(addUser(newUser))
-                  if (isAdd === true) navigate('/')
-                  dispatch(setAddStatus(false))
+                  if (isAdd === true) {
+                    navigate('/')
+                  }
                 }
               }}
               style={{

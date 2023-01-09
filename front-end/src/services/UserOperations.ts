@@ -1,19 +1,25 @@
 import axios from 'axios'
 import { User } from '../utils/interface'
+import axiosInstance from './api'
 
-const baseURL: string = 'http://localhost:8000'
+const baseURL: string = 'http://localhost:8000/user'
 
 export const getAUser = async (user: User) => {
-  const response = await axios.post(baseURL + '/user/signin', user)
+  const response = await axios.post(baseURL + '/signin', user, { withCredentials: true })
   return response
 }
 
 export const insertUser = async (user: User) => {
-  const response = await axios.post(baseURL + '/user/signup', user)
+  const response = await axios.post(baseURL + '/signup', user)
   return response
 }
 
-export const refreshUserToken = async (email: string, refreshToken: string) => {
-  const response = await axios.post(baseURL + '/user/refresh', email, { headers: { authorization: refreshToken } })
+export const logoutUserSession = async () => {
+  const response = await axiosInstance.post(baseURL + '/signout')
   return response
 }
+
+// export const refreshUserToken = async () => {
+//   const response = await axios.post(baseURL + '/refresh', { withCredentials: true })
+//   return response
+// }

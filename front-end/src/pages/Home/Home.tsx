@@ -4,20 +4,20 @@ import { useNavigate } from 'react-router-dom'
 import { Button, Grid } from '@mui/material'
 import PersonTableView from '../../Component/PersonTableView/PersonTableView'
 import LogoutIcon from '@mui/icons-material/Logout'
-import { unSetUser } from '../../slices/UserSlice'
+import { logoutUser } from '../../slices/UserSlice'
 
 const Home: React.FC = () => {
   const navigate = useNavigate()
 
   const dispatch = useDispatch()
 
-  const accessToken = useSelector((state: any) => state.user.accessToken)
+  const loggedin = useSelector((state: any) => state.user.loggedin)
 
   useEffect(() => {
-    if (accessToken === null) {
+    if (loggedin === 'false') {
       navigate('/')
     }
-  }, [accessToken])
+  }, [loggedin])
 
   return (
     <Grid
@@ -49,7 +49,7 @@ const Home: React.FC = () => {
             boxShadow: '1px 2px 2px 1px rgba(0, 0, 0, 0.16)'
           }}
           onClick={() => {
-            dispatch(unSetUser())
+            dispatch(logoutUser())
             // navigate('/')
           }}
           endIcon={<LogoutIcon />}

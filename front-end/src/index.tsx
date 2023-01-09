@@ -6,6 +6,7 @@ import reportWebVitals from './reportWebVitals'
 import { store } from './store'
 import { Provider } from 'react-redux'
 import { io } from 'socket.io-client'
+// import setupInterceptors from './services/setupInterceptors'
 
 const socket = io('http://localhost:8000/', {
   transports: ['websocket']
@@ -27,6 +28,8 @@ root.render(
     </Provider>
   </React.StrictMode>
 )
+
+// setupInterceptors(store)
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))

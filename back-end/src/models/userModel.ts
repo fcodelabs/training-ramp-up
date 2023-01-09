@@ -7,10 +7,13 @@ export default interface UserModel {
   role: string
 }
 
-export interface JwtPayload {
+export interface JwtPayloadUser {
   id?: number
   userName: string
   email: string
   password: string
   role: string
+}
+export interface JwtPayload {
+  user: JwtPayloadUser
 }

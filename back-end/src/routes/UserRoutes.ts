@@ -1,14 +1,17 @@
 import express from 'express'
 import {
   getUser,
-  addUser
+  addUser,
+  signoutUser
 } from '../controllers/UserController'
 import { refreshUser } from '../services/AuthService'
 
-const StudentRoute = express.Router()
+const UserRoutes = express.Router()
 
-StudentRoute.post('/signin', getUser)
-StudentRoute.post('/signup', addUser)
-StudentRoute.post('/refresh', refreshUser)
+UserRoutes.post('/signin', getUser)
+UserRoutes.post('/signup', addUser)
+UserRoutes.post('/signout', signoutUser)
+UserRoutes.post('/refresh', refreshUser)
+// authService(['Admin', 'Guest'])
 
-export default StudentRoute
+export default UserRoutes

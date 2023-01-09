@@ -2,7 +2,7 @@ import * as React from 'react'
 import '@progress/kendo-theme-default/dist/all.css'
 
 const CommandCell = (props: any) => {
-  const { gridCellProps, edit, remove, add, discard, update, cancel } = props
+  const { gridCellProps, role, edit, remove, add, discard, update, cancel } = props
   const inEdit: boolean = gridCellProps.dataItem.inEdit
   const isNewItem: boolean = gridCellProps.dataItem.id === 0
 
@@ -35,12 +35,13 @@ const CommandCell = (props: any) => {
     <td className="k-command-cell">
       <button
         className="k-button k-button-md k-rounded-md k-button-solid k-button-solid-primary k-grid-edit-command"
-        onClick={() => edit(gridCellProps.dataItem)}
+        onClick={() => edit(gridCellProps.dataItem)} disabled = {role === 'Guest'}
       >
         Edit
       </button>
       <button
         className="k-button k-button-md k-rounded-md k-button-solid k-button-solid-base k-grid-remove-command"
+        disabled = {role === 'Guest'}
         onClick={() => {
           const confirmStatus: boolean = confirm(
             `Do you want to remove ${String(

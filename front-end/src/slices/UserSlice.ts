@@ -1,9 +1,11 @@
+/* eslint-disable @typescript-eslint/no-unused-expressions */
 import { createSlice } from '@reduxjs/toolkit'
 
 const initialState = {
-  user: [],
-  accessToken: localStorage.getItem('accessToken'),
-  refreshToken: localStorage.getItem('refreshToken'),
+  // user: JSON.parse(localStorage.getItem('user') ?? ''),
+  email: localStorage.getItem('email') ?? '',
+  role: localStorage.getItem('role') ?? '',
+  loggedin: localStorage.getItem('loggedin') ?? 'false',
   isAdd: false,
   error: ''
 }
@@ -13,34 +15,31 @@ export const UserSlice: any = createSlice({
   initialState,
   reducers: {
     setUser: (state, action) => {
-      state.user = action.payload.data
-      localStorage.setItem('email', action.payload.data.email)
-      state.accessToken = action.payload.headers.accesskey
-      localStorage.setItem('accessToken', action.payload.headers.accesskey)
-      state.refreshToken = action.payload.headers.accesskey
-      localStorage.setItem('refreshToken', action.payload.headers.refreshkey)
+      state.email = action.payload.email
+      localStorage.setItem('email', action.payload.email)
+      state.role = action.payload.role
+      localStorage.setItem('role', action.payload.role)
+      state.loggedin = 'true'
+      localStorage.setItem('loggedin', 'true')
     },
     getUser: (state, action) => {},
     addUser: (state, action) => {},
+    logoutUser: (state, action) => {},
     unSetUser: (state) => {
-      state.user = []
+      state.email = ''
       localStorage.removeItem('email')
-      state.accessToken = null
-      localStorage.removeItem('accessToken')
-      state.refreshToken = null
-      localStorage.removeItem('refreshToken')
+      state.role = ''
+      localStorage.removeItem('role')
+      state.loggedin = 'false'
+      localStorage.removeItem('loggedin')
     },
     setError: (state, action) => {
       state.error = action.payload
     },
     setAddStatus: (state, action) => {
       state.isAdd = action.payload
-    },
-    refreshUser: (state) => {},
-    setAccessToken: (state, action) => {
-      state.accessToken = action.payload
-      localStorage.setItem('accessToken', action.payload)
     }
+    // refreshUser: (state) => {}
   }
 })
 
@@ -51,8 +50,8 @@ export const {
   unSetUser,
   setError,
   setAddStatus,
-  refreshUser,
-  setAccessToken
+  // refreshUser,
+  logoutUser
 } = UserSlice.actions
 
 export default UserSlice.reducer

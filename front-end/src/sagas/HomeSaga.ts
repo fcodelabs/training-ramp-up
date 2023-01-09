@@ -15,21 +15,22 @@ import {
 } from '../services/PersonTableViewOperations'
 import { AnyAction } from '@reduxjs/toolkit'
 import { ResponseGenerator } from '../utils/interface'
-import { refreshUser } from '../slices/UserSlice'
-
-const accessToken = localStorage.getItem('accessToken') ?? ''
+// import { getUserState } from '../slices/UserSlice'
 
 function * getStudents () {
   try {
-    const response: ResponseGenerator = yield call(getPersons, accessToken)
+    // const user: ResponseGenerator = yield select(getUserState)
+    // const accessToken = user.payload.user.accessToken
+    const response: ResponseGenerator = yield call(getPersons)
     if (response.status === 200) {
-      yield put(setAllStudents(response))
+      yield put(setAllStudents(response.data))
     } else if (response.status === 401) {
       alert(response)
-    } else {
-      yield put(refreshUser())
-      yield put(getAllStudents())
     }
+    // else {
+    //   yield put(refreshUser())
+    //   yield put(getAllStudents())
+    // }
   } catch (err) {
     console.error('error:', err)
     yield put(setError(err))
@@ -38,15 +39,18 @@ function * getStudents () {
 
 function * saveStudent (action: AnyAction) {
   try {
-    const response: ResponseGenerator = yield call(insertPerson, action.payload, accessToken)
+    // const user: ResponseGenerator = yield select(getUserState)
+    // const accessToken = user.payload.user.accessToken
+    const response: ResponseGenerator = yield call(insertPerson, action.payload)
     if (response.status === 201) {
       yield put(getAllStudents())
     } else if (response.status === 401) {
       alert(response)
-    } else {
-      yield put(refreshUser())
-      yield put(addStudent(action.payload))
     }
+    // else {
+    //   yield put(refreshUser())
+    //   yield put(addStudent(action.payload))
+    // }
   } catch (err) {
     console.error('socket error:', err)
     yield put(setError(err))
@@ -55,15 +59,18 @@ function * saveStudent (action: AnyAction) {
 
 function * updateStudent (action: AnyAction) {
   try {
-    const response: ResponseGenerator = yield call(updatePerson, action.payload, accessToken)
+    // const user: ResponseGenerator = yield select(getUserState)
+    // const accessToken = user.payload.user.accessToken
+    const response: ResponseGenerator = yield call(updatePerson, action.payload)
     if (response.status === 200) {
       yield put(getAllStudents())
     } else if (response.status === 401) {
       alert(response)
-    } else {
-      yield put(refreshUser())
-      yield put(editStudent(action.payload))
     }
+    // else {
+    //   yield put(refreshUser())
+    //   yield put(editStudent(action.payload))
+    // }
   } catch (err) {
     console.error('socket error:', err)
     yield put(setError(err))
@@ -72,15 +79,18 @@ function * updateStudent (action: AnyAction) {
 
 function * deleteStudent (action: AnyAction) {
   try {
-    const response: ResponseGenerator = yield call(deletePerson, action.payload, accessToken)
+    // const user: ResponseGenerator = yield select(getUserState)
+    // const accessToken = user.payload.user.accessToken
+    const response: ResponseGenerator = yield call(deletePerson, action.payload)
     if (response.status === 200) {
       yield put(getAllStudents())
     } else if (response.status === 401) {
       alert(response)
-    } else {
-      yield put(refreshUser())
-      yield put(removeStudent(action.payload))
     }
+    // else {
+    //   yield put(refreshUser())
+    //   yield put(removeStudent(action.payload))
+    // }
   } catch (err) {
     console.error('socket error:', err)
     yield put(setError(err))

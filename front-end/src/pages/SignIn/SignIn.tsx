@@ -21,11 +21,11 @@ import { getUser } from '../../slices/UserSlice'
 const SignIn: React.FC = () => {
   const dispatch = useDispatch()
 
-  const accessToken = useSelector((state: any) => state.user.accessToken)
+  const loggedin = useSelector((state: any) => state.user.loggedin)
 
-  const [email, setEmail] = useState('risinni@gmail.com')
+  const [email, setEmail] = useState('risini123@gmail.com')
 
-  const [password, setPassword] = useState('Risini123')
+  const [password, setPassword] = useState('Risini123.')
 
   const [emailError, setEmailError] = useState('')
 
@@ -44,10 +44,10 @@ const SignIn: React.FC = () => {
   const navigate = useNavigate()
 
   useEffect(() => {
-    if (accessToken !== null) {
+    if (loggedin === 'true') {
       navigate('/home')
     }
-  }, [accessToken])
+  }, [loggedin])
 
   const validate = () => {
     let valid: boolean = true

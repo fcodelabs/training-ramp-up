@@ -29,6 +29,9 @@ const validate = (user: UserModel) => {
   if (!validConfirmPw) {
     return false
   }
+  if (user.role === '') {
+    return false
+  }
   return true
 }
 
@@ -36,12 +39,13 @@ export const getUser = async (req: Request, res: Response) => {
   try {
     const user: any = await getUserService(req.body)
     if (user !== null && user !== undefined) {
-      const accessToken = JWT.sign({ id: user.id, userName: user.userName, email: user.email, role: user.role },
+      const accessToken = JWT.sign({ user },
         accesssecret, { expiresIn: '2m' })
-      const refreshToken = JWT.sign({ id: user.id, userName: user.userName, email: user.email, role: user.role },
+      const refreshToken = JWT.sign({ user },
         refreshsecret, { expiresIn: '20m' })
-      res.set('accesskey', accessToken)
-      res.set('refreshkey', refreshToken)
+      res.cookie('accessToken', accessToken, { maxAge: 1000 * 60 * 2, httpOnly: true })
+      res.cookie('refreshToken', refreshToken, { maxAge: 1000 * 60 * 20, httpOnly: true })
+      res.cookie('user', user, { maxAge: 1000 * 60 * 20, httpOnly: false })
       res.status(200).send(user)
       return
     }
@@ -64,6 +68,17 @@ export const addUser = async (req: Request, res: Response) => {
     } else {
       return res.status(401).send('Can not add student. Enter Valid Data')
     }
+  } catch (err) {
+    res.send(`Error: ${err}`)
+  }
+}
+
+export const signoutUser = async (req: Request, res: Response) => {
+  try {
+    res.cookie('accessToken', '', { maxAge: -1, httpOnly: true })
+    res.cookie('refreshToken', '', { maxAge: -1, httpOnly: true })
+    res.cookie('user', '', { maxAge: -1, httpOnly: false })
+    res.status(200).send('User Logged out')
   } catch (err) {
     res.send(`Error: ${err}`)
   }

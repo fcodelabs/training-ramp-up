@@ -22,6 +22,8 @@ import {
 import Person, { UpdatedPerson } from '../../utils/interface'
 
 const PersonTableView = () => {
+  const role = useSelector((state: any) => state.user.role)
+
   const students = useSelector((state: any) => state.students.students)
   // const error = useSelector((state: any) => state.students.error)
   const editField: string = 'inEdit'
@@ -145,6 +147,7 @@ const PersonTableView = () => {
   const command = (props: GridCellProps): any => (
     <CommandCell
       gridCellProps={props}
+      role={role}
       edit={(p: Person) => {
         enterEdit(p)
       }}
@@ -231,10 +234,8 @@ const PersonTableView = () => {
       editField={editField}
     >
       <GridToolbar>
-        <Button
-          title="Add New"
-          className="k-button k-button-md k-rounded-md k-button-solid k-button-solid-secondary"
-          onClick={addNew}
+        <Button title="Add New" className="k-button k-button-md k-rounded-md k-button-solid k-button-solid-secondary"
+          onClick={addNew} disabled = {role === 'Guest'}
         >
           Add New
         </Button>
