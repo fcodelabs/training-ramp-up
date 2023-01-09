@@ -1,7 +1,7 @@
 import Person from '../utils/interface'
-import axiosInstance from './api'
+import axiosInstance from './setupInterceptors'
 
-const baseURL = 'http://localhost:8000/student'
+const baseURL = '/student'
 
 export const getPersons = async () => {
   const response = await axiosInstance.get(baseURL + '/get')

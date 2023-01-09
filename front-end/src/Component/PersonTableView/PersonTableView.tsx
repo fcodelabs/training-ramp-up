@@ -25,7 +25,6 @@ const PersonTableView = () => {
   const role = useSelector((state: any) => state.user.role)
 
   const students = useSelector((state: any) => state.students.students)
-  // const error = useSelector((state: any) => state.students.error)
   const editField: string = 'inEdit'
 
   const dispatch = useDispatch()
@@ -234,8 +233,11 @@ const PersonTableView = () => {
       editField={editField}
     >
       <GridToolbar>
-        <Button title="Add New" className="k-button k-button-md k-rounded-md k-button-solid k-button-solid-secondary"
-          onClick={addNew} disabled = {role === 'Guest'}
+        <Button
+          title="Add New"
+          className="k-button k-button-md k-rounded-md k-button-solid k-button-solid-secondary"
+          onClick={addNew}
+          disabled={role === 'Guest'}
         >
           Add New
         </Button>
@@ -263,7 +265,7 @@ const PersonTableView = () => {
         editor="date"
       />
       <GridColumn title="Age" width="108px" editable={false} cell={calAge} />
-      <GridColumn title="command" width="170px" cell={command} />
+      <GridColumn title="Command" width="170px" cell={command} />
     </Grid>
   )
 }

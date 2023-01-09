@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { User } from '../utils/interface'
-import axiosInstance from './api'
+import axiosInstance from './setupInterceptors'
 
 const baseURL: string = 'http://localhost:8000/user'
 
@@ -15,7 +15,7 @@ export const insertUser = async (user: User) => {
 }
 
 export const logoutUserSession = async () => {
-  const response = await axiosInstance.post(baseURL + '/signout')
+  const response = await axiosInstance.post('/user/signout')
   return response
 }
 
