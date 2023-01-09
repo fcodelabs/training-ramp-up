@@ -16,6 +16,7 @@ export const userSlice = createSlice({
     setUserDetails: (state, action) => {
       state.userDetail = action.payload;
     },
+    refreshFunction:()=>{},
   },
 });
 
@@ -25,6 +26,7 @@ export const {
   saveUserAction,
   logOutUserAction,
   setUserDetails,
+  refreshFunction,
 } = userSlice.actions;
 
 export const selectUser = (state:any) => state.userReducer.user;

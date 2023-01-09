@@ -18,12 +18,13 @@ import {
   updateStudentAction,
   deleteStudentAction,
 } from './studentSlice';
-import { logOutUserAction } from '../SignInPage/SignInSlice';
+import { logOutUserAction, refreshFunction } from '../SignInPage/SignInSlice';
 import { checkValidation } from '../../utils/validation';
 
 const editField: string = 'inEdit';
 
 const dataGrid = () => {
+  const user3 = useSelector((state: any) => state.signIn.user);
   const [user, setuser] = useState<StudentModel[]>([]);
   const selectStudent = useSelector((state: any) => state.studentSlice.student);
   const user2 = useSelector((state: any) => state.signIn.user);
@@ -39,6 +40,11 @@ const dataGrid = () => {
 
   useEffect(() => {
     dispatch(getStudentAction());
+  }, []);
+  useEffect(() => {
+    dispatch(refreshFunction());
+    console.log('user3');
+    console.log(user3);
   }, []);
 
   useEffect(() => {

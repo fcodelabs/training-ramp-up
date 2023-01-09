@@ -16,7 +16,8 @@ import {
 } from '../../services/StudentServices';
 // import { newAccessTokenService } from '../../services/userServices';
 import { StudentModel } from '../../utils/interfaces';
-import { setUserDetails } from '../SignInPage/SignInSlice';
+import { setUserDetails,saveUserAction } from '../SignInPage/SignInSlice';
+
 const cookies = new Cookies();
 
 export default function* studentSaga() {
@@ -29,6 +30,7 @@ export function* getStudent(): any {
   try {
     const response: StudentModel = yield call(getStudentService);
     const userDataCookie = cookies.get('userData');
+    console.log(userDataCookie);
     yield put(saveStudentAction(response.data));
     yield put(
       setUserDetails({
@@ -36,6 +38,7 @@ export function* getStudent(): any {
         name: userDataCookie.name,
       })
     );
+    yield put(saveUserAction(true));
   } catch (error) {
     console.log(error);
   }

@@ -85,7 +85,7 @@ export const logout = async (req: Request, res: Response) => {
     res.cookie('userData', '', {
       maxAge: -1,
       httpOnly: true,
-    });
+    }); 
     res.status(200).json({
       status: 'Successfully logged out',
     });

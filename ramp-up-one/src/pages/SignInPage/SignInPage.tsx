@@ -25,6 +25,7 @@ const SignInPage = () => {
     if (user === true) {
       navigate('/Home');
     }
+    console.log(user);
   });
 
   function checkInputValidation(dataItem: LoginDetails) {

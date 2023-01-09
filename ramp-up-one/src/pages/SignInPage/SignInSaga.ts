@@ -6,9 +6,10 @@ import {
   logOutUserAction,
   setUserDetails,
   registerUserAction,
+  refreshFunction,
 } from './SignInSlice';
 
-import Cookies from 'universal-cookie';
+
 import { LoginDetails } from '../../utils/interfaces';
 import {
   getUserService,
@@ -16,12 +17,14 @@ import {
   getUserDetails,
   insertUserService,
 } from '../../services/userServices';
+import Cookies from 'universal-cookie';
 const cookies = new Cookies();
 
 export function* SignInSaga() {
   yield takeEvery(loginUserAction, loginUser);
   yield takeEvery(logOutUserAction, logOutUser);
   yield takeEvery(registerUserAction, registerUser);
+  yield takeEvery(refreshFunction, refreshAction);
 }
 function* loginUser(action: AnyAction): any {
   try {
@@ -82,4 +85,9 @@ function* registerUser(action: AnyAction): any {
   } catch (error) {
     console.log(error);
   }
+}
+
+
+function* refreshAction ():any {
+  yield put(saveUserAction(true));
 }
