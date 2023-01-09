@@ -51,7 +51,8 @@ const SignInPage = () => {
     return fieldStatus;
   }
   function logInFunction() {
-    const loginPerson = { email, password, pageName };
+    const loginPerson = { email, password, pageName, navigate };
+    
     if (checkInputValidation(loginPerson)) {
       dispatch(loginUserAction(loginPerson));
     }

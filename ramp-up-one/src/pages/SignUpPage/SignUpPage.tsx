@@ -7,7 +7,7 @@ import Button from '@mui/material/Button';
 import { useNavigate } from 'react-router-dom';
 import { LoginDetails } from '../../utils/interfaces';
 import { useDispatch, useSelector } from 'react-redux';
-import { registerUserAction } from './SignUpSlice';
+import { registerUserAction } from '../SignInPage/SignInSlice';
 
 const SignUpPage = () => {
   const [emailError, setEmailError] = React.useState('');
@@ -17,19 +17,26 @@ const SignUpPage = () => {
   const [email, setEmail] = React.useState('');
   const [name, setName] = React.useState('');
   const [password, setPassword] = React.useState('');
-  const pageName = 'signUpPage';
-  const user = useSelector((state: any) => state.signUp.user);
+  const userRoll = 'User';
+  const user = useSelector((state: any) => state.signIn.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  
+
   React.useEffect(() => {
     if (user === true) {
       navigate('/Home');
     }
   });
-  const openSignInPage= () => {
+  const openSignInPage = () => {
     navigate('/');
   };
+
+  function SignUpFunction() {
+    const loginPerson = { email, name, password, userRoll };
+    if (checkInputValidation(loginPerson)) {
+      dispatch(registerUserAction(loginPerson));
+    }
+  }
   function checkInputValidation(dataItem: LoginDetails) {
     const email = /^[A-z2-9]+@[A-z2-9]+\.[A-z2-9]+$/;
     const name = /^[A-z]{2,20}$/;
@@ -62,19 +69,13 @@ const SignUpPage = () => {
 
     return fieldStatus;
   }
-  function SignUpFunction(){
-    const loginPerson = { email, name, password, pageName };
-    if (checkInputValidation(loginPerson)) {
-      dispatch(registerUserAction(loginPerson));
-    }
-  }
   function checkValidation(field: string, value: string) {
     const email = /^[A-z2-9]+@[A-z2-9]+\.[A-z2-9]+$/;
     const name = /^[A-z]{2,20}$/;
     const password = /^[A-z,0-9 _]{4,10}$/;
     switch (field) {
     case 'Email':
-      if ( email.test(value)) {
+      if (email.test(value)) {
         setEmailError('');
         setEmail(value);
       } else {
@@ -94,7 +95,7 @@ const SignUpPage = () => {
       break;
 
     case 'Password':
-      if ( password.test(value)) {
+      if (password.test(value)) {
         setpasswordError('');
         setPassword(value);
       } else {
@@ -105,7 +106,7 @@ const SignUpPage = () => {
     }
   }
 
-  return (
+  return ( 
     <div>
       <Box sx={{ flexGrow: 1 }}>
         <Grid style={{ overflow: 'hidden' }} container spacing={2} columns={16}>

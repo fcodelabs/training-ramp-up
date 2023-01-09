@@ -4,27 +4,40 @@ import {
   loginUserAction,
   saveUserAction,
   logOutUserAction,
+  setUserDetails,
+  registerUserAction,
 } from './SignInSlice';
 
 import Cookies from 'universal-cookie';
 import { LoginDetails } from '../../utils/interfaces';
-import { getUserService, logoutUserService } from '../../services/userServices';
+import {
+  getUserService,
+  logoutUserService,
+  getUserDetails,
+  insertUserService,
+} from '../../services/userServices';
 const cookies = new Cookies();
 
 export function* SignInSaga() {
   yield takeEvery(loginUserAction, loginUser);
   yield takeEvery(logOutUserAction, logOutUser);
+  yield takeEvery(registerUserAction, registerUser);
 }
-function* loginUser(action: AnyAction):any {
-  console.log('second');
+function* loginUser(action: AnyAction): any {
   try {
     const response: LoginDetails = yield call(getUserService, action.payload);
-    console.log(response);
     if (response.data) {
-      const userData = cookies.get('refreshToken');
+      const userData: LoginDetails = yield call(getUserDetails);
       console.log(userData);
+
+      const userDataCookie = cookies.get('userData');
       yield put(saveUserAction(true));
-      
+      yield put(
+        setUserDetails({
+          userRoll: userDataCookie.userRoll,
+          name: userDataCookie.name,
+        })
+      );
     } else {
       alert('can not find user,check email & password..!');
     }
@@ -33,19 +46,39 @@ function* loginUser(action: AnyAction):any {
   }
 }
 
-
 function* logOutUser(): any {
-  console.log('second');
   try {
     const response: any = yield call(logoutUserService);
-    console.log(response);
-    if (response) {
+    if (response.status === 200) {
       yield put(saveUserAction(false));
-    } else {
-      alert('Your Session is Expired');
-      yield put(saveUserAction(false));
+      yield put(setUserDetails([]));
     }
-    
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+function* registerUser(action: AnyAction): any {
+  try {
+    const response: LoginDetails = yield call(
+      insertUserService,
+      action.payload
+    );
+    if (response.data) {
+      const userData: LoginDetails = yield call(getUserDetails);
+      console.log(userData);
+
+      const userDataCookie = cookies.get('userData');
+      yield put(saveUserAction(true));
+      yield put(
+        setUserDetails({
+          userRoll: userDataCookie.userRoll,
+          name: userDataCookie.name,
+        })
+      );
+    } else {
+      alert('User Already Exists!');
+    }
   } catch (error) {
     console.log(error);
   }

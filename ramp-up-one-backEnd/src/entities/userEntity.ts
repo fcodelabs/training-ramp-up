@@ -12,5 +12,8 @@ export class User extends BaseEntity {
     name!: string;
 
   @Column()
-    password!: string;
+    password!: string; 
+
+  @Column()
+    userRoll!: string;
 }

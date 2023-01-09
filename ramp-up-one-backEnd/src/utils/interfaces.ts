@@ -13,4 +13,5 @@ export interface UserModel {
   name: string;
   password: string;
   pageName: string;
+  userRoll: string;
 }

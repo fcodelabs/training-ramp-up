@@ -20,8 +20,6 @@ socket.on('notification', (data: string) => {
   alert(data);
 });
 
-
-
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );

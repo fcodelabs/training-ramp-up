@@ -18,7 +18,7 @@ import {
   updateStudentAction,
   deleteStudentAction,
 } from './studentSlice';
-import {logOutUserAction} from '../SignInPage/SignInSlice';
+import { logOutUserAction } from '../SignInPage/SignInSlice';
 import { checkValidation } from '../../utils/validation';
 
 const editField: string = 'inEdit';
@@ -27,6 +27,7 @@ const dataGrid = () => {
   const [user, setuser] = useState<StudentModel[]>([]);
   const selectStudent = useSelector((state: any) => state.studentSlice.student);
   const user2 = useSelector((state: any) => state.signIn.user);
+  const userDetails = useSelector((state: any) => state.signIn.userDetail);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [updateField, setupdateField] = React.useState<
@@ -180,6 +181,7 @@ const dataGrid = () => {
       cancel={cancel}
       edit={enterEdit}
       remove={remove}
+      userRoll={userDetails.userRoll}
     />
   );
 
@@ -197,8 +199,18 @@ const dataGrid = () => {
     height: '2rem',
     fontSize: '16px',
     fontWeight: 'bold',
-    left: '80rem'
+    left: '80rem',
   };
+  // const userNameStyle = {
+  //   position: 'relative',
+  //   margin-top: '0rem',
+  //   left: '75rem'
+  // };
+  // const userNameStyle = {
+  //   position:'relative',
+  //   border: '2px solid black',
+  //   left:'75rem'
+  // };
 
   return (
     <>
@@ -210,9 +222,13 @@ const dataGrid = () => {
               style={btnStyle}
               className="k-button k-primary"
               onClick={addNewUserField}
+              disabled={userDetails.userRoll !== 'Admin'}
             >
               Add new
             </button>
+            <h2 style={{ left: '75rem', position: 'relative',top: '-1rem' }}>
+              {userDetails.name}
+            </h2>
             <button
               title="Log Out"
               style={LogOutBtnStyle}

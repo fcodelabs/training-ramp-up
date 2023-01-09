@@ -5,12 +5,12 @@ import {
   updateStudent,
   deleteStudent,
 } from '../controllers/studentController';
-import { authorization } from '../middlewares/checkAuth';
+import { permissions } from '../middlewares/checkAuth';
 const route = express.Router();
-route.get('/', authorization, getAllCustomer);
-route.post('/', authorization, saveStudent);
-route.patch('/', updateStudent);
-route.delete('/:ID', deleteStudent);
+route.get('/', permissions, getAllCustomer);
+route.post('/',permissions, saveStudent);
+route.patch('/',permissions, updateStudent);
+route.delete('/:ID',permissions, deleteStudent);
 
 export default route;
  

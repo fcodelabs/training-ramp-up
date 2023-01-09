@@ -1,5 +1,6 @@
 import { call, put, takeEvery } from 'redux-saga/effects';
 import { AnyAction } from '@reduxjs/toolkit';
+import Cookies from 'universal-cookie';
 import {
   getStudentAction,
   saveStudentAction,
@@ -13,8 +14,10 @@ import {
   updateStudentService,
   deleteStudentService,
 } from '../../services/StudentServices';
-import { newAccessTokenService } from '../../services/userServices';
+// import { newAccessTokenService } from '../../services/userServices';
 import { StudentModel } from '../../utils/interfaces';
+import { setUserDetails } from '../SignInPage/SignInSlice';
+const cookies = new Cookies();
 
 export default function* studentSaga() {
   yield takeEvery(getStudentAction, getStudent);
@@ -22,32 +25,24 @@ export default function* studentSaga() {
   yield takeEvery(updateStudentAction, updateStudent);
   yield takeEvery(deleteStudentAction, deleteStudent);
 }
-export function* getStudent():any {
+export function* getStudent(): any {
   try {
     const response: StudentModel = yield call(getStudentService);
+    const userDataCookie = cookies.get('userData');
     yield put(saveStudentAction(response.data));
+    yield put(
+      setUserDetails({
+        userRoll: userDataCookie.userRoll,
+        name: userDataCookie.name,
+      })
+    );
   } catch (error) {
-
-    try {
-      const authorized: any = yield call(newAccessTokenService);
-      if (authorized) {
-        const response: StudentModel = yield call(getStudentService);
-        yield put(saveStudentAction(response.data));
-      } else {
-        alert('Unauthorized');
-      }
-    } catch (err) {
-      console.log(err);
-    }
-
-
+    console.log(error);
   }
 }
 
-function* saveStudent(action: AnyAction):any {
+function* saveStudent(action: AnyAction): any {
   try {
-
-
     const response: StudentModel = yield call(
       insertStudentService,
       action.payload
@@ -57,34 +52,8 @@ function* saveStudent(action: AnyAction):any {
     } else {
       alert(response.data.message);
     }
-
-
   } catch (error) {
-
-
-    try {
-      const authorized:any = yield call(newAccessTokenService);
-      console.log('authorized', authorized);
-      if (authorized) {
-        const response: StudentModel = yield call(
-          insertStudentService,
-          action.payload
-        );
-        if (response.status === 200) {
-          yield put(getStudentAction());
-        } else {
-          alert(response.data.message);
-        }
-      } else {
-        alert('Unauthorized');
-      }
-
-
-    } catch (err) {
-      console.log(err);
-    }
-
-
+    console.log(error);
   }
 }
 
