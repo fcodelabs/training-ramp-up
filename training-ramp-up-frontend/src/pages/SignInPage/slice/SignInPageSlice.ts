@@ -1,36 +1,30 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 
 import { createSlice } from '@reduxjs/toolkit'
-import { Navigate, useNavigate } from 'react-router-dom'
+import { User } from '../../../utils/interfaces'
 
 interface SignInPageState {
-    username: string
-    validLogIn: boolean
-    signedOut:boolean
+    user: User
+    
 }
 
 // Define the initial state using that type
 const initialState: SignInPageState = {
-    username: '',
-    validLogIn: false,
-    signedOut:false
+    user:{}
+
 }
 
 export const signInSlice = createSlice({
     name: 'signIn',
     initialState,
     reducers: {
-        logIn: (state, action) => {},
+        logIn: (state,action) => {},
         logInSuccess: (state, action) => {
-            state.validLogIn = action.payload
-         
+            state.user=action.payload.singedUser 
         },
-        signOut: (state) => {},
+        signOut: (state,action) => {},
         signOutSuccess: (state) => {
-            state.username = ''
-            state.validLogIn = false
-            state.signedOut = true
-           
+            state.user={}    
         },
     },
 })

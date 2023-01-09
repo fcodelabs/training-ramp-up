@@ -56,12 +56,7 @@ export const requestSignIn = async (
                 httpOnly: true,
             })
 
-            res.cookie('user', payload, {
-                maxAge: 60 * 60 * 24 * 1000,
-                httpOnly: true,
-            })
-
-            res.send({ auth: true })
+            res.send({ auth: true})
         }
     } catch (err) {
         console.log('error')
@@ -83,10 +78,10 @@ export const requestNewAccessToken = async (
         } else {
             
             const payload = jwt.verify(refreshToken, process.env.REFRESH_KEY)
-            const validRefereshToken = (payload as any).id == user.id
             
-            if (validRefereshToken) {
-                const payload = {
+            
+            if (payload) {
+                const content = {
                     id: user.id,
                     name: user.name,
                     role: user.role,
@@ -94,7 +89,7 @@ export const requestNewAccessToken = async (
 
                 const accessKey = process.env.ACCESS_KEY
 
-                const acessToken = jwt.sign(payload, accessKey, {
+                const acessToken = jwt.sign(content, accessKey, {
                     expiresIn: '5m',
                 })
                 res.cookie('accessToken', acessToken, {
@@ -127,7 +122,7 @@ export const requestSignOut = async (
         })
         res.cookie('user', '', {
             maxAge: 0,
-            httpOnly: true,
+            httpOnly: false,
         })
         res.status(200).json({
             logOut: true,
@@ -136,13 +131,25 @@ export const requestSignOut = async (
         res.status(201).send(err.message)
     }
 }
-export const requestGetAllUser = async (
+export const requestUserDetails = async (
     req: Request,
     res: Response
 ): Promise<void> => {
     try {
-        const user = await getUsers()
-        res.status(200).send(user)
+        const payload = jwt.verify(req.cookies.accessToken, process.env.ACCESS_KEY)
+        if(payload){
+          
+            const userKey = process.env.USER_KEY
+            const user = jwt.sign(payload, userKey)
+            res.cookie('user', user, {
+                maxAge: 1000 * 60 * 60 * 24,
+                httpOnly: false,
+            })
+            res.sendStatus(200)
+        }else{
+            res.sendStatus(401)
+        }
+        
     } catch (err) {
         res.status(400).send('Error : ' + err.message)
     }

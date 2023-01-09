@@ -66,7 +66,7 @@ export const addUser = async (input: User): Promise<InsertResult> => {
             name: input.name,
             username: input.username,
             password: password,
-            role: process.env.ROLE,
+            role: process.env.USER_ROLE,
         }
         const res = await appDataSource.manager.insert(User, user)
         return res

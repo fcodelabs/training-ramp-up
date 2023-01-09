@@ -6,13 +6,13 @@ import {
     requestUpdateStudent,
     requestDeleteStudent,
 } from '../controllers/StudentController'
-import { authorization } from '../middleware/auth'
+import { authorization, authPermissions } from '../middleware/auth'
 
 const route = express.Router()
 
 route.get('/', authorization,requestGetAllStudents)
-route.post('/', authorization,requestAddStudent)
-route.patch('/', authorization,requestUpdateStudent)
-route.delete('/:id',authorization, requestDeleteStudent)
+route.post('/', authorization,authPermissions,requestAddStudent)
+route.patch('/', authorization,authPermissions,requestUpdateStudent)
+route.delete('/:id',authorization, authPermissions,requestDeleteStudent)
 
 export default route

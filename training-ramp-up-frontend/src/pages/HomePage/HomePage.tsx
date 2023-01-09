@@ -23,29 +23,32 @@ import { validate } from '../../utils/homePageValidations'
 import { signOut } from '../SignInPage/slice/SignInPageSlice'
 import { Box, Container } from '@mui/material'
 import { useNavigate } from 'react-router-dom'
+import Cookies from 'universal-cookie'
+import jwtDecode from 'jwt-decode'
 
+const cookies = new Cookies()
 
 export default function HomePage() {
     const editField = 'inEdit'
 
     const students = useAppSelector((state) => state.home.students)
-    const signedOut = useAppSelector((state) => state.signIn.signedOut)
-    const dispatch = useAppDispatch()
     const [changedFields, setChangedFields] = React.useState<Array<Person>>([])
-    const navigate=useNavigate()
+    const [disable, setDisabled] = React.useState<boolean>(false)
+
+    const navigate = useNavigate()
+    const dispatch = useAppDispatch()
 
     React.useEffect(() => {
+        const user = cookies.get('user')
+        const decoded:any = jwtDecode(user)
+        const adminUser = decoded.role == 'Admin' ? false : true
+        setDisabled(adminUser)
         dispatch(getStudents())
     }, [])
 
-    React.useEffect(() => {
-        if(signedOut)navigate('/')
-    }, [signedOut])
-
     const handleSignOut = () => {
-        dispatch(signOut())
+        dispatch(signOut({ navigate }))
     }
-
 
     //Add a new row for a new student
     const addNew = () => {
@@ -170,6 +173,7 @@ export default function HomePage() {
             edit={edit}
             update={update}
             cancel={cancel}
+            disable={disable}
         />
     )
 
@@ -178,7 +182,7 @@ export default function HomePage() {
             <Container>
                 <button
                     title="Add new"
-                    style={{margin:'2vh'}}
+                    style={{ margin: '2vh' }}
                     className="k-button k-button-md k-rounded-md k-button-solid k-button-solid-secondary"
                     onClick={handleSignOut}
                 >
@@ -197,6 +201,7 @@ export default function HomePage() {
                         title="Add new"
                         className="k-button k-button-md k-rounded-md k-button-solid k-button-solid-tertiary"
                         onClick={addNew}
+                        disabled={disable}
                     >
                         Add new
                     </button>

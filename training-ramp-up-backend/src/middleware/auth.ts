@@ -10,13 +10,36 @@ export const authorization = (
 ) => {
     const accessToken = req.cookies.accessToken
     if (!accessToken) {
+        
         return res.sendStatus(403)
     } else {
         try {
-            const user = req.cookies.user
-
             const payload = jwt.verify(accessToken, process.env.ACCESS_KEY)
-            if ((payload as any).id == user.id) return next()
+            if (payload) return next()
+        } catch {
+            return res.sendStatus(403)
+        }
+    }
+}
+
+
+export const authPermissions = (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    const user = req.cookies.user
+    if (!user) {
+        return res.sendStatus(403)
+    } else {
+        try {   
+            
+            if(req.method==process.env.GET_REQUEST){
+                return next()
+            }else{
+                const role =user.role 
+                return role == process.env.ADMIN_ROLE ? next():res.sendStatus(401)
+            }
         } catch {
             return res.sendStatus(403)
         }

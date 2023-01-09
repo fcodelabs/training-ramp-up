@@ -6,30 +6,25 @@ import { logIn } from './slice/SignInPageSlice'
 import { useAppDispatch, useAppSelector } from '../../hooks'
 import { validate } from '../../utils/signUpPageValidations'
 import { useNavigate } from 'react-router-dom'
+import { User } from '../../utils/interfaces'
 
 export default function SignUpPage() {
-    const navigate = useNavigate()
+    const navigate=useNavigate()
     const dispatch = useAppDispatch()
-    const validLogIn = useAppSelector((state) => state.signIn.validLogIn)
     const [username, setUsername] = React.useState('')
     const [password, setPassword] = React.useState('')
 
     const handleLogIn = async() => {
-        const user = {
+        const user:User = {
             username: username,
             password: password,
         }
         if (validate(user)) {
-            dispatch(logIn(user))
-           
-        }
-    }
- 
-    React.useEffect(()=>{
-        if(validLogIn){
+            dispatch(logIn({user,navigate}))
             navigate('/home')
         }
-    })
+    }
+
 
     return (
         <Grid className="containerGrid">

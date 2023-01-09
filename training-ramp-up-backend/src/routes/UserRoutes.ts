@@ -6,15 +6,16 @@ import {
     requestSignIn,
     requestSignOut,
     requestNewAccessToken,
+    requestUserDetails,
 } from '../controllers/UserController'
 import { authorization } from '../middleware/auth'
 
 const route = express.Router()
 
 route.post('/', requestSignIn)
-route.get('/', requestGetAllUser)
-route.post('/', requestSignUp)
+route.post('/signUp', requestSignUp)
 route.post('/refresh', requestNewAccessToken)
+route.post('/userDetails',authorization, requestUserDetails)
 route.delete('/', authorization, requestSignOut)
 
 

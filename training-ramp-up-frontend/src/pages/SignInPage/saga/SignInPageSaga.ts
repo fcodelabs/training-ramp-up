@@ -7,32 +7,58 @@ import {
 } from '../slice/SignInPageSlice'
 import axios from 'axios'
 import axiosInstance from '../../../utils/authorization'
+import { NavigateFunction, useNavigate } from 'react-router-dom'
+import Cookies from 'universal-cookie'
+import { User } from '../../../utils/interfaces'
 
-function* handleLogIn(action: any): any {
+const cookies = new Cookies()
+
+function* handleLogIn(action: {payload:{user:User,navigate:NavigateFunction}}): any {
     try {
         const res = yield call(() =>
-            axios.post('http://localhost:4000/user/', {
-                username: action.payload.username,
+            axios.post(
+                'http://localhost:4000/user/',
+                {
+                    username: action.payload.user.username,
 
-                password: action.payload.password,
-            },{withCredentials:true})
+                    password: action.payload.user.password,
+                },
+                { withCredentials: true }
+            )
         )
-        console.log(res.data)
 
-        res.data.auth == true ? yield put(logInSuccess(true)) : alert(res.data)
+        if (res.data.auth) {
+            const user = yield call(() =>
+                axios.post('http://localhost:4000/user/userDetails','', {
+                    withCredentials: true,
+                })
+            )
+            
+
+            yield put(logInSuccess(user))
+            action.payload.navigate('/home')
+        } else {
+            alert('er' + res.data)
+        }
     } catch (error: any) {
-        alert(error)
+        alert('ERR' + error)
     }
 }
 
-function* handleSignOut(action: any): any {
+function* handleSignOut(action: {payload:{navigate:NavigateFunction}}): any {
     try {
         const res = yield call(() =>
             axiosInstance.delete('user/', {
                 withCredentials: true,
             })
         )
-        res.data.logOut == true ? yield put(signOutSuccess()) : alert(res.data)
+        const singedUser = cookies.get('user')
+        if (!singedUser) {
+            yield put(signOutSuccess())
+            action.payload.navigate('/')
+        } else {
+            alert(res.data)
+        }
     } catch (error: any) {
         alert('' + error)
     }
