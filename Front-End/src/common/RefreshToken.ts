@@ -11,11 +11,7 @@ export const RefreshTokenFn = async () => {
   // };
 
   try {
-    console.log("Here refresh1");
     const response = await axios.post(baseURL + "/user/refresh");
-
-    console.log("response", response);
-    console.log("Here refresh");
 
     const { accessToken } = response.data;
 

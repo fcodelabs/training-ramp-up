@@ -5,7 +5,6 @@ import jwt from 'jsonwebtoken';
 export default function RoleCheck(role: Array<string>) {
   // console.log(role);
   return async function (req: Request, res: Response, next: NextFunction) {
-    console.log('role', role);
     try {
       // let token = req.get('Authorization');
       const token = await req.cookies.accessToken;
@@ -19,7 +18,6 @@ export default function RoleCheck(role: Array<string>) {
       const decoded = jwt.verify(token, process.env.JWT_SECRET as string);
       // console.log(decoded);
       const { role: userRole } = decoded as any;
-      console.log('userRole', userRole);
       if (!role.includes(userRole)) {
         return res.status(401).json({
           success: false,

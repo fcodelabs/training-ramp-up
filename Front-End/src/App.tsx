@@ -9,9 +9,9 @@ const App = () => {
     <div>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Datagrid />} />
+          <Route path="/home" element={<Datagrid />} />
           <Route path="/signup" element={<Signup />} />
-          <Route path="/signin" element={<Signin />} />
+          <Route path="/" element={<Signin />} />
         </Routes>
       </BrowserRouter>
     </div>

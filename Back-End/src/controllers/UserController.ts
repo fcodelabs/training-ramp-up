@@ -2,7 +2,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Request, Response } from 'express';
 import { createUserService, loginService } from '../services/UserService';
-import { VerfiyRefreshToken } from '../utils/VerifyRefreshToken';
 import { GenerateTokens } from '../utils/GenerateTokens';
 import jwt from 'jsonwebtoken';
 
@@ -37,15 +36,12 @@ export const loginUser = async (req: Request, res: Response) => {
         httpOnly: true,
         maxAge: 60 * 60 * 24 * 1000,
       });
-
-      res.cookie('user', userData, {
-        httpOnly: true,
-        maxAge: 1000 * 60 * 60,
-      });
+      const userDetails = userData;
 
       res.status(200).json({
         accessToken,
         refreshToken,
+        userDetails,
         success: true,
         message: 'Logged in sucessfully',
       });
@@ -67,20 +63,10 @@ export const loginUser = async (req: Request, res: Response) => {
 
 export const refreshToken = async (req: Request, res: Response) => {
   try {
-    // const { email, refreshToken } = req.body;
-    console.log('Hello req');
-    const email = await req.cookies.user.email;
-    const role = await req.cookies.user.role;
-    console.log('Hello email', email);
-    console.log('Hello role', role);
-    const refreshToken = await req.cookies.refreshToken;
-    const isValid = VerfiyRefreshToken(refreshToken, email);
-    if (!isValid) {
-      return res.status(400).json({
-        success: false,
-        message: 'Invalid refresh token',
-      });
-    }
+    const userData: any = jwt.verify(req.cookies.refreshToken, process.env.REFRESH_TOKEN_SECRET as string);
+
+    const email = userData.email;
+    const role = userData.role;
 
     const payload = { email, role };
     const accessToken = jwt.sign(payload, process.env.JWT_SECRET as string, {
@@ -117,7 +103,7 @@ export const logoutUser = async (req: Request, res: Response) => {
     });
     res.cookie('user', '', {
       maxAge: -1,
-      httpOnly: true,
+      httpOnly: false,
     });
     res.status(200).json({
       message: 'Logged out sucessfully',
@@ -128,5 +114,25 @@ export const logoutUser = async (req: Request, res: Response) => {
     } else {
       res.status(400).send(err);
     }
+  }
+};
+
+export const userDetails = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const payload = jwt.verify(req.cookies.accessToken, process.env.JWT_SECRET as string);
+    if (payload) {
+      const userKey: any = process.env.USER_KEY;
+      const user = jwt.sign(payload, userKey);
+      res.cookie('user', user, {
+        maxAge: 1000 * 60 * 60 * 24,
+        httpOnly: false,
+      });
+      console.log('user details', payload);
+      res.sendStatus(200);
+    } else {
+      res.sendStatus(401);
+    }
+  } catch (err: any) {
+    res.status(400).send('Error : ' + err.message);
   }
 };

@@ -26,10 +26,16 @@ import { io } from "socket.io-client";
 const socket = io("http://localhost:8000/", {
   transports: ["websocket"],
 });
+import Cookies from "universal-cookie";
+import jwtDecode from "jwt-decode";
+import { Box, Container } from "@mui/material";
+
+const cookies = new Cookies();
 
 export default function Datagrid() {
   const editField = "inEdit";
   const students = useSelector(selectStudent);
+  const [disable, setDisabled] = React.useState<boolean>(false);
   const dispatch = useDispatch();
 
   const [editedFeilds, setEditedFields] = React.useState(
@@ -37,6 +43,11 @@ export default function Datagrid() {
   );
 
   React.useEffect(() => {
+    const user = cookies.get("user");
+    console.log(user);
+    const decoded: any = jwtDecode(user);
+    const adminUser = decoded.role == "admin" ? false : true;
+    setDisabled(adminUser);
     dispatch(getStudentsAction());
   }, []);
 
@@ -133,19 +144,19 @@ export default function Datagrid() {
     )[0];
 
     if (fieldsToBeUpdated != undefined) {
-      const data: any = { id: fieldsToBeUpdated.id };
-      fieldsToBeUpdated.value.forEach((value: any, key: string | number) => {
-        data[key] = value;
-      });
-      console.log(data);
+      // const data: any = { id: fieldsToBeUpdated.id };
+      // fieldsToBeUpdated.value.forEach((value: any, key: string | number) => {
+      //   data[key] = value;
+      // });
+      // console.log(data);
 
       if (validate(dataItem)) {
-        console.log("update");
-        dispatch(updateStudentAction(data));
+        dispatch(updateStudentAction(fieldsToBeUpdated as any));
+        const index = editedFeilds.indexOf(fieldsToBeUpdated);
+        editedFeilds.splice(index, 1);
+      } else {
+        console.log("Invalid");
       }
-    }
-    if (validate(dataItem)) {
-      dispatch(updateStudentAction(dataItem));
     }
   };
 
@@ -210,26 +221,23 @@ export default function Datagrid() {
       discard={discard}
       cancel={cancel}
       remove={remove}
+      disable={disable}
     />
   );
 
   return (
-    <>
+    <Box>
       {/* logout button */}
-      <button
-        title="Logout"
-        className="k-button k-button-md k-rounded-md k-button-solid k-button-solid-primary"
-        onClick={logout}
-      >
-        Logout
-      </button>
+      <Container>
+        <button
+          title="Sign Out"
+          className="k-button k-button-md k-rounded-md k-button-solid k-button-solid-primary"
+          onClick={logout}
+        >
+          Sign Out
+        </button>
+      </Container>
 
-      {/* email */}
-      {/* <div className="k-form-field">
-        <label className="k-form-field">
-          <span>{user.email}</span>
-        </label>
-      </div> */}
       {/* grid */}
       <Grid
         style={{ margin: "3vh" }}
@@ -242,6 +250,7 @@ export default function Datagrid() {
             title="Add new"
             className="k-button k-button-md k-rounded-md k-button-solid k-button-solid-primary"
             onClick={addNew}
+            disabled={disable}
           >
             Add new
           </button>
@@ -267,6 +276,6 @@ export default function Datagrid() {
         <GridColumn field="age" title="Age" editable={false} />
         <GridColumn cell={command} title="Command" width="220px" />
       </Grid>
-    </>
+    </Box>
   );
 }

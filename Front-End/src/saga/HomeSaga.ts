@@ -24,7 +24,6 @@ import { Student } from "../utils/Interfaces/Student";
 function* getStudentsSaga(): any {
   try {
     const result = yield call(getStudents);
-    console.log(result);
     const students: Student[] = result.data.map((temp: Student) => ({
       inEdit: false,
       ...temp,

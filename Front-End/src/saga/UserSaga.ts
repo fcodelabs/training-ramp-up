@@ -9,6 +9,7 @@ import {
   registerUserService,
   loginUserService,
   logoutUserService,
+  userDetailsService,
 } from "../utils/Services";
 
 function* registerUserSaga(action: any): any {
@@ -27,12 +28,14 @@ function* registerUserSaga(action: any): any {
 
 function* loginUserSaga(action: any): any {
   try {
-    const response = yield call(loginUserService, action.payload);
-    if (response) {
-      window.location.href = "/";
-      alert("Login successful");
-    } else {
-      alert("Login failed");
+    const responseData = yield call(loginUserService, action.payload);
+    if (responseData.data.success) {
+      const result = yield call(userDetailsService);
+
+      if (result.status === 200) {
+        window.location.href = "/home";
+        alert("Login successful");
+      }
     }
   } catch (error) {
     console.log(error);
@@ -43,7 +46,7 @@ function* logoutUserSaga(): any {
   try {
     const response = yield call(logoutUserService);
     if (response) {
-      window.location.href = "/signin";
+      window.location.href = "/";
       alert("Logout successful");
     } else {
       alert("Logout failed");
