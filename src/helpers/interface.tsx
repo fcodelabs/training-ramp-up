@@ -1,3 +1,16 @@
+export interface Person {
+  PersonID: number;
+  PersonName?: string;
+  PersonGender?: string;
+  PersonAddress?: string;
+  PersonMobileNo?: string;
+  DateOfBirth?: Date;
+  PersonAge?: Number;
+  inEdit?: boolean | string;
+  locked?: boolean;
+  expanded?: boolean;
+}
+
 export interface ProductCategory {
   CategoryID?: number;
   CategoryName?: string;
@@ -62,10 +75,4 @@ export interface Order {
   details: OrderDetails[];
 }
 
-export interface Person {
-  id: number;
-  firstName: string;
-  lastName: string;
-  city: string;
-  title: string;
-}
+

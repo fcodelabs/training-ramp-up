@@ -15,129 +15,58 @@ import {
   updateItem,
   deleteItem,
 } from "../helpers/Services";
-import { Product } from "../helpers/interface";
+import { Product, Person } from "../helpers/interface";
 
 const editField: string = "inEdit";
 
 export const Table = () => {
-  const [data, setData] = React.useState<Product[]>([]);
-
+  //const [data, setData] = React.useState<Product[]>([]);
+  const [data, setData] = React.useState<Person[]>([]);
   React.useEffect(() => {
     let newItems = getItems();
     setData(newItems);
   }, []);
 
-  // modify the data in the store, db etc
-  const remove = (dataItem: Product) => {
-    const newData = [...deleteItem(dataItem)];
-    setData(newData);
-  };
-
-  const add = (dataItem: Product) => {
-    dataItem.inEdit = true;
-
-    const newData = insertItem(dataItem);
-    setData(newData);
-  };
-
-  const update = (dataItem: Product) => {
-    dataItem.inEdit = false;
-    const newData = updateItem(dataItem);
-    setData(newData);
-  };
-
-  // Local state operations
-  const discard = () => {
-    const newData = [...data];
-    newData.splice(0, 1);
-    setData(newData);
-  };
-
-  const cancel = (dataItem: Product) => {
-    const originalItem = getItems().find(
-      (p) => p.ProductID === dataItem.ProductID
-    );
-    const newData = data.map((item) =>
-      item.ProductID === originalItem?.ProductID ? originalItem : item
-    );
-
-    setData(newData);
-  };
-
-  const enterEdit = (dataItem: Product) => {
-    setData(
-      data.map((item) =>
-        item.ProductID === dataItem.ProductID ? { ...item, inEdit: true } : item
-      )
-    );
-  };
-
-  const itemChange = (event: GridItemChangeEvent) => {
-    const newData = data.map((item) =>
-      item.ProductID === event.dataItem.ProductID
-        ? { ...item, [event.field || ""]: event.value }
-        : item
-    );
-
-    setData(newData);
-  };
-
-  const addNew = () => {
-    const newDataItem: Product = {
-      inEdit: true,
-      Discontinued: false,
-      ProductID: 0,
-    };
-
-    setData([newDataItem, ...data]);
-  };
-
   const CommandCell = (props: GridCellProps) => (
-    <MyCommandCell
-      {...props}
-      edit={enterEdit}
-      remove={remove}
-      add={add}
-      discard={discard}
-      update={update}
-      cancel={cancel}
-      editField={editField}
-    />
+    <MyCommandCell {...props} editField={editField} />
   );
 
   return (
     <Grid
       style={{ height: "520px" }}
       data={data}
-      onItemChange={itemChange}
+      //  onItemChange={itemChange}
       editField={editField}
     >
       <GridToolbar>
         <button
           title="Add new"
           className="k-button k-button-md k-rounded-md k-button-solid k-button-solid-error"
-          onClick={addNew}
         >
           Add new
         </button>
       </GridToolbar>
-      <Column field="ProductID" title="Id" width="100px" editable={false} />
-      <Column field="ProductName" title="Product Name" width="200px" />
+      <Column field="PersonID" title="Id" width="100px" editable={false} />
+      <Column field="PersonName" title="Person Name" width="200px" />
+      <Column field="PersonGender" title="Person Gender" width="150px" />
+      <Column field="PersonAddress" title="Person Address"  />
+      <Column field="PersonMobileNo" title="Person Mobile No" width="150px" />
       <Column
-        field="FirstOrderedOn"
-        title="First Ordered"
+        field="DateOfBirth"
+        title="Date Of Birth"
         editor="date"
-        format="{0:d}"
-        width="150px"
+        width="220px"
+        format="{0:EEE MMM dd yyyy}"
       />
+
       <Column
-        field="UnitsInStock"
-        title="Units"
-        width="120px"
+        field="PersonAge"
+        title="Person Age"
         editor="numeric"
+        width="120px"
       />
-      <Column field="Discontinued" title="Discontinued" editor="boolean" />
-      <Column cell={CommandCell} width="300px" />
+
+      <Column title="Command" cell={CommandCell} width="300px" />
     </Grid>
   );
 };
