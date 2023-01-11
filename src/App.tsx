@@ -2,6 +2,7 @@ import React from 'react';
 import { Button } from '@progress/kendo-react-buttons';
 import kendoka from './kendoka.svg';
 import './App.css';
+import { Table } from './pages/Table';
 
 function App() {
   const handleClick = React.useCallback(() => {
@@ -10,19 +11,8 @@ function App() {
 
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={kendoka} className="App-logo" alt="kendoka" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <Button
-          themeColor={'primary'}
-          size={"large"}
-          onClick={handleClick}
-        >
-          Learn KendoReact
-        </Button>
-      </header>
+     
+<Table/>
     </div>
   );
 }
