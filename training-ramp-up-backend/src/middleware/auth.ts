@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express'
 import jwt = require('jsonwebtoken')
-import { requestNewAccessToken } from '../controllers/UserController'
+import { requestNewAccessToken } from '../controllers/userController'
 import { User } from '../models/User'
 
 export const authorization = (
@@ -10,7 +10,6 @@ export const authorization = (
 ) => {
     const accessToken = req.cookies.accessToken
     if (!accessToken) {
-        
         return res.sendStatus(403)
     } else {
         try {
@@ -22,7 +21,6 @@ export const authorization = (
     }
 }
 
-
 export const authPermissions = (
     req: Request,
     res: Response,
@@ -32,13 +30,14 @@ export const authPermissions = (
     if (!user) {
         return res.sendStatus(403)
     } else {
-        try {   
-            
-            if(req.method==process.env.GET_REQUEST){
+        try {
+            if (req.method == process.env.GET_REQUEST) {
                 return next()
-            }else{
-                const role =user.role 
-                return role == process.env.ADMIN_ROLE ? next():res.sendStatus(401)
+            } else {
+                const role = user.role
+                return role == process.env.ADMIN_ROLE
+                    ? next()
+                    : res.sendStatus(401)
             }
         } catch {
             return res.sendStatus(403)

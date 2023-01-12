@@ -5,10 +5,7 @@ import { InsertResult } from 'typeorm'
 import bcrypt = require('bcrypt')
 import jwt = require('jsonwebtoken')
 
-export const getUser = async (
-    username: string,
-    password: string
-): Promise<User> => {
+export const getUser = async (username: string, password: string) => {
     try {
         const user = await appDataSource.manager.getRepository(User).findOne({
             where: {
@@ -16,28 +13,28 @@ export const getUser = async (
             },
         })
 
-        if (user != null) {
+        if (user) {
             const isPasswordMatch = await bcrypt.compare(
                 password,
                 user.password
             )
-            if (isPasswordMatch) {        
+            if (isPasswordMatch) {
                 return user
-                
             } else {
-                throw new Error('Incorrect Password')
+                return { err: 'Incorrect Password' }
+                // throw new Error('Incorrect Password')
             }
         } else {
-            throw new Error('User Not Found')
+            return { err: 'User Not Found' }
+            //throw new Error('User Not Found')
         }
     } catch (err) {
-        throw err
+        return { err: 'Can not get use details.Error occured' }
+        //throw err
     }
 }
 
-export const isUserAlreadyExist = async (
-    username: string
-): Promise<boolean> => {
+export const isUserAlreadyExist = async (username: string) => {
     try {
         const user = await appDataSource.manager.getRepository(User).findOne({
             where: {
@@ -46,20 +43,11 @@ export const isUserAlreadyExist = async (
         })
         return user != null ? true : false
     } catch (err) {
-        throw err
+        return { err: 'Failed to check whether user exists.Error occured' }
     }
 }
 
-export const getUsers = async (): Promise<Array<User>> => {
-    try {
-        const user = await appDataSource.manager.getRepository(User).find()
-        return user
-    } catch (err) {
-        throw err
-    }
-}
-
-export const addUser = async (input: User): Promise<InsertResult> => {
+export const addUser = async (input: User) => {
     try {
         const password = await bcrypt.hash(input.password, 12)
         const user = {
@@ -71,7 +59,6 @@ export const addUser = async (input: User): Promise<InsertResult> => {
         const res = await appDataSource.manager.insert(User, user)
         return res
     } catch (err) {
-        throw err
+        return { err: 'Can not and user.Error occured' }
     }
 }
-

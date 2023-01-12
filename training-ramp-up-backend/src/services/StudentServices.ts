@@ -3,7 +3,8 @@ import { Student } from '../models/Student'
 import { appDataSource } from '../configs/dataSourceConfig'
 import { DeleteResult, InsertEvent, InsertResult, UpdateResult } from 'typeorm'
 
-export const getAllStudents = async (): Promise<Array<Student>> => {
+
+export const getAllStudents = async ():Promise<Array<Student>|Object>=> {
     try {
         const students = await appDataSource.manager
             .getRepository(Student)
@@ -14,21 +15,21 @@ export const getAllStudents = async (): Promise<Array<Student>> => {
             })
         return students
     } catch (err) {
-        throw err
+        return {err:'Can not fetch students.Error occured'}
     }
 }
 
-export const addStudent = async (input: Student): Promise<InsertResult> => {
+export const addStudent = async (input: Student) :Promise<Student|Object>=> {
     try {
         const student = { ...input }
         const res = await appDataSource.manager.insert(Student, student)
         return res
     } catch (err) {
-        throw err
+        return {err:'Add student failed.Error occured'}
     }
 }
 
-export const updateStudent = async (input: Student): Promise<UpdateResult> => {
+export const updateStudent = async (input: Student):Promise<Student|Object> => {
     try {
         const student = { ...input }
         const students = await appDataSource.manager.update(
@@ -38,15 +39,15 @@ export const updateStudent = async (input: Student): Promise<UpdateResult> => {
         )
         return students
     } catch (err) {
-        throw err
+        return {err: 'Failed to update student.Error occured',}
     }
 }
 
-export const deleteStudent = async (id: string): Promise<DeleteResult> => {
+export const deleteStudent = async (id: string) :Promise<Student|Object>=> {
     try {
         const students = await appDataSource.manager.delete(Student, id)
         return students
     } catch (err) {
-        throw err
+        return {err: 'Can not delete student.Error occured'}
     }
 }

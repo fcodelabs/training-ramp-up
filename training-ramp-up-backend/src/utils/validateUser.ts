@@ -1,6 +1,5 @@
 import { User } from '../models/User'
-import { isUserAlreadyExist } from '../services/UserServices'
-
+import { isUserAlreadyExist } from '../services/userServices'
 
 const validations = new Map([
     ['name', new RegExp('^([A-z\\s.]{3,80})$')],
@@ -11,17 +10,16 @@ const validations = new Map([
 const validateFields = (input: User): boolean => {
     validations.forEach(function (value, key) {
         if (input[key] != undefined) {
-            if (!value.test(input[key])) {      
+            if (!value.test(input[key])) {
                 const err =
                     key == 'password'
                         ? new Error(
-                            'Please enter valid ' +
+                              'Please enter valid ' +
                                   key +
                                   '\n\n* Password should contain at least 6 characters'
-                        )
+                          )
                         : new Error('Please enter valid ' + key)
-                throw err         
-               
+                throw err
             }
         }
     })
@@ -29,16 +27,15 @@ const validateFields = (input: User): boolean => {
     return true
 }
 
-const doesUserAlreadyExist=async(username:string)=>{
-    const userExists= await isUserAlreadyExist(username);
-    if(!userExists){
+const doesUserAlreadyExist = async (username: string) => {
+    const userExists = await isUserAlreadyExist(username)
+    if (!userExists) {
         return true
-    }else {
-       throw new Error('User Already exists.Please use a different username')
+    } else {
+        throw new Error('User Already exists.Please use a different username')
     }
-    
 }
 
-export const validate = async(item: User): Promise<boolean> => {
-    return validateFields(item)  && await doesUserAlreadyExist(item.username)
+export const validate = async (item: User): Promise<boolean> => {
+    return validateFields(item) && (await doesUserAlreadyExist(item.username))
 }
