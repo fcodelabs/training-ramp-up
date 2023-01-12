@@ -12,17 +12,26 @@ module.exports = {
   ],
   parserOptions: {
     ecmaVersion: 'latest',
-    sourceType: 'module'
+    sourceType: 'module',
+    project: ['./tsconfig.json'],
   },
   plugins: ['react', 'react-hooks', '@typescript-eslint', 'prettier'],
   rules: {
-        'react/react-in-jsx-scope': 'off',
-        'camelcase' :'error',
-        'spaced-comment': 'error',
-        'quotes': ['error', 'single'],
-        'no-duplicate-imports': 'error'
+    'react/react-in-jsx-scope': 'off',
+    "no-unused-vars": "off",
+    "@typescript-eslint/no-unused-vars": "warn",
+    "@typescript-eslint/explicit-function-return-type": "warn",
+ "@typescript-eslint/strict-boolean-expressions": "warn",
+  "@typescript-eslint/restrict-plus-operands": "warn",
+  "@typescript-eslint/strict-boolean-expressions": "warn",
+     'camelcase': 'warn',
+     'spaced-comment': 'warn',
+   //  'quotes': ['error', 'single'],
+     'no-duplicate-imports': 'error',
+"@typescript-eslint/prefer-nullish-coalescing": "warn",
+  "@typescript-eslint/strict-boolean-expressions": "warn",
   },
-settings: {
+  settings: {
     'import/resolver': {
       'typescript': {}
     }

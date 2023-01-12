@@ -1,33 +1,67 @@
-import { Person, Product } from "./interface";
-import { sampleProducts,sampleData } from "./sample-products";
-var data:Product[]; 
-var personData:Person[];
-data = [...sampleProducts];
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-personData=[...sampleData]
+import { Person } from './interface'
+import { sampleData } from './sample-products'
+import { durationInYears } from '@progress/kendo-date-math'
 
+let personData: Person[]= [];
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars, prefer-const
+personData = [...sampleData]
+
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 const generateId = (data: any[]) =>
-    data.reduce((acc: number, current: { ProductID: number; }) => Math.max(acc, current.ProductID), 0) + 1;
+  parseInt(
+    data.reduce((acc: number, current: { PersonID: number }) => Math.max(acc, current.PersonID), 0),
+  ) + 1
 
-export const insertItem = (item: Product) => {
-    item.ProductID = generateId(data);
-    item.inEdit = false;
-    data.unshift(item);
-    return data;
-};
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+function regValidate(url: string, urlRegex: RegExp) {
+  return urlRegex.test(url)
+}
 
-export const getItems = () => {
-    return personData;
-};
+export const checkErr = (item: Person): string[] => {
+  const tempErr: string[] = []
 
-export const updateItem = (item: Product) => {
-    let index = data.findIndex(record => record.ProductID === item.ProductID);
-    data[index] = item;
-    return data;
-};
+  if (
+    item.PersonAddress === undefined ||
+    item.PersonAddress === '' ||
+    item.PersonMobileNo === undefined ||
+    item.PersonMobileNo === '' ||
+    item.PersonName === undefined ||
+    item.PersonName === ''
+  ) {
+    tempErr.push('every field required!')
+  } else {
+    if (item.DateOfBirth != null && durationInYears(item.DateOfBirth, new Date()) < 1) {
+      tempErr.push('student needs to be 18 years or older!')
+    }
+    if (
+      item.PersonMobileNo != null &&
+      regValidate(item.PersonMobileNo, /^\+?([0-9]{2})\)?[-. ]?([0-9]{4})[-. ]?([0-9]{4})$/)
+    )
+      tempErr.push('phone number should be XXX-XXX-XXXX format')
+  }
+  return tempErr
+}
+export const insertItem = (item: Person): any => {
+  item.PersonID = generateId(personData)
+  item.inEdit = false
+  personData.unshift(item)
+  return personData
+}
 
-export const deleteItem = (item: Product) => {
-    let index = data.findIndex(record => record.ProductID === item.ProductID);
-    data.splice(index, 1);
-    return data;
-};
+export const getItems = (): Person[] => {
+  return personData
+}
+
+export const updateItem = (item: Person): Person[] => {
+  item.inEdit = false
+  const index = personData.findIndex((record) => record.PersonID === item.PersonID)
+  personData[index] = item
+  return personData
+}
+
+export const deleteItem = (item: Person): Person[] => {
+  const index = personData.findIndex((record) => record.PersonID === item.PersonID)
+  personData.splice(index, 1)
+  return personData
+}

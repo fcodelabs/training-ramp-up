@@ -7,6 +7,7 @@ export const sampleData = [
     PersonMobileNo: "034545445645",
     DateOfBirth: new Date(1996, 8, 20),
     PersonAge: 3,
+    inEdit:false,
   },
   {
     PersonID: 2,
@@ -16,6 +17,7 @@ export const sampleData = [
     PersonMobileNo: "034545445645",
     DateOfBirth: new Date(1996, 8, 20),
     PersonAge: 3,
+inEdit:false,
   },
   {
     PersonID: 3,
@@ -24,7 +26,7 @@ export const sampleData = [
     PersonAddress: "test",
     PersonMobileNo: "034545445645",
     DateOfBirth: new Date(1996, 8, 20),
-    PersonAge: 3,
+    PersonAge: 3,inEdit:false,
   },
   {
     PersonID: 4,
@@ -33,7 +35,7 @@ export const sampleData = [
     PersonAddress: "test",
     PersonMobileNo: "034545445645",
     DateOfBirth: new Date(1996, 8, 20),
-    PersonAge: 3,
+    PersonAge: 3,inEdit:false,
   },
   {
     PersonID: 5,
@@ -42,7 +44,7 @@ export const sampleData = [
     PersonAddress: "test",
     PersonMobileNo: "034545445645",
     DateOfBirth: new Date(1996, 8, 20),
-    PersonAge: 3,
+    PersonAge: 3,inEdit:false,
   },
   {
     PersonID: 6,
@@ -51,7 +53,7 @@ export const sampleData = [
     PersonAddress: "test",
     PersonMobileNo: "034545445645",
     DateOfBirth: new Date(1996, 8, 20),
-    PersonAge: 3,
+    PersonAge: 3,inEdit:false,
   },
   {
     PersonID: 7,
@@ -60,7 +62,7 @@ export const sampleData = [
     PersonAddress: "test",
     PersonMobileNo: "034545445645",
     DateOfBirth: new Date(1996, 8, 20),
-    PersonAge: 3,
+    PersonAge: 3,inEdit:false,
   },  {
     PersonID: 8,
     PersonName: "joy",
@@ -68,7 +70,7 @@ export const sampleData = [
     PersonAddress: "test",
     PersonMobileNo: "034545445645",
     DateOfBirth: new Date(1996, 8, 20),
-    PersonAge: 3,
+    PersonAge: 3,inEdit:false,
   },
   {
     PersonID: 9,
@@ -77,7 +79,7 @@ export const sampleData = [
     PersonAddress: "test",
     PersonMobileNo: "034545445645",
     DateOfBirth: new Date(1996, 8, 20),
-    PersonAge: 3,
+    PersonAge: 3,inEdit:false,
   },
   {
     PersonID: 10,
@@ -86,7 +88,7 @@ export const sampleData = [
     PersonAddress: "test",
     PersonMobileNo: "034545445645",
     DateOfBirth: new Date(1996, 8, 20),
-    PersonAge: 3,
+    PersonAge: 3,inEdit:false,
   },
   
 ];
