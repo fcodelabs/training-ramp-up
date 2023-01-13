@@ -1,7 +1,5 @@
 import * as express from 'express'
 import { Express, Request, Response } from 'express'
-import { Socket } from 'socket.io'
-import { io } from '../..'
 import { getUser, addUser } from '../services/userServices'
 import { validate } from '../utils/validateUser'
 import jwt = require('jsonwebtoken')

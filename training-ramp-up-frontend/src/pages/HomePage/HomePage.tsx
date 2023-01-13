@@ -39,12 +39,14 @@ export default function HomePage() {
     const dispatch = useAppDispatch()
 
     React.useEffect(() => {
+        dispatch(getStudents())
+    },[])
+    React.useEffect(() => {
         const user = cookies.get('user')
         const decoded:any = jwtDecode(user)
         const adminUser = decoded.role == 'Admin' ? false : true
         setDisabled(adminUser)
-        dispatch(getStudents())
-    }, [])
+    })
 
     const handleSignOut = () => {
         dispatch(signOut({ navigate }))

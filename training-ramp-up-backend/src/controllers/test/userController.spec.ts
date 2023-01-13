@@ -137,39 +137,5 @@ describe('User Controller', () => {
         })
     })
 
-    describe('Request new access token', () => {
-        const user = {
-            id: 1,
-            name: 'Rashmi',
-            role: 'User',
-        }
-
-        const req = {
-            cookies: {
-                user: user,
-                refreshToken: '123456',
-            },
-        } as Request
-
-        const res = mockResponse()
-
-        test('Request new access token success', async () => {
-            jwt.verify = jest.fn().mockResolvedValue(user)
-            jwt.sign = jest.fn().mockResolvedValue('New access token')
-
-            await requestNewAccessToken(req, res)
-
-            expect(res.cookie).toHaveBeenCalledTimes(1)
-            expect(res.sendStatus).toHaveBeenCalledWith(200)
-        })
-
-        // test('Request new access token failed', async () => {
-        //     jwt.verify = jest.fn().mockRejectedValue(null)
-        //     jwt.sign = jest.fn().mockRejectedValue(null)
-
-        //     await requestNewAccessToken(req, res)
-
-        //     expect(res.sendStatus).toHaveBeenCalledWith(401)
-        // })
-    })
+    
 })

@@ -34,7 +34,9 @@ export const authPermissions = (
             if (req.method == process.env.GET_REQUEST) {
                 return next()
             } else {
-                const role = user.role
+                const payload = jwt.verify(user, process.env.USER_KEY)
+                const userT = payload as User
+                const role = userT.role               
                 return role == process.env.ADMIN_ROLE
                     ? next()
                     : res.sendStatus(401)

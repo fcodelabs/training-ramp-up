@@ -1,12 +1,14 @@
 import * as express from 'express'
 import { Express, Request, Response } from 'express'
-import { io } from '../..'
+
 import {
     getAllStudents,
     addStudent,
     updateStudent,
     deleteStudent,
 } from '../services/studentServices'
+import { io } from '../../server'
+//import { io } from '../../index'
 import { validate } from '../utils/validateStudent'
 
 export const requestGetAllStudents = async (
@@ -17,7 +19,7 @@ export const requestGetAllStudents = async (
         const students = await getAllStudents()
         res.send(students)
     } catch (err) {
-        res.send('Error' + err)
+        res.status(400)
     }
 }
 
@@ -35,7 +37,7 @@ export const requestAddStudent = async (
             )
         }
     } catch (err) {
-        res.send('Error : ' + err.message)
+        res.status(400)
     }
 }
 
@@ -53,7 +55,7 @@ export const requestUpdateStudent = async (
             )
         }
     } catch (err) {
-        res.send('Error' + err.message)
+        res.status(400)
     }
 }
 
@@ -69,6 +71,6 @@ export const requestDeleteStudent = async (
             'The with id ' + req.params.id + ' student has been deleted'
         )
     } catch (err) {
-        res.send('Error' + err.message)
+        res.status(400)
     }
 }
