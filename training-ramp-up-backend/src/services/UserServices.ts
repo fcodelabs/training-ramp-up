@@ -22,15 +22,16 @@ export const getUser = async (username: string, password: string) => {
                 return user
             } else {
                 return { err: 'Incorrect Password' }
-                // throw new Error('Incorrect Password')
+               
             }
         } else {
             return { err: 'User Not Found' }
-            //throw new Error('User Not Found')
+           
         }
     } catch (err) {
+        console.log(err);
         return { err: 'Can not get use details.Error occured' }
-        //throw err
+      
     }
 }
 
@@ -43,6 +44,7 @@ export const isUserAlreadyExist = async (username: string) => {
         })
         return user != null ? true : false
     } catch (err) {
+        console.log(err);
         return { err: 'Failed to check whether user exists.Error occured' }
     }
 }
@@ -59,6 +61,7 @@ export const addUser = async (input: User) => {
         const res = await appDataSource.manager.insert(User, user)
         return res
     } catch (err) {
+        console.log(err);
         return { err: 'Can not and user.Error occured' }
     }
 }

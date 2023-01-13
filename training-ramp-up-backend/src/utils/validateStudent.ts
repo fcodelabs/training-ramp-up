@@ -11,7 +11,7 @@ const validations = new Map([
 const validateFields = (input: Student): boolean => {
     validations.forEach(function (value, key) {
         if (input[key] != undefined) {
-            if (!value.test(input[key])) {               
+            if (!value.test(input[key])) {
                 throw new Error('Please enter valid ' + key)
             }
         }

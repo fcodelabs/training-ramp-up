@@ -12,7 +12,7 @@ export const appDataSource = new DataSource({
     database: 'studentdetails',
     synchronize: true,
     logging: false,
-    entities: [Student,User],
+    entities: [Student, User],
     migrations: [],
     subscribers: [],
 })
