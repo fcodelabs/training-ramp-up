@@ -1,6 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit";
-import studentReducer from "../slice/HomeSlice";
-import userReducer from "../slice/UserSlice";
+import studentReducer from "../slice/homeSlice";
+import userReducer from "../slice/userSlice";
 import createSagaMiddleware from "redux-saga";
 
 import rootSaga from "./rootSaga";

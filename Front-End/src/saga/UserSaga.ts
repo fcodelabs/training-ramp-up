@@ -3,20 +3,20 @@ import {
   registerUserAction,
   loginUserAction,
   logoutUserAction,
-} from "../slice/UserSlice";
+} from "../slice/userSlice";
 import { call, takeLatest } from "redux-saga/effects";
 import {
   registerUserService,
   loginUserService,
   logoutUserService,
   userDetailsService,
-} from "../utils/Services";
+} from "../utils/services";
 
 function* registerUserSaga(action: any): any {
   try {
     const response = yield call(registerUserService, action.payload);
     if (response) {
-      window.location.href = "/signin";
+      window.location.href = "/";
       alert("Registration successful");
     } else {
       alert("Registration failed");
@@ -38,7 +38,7 @@ function* loginUserSaga(action: any): any {
       }
     }
   } catch (error) {
-    console.log(error);
+    alert("Incorrect Username or Password");
   }
 }
 

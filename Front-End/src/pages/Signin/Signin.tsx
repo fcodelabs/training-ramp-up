@@ -7,8 +7,6 @@ import {
   Typography,
   Stack,
   Link as MuiLink,
-  // FormControlLabel,
-  // Checkbox,
 } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { FC } from "react";
@@ -17,11 +15,9 @@ import { Link } from "react-router-dom";
 import { literal, object, string, TypeOf } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import FormInput from "../../components/FormInput/FormInput";
-// import { ReactComponent as GoogleLogo } from "../../assets/Google/Google.svg";
-// import { ReactComponent as GitHubLogo } from "../../assets/Github/Github.svg";
 import styled from "@emotion/styled";
 import { useDispatch } from "react-redux";
-import { loginUserAction } from "../../slice/UserSlice";
+import { loginUserAction } from "../../slice/userSlice";
 
 // ? Styled React Route Dom Link Component
 export const LinkItem = styled(Link)`
@@ -68,8 +64,6 @@ type ILogin = TypeOf<typeof loginSchema>;
 
 const LoginPage: FC = () => {
   const dispatch = useDispatch();
-  // const navigate = useNavigate();
-  // ? Default Values
   const defaultValues: ILogin = {
     email: "",
     password: "",
@@ -161,29 +155,6 @@ const LoginPage: FC = () => {
                       focused
                     />
 
-                    {/* <FormControlLabel
-                      control={
-                        <Checkbox
-                          size="small"
-                          aria-label="trust this device checkbox"
-                          required
-                          {...methods.register("persistUser")}
-                        />
-                      }
-                      label={
-                        <Typography
-                          variant="body2"
-                          sx={{
-                            fontSize: "0.8rem",
-                            fontWeight: 400,
-                            color: "#5e5b5d",
-                          }}
-                        >
-                          Trust this device
-                        </Typography>
-                      }
-                    /> */}
-
                     <LoadingButton
                       loading={false}
                       type="submit"
@@ -199,33 +170,6 @@ const LoginPage: FC = () => {
                     </LoadingButton>
                   </Box>
                 </Grid>
-                {/* <Grid item xs={12} sm={6}>
-                  <Typography
-                    variant="h6"
-                    component="p"
-                    sx={{
-                      paddingLeft: { sm: "3rem" },
-                      mb: "1.5rem",
-                      textAlign: "center",
-                    }}
-                  >
-                    Log in with another provider:
-                  </Typography>
-                  <Box
-                    display="flex"
-                    flexDirection="column"
-                    sx={{ paddingLeft: { sm: "3rem" }, rowGap: "1rem" }}
-                  >
-                    <OauthMuiLink href="">
-                      <GoogleLogo style={{ height: "2rem" }} />
-                      Google
-                    </OauthMuiLink>
-                    <OauthMuiLink href="">
-                      <GitHubLogo style={{ height: "2rem" }} />
-                      GitHub
-                    </OauthMuiLink>
-                  </Box>
-                </Grid> */}
               </Grid>
               <Grid container justifyContent="center">
                 <Stack sx={{ mt: "3rem", textAlign: "center" }}>
@@ -234,10 +178,10 @@ const LoginPage: FC = () => {
                     <LinkItem to="/signup">Sign up here</LinkItem>
                   </Typography>
                   <Typography sx={{ fontSize: "0.9rem" }}>
-                    {/* Forgot your{" "} */}
+                    {/* Forgot your{" "}
                     <LinkItem to="/forgotPassword">
                       Forgot your password?
-                    </LinkItem>
+                    </LinkItem> */}
                   </Typography>
                 </Stack>
               </Grid>

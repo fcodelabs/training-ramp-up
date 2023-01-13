@@ -5,7 +5,7 @@ import {
   getStudentsAction,
   setStudentsAction,
   deleteStudentAction,
-} from "../slice/HomeSlice";
+} from "../slice/homeSlice";
 
 import { call, put, takeLatest } from "redux-saga/effects";
 // import { io } from "socket.io-client";
@@ -14,8 +14,8 @@ import {
   addStudent,
   updateStudent,
   deleteStudent,
-} from "../utils/Services";
-import { Student } from "../utils/Interfaces/Student";
+} from "../utils/services";
+import { Student } from "../utils/interfaces/student";
 
 // const socket = io("http://localhost:8000/", {
 //   transports: ["websocket"],

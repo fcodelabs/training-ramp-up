@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Student } from "../../utils/Interfaces/Student";
+import { Student } from "../../utils/interfaces/student";
 
 export const CommandCell = (props: {
   dataItem: Student;

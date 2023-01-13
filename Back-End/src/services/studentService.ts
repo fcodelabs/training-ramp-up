@@ -1,7 +1,8 @@
-import { Student } from '../entities/Student';
-import { BaseEntity, DeepPartial } from 'typeorm';
+/* eslint-disable no-useless-catch */
+import { Student } from '../entities/student';
+import { UpdateResult } from 'typeorm';
 import dataSource from '../dataSource';
-import StudentType from '../interfaces/StudentType';
+import StudentType from '../interfaces/studentType';
 
 // get all students
 
@@ -28,18 +29,17 @@ export const addStudentService = async (student: StudentType) => {
   }
 };
 
-// update or patch student
+// update student
 
-export const findStudentService = async (studentId: number) => {
-  return await Student.findOneBy({ id: studentId });
-};
-
-export const mergeStudentService = async (student: Student, body: DeepPartial<BaseEntity>) => {
-  return Student.merge(student, body);
-};
-
-export const saveStudentService = async (student: Student) => {
-  return await Student.save(student);
+export const updateStudent = async (input: Student): Promise<UpdateResult> => {
+  try {
+    const student = { ...input };
+    const studentRepository = dataSource.getRepository(Student);
+    const students = await studentRepository.update(input.id, student);
+    return students;
+  } catch (err) {
+    throw err;
+  }
 };
 
 // delete student

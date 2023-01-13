@@ -11,11 +11,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteStudent = exports.patchStudent = exports.addStudent = exports.getAllStudents = void 0;
 const server_1 = require("../../server");
-const StudentService_1 = require("../services/StudentService");
+const studentService_1 = require("../services/studentService");
 // get all students controller
 const getAllStudents = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const students = yield (0, StudentService_1.getAllStudentsService)().catch((err) => {
+        const students = yield (0, studentService_1.getAllStudentsService)().catch((err) => {
             res.status(500);
             res.json(err);
             return;
@@ -32,7 +32,7 @@ exports.getAllStudents = getAllStudents;
 // add student controller
 const addStudent = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        yield (0, StudentService_1.addStudentService)(req.body);
+        yield (0, studentService_1.addStudentService)(req.body);
         server_1.io.emit('message', 'Student ' + req.body.name + ' added');
         res.status(200);
         res.json({ message: 'Student added successfully' });
@@ -46,17 +46,13 @@ exports.addStudent = addStudent;
 // patch student controller
 const patchStudent = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const studentId = parseInt(req.params.id);
-        const student = yield (0, StudentService_1.findStudentService)(studentId);
-        if (student) {
-            (0, StudentService_1.mergeStudentService)(student, req.body);
-            const results = yield (0, StudentService_1.saveStudentService)(student);
-            server_1.io.emit('message', 'Student Id : ' + req.body.id + ' updated');
-            return res.send(results);
-        }
+        console.log('Hello Update');
+        const students = yield (0, studentService_1.updateStudent)(req.body);
+        res.send(students);
+        server_1.io.emit('notification', 'The with id ' + req.body.id + ' student has been updated');
     }
     catch (err) {
-        res.status(500);
+        res.status(400);
         res.json(err);
     }
 });
@@ -65,7 +61,7 @@ exports.patchStudent = patchStudent;
 const deleteStudent = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const studentId = parseInt(req.params.id);
-        yield (0, StudentService_1.deleteStudentService)(studentId);
+        yield (0, studentService_1.deleteStudentService)(studentId);
         server_1.io.emit('message', 'Student Id : ' + studentId + ' deleted');
         res.status(200);
         res.json({ message: 'Student deleted successfully' });

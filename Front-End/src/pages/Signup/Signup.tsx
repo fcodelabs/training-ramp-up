@@ -11,11 +11,9 @@ import { ReactComponent as GoogleLogo } from "../../assets/Google/Google.svg";
 import { ReactComponent as GitHubLogo } from "../../assets/Github/Github.svg";
 import { LinkItem, OauthMuiLink } from "../Signin/Signin";
 import { useDispatch } from "react-redux";
-import { registerUserAction } from "../../slice/UserSlice";
+import { registerUserAction } from "../../slice/userSlice";
 
-// ? SignUp Schema with Zod
 const signupSchema = object({
-  // name: string().min(1, "Name is required").max(70),
   email: string().min(1, "Email is required").email("Email is invalid"),
   password: string()
     .min(1, "Password is required")
@@ -27,14 +25,12 @@ const signupSchema = object({
   message: "Passwords do not match",
 });
 
-// ? Infer the Schema to get TypeScript Type
 type ISignUp = TypeOf<typeof signupSchema>;
 
 const SignupPage: FC = () => {
   const dispatch = useDispatch();
   // ? Default Values
   const defaultValues: ISignUp = {
-    // name: "",
     email: "",
     password: "",
     passwordConfirm: "",
@@ -123,13 +119,6 @@ const SignupPage: FC = () => {
                       Create new your account
                     </Typography>
 
-                    {/* <FormInput
-                      label="Name"
-                      type="text"
-                      name="name"
-                      focused
-                      required
-                    /> */}
                     <FormInput
                       label="Enter your email"
                       type="email"
@@ -198,8 +187,7 @@ const SignupPage: FC = () => {
               <Grid container justifyContent="center">
                 <Stack sx={{ mt: "3rem", textAlign: "center" }}>
                   <Typography sx={{ fontSize: "0.9rem", mb: "1rem" }}>
-                    Already have an account?{" "}
-                    <LinkItem to="/signin">Login</LinkItem>
+                    Already have an account? <LinkItem to="/">Login</LinkItem>
                   </Typography>
                 </Stack>
               </Grid>

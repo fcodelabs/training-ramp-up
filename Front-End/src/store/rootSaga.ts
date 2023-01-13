@@ -1,5 +1,5 @@
-import HomeSaga from "../saga/HomeSaga";
-import UserSaga from "../saga/UserSaga";
+import HomeSaga from "../saga/homeSaga";
+import UserSaga from "../saga/userSaga";
 import { all, fork } from "redux-saga/effects";
 
 export default function* rootSaga() {

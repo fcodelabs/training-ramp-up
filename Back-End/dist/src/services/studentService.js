@@ -12,13 +12,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteStudentService = exports.saveStudentService = exports.mergeStudentService = exports.findStudentService = exports.addStudentService = exports.getAllStudentsService = void 0;
-const Student_1 = require("../entities/Student");
+exports.deleteStudentService = exports.updateStudent = exports.addStudentService = exports.getAllStudentsService = void 0;
+/* eslint-disable no-useless-catch */
+const student_1 = require("../entities/student");
 const dataSource_1 = __importDefault(require("../dataSource"));
 // get all students
 const getAllStudentsService = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const studentRepository = dataSource_1.default.getRepository(Student_1.Student);
+        const studentRepository = dataSource_1.default.getRepository(student_1.Student);
         const students = yield studentRepository.find();
         return students;
     }
@@ -31,7 +32,7 @@ exports.getAllStudentsService = getAllStudentsService;
 // add student
 const addStudentService = (student) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const studentRepository = dataSource_1.default.getRepository(Student_1.Student);
+        const studentRepository = dataSource_1.default.getRepository(student_1.Student);
         yield studentRepository.insert(student);
     }
     catch (err) {
@@ -40,24 +41,24 @@ const addStudentService = (student) => __awaiter(void 0, void 0, void 0, functio
     }
 });
 exports.addStudentService = addStudentService;
-// update or patch student
-const findStudentService = (studentId) => __awaiter(void 0, void 0, void 0, function* () {
-    return yield Student_1.Student.findOneBy({ id: studentId });
+// update student
+const updateStudent = (input) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const student = Object.assign({}, input);
+        const studentRepository = dataSource_1.default.getRepository(student_1.Student);
+        const students = yield studentRepository.update(input.id, student);
+        return students;
+    }
+    catch (err) {
+        throw err;
+    }
 });
-exports.findStudentService = findStudentService;
-const mergeStudentService = (student, body) => __awaiter(void 0, void 0, void 0, function* () {
-    return Student_1.Student.merge(student, body);
-});
-exports.mergeStudentService = mergeStudentService;
-const saveStudentService = (student) => __awaiter(void 0, void 0, void 0, function* () {
-    return yield Student_1.Student.save(student);
-});
-exports.saveStudentService = saveStudentService;
+exports.updateStudent = updateStudent;
 // delete student
 const deleteStudentService = (id) => __awaiter(void 0, void 0, void 0, function* () {
     function remove(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            yield Student_1.Student.delete({ id: id });
+            yield student_1.Student.delete({ id: id });
         });
     }
     return remove(id);

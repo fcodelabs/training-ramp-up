@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Request, Response } from 'express';
-import { createUserService, loginService } from '../services/UserService';
-import { GenerateTokens } from '../utils/GenerateTokens';
+import { createUserService, loginService } from '../services/userService';
+import { GenerateTokens } from '../utils/generateTokens';
 import jwt from 'jsonwebtoken';
 
 export const signupUser = async (req: Request, res: Response) => {
@@ -12,12 +12,8 @@ export const signupUser = async (req: Request, res: Response) => {
       success: true,
       message: 'User created successfully',
     });
-  } catch (err) {
-    if (typeof err === 'object' && err !== null) {
-      res.status(400).send(err.toString());
-    } else {
-      res.status(400).send(err);
-    }
+  } catch (error) {
+    res.status(401).send('Invalid Signup');
   }
 };
 
@@ -39,25 +35,17 @@ export const loginUser = async (req: Request, res: Response) => {
       const userDetails = userData;
 
       res.status(200).json({
-        accessToken,
-        refreshToken,
-        userDetails,
         success: true,
         message: 'Logged in sucessfully',
       });
+    } else {
+      alert('Invalid credentials');
     }
   } catch (err) {
-    if (typeof err === 'object' && err !== null) {
-      res.status(400).json({
-        success: false,
-        message: err.toString(),
-      });
-    } else {
-      res.status(400).json({
-        success: false,
-        message: err,
-      });
-    }
+    res.status(401).json({
+      success: false,
+      message: 'err',
+    });
   }
 };
 
@@ -83,11 +71,9 @@ export const refreshToken = async (req: Request, res: Response) => {
       message: 'Token refreshed',
     });
   } catch (err) {
-    if (typeof err === 'object' && err !== null) {
-      res.status(400).send(err.toString());
-    } else {
-      res.status(400).json(err);
-    }
+    res.status(401).json({
+      message: 'error',
+    });
   }
 };
 
@@ -109,11 +95,7 @@ export const logoutUser = async (req: Request, res: Response) => {
       message: 'Logged out sucessfully',
     });
   } catch (err) {
-    if (typeof err === 'object' && err !== null) {
-      res.status(400).send(err.toString());
-    } else {
-      res.status(400).send(err);
-    }
+    res.status(400).send(err);
   }
 };
 

@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { User } from '../entities/User';
+import { User } from '../entities/user';
 import { DeepPartial } from 'typeorm';
 import bcrypt from 'bcryptjs';
 import dataSource from '../dataSource';
-import UserType from '../interfaces/UserType';
+import UserType from '../interfaces/userType';
 import * as dotenv from 'dotenv';
 
 dotenv.config();
@@ -28,8 +28,8 @@ export const loginService = async (email: string, password: string) => {
     const userRepository = dataSource.getRepository(User);
     const userFound = await userRepository.findOneBy({ email: email });
     if (userFound) {
-      const isMatch = bcrypt.compare(password, userFound.password);
-      return { isMatch, userFound };
+      const isMatch = await bcrypt.compare(password, userFound.password);
+      return { isMatch: isMatch, userFound: userFound };
     }
   } catch (err) {
     console.log(err);

@@ -13,6 +13,7 @@ export const studentAddValidationRules = () => {
 
 export const studentPatchValidationRules = () => {
   return [
+    body('id', 'Id is required').optional().notEmpty().isNumeric(),
     body('name', 'Name is required').optional().notEmpty(),
     body('gender', 'Gender is required').optional().not().isEmpty().isIn(['Male', 'Female']),
     body('address', 'Address is required').optional().not().isEmpty(),

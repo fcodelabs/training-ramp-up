@@ -1,12 +1,8 @@
 import express from 'express';
-import { getAllStudents, addStudent, deleteStudent, patchStudent } from '../controllers/StudentController';
-import {
-  studentAddValidationRules,
-  studentValidation,
-  studentPatchValidationRules,
-} from '../utils/Validation/StudentValidation';
-import isAuthenticated from '../utils/Authentication';
-import RoleCheck from '../utils/RoleCheck';
+import { getAllStudents, addStudent, deleteStudent, patchStudent } from '../controllers/studentController';
+import { studentAddValidationRules, studentValidation } from '../utils/Validation/studentValidation';
+import isAuthenticated from '../utils/authentication';
+import RoleCheck from '../utils/roleCheck';
 
 const studentRouter = express.Router();
 
@@ -19,14 +15,7 @@ studentRouter.post(
   addStudent
 );
 studentRouter.get('/', isAuthenticated, RoleCheck(['admin', 'user']), getAllStudents);
-studentRouter.patch(
-  '/:id',
-  studentPatchValidationRules(),
-  isAuthenticated,
-  RoleCheck(['admin']),
-  studentValidation,
-  patchStudent
-);
-studentRouter.delete('/:id', isAuthenticated, RoleCheck(['admin', 'user']), deleteStudent);
+studentRouter.patch('/', isAuthenticated, RoleCheck(['admin']), patchStudent);
+studentRouter.delete('/:id', isAuthenticated, RoleCheck(['admin']), deleteStudent);
 
 export default studentRouter;

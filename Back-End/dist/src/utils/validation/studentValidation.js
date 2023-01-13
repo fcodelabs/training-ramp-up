@@ -14,6 +14,7 @@ const studentAddValidationRules = () => {
 exports.studentAddValidationRules = studentAddValidationRules;
 const studentPatchValidationRules = () => {
     return [
+        (0, express_validator_1.body)('id', 'Id is required').optional().notEmpty().isNumeric(),
         (0, express_validator_1.body)('name', 'Name is required').optional().notEmpty(),
         (0, express_validator_1.body)('gender', 'Gender is required').optional().not().isEmpty().isIn(['Male', 'Female']),
         (0, express_validator_1.body)('address', 'Address is required').optional().not().isEmpty(),

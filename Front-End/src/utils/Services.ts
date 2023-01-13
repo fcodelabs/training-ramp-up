@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import axios from "axios";
-import { axiosApiInstance } from "../common/AxiosIntercepter";
+import { axiosApiInstance } from "../common/axiosIntercepter";
 
 const baseURL = "http://localhost:8000";
 
@@ -79,7 +79,8 @@ export const addStudent = (student: any) => {
 
 export const updateStudent = (student: any) => {
   try {
-    return axiosApiInstance.patch(baseURL + "/student/" + student.id, student, {
+    console.log(student);
+    return axiosApiInstance.patch(baseURL + "/student", student, {
       withCredentials: true,
     });
   } catch (error) {

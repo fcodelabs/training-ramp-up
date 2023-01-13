@@ -11,7 +11,7 @@ import {
 import "@progress/kendo-theme-default/dist/all.css";
 import { CommandCell } from "../../components/CommandCell/CommandCell";
 import { DropDownCell } from "../../components/DropDownCell/DropDownCell";
-import { Student } from "../../utils/Interfaces/Student";
+import { Student } from "../../utils/interfaces/student";
 import { DatePickerCell } from "../../components/DatePickerCell/DatePickerCell";
 import {
   addStudentAction,
@@ -20,8 +20,8 @@ import {
   selectStudent,
   setStudentsAction,
   updateStudentAction,
-} from "../../slice/HomeSlice";
-import { logoutUserAction } from "../../slice/UserSlice";
+} from "../../slice/homeSlice";
+import { logoutUserAction } from "../../slice/userSlice";
 import { io } from "socket.io-client";
 const socket = io("http://localhost:8000/", {
   transports: ["websocket"],
@@ -44,7 +44,9 @@ export default function Datagrid() {
 
   React.useEffect(() => {
     const user = cookies.get("user");
-    console.log(user);
+    if (user == undefined) {
+      window.location.href = "/";
+    }
     const decoded: any = jwtDecode(user);
     const adminUser = decoded.role == "admin" ? false : true;
     setDisabled(adminUser);
@@ -144,12 +146,6 @@ export default function Datagrid() {
     )[0];
 
     if (fieldsToBeUpdated != undefined) {
-      // const data: any = { id: fieldsToBeUpdated.id };
-      // fieldsToBeUpdated.value.forEach((value: any, key: string | number) => {
-      //   data[key] = value;
-      // });
-      // console.log(data);
-
       if (validate(dataItem)) {
         dispatch(updateStudentAction(fieldsToBeUpdated as any));
         const index = editedFeilds.indexOf(fieldsToBeUpdated);
@@ -228,7 +224,7 @@ export default function Datagrid() {
   return (
     <Box>
       {/* logout button */}
-      <Container>
+      <Container sx={{ ml: 0, mt: 2, mb: 5 }}>
         <button
           title="Sign Out"
           className="k-button k-button-md k-rounded-md k-button-solid k-button-solid-primary"

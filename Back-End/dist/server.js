@@ -5,8 +5,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.io = void 0;
 const express_1 = __importDefault(require("express"));
-const StudentRoutes_1 = __importDefault(require("./src/routes/StudentRoutes"));
-const UserRoutes_1 = __importDefault(require("./src/routes/UserRoutes"));
+const studentRoutes_1 = __importDefault(require("./src/routes/studentRoutes"));
+const userRoutes_1 = __importDefault(require("./src/routes/userRoutes"));
 const dataSource_1 = __importDefault(require("./src/dataSource"));
 const cors_1 = __importDefault(require("cors"));
 const http_1 = require("http");
@@ -24,8 +24,8 @@ app.use((0, cors_1.default)({
     credentials: true,
     origin: ['http://localhost:3000', 'your-production-domain'],
 }));
-app.use('/student', StudentRoutes_1.default);
-app.use('/user', UserRoutes_1.default);
+app.use('/student', studentRoutes_1.default);
+app.use('/user', userRoutes_1.default);
 const httpServer = (0, http_1.createServer)(app);
 app.get('/', (req, res) => {
     res.send('Express, TypeScript Server');

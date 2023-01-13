@@ -4,11 +4,9 @@ import { io } from '../../server';
 import {
   getAllStudentsService,
   deleteStudentService,
-  findStudentService,
-  mergeStudentService,
-  saveStudentService,
   addStudentService,
-} from '../services/StudentService';
+  updateStudent,
+} from '../services/studentService';
 
 // get all students controller
 
@@ -22,7 +20,7 @@ export const getAllStudents = async (req: Request, res: Response) => {
     res.status(200);
     res.json(students);
   } catch (err) {
-    res.status(500);
+    res.status(401);
     res.json(err);
   }
 };
@@ -36,25 +34,21 @@ export const addStudent = async (req: Request, res: Response) => {
     res.status(200);
     res.json({ message: 'Student added successfully' });
   } catch (err) {
-    res.status(500);
+    res.status(401);
     res.json(err);
   }
 };
 
 // patch student controller
 
-export const patchStudent = async (req: Request, res: Response) => {
+export const patchStudent = async (req: Request, res: Response): Promise<void> => {
   try {
-    const studentId = parseInt(req.params.id);
-    const student = await findStudentService(studentId);
-    if (student) {
-      mergeStudentService(student, req.body);
-      const results = await saveStudentService(student);
-      io.emit('message', 'Student Id : ' + req.body.id + ' updated');
-      return res.send(results);
-    }
+    console.log('Hello Update');
+    const students = await updateStudent(req.body);
+    res.send(students);
+    io.emit('notification', 'The with id ' + req.body.id + ' student has been updated');
   } catch (err) {
-    res.status(500);
+    res.status(401);
     res.json(err);
   }
 };
@@ -69,7 +63,7 @@ export const deleteStudent = async (req: Request, res: Response) => {
     res.status(200);
     res.json({ message: 'Student deleted successfully' });
   } catch (err) {
-    res.status(500);
+    res.status(401);
     res.json(err);
   }
 };

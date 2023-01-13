@@ -1,11 +1,11 @@
 import express from 'express';
-import { loginUser, refreshToken, signupUser, logoutUser, userDetails } from '../controllers/UserController';
+import { loginUser, refreshToken, signupUser, logoutUser, userDetails } from '../controllers/userController';
 import {
   userLoginValidationRules,
   userValidation,
   userSignupValidationRules,
-} from '../utils/Validation/UserValidation';
-import isAuthenticated from '../utils/Authentication';
+} from '../utils/Validation/userValidation';
+import isAuthenticated from '../utils/authentication';
 
 const userRouter = express.Router();
 

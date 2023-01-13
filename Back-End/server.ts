@@ -1,6 +1,6 @@
 import express, { Express, Request, Response } from 'express';
-import studentRoutes from './src/routes/StudentRoutes';
-import userRoutes from './src/routes/UserRoutes';
+import studentRoutes from './src/routes/studentRoutes';
+import userRoutes from './src/routes/userRoutes';
 import dataSource from './src/dataSource';
 import cors from 'cors';
 import { createServer } from 'http';
