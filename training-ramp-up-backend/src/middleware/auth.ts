@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express'
 import jwt = require('jsonwebtoken')
 import { requestNewAccessToken } from '../controllers/userController'
-import { User } from '../models/User'
+import { User } from '../models/user'
 
 export const authorization = (
     req: Request,

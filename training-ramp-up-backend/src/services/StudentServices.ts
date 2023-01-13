@@ -1,5 +1,5 @@
 import * as express from 'express'
-import { Student } from '../models/Student'
+import { Student } from '../models/student'
 import { appDataSource } from '../configs/dataSourceConfig'
 import { DeleteResult, InsertEvent, InsertResult, UpdateResult } from 'typeorm'
 

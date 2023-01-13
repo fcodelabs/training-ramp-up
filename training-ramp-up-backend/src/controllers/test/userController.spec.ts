@@ -8,7 +8,7 @@ import {
     requestSignUp,
 } from '../../controllers/userController'
 import * as validateUser from '../../utils/validateUser'
-import { User } from '../../models/User'
+import { User } from '../../models/user'
 import jwt = require('jsonwebtoken')
 
 const mockResponse = () => {

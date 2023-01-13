@@ -1,8 +1,8 @@
 import * as React from 'react'
-import HomePage from './pages/HomePage/HomePage'
-import SignUpPage from './pages/SignUpPage/SignUpPage'
+import HomePage from './pages/homePage/homePage'
+import SignUpPage from './pages/signUpPage/signUpPage'
 import { Route, Routes } from 'react-router-dom'
-import SignInPage from './pages/SignInPage/SignInPage'
+import SignInPage from './pages/signInPage/signInPage'
 import ProtectedRoutes from './ProtectedRoutes'
 
 
@@ -16,6 +16,7 @@ const App = () => {
                 <Route path="/home" element={<HomePage />} />
             </Route>
         </Routes>
+    
     )
 }
 

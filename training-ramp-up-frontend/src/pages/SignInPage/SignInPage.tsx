@@ -1,30 +1,29 @@
 import { Grid, Typography, TextField, Container, Link } from '@mui/material'
 import React from 'react'
-import '../SignInPage/SignInPage.css'
+import '../signInPage/signInPage.css'
 import Button from '@mui/material/Button'
-import { logIn } from './slice/SignInPageSlice'
-import { useAppDispatch, useAppSelector } from '../../hooks'
+import { logIn } from './slice/signInPageSlice'
+import { useAppDispatch} from '../../hooks'
 import { validate } from '../../utils/signUpPageValidations'
 import { useNavigate } from 'react-router-dom'
 import { User } from '../../utils/interfaces'
 
 export default function SignUpPage() {
-    const navigate=useNavigate()
+    const navigate = useNavigate()
     const dispatch = useAppDispatch()
     const [username, setUsername] = React.useState('')
     const [password, setPassword] = React.useState('')
 
-    const handleLogIn = async() => {
-        const user:User = {
+    const handleLogIn = async () => {
+        const user: User = {
             username: username,
             password: password,
         }
         if (validate(user)) {
-            dispatch(logIn({user,navigate}))
+            dispatch(logIn({ user, navigate }))
             navigate('/home')
         }
     }
-
 
     return (
         <Grid className="containerGrid">

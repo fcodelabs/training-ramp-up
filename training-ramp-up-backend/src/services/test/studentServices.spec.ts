@@ -4,7 +4,7 @@ import {
     getAllStudents,
     updateStudent,
 } from '../../services/studentServices'
-import { Student } from '../../models/Student'
+import { Student } from '../../models/student'
 import { appDataSource } from '../../configs/dataSourceConfig'
 
 describe('Student', () => {

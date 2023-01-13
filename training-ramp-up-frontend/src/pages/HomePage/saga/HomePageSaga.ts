@@ -9,7 +9,7 @@ import {
     deleteStudentFailed,
     updateStudent,
     updateStudentFailed,
-} from '../slice/HomePageSlice'
+} from '../slice/homePageSlice'
 import axios from '../../../utils/authorization'
 import { Person } from '../../../utils/interfaces'
 

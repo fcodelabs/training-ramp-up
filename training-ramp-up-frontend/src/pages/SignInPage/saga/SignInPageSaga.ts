@@ -4,7 +4,7 @@ import {
     logInSuccess,
     signOut,
     signOutSuccess,
-} from '../slice/SignInPageSlice'
+} from '../slice/signInPageSlice'
 import axios from 'axios'
 import axiosInstance from '../../../utils/authorization'
 import { NavigateFunction, useNavigate } from 'react-router-dom'
@@ -13,7 +13,9 @@ import { User } from '../../../utils/interfaces'
 
 const cookies = new Cookies()
 
-function* handleLogIn(action: {payload:{user:User,navigate:NavigateFunction}}): any {
+function* handleLogIn(action: {
+    payload: { user: User; navigate: NavigateFunction }
+}): any {
     try {
         const res = yield call(() =>
             axios.post(
@@ -29,11 +31,10 @@ function* handleLogIn(action: {payload:{user:User,navigate:NavigateFunction}}): 
 
         if (res.data.auth) {
             const user = yield call(() =>
-                axios.post('http://localhost:4000/user/userDetails','', {
+                axios.post('http://localhost:4000/user/userDetails', '', {
                     withCredentials: true,
                 })
             )
-            
 
             yield put(logInSuccess(user))
             action.payload.navigate('/home')
@@ -45,7 +46,9 @@ function* handleLogIn(action: {payload:{user:User,navigate:NavigateFunction}}): 
     }
 }
 
-function* handleSignOut(action: {payload:{navigate:NavigateFunction}}): any {
+function* handleSignOut(action: {
+    payload: { navigate: NavigateFunction }
+}): any {
     try {
         const res = yield call(() =>
             axiosInstance.delete('user/', {

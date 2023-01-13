@@ -3,7 +3,7 @@ import { Express, Request, Response } from 'express'
 import { getUser, addUser } from '../services/userServices'
 import { validate } from '../utils/validateUser'
 import jwt = require('jsonwebtoken')
-import { User } from '../models/User'
+import { User } from '../models/user'
 
 export const requestSignUp = async (
     req: Request,

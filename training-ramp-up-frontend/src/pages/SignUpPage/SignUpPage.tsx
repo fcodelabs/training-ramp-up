@@ -7,15 +7,15 @@ import {
     Button,
 } from '@mui/material'
 import React from 'react'
-import '../SignUpPage/SignUpPage.css'
+import '../signUpPage/signUpPage.css'
 import { validate } from '../../utils/signUpPageValidations'
 import { User } from '../../utils/interfaces'
-import { addUser } from './slice/SignUpPageSlice'
+import { addUser } from './slice/signUpPageSlice'
 import { useAppDispatch, useAppSelector } from '../../hooks'
 import { useNavigate } from 'react-router-dom'
 
 export default function SignUpPage() {
-    const navigate=useNavigate()
+    const navigate = useNavigate()
     const dispatch = useAppDispatch()
     const validSignUp = useAppSelector((state) => state.signUp.validSignUp)
     const [name, setName] = React.useState('')
@@ -29,12 +29,12 @@ export default function SignUpPage() {
             password: password,
         }
         if (validate(user)) {
-            dispatch(addUser(user)) 
+            dispatch(addUser(user))
         }
     }
 
-    React.useEffect(()=>{
-        if(validSignUp){
+    React.useEffect(() => {
+        if (validSignUp) {
             navigate('/')
         }
     })

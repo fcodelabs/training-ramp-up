@@ -3,9 +3,9 @@ import {
     getUser,
     isUserAlreadyExist,
 } from '../../services/userServices'
-import { Student } from '../../models/Student'
+import { Student } from '../../models/student'
 import { appDataSource } from '../../configs/dataSourceConfig'
-import { User } from '../../models/User'
+import { User } from '../../models/user'
 import bcrypt = require('bcrypt')
 
 describe('User', () => {

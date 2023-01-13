@@ -7,20 +7,21 @@ import {
     GridToolbar,
 } from '@progress/kendo-react-grid'
 import '@progress/kendo-theme-default/dist/all.css'
-import { CommandCell } from '../../components/CommandCell/CommandCell'
-import { DropDownCell } from '../../components/DropDownCell/DropDownCell'
+import '../homePage/homePage.css'
+import { CommandCell } from '../../components/commandCell/CommandCell'
+import { DropDownCell } from '../../components/dropDownCell/DropDownCell'
 import { Person } from '../../utils/interfaces'
-import { DatePickerCell } from '../../components/DatePickerCell/DatePickerCell'
+import { DatePickerCell } from '../../components/datePickerCell/DatePickerCell'
 import {
     getStudents,
     addStudent,
     setStudents,
     deleteStudent,
     updateStudent,
-} from './slice/HomePageSlice'
+} from './slice/homePageSlice'
 import { useAppSelector, useAppDispatch } from '../../hooks'
 import { validate } from '../../utils/homePageValidations'
-import { signOut } from '../SignInPage/slice/SignInPageSlice'
+import { signOut } from '../signInPage/slice/signInPageSlice'
 import { Box, Container } from '@mui/material'
 import { useNavigate } from 'react-router-dom'
 import Cookies from 'universal-cookie'
@@ -40,10 +41,10 @@ export default function HomePage() {
 
     React.useEffect(() => {
         dispatch(getStudents())
-    },[])
+    }, [])
     React.useEffect(() => {
         const user = cookies.get('user')
-        const decoded:any = jwtDecode(user)
+        const decoded: any = jwtDecode(user)
         const adminUser = decoded.role == 'Admin' ? false : true
         setDisabled(adminUser)
     })
@@ -181,19 +182,18 @@ export default function HomePage() {
 
     return (
         <Box>
-            <Container>
+            <Box className='signOutContainer'>
                 <button
-                    title="Add new"
-                    style={{ margin: '2vh' }}
-                    className="k-button k-button-md k-rounded-md k-button-solid k-button-solid-secondary"
+                    title="Signout"
+                    className="k-button k-button-md k-rounded-md k-button-solid k-button-solid-secondary signOutBtn"
                     onClick={handleSignOut}
                 >
                     Sign Out
                 </button>
-            </Container>
+            </Box>
 
             <Grid
-                style={{ height: '650px', margin: '4vh' }}
+                className='table'
                 data={students}
                 editField={editField}
                 onItemChange={itemChange}

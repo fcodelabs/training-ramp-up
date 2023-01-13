@@ -1,0 +1,13 @@
+.signOutContainer {
+    display: flex  ;
+    justify-content: flex-end ;
+}
+
+.signOutBtn {
+    margin: 2vh ;
+    margin-right: 4vh ;
+}
+
+.table {
+    margin: 4vh;
+}

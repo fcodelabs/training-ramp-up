@@ -1,5 +1,5 @@
 import { call, put, takeEvery } from 'redux-saga/effects'
-import { addUser, addUserSuccess } from '../slice/SignUpPageSlice'
+import { addUser, addUserSuccess } from '../slice/signUpPageSlice'
 import axios from '../../../utils/authorization'
 
 function* handleAddUser(action: any): any {

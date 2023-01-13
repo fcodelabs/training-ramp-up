@@ -1,4 +1,4 @@
-import { Student } from '../models/Student'
+import { Student } from '../models/student'
 
 const validations = new Map([
     ['name', new RegExp('^([A-z\\s.]{3,80})$')],
