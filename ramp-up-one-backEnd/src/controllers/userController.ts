@@ -5,7 +5,7 @@ import {
   getUser,
   refreshService,
   getUserDetails,
-} from '../services/userService';
+} from '../services/userService'; 
 import { UserModel } from '../utils/interfaces';
 
 export const saveUser = async (req: Request, res: Response) => {
@@ -21,7 +21,7 @@ export const saveUser = async (req: Request, res: Response) => {
         httpOnly: true,
       });
     }
-    response !== false ? res.json(true) : res.json(false);
+   response !== false ? res.json(true) : res.json(false);
   } catch (err) {
     res.send('Error' + err);
   }
@@ -40,11 +40,9 @@ export const loginUser = async (req: Request, res: Response) => {
         maxAge: 60 * 60 * 24 * 1000,
         httpOnly: true,
       });
-      res.status(200);
 
-      //res.sendStatus(200);
     }
-
+//res.json(true);
     response !== false ? res.json(true) : res.json(false);
   } catch (err) {
     res.send('Error' + err);

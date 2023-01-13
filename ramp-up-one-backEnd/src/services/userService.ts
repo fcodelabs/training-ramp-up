@@ -35,12 +35,13 @@ export const saveUserService = async (data: UserModel) => {
         newRefreshToken: jwt.sign(dataStoredInToken, config.jwt_secret_key, {
           expiresIn: 60 * 60 * 24 * 1000,
         }),
+        messege: 'user added successfully',
       };
     } else {
       return false;
     }
   } catch (err) {
-    console.log(err);
+    return { err: 'Registration Failed' };
   }
 };
 
@@ -75,7 +76,7 @@ export const getUser = async (data: UserModel) => {
       return false;
     }
   } catch (err) {
-    console.log(err);
+    return { err: 'Login Failed' };
   }
 };
 

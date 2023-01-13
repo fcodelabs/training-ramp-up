@@ -4,12 +4,10 @@ import { AppDataSource } from '../dataSource';
 import { StudentModel } from '../utils/interfaces';
 
 //get all student
-export const getAllCustomerService = async () => {
+export const getAllStudentService = async () => {
   try {
     const studentsRepo = AppDataSource.getRepository(Student);
-    const allStudent = await studentsRepo.find(
-      {order:{id:'DESC'}}
-    );
+    const allStudent = await studentsRepo.find({ order: { id: 'DESC' } });
     return allStudent;
   } catch (error) {
     return { error };

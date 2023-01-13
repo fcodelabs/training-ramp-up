@@ -8,10 +8,9 @@ export interface StudentModel {
   age: number;
 }
 export interface UserModel {
-  id: number;
+  id?: number;
   email: string;
-  name: string;
+  name?: string;
   password: string;
-  pageName: string;
   userRoll: string;
 }

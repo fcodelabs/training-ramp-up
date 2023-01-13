@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import {
-  getAllCustomerService,
+  getAllStudentService,
   saveStudentService,
   updateStudentService,
   deleteStudentService, 
@@ -12,9 +12,9 @@ import { checkValidation } from '../../../ramp-up-one/src/utils/validation';
 import { validationStatus } from '../utils/validation';
 
 //get all student
-export const getAllCustomer = async (req: Request, res: Response) => {
+export const getAllStudent = async (req: Request, res: Response) => {
   try {
-    const student = await getAllCustomerService(); 
+    const student = await getAllStudentService(); 
     res.send(student);
   } catch (err) {
     res.send('Error' + err);
