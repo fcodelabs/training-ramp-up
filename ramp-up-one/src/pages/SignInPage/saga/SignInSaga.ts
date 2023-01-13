@@ -2,11 +2,11 @@ import { call, put, takeEvery } from 'redux-saga/effects';
 import { AnyAction } from '@reduxjs/toolkit';
 import {
   loginUserAction,
-  saveUserAction,
   logOutUserAction,
   setUserDetails,
   registerUserAction,
   refreshFunction,
+  saveUserAction,
 } from '../slices/SignInSlice';
 
 import { LoginDetails } from '../../../utils/interfaces';
@@ -79,6 +79,8 @@ function* registerUser(action: AnyAction): any {
           name: userDataCookie.name,
         })
       );
+      // yield put(signUpSuccess(true));
+      // alert('User Added Successfully!');
     } else {
       alert('User Already Exists!');
     }

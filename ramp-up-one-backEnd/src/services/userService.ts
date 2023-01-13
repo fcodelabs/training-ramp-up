@@ -6,12 +6,12 @@ import jwt from 'jsonwebtoken';
 import { config } from '../utils/config';
 
 const userRepository = AppDataSource.getRepository(User);
-
+ 
 //save new user
 export const saveUserService = async (data: UserModel) => {
   try {
-    const findUser = await userRepository.findOneBy({ email: data.email });
-    if (!findUser) {
+    // const findUser = await userRepository.findOneBy({ email: data.email });
+    // if (!findUser) {
       const user = new User();
       user.email = data.email;
       user.name = data.name;
@@ -21,25 +21,26 @@ export const saveUserService = async (data: UserModel) => {
       const hash = await bcrypt.hash(tempPassword, 10);
       user.password = hash;
 
-      const newUser = await userRepository.save(user);
+      const newUser:UserModel = await userRepository.save(user);
       // return newUser;
-      const dataStoredInToken = {
-        email: newUser.email,
-        name: newUser.name,
-        userRoll: newUser.userRoll,
-      };
-      return {
-        newAccessToken: jwt.sign(dataStoredInToken, config.jwt_secret_key, {
-          expiresIn: 60 * 60,
-        }),
-        newRefreshToken: jwt.sign(dataStoredInToken, config.jwt_secret_key, {
-          expiresIn: 60 * 60 * 24 * 1000,
-        }),
-        messege: 'user added successfully',
-      };
-    } else {
-      return false;
-    }
+      // const dataStoredInToken = {
+      //   email: newUser.email,
+      //   name: newUser.name,
+      //   userRoll: newUser.userRoll,
+      // };
+      // return {
+      //   newAccessToken: jwt.sign(dataStoredInToken, config.jwt_secret_key, {
+      //     expiresIn: 60 * 60,
+      //   }),
+      //   newRefreshToken: jwt.sign(dataStoredInToken, config.jwt_secret_key, {
+      //     expiresIn: 60 * 60 * 24 * 1000,
+      //   }),
+      //   messege: 'user added successfully',
+      // };
+      return newUser;
+    // } else {
+    //   return false;
+    // }
   } catch (err) {
     return { err: 'Registration Failed' };
   }
@@ -48,29 +49,30 @@ export const saveUserService = async (data: UserModel) => {
 //log in user
 export const getUser = async (data: UserModel) => {
   try {
-    const findUser = await userRepository.findOneBy({ email: data.email });
+    const findUser:UserModel = await userRepository.findOneBy({ email: data.email });
     if (findUser) {
       const isValid = await bcrypt.compare(data.password, findUser.password);
       if (isValid) {
-        const dataStoredInToken = {
-          email: data.email,
-          userRoll: findUser.userRoll,
-        };
+        // const dataStoredInToken = {
+        //   email: data.email,
+        //   userRoll: findUser.userRoll,
+        // };
 
-        return {
-          newAccessToken: jwt.sign(dataStoredInToken, config.jwt_secret_key, {
-            expiresIn: 60 * 60,
-          }),
-          newRefreshToken: jwt.sign(
-            dataStoredInToken,
-            config.jwt_secretRe_key,
-            {
-              expiresIn: 60 * 60 * 24 * 1000,
-            }
-          ),
-        };
+        // return {
+        //   newAccessToken: jwt.sign(dataStoredInToken, config.jwt_secret_key, {
+        //     expiresIn: 60 * 60,
+        //   }),
+        //   newRefreshToken: jwt.sign(
+        //     dataStoredInToken,
+        //     config.jwt_secretRe_key,
+        //     {
+        //       expiresIn: 60 * 60 * 24 * 1000,
+        //     }
+        //   ),
+        // };
+        return findUser;
       } else {
-        return isValid;
+        return false;
       }
     } else {
       return false;
@@ -93,19 +95,19 @@ export const refreshService = async (refreshToken: string) => {
       const findUser = await userRepository.findOneBy({
         email: userEmail,
       });
-      const secret = config.jwt_secret_key;
-      if (findUser !== null) {
-        const tokenData = {
-          email: findUser.email,
-          userRoll: findUser.userRoll,
-        };
-        const newAccessToken = jwt.sign(tokenData, secret, {
-          expiresIn: 60 * 60,
-        });
-        return {
-          newAccessToken,
-          tokenData,
-        };
+      if (findUser) {
+        // const tokenData = {
+        //   email: findUser.email,
+        //   userRoll: findUser.userRoll,
+        // };
+        // const newAccessToken = jwt.sign(tokenData, secret, {
+        //   expiresIn: 60 * 60,
+        // });
+        // return {
+        //   newAccessToken,
+        //   tokenData,
+        // };
+        return findUser;
       }
     }
   } catch (err) {

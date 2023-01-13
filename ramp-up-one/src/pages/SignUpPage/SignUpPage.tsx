@@ -36,7 +36,7 @@ const SignUpPage = () => {
     if (checkInputValidation(loginPerson)) {
       dispatch(registerUserAction(loginPerson));
     }
-  }
+  }  
   function checkInputValidation(dataItem: LoginDetails) {
     const email = /^[A-z2-9]+@[A-z2-9]+\.[A-z2-9]+$/;
     const name = /^[A-z]{2,20}$/;

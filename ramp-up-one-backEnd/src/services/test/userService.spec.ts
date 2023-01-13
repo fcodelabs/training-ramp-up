@@ -1,6 +1,6 @@
 import { AppDataSource } from '../../dataSource';
 import { User } from '../../entities/userEntity';
-import { saveUserService, getUser } from '../../services/userService';
+import { saveUserService, getUser } from '../userService';
 import { UserModel } from '../../utils/interfaces';
 import bcrypt from 'bcrypt';
 const userRepository = AppDataSource.getRepository(User);
@@ -16,8 +16,7 @@ describe('User Service', () => {
     test('Register User Success', async () => {
       userRepository.save = jest.fn().mockResolvedValue(newUser);
       const res:any = await saveUserService(newUser);
-      expect(res.newRefreshToken).toBeDefined();
-      expect(res.newAccessToken).toBeDefined();
+      expect(res).toEqual(newUser);
     });
 
     test('Register User Fail', async () => {
@@ -44,8 +43,7 @@ describe('User Service', () => {
       userRepository.findOneBy = jest.fn().mockResolvedValue(user);
       bcrypt.compare = jest.fn().mockResolvedValue(true);
       const res: any = await getUser(user);
-      expect(res.newRefreshToken).toBeDefined();
-      expect(res.newAccessToken).toBeDefined();
+      expect(res).toEqual(user);
     });
 
     test('Login User Fail,invalid Email', async () => {
