@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import {
   Grid,
   GridCellProps,
-  GridColumn as Column,
+  GridColumn as Column, 
   GridItemChangeEvent,
   GridToolbar,
 } from '@progress/kendo-react-grid';
