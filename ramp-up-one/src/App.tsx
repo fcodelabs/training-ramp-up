@@ -13,7 +13,7 @@ function App() {
           <Route path="/" element={<SignInPage />} />
           <Route path="/register" element={<SignUpPage />} />
           <Route element={<PrivateRoutes/>}>
-            <Route path="/Home" element={<DataGrid />} />
+            <Route path="/home" element={<DataGrid />} />
           </Route>
         </Routes>
       </BrowserRouter>

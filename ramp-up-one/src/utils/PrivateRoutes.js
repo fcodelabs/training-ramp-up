@@ -3,10 +3,11 @@ import { Navigate, Outlet } from 'react-router-dom';
 import Cookies from 'universal-cookie';
 
 const cookies = new Cookies();
-const userDataCookie = cookies.get('userData');
+
 
 const PrivateRoutes = () => {
-  return userDataCookie !== null ? <Outlet /> : <Navigate to="/" />;
+  console.log('check route');
+  const userDataCookie = cookies.get('userData');
+  return userDataCookie ? <Outlet /> : <Navigate to="/" />;
 };
 export default PrivateRoutes;
-  

@@ -7,16 +7,19 @@ import {
   updateStudentAction,
   deleteStudentAction,
   addStudent,
-} from './studentSlice';
+} from '../slices/studentSlice';
 import {
   insertStudentService,
   getStudentService,
   updateStudentService,
   deleteStudentService,
-} from '../../services/StudentServices';
+} from '../../../services/StudentServices';
 // import { newAccessTokenService } from '../../services/userServices';
-import { StudentModel } from '../../utils/interfaces';
-import { setUserDetails,saveUserAction } from '../SignInPage/SignInSlice';
+import { StudentModel } from '../../../utils/interfaces';
+import {
+  setUserDetails,
+  saveUserAction,
+} from '../../SignInPage/slices/SignInSlice';
 
 const cookies = new Cookies();
 
@@ -30,7 +33,6 @@ export function* getStudent(): any {
   try {
     const response: StudentModel = yield call(getStudentService);
     const userDataCookie = cookies.get('userData');
-    console.log(userDataCookie);
     yield put(saveStudentAction(response.data));
     yield put(
       setUserDetails({

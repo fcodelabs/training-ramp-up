@@ -7,7 +7,7 @@ import Button from '@mui/material/Button';
 import { useNavigate } from 'react-router-dom';
 import { LoginDetails } from '../../utils/interfaces';
 import { useDispatch, useSelector } from 'react-redux';
-import { registerUserAction } from '../SignInPage/SignInSlice';
+import { registerUserAction } from '../SignInPage/slices/SignInSlice';
 
 const SignUpPage = () => {
   const [emailError, setEmailError] = React.useState('');
@@ -24,7 +24,7 @@ const SignUpPage = () => {
 
   React.useEffect(() => {
     if (user === true) {
-      navigate('/Home');
+      navigate('/home');
     }
   });
   const openSignInPage = () => {
@@ -106,7 +106,7 @@ const SignUpPage = () => {
     }
   }
 
-  return ( 
+  return (
     <div>
       <Box sx={{ flexGrow: 1 }}>
         <Grid style={{ overflow: 'hidden' }} container spacing={2} columns={16}>

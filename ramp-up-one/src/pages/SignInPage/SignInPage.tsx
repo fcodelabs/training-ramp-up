@@ -7,7 +7,7 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import { useNavigate } from 'react-router-dom';
 import { LoginDetails } from '../../utils/interfaces';
-import { loginUserAction } from './SignInSlice';
+import { loginUserAction } from './slices/SignInSlice';
 import { useDispatch, useSelector } from 'react-redux';
 
 const SignInPage = () => {
@@ -16,18 +16,20 @@ const SignInPage = () => {
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
   const pageName = 'signInPage';
-
+  const userDetails = useSelector((state: any) => state.signIn.userDetail);
   const user = useSelector((state: any) => state.signIn.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   React.useEffect(() => {
     if (user === true) {
-      navigate('/Home');
+      navigate('/home');
     }
-    console.log(user);
   });
-
+  React.useEffect(() => {
+    console.log('userDetails-', userDetails);
+    // dispatch(refreshFunction());
+  }, []);
   function checkInputValidation(dataItem: LoginDetails) {
     const email = /^[A-z2-9]+@[A-z2-9]+\.[A-z2-9]+$/;
     const password = /^[A-z,0-9 _]{4,10}$/;
@@ -53,7 +55,6 @@ const SignInPage = () => {
   }
   function logInFunction() {
     const loginPerson = { email, password, pageName, navigate };
-    
     if (checkInputValidation(loginPerson)) {
       dispatch(loginUserAction(loginPerson));
     }

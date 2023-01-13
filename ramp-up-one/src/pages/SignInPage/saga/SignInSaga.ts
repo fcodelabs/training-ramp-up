@@ -7,16 +7,15 @@ import {
   setUserDetails,
   registerUserAction,
   refreshFunction,
-} from './SignInSlice';
+} from '../slices/SignInSlice';
 
-
-import { LoginDetails } from '../../utils/interfaces';
+import { LoginDetails } from '../../../utils/interfaces';
 import {
   getUserService,
   logoutUserService,
   getUserDetails,
   insertUserService,
-} from '../../services/userServices';
+} from '../../../services/userServices';
 import Cookies from 'universal-cookie';
 const cookies = new Cookies();
 
@@ -26,6 +25,7 @@ export function* SignInSaga() {
   yield takeEvery(registerUserAction, registerUser);
   yield takeEvery(refreshFunction, refreshAction);
 }
+
 function* loginUser(action: AnyAction): any {
   try {
     const response: LoginDetails = yield call(getUserService, action.payload);
@@ -87,7 +87,6 @@ function* registerUser(action: AnyAction): any {
   }
 }
 
-
-function* refreshAction ():any {
-  yield put(saveUserAction(true));
+function* refreshAction(): any {
+  // yield put(saveUserAction(true));
 }

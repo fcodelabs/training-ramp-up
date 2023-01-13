@@ -10,21 +10,20 @@ import { useNavigate } from 'react-router-dom';
 import Command from '../../components/Buttons/Buttons';
 import { StudentModel } from '../../utils/interfaces';
 import DropDownCell from '../../components/Dropdown/DropDownCell';
-import ValidatedDate from '../../components/ValidatedDate/ValidatedDate';
+import ValidatedDate from '../../components/ValidatedDate/validatedDate';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   getStudentAction,
   addStudent,
   updateStudentAction,
   deleteStudentAction,
-} from './studentSlice';
-import { logOutUserAction, refreshFunction } from '../SignInPage/SignInSlice';
+} from './slices/studentSlice';
+import { logOutUserAction } from '../SignInPage/slices/SignInSlice';
 import { checkValidation } from '../../utils/validation';
 
 const editField: string = 'inEdit';
 
 const dataGrid = () => {
-  const user3 = useSelector((state: any) => state.signIn.user);
   const [user, setuser] = useState<StudentModel[]>([]);
   const selectStudent = useSelector((state: any) => state.studentSlice.student);
   const user2 = useSelector((state: any) => state.signIn.user);
@@ -42,9 +41,8 @@ const dataGrid = () => {
     dispatch(getStudentAction());
   }, []);
   useEffect(() => {
-    dispatch(refreshFunction());
-    console.log('user3');
-    console.log(user3);
+    console.log('userDetails-', userDetails);
+    // dispatch(refreshFunction());
   }, []);
 
   useEffect(() => {
@@ -232,7 +230,7 @@ const dataGrid = () => {
             >
               Add new
             </button>
-            <h2 style={{ left: '75rem', position: 'relative',top: '-1rem' }}>
+            <h2 style={{ left: '75rem', position: 'relative', top: '-1rem' }}>
               {userDetails.name}
             </h2>
             <button
