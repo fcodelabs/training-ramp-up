@@ -55,3 +55,14 @@ export interface AxiosRequestConfig {
 export interface PropType {
   component: React.FC
 }
+
+// export interface ResponseType {
+//   data: string
+//   status: number
+// }
+// export interface ErrorType {
+//   code: string
+//   config: any
+//   message: string
+//   response: ResponseType
+// }

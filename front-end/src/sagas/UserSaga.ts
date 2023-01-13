@@ -7,12 +7,12 @@ import {
   setAddStatus,
   unSetUser,
   logoutUser
-} from '../slices/userSlice'
+} from '../slices/UserSlice'
 import {
   getAUser,
   insertUser,
   logoutUserSession
-} from '../services/userOperations'
+} from '../services/UserOperations'
 import { AnyAction } from '@reduxjs/toolkit'
 import { ResponseGenerator } from '../utils/interface'
 
@@ -22,10 +22,11 @@ function * findUser (action: AnyAction) {
     if (response.status === 200) {
       yield put(setUser(response.data))
     } else {
+      console.log(response)
       alert(response.data)
     }
-  } catch (err) {
-    console.error('error:', err)
+  } catch (err: any) {
+    alert(err.response.data)
     yield put(setError(err))
   }
 }
@@ -39,8 +40,8 @@ function * saveUser (action: AnyAction) {
     } else {
       alert(response.data)
     }
-  } catch (err) {
-    console.error('error:', err)
+  } catch (err: any) {
+    alert(err.response.data)
     yield put(setError(err))
   }
 }
@@ -51,8 +52,8 @@ function * signoutUser (action: AnyAction) {
     if (response.status === 200) {
       yield put(unSetUser())
     }
-  } catch (err) {
-    console.error('error:', err)
+  } catch (err: any) {
+    alert(err.response.data)
     yield put(setError(err))
   }
 }

@@ -16,12 +16,15 @@ import Visibility from '@mui/icons-material/Visibility'
 import VisibilityOff from '@mui/icons-material/VisibilityOff'
 import { useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux/es/exports'
-import { getUser } from '../../slices/userSlice'
+import { getUser } from '../../slices/UserSlice'
+import LoadingSpinner from '../../components/loadingSpinner/LoadingSpinner'
 
 const SignIn: React.FC = () => {
   const dispatch = useDispatch()
 
   const loggedin = useSelector((state: any) => state.user.loggedin)
+
+  const [isLoading, setIsLoading] = useState(false)
 
   const [email, setEmail] = useState('')
 
@@ -185,11 +188,16 @@ const SignIn: React.FC = () => {
             <Button
               variant="contained"
               onClick={() => {
+                setIsLoading(true)
                 if (validate()) {
                   const user = { email: email, password: password }
                   dispatch(getUser(user))
                 }
+                setTimeout(() => {
+                  setIsLoading(false)
+                }, 3000)
               }}
+              disabled={isLoading}
               style={{
                 borderRadius: '40px',
                 padding: '8px 30px',
@@ -200,6 +208,7 @@ const SignIn: React.FC = () => {
               {' '}
               SIGN IN{' '}
             </Button>
+            {isLoading ? <LoadingSpinner /> : ''}
           </Grid>
           <Button
             size="small"

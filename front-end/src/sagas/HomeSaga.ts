@@ -6,16 +6,15 @@ import {
   editStudent,
   removeStudent,
   setError
-} from '../slices/homeSlice'
+} from '../slices/HomeSlice'
 import {
   deletePerson,
   getPersons,
   insertPerson,
   updatePerson
-} from '../services/personTableViewOperations'
+} from '../services/PersonTableViewOperations'
 import { AnyAction } from '@reduxjs/toolkit'
 import { ResponseGenerator } from '../utils/interface'
-// import { getUserState } from '../slices/UserSlice'
 
 function * getStudents () {
   try {
@@ -25,8 +24,8 @@ function * getStudents () {
     } else if (response.status === 401) {
       alert(response)
     }
-  } catch (err) {
-    console.error('error:', err)
+  } catch (err: any) {
+    alert(err.response.data)
     yield put(setError(err))
   }
 }
@@ -39,8 +38,8 @@ function * saveStudent (action: AnyAction) {
     } else if (response.status === 401) {
       alert(response)
     }
-  } catch (err) {
-    console.error('error:', err)
+  } catch (err: any) {
+    alert(err.response.data)
     yield put(setError(err))
   }
 }
@@ -53,8 +52,8 @@ function * updateStudent (action: AnyAction) {
     } else if (response.status === 401) {
       alert(response)
     }
-  } catch (err) {
-    console.error('error:', err)
+  } catch (err: any) {
+    alert(err.response.data)
     yield put(setError(err))
   }
 }
@@ -67,8 +66,8 @@ function * deleteStudent (action: AnyAction) {
     } else if (response.status === 401) {
       alert(response)
     }
-  } catch (err) {
-    console.error('error:', err)
+  } catch (err: any) {
+    alert(err.response.data)
     yield put(setError(err))
   }
 }
