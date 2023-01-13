@@ -1,12 +1,12 @@
 import { Request, Response } from 'express'
-import { io } from '../..'
-import StudentModel from '../models/studentModel'
+import { io } from '../../server'
+import StudentModel, { DeleteStudentModel } from '../models/studentModel'
 import {
   getAllStudentsService,
   addStudentService,
   updateStudentService,
   deleteStudentService
-} from '../services/StudentService'
+} from '../services/studentService'
 
 const validate = (person: StudentModel) => {
   const name = /^([A-z\s.]{3,20})$/
@@ -21,15 +21,19 @@ const validate = (person: StudentModel) => {
   if (person.name !== undefined && !name.test(person.name)) {
     return false
   }
+
   if (person.gender !== undefined && person.gender === '') {
     return false
   }
+
   if (person.address !== undefined && !address.test(person.address)) {
     return false
   }
+
   if (person.mobileNo !== undefined && !mobileNo.test(person.mobileNo)) {
     return false
   }
+
   if (person.dob !== undefined && !validateAge) {
     return false
   }
@@ -39,26 +43,33 @@ const validate = (person: StudentModel) => {
 export const getAllStudents = async (req: Request, res: Response) => {
   try {
     const students = await getAllStudentsService()
-    res.status(200).send(students)
+    if (students !== null) {
+      res.status(200).send(students)
+    } else {
+      res.status(400).send('Could not get student details')
+    }
   } catch (err) {
-    res.send(`Error: ${err}`)
+    res.status(400).send(`Error: ${err}`)
   }
 }
 
 export const addStudent = async (req: Request, res: Response) => {
   try {
-    if (validate(req.body)) {
+    const valid = validate(req.body)
+    if (valid) {
       const result = await addStudentService(req.body)
-      res.status(201).send(result)
-      io.emit(
-        'notification',
-        'Student has been added'
-      )
+      if (result !== null) {
+        res.status(201).send(result)
+        io.emit(
+          'notification',
+          'Student has been added'
+        )
+      }
     } else {
-      res.send('Can not add student. Enter Valid Data')
+      res.status(400).send('Can not add student. Enter Valid Data')
     }
   } catch (err) {
-    res.send(`Error: ${err}`)
+    res.status(400).send(`Error: ${err}`)
   }
 }
 
@@ -66,29 +77,35 @@ export const updateStudent = async (req: Request, res: Response) => {
   try {
     if (validate(req.body)) {
       const result = await updateStudentService(req.body)
-      res.status(200).send(result)
-      io.emit(
-        'notification',
-        'Student has been updated'
-      )
+      if (result !== null) {
+        res.status(200).send(result)
+        io.emit(
+          'notification',
+          'Student has been updated'
+        )
+      }
     } else {
-      res.send('Can not update student. Enter Valid Data')
+      res.status(400).send('Can not update student. Enter Valid Data')
     }
   } catch (err) {
-    res.send(`Error: ${err}`)
+    res.status(400).send(`Error: ${err}`)
   }
 }
 
 export const deleteStudent = async (req: Request, res: Response) => {
   try {
     const studentId = parseInt(req.params.Id)
-    const result = await deleteStudentService(studentId)
-    res.status(200).send(result)
-    io.emit(
-      'notification',
-      'Student has been deleted'
-    )
+    const result = await deleteStudentService(studentId) as DeleteStudentModel
+    if (result.affected !== 0) {
+      res.status(200).send(result)
+      io.emit(
+        'notification',
+        'Student has been deleted'
+      )
+    } else {
+      res.status(400).send('Could not found student to delete')
+    }
   } catch (err) {
-    res.send(`Error: ${err}`)
+    res.status(400).send(`Error: ${err}`)
   }
 }

@@ -7,6 +7,11 @@ export default interface UserModel {
   role: string
 }
 
+export interface LoginUserModel {
+  email: string
+  password: string
+}
+
 export interface JwtPayloadUser {
   id?: number
   userName: string

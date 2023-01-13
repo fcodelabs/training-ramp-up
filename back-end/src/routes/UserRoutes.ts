@@ -3,15 +3,15 @@ import {
   getUser,
   addUser,
   signoutUser
-} from '../controllers/UserController'
-import { refreshUser } from '../services/AuthService'
+} from '../controllers/userController'
+import { refreshUser } from '../services/authService'
 
-const UserRoutes = express.Router()
+const userRoutes = express.Router()
 
-UserRoutes.post('/signin', getUser)
-UserRoutes.post('/signup', addUser)
-UserRoutes.post('/signout', signoutUser)
-UserRoutes.post('/refresh', refreshUser)
+userRoutes.post('/signin', getUser)
+userRoutes.post('/signup', addUser)
+userRoutes.post('/signout', signoutUser)
+userRoutes.post('/refresh', refreshUser)
 // authService(['Admin', 'Guest'])
 
-export default UserRoutes
+export default userRoutes

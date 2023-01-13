@@ -43,4 +43,4 @@ var Student = /** @class */ (function () {
     return Student;
 }());
 exports.default = Student;
-//# sourceMappingURL=Student.js.map
+//# sourceMappingURL=student.js.map

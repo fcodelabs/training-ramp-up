@@ -1,6 +1,6 @@
-import User from '../entity/User'
-import UserModel from '../models/userModel'
-import DatabaseService from './DatabaseService'
+import User from '../entity/user'
+import UserModel, { LoginUserModel } from '../models/userModel'
+import DatabaseService from './databaseService'
 import bcrypt from 'bcrypt'
 
 const checkUserValid = async (userEmail: string) => {
@@ -13,7 +13,7 @@ const checkUserValid = async (userEmail: string) => {
   return false
 }
 
-export const getUserService = async (user: UserModel) => {
+export const getUserService = async (user: LoginUserModel) => {
   try {
     const useremail = user.email
     const founduser: UserModel | null = await DatabaseService.getRepository(User).findOneBy({

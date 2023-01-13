@@ -7,7 +7,6 @@ import { PropType } from '../utils/interface'
 
 const GuardRoute: FC<PropType> = ({ component: Component }) => {
   const isAuthenticated = useSelector((state: any) => state.user.loggedin)
-  // console.log(isAuthenticated)
 
   if (isAuthenticated === 'true') return <Component />
   return <Navigate to="/" />

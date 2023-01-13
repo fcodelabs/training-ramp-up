@@ -3,7 +3,7 @@ import UserModel from '../models/userModel'
 import {
   getUserService,
   addUserService
-} from '../services/UserService'
+} from '../services/userService'
 import dotenv from 'dotenv'
 import JWT from 'jsonwebtoken'
 
@@ -11,7 +11,7 @@ dotenv.config()
 const refreshsecret = process.env.REFRESH_SECRET ?? ''
 const accesssecret = process.env.ACCESS_SECRET ?? ''
 
-const validate = (user: UserModel) => {
+export const validate = (user: UserModel) => {
   const nameReg = /^([A-z\s]{3,30})$/
   const emailReg = /^([\w-.]+@([\w-]+\.)+[\w-]{2,4})$/
   const validPw: boolean = user.password.length >= 8 && /[0-9]/.test(user.password)
@@ -21,6 +21,7 @@ const validate = (user: UserModel) => {
     return false
   }
   if (!emailReg.test(user.email)) {
+    // console.log('email', emailReg.test(user.email))
     return false
   }
   if (!validPw) {
@@ -52,24 +53,26 @@ export const getUser = async (req: Request, res: Response) => {
 
     return res.status(401).send('Email or Password Invalid')
   } catch (err) {
-    res.send(`Error: ${err}`)
+    res.status(403).send(`Error: ${err}`)
   }
 }
 
 export const addUser = async (req: Request, res: Response) => {
   try {
+    // console.log(validate(req.body))
+    // console.log(req.body)
     if (validate(req.body)) {
       const result = await addUserService(req.body)
       if (result !== false) {
-        return res.status(200).send(result)
+        return res.status(201).send(result)
       } else {
-        res.status(401).send('Email has already been used!!')
+        return res.status(401).send('Email has already been used!!')
       }
     } else {
-      return res.status(401).send('Can not add student. Enter Valid Data')
+      return res.status(400).send('Can not add student. Enter Valid Data')
     }
   } catch (err) {
-    res.send(`Error: ${err}`)
+    res.status(403).send(`Error: ${err}`)
   }
 }
 
@@ -80,6 +83,6 @@ export const signoutUser = async (req: Request, res: Response) => {
     res.cookie('user', '', { maxAge: -1, httpOnly: false })
     res.status(200).send('User Logged out')
   } catch (err) {
-    res.send(`Error: ${err}`)
+    res.status(403).send(`Error: ${err}`)
   }
 }

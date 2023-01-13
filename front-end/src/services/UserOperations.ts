@@ -5,7 +5,9 @@ import axiosInstance from './setupInterceptors'
 const baseURL: string = 'http://localhost:8000/user'
 
 export const getAUser = async (user: User) => {
-  const response = await axios.post(baseURL + '/signin', user, { withCredentials: true })
+  const response = await axios.post(baseURL + '/signin', user, {
+    withCredentials: true
+  })
   return response
 }
 

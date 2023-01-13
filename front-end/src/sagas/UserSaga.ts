@@ -7,8 +7,12 @@ import {
   setAddStatus,
   unSetUser,
   logoutUser
-} from '../slices/UserSlice'
-import { getAUser, insertUser, logoutUserSession } from '../services/UserOperations'
+} from '../slices/userSlice'
+import {
+  getAUser,
+  insertUser,
+  logoutUserSession
+} from '../services/userOperations'
 import { AnyAction } from '@reduxjs/toolkit'
 import { ResponseGenerator } from '../utils/interface'
 
@@ -18,7 +22,7 @@ function * findUser (action: AnyAction) {
     if (response.status === 200) {
       yield put(setUser(response.data))
     } else {
-      alert(response)
+      alert(response.data)
     }
   } catch (err) {
     console.error('error:', err)
@@ -29,11 +33,11 @@ function * findUser (action: AnyAction) {
 function * saveUser (action: AnyAction) {
   try {
     const response: ResponseGenerator = yield call(insertUser, action.payload)
-    if (response.status === 200) {
+    if (response.status === 201) {
       yield put(setAddStatus(true))
       alert('Successfully Registered')
     } else {
-      alert(response)
+      alert(response.data)
     }
   } catch (err) {
     console.error('error:', err)

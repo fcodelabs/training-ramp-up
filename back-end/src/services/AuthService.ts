@@ -33,7 +33,7 @@ export const authService = (role: string[]) => {
       }
       if (decoded && role.includes(decoded.user.role)) return next()
     } catch (err) {
-      return res.status(400).send('Invalid Accesss Token')
+      return res.status(401).send('Invalid Accesss Token')
     }
   }
 }

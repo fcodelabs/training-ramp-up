@@ -1,13 +1,13 @@
-import Student from '../entity/Student'
-import StudentModel from '../models/studentModel'
-import DatabaseService from './DatabaseService'
+import Student from '../entity/student'
+import StudentModel, { UpdateStudentModel } from '../models/studentModel'
+import DatabaseService from './databaseService'
 
 export const getAllStudentsService = async () => {
   try {
     const students = await DatabaseService.getRepository(Student).find({ order: { id: 'ASC' } })
     return students
   } catch (err) {
-    return err
+    return null
   }
 }
 
@@ -22,23 +22,24 @@ export const addStudentService = async (student: StudentModel) => {
     const result = await DatabaseService.getRepository(Student).save(newStudent)
     return result
   } catch (err) {
-    return err
+    return null
   }
 }
 
-export const updateStudentService = async (updatestudent: StudentModel) => {
+export const updateStudentService = async (updatestudent: UpdateStudentModel) => {
   try {
     const studentId = updatestudent.id
     const student = await DatabaseService.getRepository(Student).findOneBy({
       id: studentId
     })
     if (student !== null) {
-      DatabaseService.getRepository(Student).merge(student, updatestudent)
-      const result = await DatabaseService.getRepository(Student).save(student)
+      const updatedStudent = DatabaseService.getRepository(Student).merge(student, updatestudent)
+      const result = await DatabaseService.getRepository(Student).save(updatedStudent)
       return result
     }
+    return null
   } catch (err) {
-    return err
+    return null
   }
 }
 
@@ -47,6 +48,6 @@ export const deleteStudentService = async (ID: number) => {
     const result = await DatabaseService.getRepository(Student).delete(ID)
     return result
   } catch (err) {
-    return err
+    return null
   }
 }

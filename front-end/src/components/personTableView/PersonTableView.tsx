@@ -9,16 +9,16 @@ import {
 } from '@progress/kendo-react-grid'
 import { Button } from '@progress/kendo-react-buttons'
 import '@progress/kendo-theme-default/dist/all.css'
-import CommandCell from '../CommandCell/CommandCell'
+import CommandCell from '../commandCell/CommandCell'
 import { durationInYears, addYears } from '@progress/kendo-date-math'
-import DropDownCell from '../DropDownCell/DropDownCell'
+import DropDownCell from '../dropDownCell/DropDownCell'
 import { useDispatch, useSelector } from 'react-redux/es/exports'
 import {
   addStudent,
   editStudent,
   getAllStudents,
   removeStudent
-} from '../../slices/HomeSlice'
+} from '../../slices/homeSlice'
 import Person, { UpdatedPerson } from '../../utils/interface'
 
 const PersonTableView = () => {
