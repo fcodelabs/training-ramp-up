@@ -16,7 +16,7 @@ import Visibility from '@mui/icons-material/Visibility'
 import VisibilityOff from '@mui/icons-material/VisibilityOff'
 import { useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux/es/exports'
-import { getUser } from '../../slices/userSlice'
+import { getUser } from '../../slices/UserSlice'
 import LoadingSpinner from '../../components/loadingSpinner/LoadingSpinner'
 
 const SignIn: React.FC = () => {

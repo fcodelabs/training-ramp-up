@@ -3,7 +3,7 @@ import UserModel from '../models/userModel'
 import {
   getUserService,
   addUserService
-} from '../services/userService'
+} from '../services/UserService'
 import dotenv from 'dotenv'
 import JWT from 'jsonwebtoken'
 

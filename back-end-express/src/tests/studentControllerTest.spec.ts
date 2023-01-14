@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/consistent-type-assertions */
 import { Request, Response } from 'express'
-import * as studentServices from '../services/studentService'
-import { getAllStudents, addStudent, updateStudent, deleteStudent } from '../controllers/studentController'
+import * as studentServices from '../services/StudentService'
+import { getAllStudents, addStudent, updateStudent, deleteStudent } from '../controllers/StudentController'
 import { DeleteStudentModel } from '../models/studentModel'
-import Student from '../entity/student'
+import Student from '../entity/Student'
 
 describe('Student Controllers Test', () => {
   const response = () => {

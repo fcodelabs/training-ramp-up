@@ -1,8 +1,8 @@
 import express, { Request, Response, NextFunction } from 'express'
 import dotenv from 'dotenv'
-import studentRoutes from './src/routes/studentRoutes'
-import userRoutes from './src/routes/userRoutes'
-import DatabaseService from './src/services/databaseService'
+import studentRoutes from './src/routes/StudentRoutes'
+import userRoutes from './src/routes/UserRoutes'
+import DatabaseService from './src/services/DatabaseService'
 import cookieParser from 'cookie-parser'
 import { app, httpServer, io } from './server'
 

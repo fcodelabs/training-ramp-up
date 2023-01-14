@@ -1,6 +1,6 @@
-import Student from '../entity/student'
+import Student from '../entity/Student'
 import StudentModel, { UpdateStudentModel } from '../models/studentModel'
-import DatabaseService from './databaseService'
+import DatabaseService from './DatabaseService'
 
 export const getAllStudentsService = async () => {
   try {

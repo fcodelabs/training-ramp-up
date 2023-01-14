@@ -1,13 +1,13 @@
 /* eslint-disable @typescript-eslint/consistent-type-assertions */
-import Student from '../entity/student'
+import Student from '../entity/Student'
 import StudentModel, { DeleteStudentModel, UpdateStudentModel } from '../models/studentModel'
-import DatabaseService from '../services/databaseService'
+import DatabaseService from '../services/DatabaseService'
 import {
   getAllStudentsService,
   addStudentService,
   updateStudentService,
   deleteStudentService
-} from '../services/studentService'
+} from '../services/StudentService'
 
 describe('Student Services Test', () => {
   const allStudents = [

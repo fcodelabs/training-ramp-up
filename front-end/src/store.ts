@@ -1,9 +1,9 @@
 import { configureStore } from '@reduxjs/toolkit'
-import studentReducer from './slices/homeSlice'
-import userReducer from './slices/userSlice'
+import studentReducer from './slices/HomeSlice'
+import userReducer from './slices/UserSlice'
 import createSagaMiddleware from 'redux-saga'
-import { HomeSaga } from './sagas/homeSaga'
-import { UserSaga } from './sagas/userSaga'
+import { HomeSaga } from './sagas/HomeSaga'
+import { UserSaga } from './sagas/UserSaga'
 
 const sagaMiddleware = createSagaMiddleware()
 const middleware = [sagaMiddleware]

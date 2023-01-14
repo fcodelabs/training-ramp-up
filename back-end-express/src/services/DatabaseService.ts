@@ -1,8 +1,8 @@
 import { DataSource } from 'typeorm'
 import 'reflect-metadata'
 import * as dotenv from 'dotenv'
-import Student from '../entity/student'
-import User from '../entity/user'
+import Student from '../entity/Student'
+import User from '../entity/User'
 
 dotenv.config()
 

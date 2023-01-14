@@ -1,6 +1,6 @@
-import User from '../entity/user'
+import User from '../entity/User'
 import UserModel, { LoginUserModel } from '../models/userModel'
-import DatabaseService from './databaseService'
+import DatabaseService from './DatabaseService'
 import bcrypt from 'bcrypt'
 
 const checkUserValid = async (userEmail: string) => {

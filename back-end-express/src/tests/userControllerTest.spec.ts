@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/consistent-type-assertions */
 import { Request, Response } from 'express'
-import { getUser, addUser, signoutUser } from '../controllers/userController'
+import { getUser, addUser, signoutUser } from '../controllers/UserController'
 import UserModel from '../models/userModel'
-import * as userServices from '../services/userService'
+import * as userServices from '../services/UserService'
 
 describe('User Controller Test', () => {
   const response = () => {

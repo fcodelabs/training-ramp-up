@@ -6,7 +6,7 @@ import {
   addStudentService,
   updateStudentService,
   deleteStudentService
-} from '../services/studentService'
+} from '../services/StudentService'
 
 const validate = (person: StudentModel) => {
   const name = /^([A-z\s.]{3,20})$/

@@ -4,8 +4,8 @@ import {
   addStudent,
   updateStudent,
   deleteStudent
-} from '../controllers/studentController'
-import { authService } from '../services/authService'
+} from '../controllers/StudentController'
+import { authService } from '../services/AuthService'
 
 const studentRoutes = express.Router()
 

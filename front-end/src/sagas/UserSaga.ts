@@ -7,12 +7,12 @@ import {
   setAddStatus,
   unSetUser,
   logoutUser
-} from '../slices/userSlice'
+} from '../slices/UserSlice'
 import {
   getAUser,
   insertUser,
   logoutUserSession
-} from '../services/userOperations'
+} from '../services/UserOperations'
 import { AnyAction } from '@reduxjs/toolkit'
 import { ResponseGenerator } from '../utils/interface'
 

@@ -3,8 +3,8 @@ import {
   getUser,
   addUser,
   signoutUser
-} from '../controllers/userController'
-import { refreshUser } from '../services/authService'
+} from '../controllers/UserController'
+import { refreshUser } from '../services/AuthService'
 
 const userRoutes = express.Router()
 

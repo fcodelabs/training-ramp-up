@@ -6,13 +6,13 @@ import {
   editStudent,
   removeStudent,
   setError
-} from '../slices/homeSlice'
+} from '../slices/HomeSlice'
 import {
   deletePerson,
   getPersons,
   insertPerson,
   updatePerson
-} from '../services/personTableViewOperations'
+} from '../services/PersonTableViewOperations'
 import { AnyAction } from '@reduxjs/toolkit'
 import { ResponseGenerator } from '../utils/interface'
 

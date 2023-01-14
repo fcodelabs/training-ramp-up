@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/consistent-type-assertions */
-import User from '../entity/user'
+import User from '../entity/User'
 import UserModel, { LoginUserModel } from '../models/userModel'
-import DatabaseService from '../services/databaseService'
+import DatabaseService from '../services/DatabaseService'
 import {
   getUserService,
   addUserService
-} from '../services/userService'
+} from '../services/UserService'
 import bcrypt from 'bcrypt'
 
 describe('User Service Test', () => {
