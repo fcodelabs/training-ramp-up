@@ -10,19 +10,20 @@ import {
   InputLabel,
   FormControl,
   FormHelperText,
-  Grid,
-  Select,
-  MenuItem
+  Grid
 } from '@mui/material'
 import Visibility from '@mui/icons-material/Visibility'
 import VisibilityOff from '@mui/icons-material/VisibilityOff'
 import { useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux/es/exports'
-import { addUser, setAddStatus } from '../../slices/UserSlice'
+import { addUser, setAddStatus } from '../../slices/userSlice'
 import { User } from '../../utils/interface'
+import LoadingSpinner from '../../components/loadingSpinner/LoadingSpinner'
 
 const SignUp: React.FC = () => {
   const isAdd = useSelector((state: any) => state.user.isAdd)
+
+  const [isLoading, setIsLoading] = useState(false)
 
   const [userName, setUserName] = useState('')
 
@@ -32,8 +33,6 @@ const SignUp: React.FC = () => {
 
   const [confirmPassword, setConfirmPassword] = useState('')
 
-  const [role, setRole] = useState('')
-
   const [userNameError, setUserNameError] = useState('')
 
   const [emailError, setEmailError] = useState('')
@@ -41,8 +40,6 @@ const SignUp: React.FC = () => {
   const [passwordError, setPasswordError] = useState('')
 
   const [confirmPasswordError, setConfirmPasswordError] = useState('')
-
-  const [roleError, setRoleError] = useState('')
 
   const [showPassword1, setShowPassword1] = useState(false)
 
@@ -88,15 +85,12 @@ const SignUp: React.FC = () => {
       setConfirmPasswordError('Password does not match')
       valid = false
     }
-    if (role === '') {
-      setRoleError('Select your role')
-      valid = false
-    }
     return valid
   }
 
   useEffect(() => {
     if (isAdd === true) {
+      setIsLoading(false)
       navigate('/')
       dispatch(setAddStatus(false))
     }
@@ -194,34 +188,6 @@ const SignUp: React.FC = () => {
                 marginBottom: '10px'
               }}
             />
-            <FormControl>
-              <InputLabel
-                htmlFor="outlined-role"
-                style={{ color: roleError !== '' ? '#d32f2f' : '' }}
-              >
-                Role
-              </InputLabel>
-              <Select
-                labelId="select-label"
-                id="simple-select"
-                value={role}
-                label="Role"
-                onChange={(e) => {
-                  setRole(e.target.value)
-                }}
-                error={roleError !== ''}
-                style={{
-                  width: '420px',
-                  backgroundColor: 'white'
-                }}
-              >
-                <MenuItem value={'Admin'}>Admin</MenuItem>
-                <MenuItem value={'Guest'}>Guest</MenuItem>
-              </Select>
-              <FormHelperText error id="role-error">
-                {roleError}
-              </FormHelperText>
-            </FormControl>
             <FormControl variant="outlined">
               <InputLabel
                 htmlFor="outlined-adornment-password"
@@ -257,7 +223,11 @@ const SignUp: React.FC = () => {
                   </InputAdornment>
                 }
               />
-              <FormHelperText error id="accountId-error">
+              <FormHelperText
+                error
+                id="accountId-error"
+                style={{ marginBottom: '6px' }}
+              >
                 {passwordError}
               </FormHelperText>
             </FormControl>
@@ -304,19 +274,24 @@ const SignUp: React.FC = () => {
               variant="contained"
               onClick={() => {
                 if (validate()) {
+                  setIsLoading(true)
                   const newUser: User = {
                     userName: userName,
                     email: email,
                     password: password,
                     confirmPassword: confirmPassword,
-                    role: role
+                    role: 'Guest'
                   }
+                  setTimeout(() => {
+                    setIsLoading(false)
+                  }, 2000)
                   dispatch(addUser(newUser))
                   if (isAdd === true) {
                     navigate('/')
                   }
                 }
               }}
+              disabled={isLoading}
               style={{
                 borderRadius: '40px',
                 padding: '8px 30px',
@@ -327,6 +302,7 @@ const SignUp: React.FC = () => {
               {' '}
               SIGN UP{' '}
             </Button>
+            {isLoading ? <LoadingSpinner /> : ''}
           </Grid>
           <Button
             size="small"

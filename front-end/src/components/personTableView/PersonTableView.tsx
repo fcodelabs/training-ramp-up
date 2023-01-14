@@ -18,7 +18,7 @@ import {
   editStudent,
   getAllStudents,
   removeStudent
-} from '../../slices/HomeSlice'
+} from '../../slices/homeSlice'
 import Person, { UpdatedPerson } from '../../utils/interface'
 
 const PersonTableView = () => {

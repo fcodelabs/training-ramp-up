@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import { Button, Grid } from '@mui/material'
 import PersonTableView from '../../components/personTableView/PersonTableView'
 import LogoutIcon from '@mui/icons-material/Logout'
-import { logoutUser } from '../../slices/UserSlice'
+import { logoutUser } from '../../slices/userSlice'
 
 const Home: React.FC = () => {
   const navigate = useNavigate()
