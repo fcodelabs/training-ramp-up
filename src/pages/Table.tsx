@@ -25,6 +25,7 @@ export const Table = (): any => {
   const [birthday, setBirthday] = React.useState<Date>(new Date())
   const [success, setSuccess] = React.useState(false)
 
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   const onToggle = () => {
     setSuccess(!success)
     if (!success) {
@@ -162,7 +163,7 @@ export const Table = (): any => {
           width='150px'
           cell={(props: GridCellProps) => (
             <td>
-              {props?.dataItem?.inEdit ? (
+              {props?.dataItem?.inEdit ===true ? (
                 <DropDownList
                   style={{ width: '300px' }}
                   data={gender}
@@ -178,13 +179,12 @@ export const Table = (): any => {
         />
         <Column field='PersonAddress' title='Person Address' />
         <Column field='PersonMobileNo' title='Person Mobile No' width='150px' />
-
         <Column
           field='DateOfBirth'
           title='Date Of Birth'
           cell={(props: GridCellProps) => (
             <td>
-              {props?.dataItem?.inEdit ? (
+              {props?.dataItem?.inEdit ===true ? (
                 <DatePicker
                   min={new Date(1970, 1, 1)}
                   max={new Date()}
@@ -204,8 +204,9 @@ export const Table = (): any => {
           title='Person Age'
           cell={(props: GridCellProps) => (
             <td>
-              {props?.dataItem?.inEdit && birthday
+              {props?.dataItem?.inEdit ===true 
                 ? durationInYears(birthday, new Date())
+                // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
                 : props?.dataItem?.DateOfBirth
                 ? durationInYears(props.dataItem.DateOfBirth, new Date())
                 : ''}

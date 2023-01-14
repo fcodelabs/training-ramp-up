@@ -13,10 +13,11 @@ const generateId = (data: any[]) =>
     data.reduce((acc: number, current: { PersonID: number }) => Math.max(acc, current.PersonID), 0),
   ) + 1
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-function regValidate(url: string, urlRegex: RegExp) {
-  return urlRegex.test(url)
+
+function regValidate(url: string, urlRegex: RegExp):boolean {
+  return urlRegex.test(url);
 }
+
 
 export const checkErr = (item: Person): string[] => {
   const tempErr: string[] = []
@@ -36,12 +37,28 @@ export const checkErr = (item: Person): string[] => {
     }
     if (
       item.PersonMobileNo != null &&
-      regValidate(item.PersonMobileNo, /^\+?([0-9]{2})\)?[-. ]?([0-9]{4})[-. ]?([0-9]{4})$/)
+      // eslint-disable-next-line no-useless-escape
+      !regValidate(item.PersonMobileNo,/^[+]*[(]{0,1}[0-9]{1,3}[)]{0,1}[-\s\.\/0-9]*$/g)
     )
-      tempErr.push('phone number should be XXX-XXX-XXXX format')
+      tempErr.push('phone number should be in valid format')
+ if (
+      item.PersonName != null &&
+      // eslint-disable-next-line no-useless-escape 
+      !regValidate(item.PersonName,/^[A-Z]{5,10}$/i)
+    )
+      tempErr.push('person name should bein valid format')
+if (
+      item.PersonAddress != null &&
+      // eslint-disable-next-line no-useless-escape 
+      !regValidate(item.PersonAddress,/^[#.0-9a-zA-Z\s,/]+$/i)
+    )
+      tempErr.push('person address should bein valid format')
+
   }
+
   return tempErr
 }
+
 export const insertItem = (item: Person): any => {
   item.PersonID = generateId(personData)
   item.inEdit = false

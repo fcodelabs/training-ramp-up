@@ -43,7 +43,7 @@ export const MyCommandCell = (props: {
       <button
         onClick={() =>
           // eslint-disable-next-line no-restricted-globals
-          confirm((dataItem.PersonName ) && 'Confirm deleting: ' + dataItem.PersonName) && props.remove(dataItem)
+          confirm((dataItem?.PersonName) && 'Confirm deleting: ' + dataItem.PersonName) && props.remove(dataItem)
         }
         className='k-button k-button-md k-rounded-md k-button-solid k-button-solid-error k-grid-remove-command'
       >
