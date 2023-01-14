@@ -66,7 +66,7 @@ export const addUser = async (req: Request, res: Response) => {
       if (result !== false) {
         return res.status(201).send(result)
       } else {
-        return res.status(401).send('Email has already been used!!')
+        return res.status(401).send('Email has been already used!!')
       }
     } else {
       return res.status(400).send('Can not add student. Enter Valid Data')
