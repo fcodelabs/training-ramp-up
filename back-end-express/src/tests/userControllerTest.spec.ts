@@ -67,7 +67,6 @@ describe('User Controller Test', () => {
         password: 'NewUserPw123.',
         confirmPassword: 'NewUserPw123.',
         role: 'Admin'
-
       }
     } as Request
 
@@ -99,7 +98,7 @@ describe('User Controller Test', () => {
         .mockResolvedValue(false)
       await addUser(req1, res)
       expect(res.status).toHaveBeenCalledWith(401)
-      expect(res.send).toHaveBeenCalledWith('Email has already been used!!')
+      expect(res.send).toHaveBeenCalledWith('Email has been already used!!')
       spyAddUser.mockRestore()
     })
     test('Add User fail with Invalid Data', async () => {

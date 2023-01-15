@@ -6,6 +6,5 @@
   "parser": "flow",
   "arrowParens": "always",
   "printWidth": 120
-   
 }
   
