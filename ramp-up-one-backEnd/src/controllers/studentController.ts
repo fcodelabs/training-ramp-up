@@ -4,7 +4,7 @@ import {
   saveStudentService,
   updateStudentService,
   deleteStudentService, 
-  findStudent,
+  findStudent, 
 } from '../services/studentService';
 import { StudentModel } from '../utils/interfaces';
 import { io } from '../../index';

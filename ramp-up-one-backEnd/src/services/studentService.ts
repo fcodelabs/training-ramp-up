@@ -10,19 +10,23 @@ export const getAllStudentService = async () => {
     const allStudent = await studentsRepo.find({ order: { id: 'DESC' } });
     return allStudent;
   } catch (error) {
-    return { error };
+    return { error:'Can not get Student' };
   }
 };
 
 //save Student
 export const saveStudentService = async (data: StudentModel) => {
-  const student = data;
-  const studentRepository = AppDataSource.getRepository(Student);
-  const newStudent = await studentRepository.save(student);
-  if (!newStudent) {
-    return { message: 'Faild to add student !' };
+  try {
+    const student = data;
+    const studentRepository = AppDataSource.getRepository(Student);
+    const newStudent = await studentRepository.save(student);
+    if (!newStudent) {
+      return { message: 'Faild to add student !' };
+    }
+    return { message: 'Student added successfully !', newStudent };
+  } catch (error) {
+    return { error: 'Faild to add student !' };
   }
-  return { message: 'Student added successfully !', newStudent };
 };
 
 //update Student
@@ -31,22 +35,31 @@ export const findStudent = async (studentId: number) => {
 };
 
 export const updateStudentService = async (data: StudentModel) => {
-  const student = data;
-  const studentRepository = AppDataSource.getRepository(Student);
-  const newStudent = await studentRepository.save(student);
-  if (!newStudent) {
-    return { message: 'Faild to add student !' };
+  try {
+    const student = data;
+    const studentRepository = AppDataSource.getRepository(Student);
+    const newStudent = await studentRepository.save(student);
+    if (!newStudent) {
+      return { message: 'Faild to Update student !' };
+    }
+    return { message: 'Student updated successfully !', newStudent };
+  } catch (error) {
+    return { error: 'Faild to Update student !' };
   }
-  return { message: 'Student updated successfully !', newStudent };
 };
 
 //delete Student
 export const deleteStudentService = async (id: number) => {
-  const student = AppDataSource.getRepository(Student);
-  const studentToRemove = await student.findOneBy({ id });
-  if (!studentToRemove) {
-    return { message: 'Student doesn\'t exist !' };
+  try {
+    const student = AppDataSource.getRepository(Student);
+    // const studentToRemove = await student.findOneBy({ id });
+    // if (!studentToRemove) {
+    //   return { message: 'Faild to Delete student !' };
+    // }
+    const deletedStudent = await student.delete(id);
+    console.log('deletedStudent-',deletedStudent )
+    return deletedStudent ;
+  } catch (error) {
+    return { error: 'Faild to Delete student !' };
   }
-  await student.remove(studentToRemove);
-  return { message: 'Student removed successfully !' };
 };
