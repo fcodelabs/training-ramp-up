@@ -4,19 +4,24 @@ import {
   GridCellProps,
   GridColumn as Column,
   GridItemChangeEvent,
+  GridPageChangeEvent,
+  GridSortChangeEvent,
   GridToolbar,
 } from '@progress/kendo-react-grid'
 import { durationInYears } from '@progress/kendo-date-math'
-import { MyCommandCell } from '../helpers/MyCommandCell'
-import { Person } from '../helpers/interface'
+import { CommandCell } from '../../helpers/CommandCell'
+import { PageState, Person } from '../../helpers/interface'
 import { DropDownList, DropDownListChangeEvent } from '@progress/kendo-react-dropdowns'
 import { DatePicker, DatePickerChangeEvent } from '@progress/kendo-react-dateinputs'
-import { insertItem, getItems, updateItem, deleteItem, checkErr } from '../helpers/Services'
+import { insertItem, getItems, updateItem, deleteItem, checkErr } from '../../helpers/Services'
 import { Notification, NotificationGroup } from '@progress/kendo-react-notification'
 import { Fade } from '@progress/kendo-react-animation'
+import { orderBy, SortDescriptor } from '@progress/kendo-data-query'
 
 const editField: string = 'inEdit'
 const gender = ['Female', 'Male']
+const initialSort: SortDescriptor[] = [{ field: 'PersonID', dir: 'asc' }]
+const initialDataState: PageState = { skip: 0, take: 10 }
 
 export const Table = (): any => {
   const [data, setData] = React.useState<Person[]>([])
@@ -24,6 +29,8 @@ export const Table = (): any => {
   const [personGen, setGender] = React.useState({ value: 'Male' })
   const [birthday, setBirthday] = React.useState<Date>(new Date())
   const [success, setSuccess] = React.useState(false)
+  const [sort, setSort] = React.useState(initialSort)
+  const [page, setPage] = React.useState<PageState>(initialDataState)
 
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   const onToggle = () => {
@@ -108,7 +115,8 @@ export const Table = (): any => {
       data.map((item) => (item.PersonID === dataItem.PersonID ? { ...item, inEdit: true } : item)),
     )
   }
-  const addNew = (): any => {
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+  const addNew = () => {
     const newDataItem: Person = {
       inEdit: true,
       Discontinued: false,
@@ -130,8 +138,13 @@ export const Table = (): any => {
   }
 
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-  const CommandCell = (props: GridCellProps) => (
-    <MyCommandCell
+  const pageChange = (event: GridPageChangeEvent) => {
+    setPage(event.page)
+  }
+
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+  const CommandCellFunc = (props: GridCellProps) => (
+    <CommandCell
       {...props}
       edit={enterEdit}
       remove={remove}
@@ -145,7 +158,22 @@ export const Table = (): any => {
 
   return (
     <React.Fragment>
-      <Grid style={{ height: '520px' }} data={data} onItemChange={itemChange} editField={editField}>
+      <Grid
+        style={{ height: '720px' }}
+        data={orderBy(data.slice(page.skip, page.take + page.skip),sort)}
+        onItemChange={itemChange}
+        editField={editField}
+        skip={page.skip}
+        take={page.take}
+        total={data.length}
+        pageable={true}
+        onPageChange={pageChange}
+        sortable={true}
+        sort={sort}
+        onSortChange={(e: GridSortChangeEvent) => {
+          setSort(e.sort)
+        }}
+      >
         <GridToolbar>
           <button
             title='Add new'
@@ -163,7 +191,7 @@ export const Table = (): any => {
           width='150px'
           cell={(props: GridCellProps) => (
             <td>
-              {props?.dataItem?.inEdit ===true ? (
+              {props?.dataItem?.inEdit === true ? (
                 <DropDownList
                   style={{ width: '300px' }}
                   data={gender}
@@ -184,7 +212,7 @@ export const Table = (): any => {
           title='Date Of Birth'
           cell={(props: GridCellProps) => (
             <td>
-              {props?.dataItem?.inEdit ===true ? (
+              {props?.dataItem?.inEdit === true ? (
                 <DatePicker
                   min={new Date(1970, 1, 1)}
                   max={new Date()}
@@ -204,10 +232,10 @@ export const Table = (): any => {
           title='Person Age'
           cell={(props: GridCellProps) => (
             <td>
-              {props?.dataItem?.inEdit ===true 
+              {props?.dataItem?.inEdit === true
                 ? durationInYears(birthday, new Date())
-                // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-                : props?.dataItem?.DateOfBirth
+                : // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+                props?.dataItem?.DateOfBirth
                 ? durationInYears(props.dataItem.DateOfBirth, new Date())
                 : ''}
             </td>
@@ -216,7 +244,7 @@ export const Table = (): any => {
           editable={false}
         />
 
-        <Column title='Command' cell={CommandCell} width='300px' />
+        <Column title='Command' cell={CommandCellFunc} width='300px' />
       </Grid>
       <NotificationGroup
         style={{

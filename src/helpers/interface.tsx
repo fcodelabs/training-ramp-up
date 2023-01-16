@@ -1,3 +1,4 @@
+
 export interface Person {
   PersonID: number
   PersonName?: string
@@ -11,7 +12,10 @@ export interface Person {
   expanded?: boolean
   Discontinued?: boolean
 }
-
+export interface PageState {
+  skip: number;
+  take: number;
+}
 export interface ProductCategory {
   CategoryID?: number
   CategoryName?: string

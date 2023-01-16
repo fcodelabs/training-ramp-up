@@ -1,20 +1,19 @@
-import React from 'react';
-import { Button } from '@progress/kendo-react-buttons';
-import kendoka from './kendoka.svg';
-import './App.css';
-import { Table } from './pages/Table';
+import { useEffect } from 'react'
+import { io } from 'socket.io-client'
+import './App.css'
+import { Table } from './pages/rampUpHome/Table'
 
-function App() {
-  const handleClick = React.useCallback(() => {
-    window.open('https://www.telerik.com/kendo-react-ui/components/', '_blank');
-  }, []);
+function App(): JSX.Element {
+
+  useEffect(() => {
+    io('http://localhost:5000')
+  }, [])
 
   return (
-    <div className="App">
-     
-<Table/>
+    <div className='App'>
+      <Table />
     </div>
-  );
+  )
 }
 
-export default App;
+export default App

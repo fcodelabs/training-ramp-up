@@ -63,6 +63,7 @@ export const insertItem = (item: Person): any => {
   item.PersonID = generateId(personData)
   item.inEdit = false
   personData.unshift(item)
+  
   return personData
 }
 

@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { Person } from './interface'
 
-export const MyCommandCell = (props: {
+export const CommandCell = (props: {
   editField: any
   add?: any
   update?: any
@@ -42,7 +42,7 @@ export const MyCommandCell = (props: {
       </button>
       <button
         onClick={() =>
-          // eslint-disable-next-line no-restricted-globals
+          // eslint-disable-next-line no-restricted-globals, @typescript-eslint/strict-boolean-expressions
           confirm((dataItem?.PersonName) && 'Confirm deleting: ' + dataItem.PersonName) && props.remove(dataItem)
         }
         className='k-button k-button-md k-rounded-md k-button-solid k-button-solid-error k-grid-remove-command'
