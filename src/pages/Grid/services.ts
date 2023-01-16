@@ -1,11 +1,11 @@
-import { Product } from './interfaces';
-import { sampleProducts } from './sample-products';
+import { Student } from './interfaces';
+import { sampleStudents } from './sample-students';
 import { DropDownList } from '@progress/kendo-react-dropdowns';
 import { validateMobile, validateName, validateAddress,validateDate } from './validators'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { To } from 'react-router-dom';
-const data = [...sampleProducts];
+const data = [...sampleStudents];
 
 const generateId = (data: any[]) =>
     data.reduce((acc, current) => Math.max(acc, current.ID), 0) + 1;
@@ -23,7 +23,7 @@ const calcAge = (dateOfBirth: string) => {
         return age;
 }
 export const insertItem = (item: any) => {
-    console.log(item);
+    // console.log(item);
     if(validateName(item.Name) && validateMobile(item.MobileNo) && validateAddress(item.Address) && validateDate(item.DateofBirth)){
         item.Age = calcAge(item.DateofBirth);
         item.ID = generateId(data);
@@ -50,7 +50,7 @@ export const updateItem = (item: any) => {
     }
 };
 
-export const deleteItem = (item: Product) => {
+export const deleteItem = (item: Student) => {
     const index = data.findIndex(record => record.ID === item.ID);
     data.splice(index, 1);
     return data;

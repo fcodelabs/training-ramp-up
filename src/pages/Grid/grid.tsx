@@ -2,48 +2,40 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { Grid, GridColumn, GridCellProps, GridItemChangeEvent, GridToolbar} from '@progress/kendo-react-grid';
 import { Button } from '@progress/kendo-react-buttons';
-import { MyCommandCell } from '../myCommandCell';
-import { DropDownCell } from '../myDropDownCell';
-import { insertItem, getItems, updateItem, deleteItem } from '../services';
+import { MyCommandCell } from '../../components/MyCommandCell/myCommandCell';
+import { DropDownCell } from '../../components/MyDropDownCell/myDropDownCell';
+import { insertItem, getItems, updateItem, deleteItem } from './services';
 import { ToastContainer} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-// import data from './data.json';
-import { Product } from '../interfaces';
+import { Student } from './interfaces';
 const editField = 'inEdit';
-
-
 
 export default function Grids () {
   const [data, setData] = React.useState<any>([]);
-
   React.useEffect(()=>{
     const newItems = getItems();
     setData(newItems);
 },[])
 
-      // modify the data in the store, db etc
-const remove = (dataItem: Product) => {
+
+const remove = (dataItem: Student) => {
     const newData = [...deleteItem(dataItem)];
     setData(newData);
 };
 
-const add = (dataItem: Product) => {
-  
+const add = (dataItem: Student) => {
     dataItem.inEdit = true;
-    console.log('adding');
     const newData = insertItem(dataItem);
-    
     setData(newData);
 };
 
-const update = (dataItem: Product) => {
-    console.log('error');
+const update = (dataItem: Student) => {
     dataItem.inEdit = false;
     const newData = updateItem(dataItem);
     setData(newData);
 };
 
-// Local state operations
+
 const discard = () => {
     const newData = [...data];
     newData.splice(0, 1)
@@ -61,8 +53,7 @@ const cancel = (dataItem: any) => {
     setData(newData);
 };
 
-const enterEdit = (dataItem: Product) => {
-  console.log('enter edit');
+const enterEdit = (dataItem: Student) => {
     setData(
         data.map((item: { ID: number; }) =>
             item.ID === dataItem.ID ? { ...item, inEdit: true } : item
@@ -81,7 +72,7 @@ const itemChange = (event: GridItemChangeEvent) => {
 };
 
 const addNew = () => {
-    const newDataItem = { inEdit: true, Discontinued: false };
+    const newDataItem = { inEdit: true};
     setData([newDataItem, ...data]);
 };
 

@@ -1,4 +1,4 @@
-export const sampleProducts = [
+export const sampleStudents = [
     {'ID': 1, 'Name': 'Piyumi', 'Gender': 'Male', 'Address': 'Galle', 'MobileNo': '0767895678', 'DateofBirth': new Date('Mon, September 16, 2000'), 'Age':22},
     {'ID': 7, 'Name': 'Chan', 'Gender': 'Female',  'Address': 'Colombo', 'MobileNo': '0764565456', 'DateofBirth': new Date('Fei Dec 11 1998'), 'Age':24},
     {'ID': 8, 'Name': 'Pawani', 'Gender': 'Female',  'Address': 'Colombo', 'MobileNo': '0764565456', 'DateofBirth':new Date('Mon Sep 16 1996'), 'Age':26},

@@ -1,15 +1,15 @@
 import * as React from 'react';
-import { Product } from './interfaces';
+import { Student } from '../../pages/Grid/interfaces';
 
 interface MyCommandCellProps {
   dataItem: any;
   editField: string;
-  add: (dataItem: Product) => void;
-  update: (dataItem: Product) => void;
-  remove: (dataItem: Product) => void;
-  discard: (dataItem: Product) => void;
-  cancel: (dataItem: Product) => void;
-  edit: (dataItem: Product) => void;
+  add: (dataItem: Student) => void;
+  update: (dataItem: Student) => void;
+  remove: (dataItem: Student) => void;
+  discard: (dataItem: Student) => void;
+  cancel: (dataItem: Student) => void;
+  edit: (dataItem: Student) => void;
 
 }
 

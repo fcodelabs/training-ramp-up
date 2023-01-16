@@ -1,4 +1,4 @@
-export interface Product {
+export interface Student {
     ID: number,
     Name?: string,
     Gender?: string,
@@ -6,7 +6,5 @@ export interface Product {
     MobileNo?: string,
     DateofBirth?: string,
     Age?: number,
-    expanded?: boolean,
     inEdit?: boolean | string,
-    locked?: boolean
 }
