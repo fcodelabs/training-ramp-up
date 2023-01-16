@@ -64,27 +64,8 @@ const add = (
   }
 }
 
-const edit = (
-  newAdded: boolean,
-  tempData: User[],
-  setTempData: TempDataCallback,
-  setEditId: EditIdCallBack,
-  index: number,
-) => {
-  if (!newAdded) {
-    setEditId(index)
-  }
-}
-const remove = (setData: DataCallback, dataIndex: number, data: User[]) => {
-  const newData: User[] = []
-  for (let index = 0; index < data.length; index++) {
-    const record = data[index]
-    if (index !== dataIndex) {
-      newData.push(record)
-    }
-  }
-  setData(newData)
-}
+
+
 
 const discard = (
   setEditId: EditIdCallBack,
@@ -132,41 +113,18 @@ export const command = (
         </div>
       )}
 
-      {dataIndex === editId && !newAdded && (
-        <div className='table--button--group'>
-          <button
-            onClick={() => {
-              add(editId, setEditId, setNewAdded, setTempData, data, tempData, displayErrors)
-            }}
-            className='table--button k-button k-button-md k-rounded-md k-button-solid k-button-solid-light k-grid-save-command'
-          >
-            Update
-          </button>
-          <button
-            onClick={() => {
-              discard(setEditId, setNewAdded, setData, tempData)
-            }}
-            className='table--button k-button k-button-md k-rounded-md k-button-solid k-button-solid-light k-grid-save-command'
-          >
-            Cancel
-          </button>
-        </div>
-      )}
+
 
       {dataIndex !== editId && (
         <div className='table--button--group'>
           <button
-            onClick={() => {
-              edit(newAdded, tempData, setTempData, setEditId, dataIndex)
-            }}
+
             className='table--button k-button k-button-md k-rounded-md k-button-solid k-button-solid-primary k-grid-save-command'
           >
             Edit
           </button>
           <button
-            onClick={() => {
-              remove(setData, dataIndex, data)
-            }}
+
             className='table--button k-button k-button-md k-rounded-md k-button-solid k-button-solid-light k-grid-save-command'
           >
             Remove
