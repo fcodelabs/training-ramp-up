@@ -16,7 +16,7 @@ export interface UpdateStudentInterface {
   dob?: Date;
 }
 
-export interface DeleteStudentInterface {
-  raw: any;
-  affected: number;
-}
+// export interface DeleteStudentInterface {
+//   raw: any;
+//   affected: number;
+// }

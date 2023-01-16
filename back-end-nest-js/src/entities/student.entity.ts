@@ -1,22 +1,34 @@
+/* eslint-disable prettier/prettier */
 import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+// const { Entity, PrimaryGeneratedColumn, Column } = require('typeorm');
 
 @Entity()
 export default class Student {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({
+    nullable: false,
+  })
   name: string;
 
-  @Column()
+  @Column({
+    nullable: false,
+  })
   gender: string;
 
-  @Column()
+  @Column({
+    nullable: false,
+  })
   address: string;
 
-  @Column()
+  @Column({
+    nullable: false,
+  })
   mobileNo: string;
 
-  @Column()
+  @Column({
+    nullable: false,
+  })
   dob: Date;
 }
