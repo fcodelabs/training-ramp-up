@@ -64,7 +64,6 @@ function* saveStudent(action: AnyAction): any {
 
 function* updateStudent(action: AnyAction) {
   try {
-    console.log(action.payload);
     const response: StudentModel = yield call(
       updateStudentService,
       action.payload

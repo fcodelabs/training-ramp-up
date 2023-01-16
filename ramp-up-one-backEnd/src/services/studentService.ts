@@ -52,10 +52,7 @@ export const updateStudentService = async (data: StudentModel): Promise<any> => 
 export const deleteStudentService = async (id: number): Promise<any> => {
   try {
     const student = AppDataSource.getRepository(Student);
-    // const studentToRemove = await student.findOneBy({ id });
-    // if (!studentToRemove) {
-    //   return { message: 'Faild to Delete student !' };
-    // }
+    
     const deletedStudent = await student.delete(id);
     return deletedStudent;
   } catch (error) {

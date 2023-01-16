@@ -21,14 +21,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/student', studentRoutes);
 app.use('/user', userRoutes);
 
-// socket.io
 
-// export const io = new Server(httpServer, {
-//   cors: {
-//     origin: 'http://localhost:3000',
-//     methods: ['GET', 'POST', 'PUT', 'DELETE'],
-//   },
-// });
 
 io.on('connection', (socket) => {
   console.log('socketId');
