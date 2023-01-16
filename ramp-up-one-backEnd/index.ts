@@ -3,14 +3,11 @@ import dotenv from 'dotenv';
 import { AppDataSource } from './src/dataSource';
 import studentRoutes from './src/routes/studentRoute';
 import userRoutes from './src/routes/userRoutes';
-import { createServer } from 'http';
-import { Server } from 'socket.io';
+import { app, httpServer, io } from './socketServer';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 
 dotenv.config();
-const app: Express = express();
-const httpServer = createServer(app);
 const port = process.env.PORT;
 
 app.use(cookieParser());
@@ -26,12 +23,12 @@ app.use('/user', userRoutes);
 
 // socket.io
 
-export const io = new Server(httpServer, {
-  cors: {
-    origin: 'http://localhost:3000',
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  },
-});
+// export const io = new Server(httpServer, {
+//   cors: {
+//     origin: 'http://localhost:3000',
+//     methods: ['GET', 'POST', 'PUT', 'DELETE'],
+//   },
+// });
 
 io.on('connection', (socket) => {
   console.log('socketId');

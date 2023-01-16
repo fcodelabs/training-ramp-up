@@ -37,7 +37,7 @@ describe('User Controller', () => {
       const res = mockResponse();
 
       test("Register User Success", async () => {
-        const spyRegisterUser = jest
+        const spyRegisterUser = jest 
           .spyOn(userServices, 'saveUserService')
           .mockResolvedValue(newUser);
         await saveUser(req, res);
