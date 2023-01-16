@@ -1,30 +1,102 @@
-import { Controller, Delete, Get, Patch, Post, Res } from '@nestjs/common';
+/* eslint-disable prettier/prettier */
+import { Body, Controller, Delete, Get, Param, Patch, Post, Res } from '@nestjs/common';
 import { Response } from 'express';
-// import { StudentType } from 'src/interfaces/student.interface';
+import { CreateStudentDto, UpdateStudentDto } from './dto/create-student.dto';
+import { DeleteStudentInterface, StudentInterface } from './interfaces/student.interface';
 import { StudentService } from './student.service';
 
 @Controller('student')
 export class StudentController {
   constructor(private studentService: StudentService) {}
 
+  validate = (student: StudentInterface) => {
+    const name = /^([A-z\s.]{3,20})$/
+  
+    const address = /^([A-z0-9/,\s]{5,})$/
+  
+    const mobileNo = /^([0][0-9]{9})$/
+  
+    const age: number = Math.round((new Date().getTime() - new Date(student.dob).getTime()) / (1000 * 60 * 60 * 24 * 365))
+    const validateAge: boolean = age >= 18
+  
+    if (student.name !== undefined && !name.test(student.name)) {
+      return false
+    }
+  
+    if (student.gender !== undefined && student.gender === '') {
+      return false
+    }
+  
+    if (student.address !== undefined && !address.test(student.address)) {
+      return false
+    }
+  
+    if (student.mobileNo !== undefined && !mobileNo.test(student.mobileNo)) {
+      return false
+    }
+  
+    if (student.dob !== undefined && !validateAge) {
+      return false
+    }
+    return true
+  }
+
   @Get('get')
   async getAllStudents(@Res() res: Response) {
-    // console.log('hi');
-    return res.status(200).send('This action returns all students');
+    try {
+      const students = await this.studentService.getAllStudentsService()
+      if (students !== null) {
+        res.status(200).send(students)
+      } else {
+        res.status(400).send('Could not get student details')
+      }
+    } catch (err) {
+      res.status(400).send(`Error: ${err}`)
+    }
   }
 
   @Post('add')
-  async addStudent(): Promise<string> {
-    return 'This action adds a new student';
-  }
+  async addStudent(@Body() newStudent: CreateStudentDto, @Res() res: Response) {
+    try {
+      const valid = this.validate(newStudent)
+      if (valid) {
+        const result = await this.studentService.addStudentService(newStudent)
+        if (result !== null) {
+          res.status(201).send(result)
+        }
+      } else {
+        res.status(400).send('Can not add student. Enter Valid Data')
+      }
+    } catch (err) {
+      res.status(400).send(`Error: ${err}`)
+    }  } 
 
   @Patch('update')
-  async updateStudent(): Promise<string> {
-    return 'This action update a new student';
-  }
+  async updateStudent(@Body() updateStudent: UpdateStudentDto, @Res() res: Response) {
+    try {
+      if (this.validate(updateStudent)) {
+        const result = await this.studentService.updateStudentService(updateStudent)
+        if (result !== null) {
+          res.status(200).send(result)
+        }
+      } else {
+        res.status(400).send('Can not update student. Enter Valid Data')
+      }
+    } catch (err) {
+      res.status(400).send(`Error: ${err}`)
+    }  }
 
-  @Delete('update')
-  async deleteStudent(): Promise<string> {
-    return 'This action delete a new student';
-  }
+  @Delete('delete')
+  async deleteStudent(@Param('Id') deleteStudentId: string, @Res() res: Response) {
+    try {
+      const studentId = parseInt(deleteStudentId)
+      const result: DeleteStudentInterface = await this.studentService.deleteStudentService(studentId)
+      if (result.affected !== 0) {
+        res.status(200).send(result)
+      } else {
+        res.status(400).send('Could not found student to delete')
+      }
+    } catch (err) {
+      res.status(400).send(`Error: ${err}`)
+    }  }
 }
