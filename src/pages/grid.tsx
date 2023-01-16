@@ -3,7 +3,10 @@ import * as ReactDOM from 'react-dom';
 import { Grid, GridColumn, GridCellProps, GridItemChangeEvent, GridToolbar} from '@progress/kendo-react-grid';
 import { Button } from '@progress/kendo-react-buttons';
 import { MyCommandCell } from '../myCommandCell';
+import { DropDownCell } from '../myDropDownCell';
 import { insertItem, getItems, updateItem, deleteItem } from '../services';
+import { ToastContainer} from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 // import data from './data.json';
 import { Product } from '../interfaces';
 const editField = 'inEdit';
@@ -25,9 +28,11 @@ const remove = (dataItem: Product) => {
 };
 
 const add = (dataItem: Product) => {
+  
     dataItem.inEdit = true;
     console.log('adding');
     const newData = insertItem(dataItem);
+    
     setData(newData);
 };
 
@@ -100,6 +105,7 @@ const CommandCell = (props: GridCellProps) => (
         data={data}
         onItemChange={itemChange}
         editField={editField}
+        dataItemKey={'ID'}
         >
         <GridToolbar>
           <button
@@ -112,14 +118,16 @@ const CommandCell = (props: GridCellProps) => (
         </GridToolbar>
         <GridColumn field="ID" title="ID" width="40px" editable={false} />
         <GridColumn field="Name" title="Name" width="250px" />
-        <GridColumn field="Gender" title="Gender" />
+        <GridColumn field="Gender" title="Gender" cell={DropDownCell}/>
         <GridColumn field="Address" title="Address" />
         <GridColumn field="MobileNo" title="Mobile No"/>
         <GridColumn field="DateofBirth" title="Date of Birth" editor="date" format="{0:D}"/>
-        <GridColumn field="Age" title="Age" />
+        <GridColumn field="Age" title="Age" editable = {false}/>
         <GridColumn title= "command " cell = {CommandCell}  width="200px" />
       </Grid>
+      <ToastContainer/>
       </div>
+      
     );
 }
 
