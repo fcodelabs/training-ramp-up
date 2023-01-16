@@ -5,4 +5,5 @@ export type User = {
   address: string
   mobileNo: string
   dateOfBirth: Date | null
+  age:number
 }

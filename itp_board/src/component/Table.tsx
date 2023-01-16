@@ -10,14 +10,11 @@ import {
 import { Users } from '../dummy'
 import '../App.css'
 import { useState } from 'react'
-import { command, calcAge, addRecord } from '../Pages/Users/UserFunction'
-import { ToastContainer, toast } from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.css'
+import { command } from '../Pages/Users/UserFunction'
 
 
 const Table = () => {
   const [data, setData] = useState(Users)
-  const [tempData, setTempData] = useState(Users)
   const [editId, setEditId] = useState<number | null>(null)
   const [newAdded, setNewAdded] = useState(false)
 
@@ -29,35 +26,11 @@ const Table = () => {
     setData(newData)
   }
 
-  const displayErrors = (errors:string[]) =>{
-    errors.forEach((error)=>{
-      toast.error(error, {
-        position: 'top-right',
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: 'light',
-      })
-    })
-  }
+
 
   return (
     <>
-      <ToastContainer
-        position='top-right'
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme='light'
-      />
+
       <Grid
         data={data.map((record, index) => ({
           ...record,
@@ -71,9 +44,6 @@ const Table = () => {
             <button
               title='Add new'
               className='k-button k-button-md k-rounded-md k-button-solid k-button-solid-light'
-              onClick={() => {
-                addRecord(newAdded, setEditId, setNewAdded, setData, data)
-              }}
             >
               Add new
             </button>
@@ -85,23 +55,12 @@ const Table = () => {
         <GridColumn field='address' title='Address' />
         <GridColumn field='mobileNo' title='Mobile No' />
         <GridColumn editor='date' format='{0:D}' field='dateOfBirth' title='Date of Birth' />
-        <GridColumn field='age' title='Age' cell={calcAge} />
+        <GridColumn field='age' title='Age'/>
         <GridColumn
           field='command'
           title='Command'
           cell={(props: GridCellProps) => {
-            return command(
-              props.dataIndex,
-              editId,
-              newAdded,
-              setEditId,
-              setNewAdded,
-              setTempData,
-              data,
-              setData,
-              tempData,
-              displayErrors
-            )
+            return command()
           }}
           className='k-text-center'
         />

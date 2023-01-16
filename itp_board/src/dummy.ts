@@ -8,6 +8,7 @@ export const Users: User[] = [
     address: 'homagama',
     mobileNo: '0112748768',
     dateOfBirth: new Date('1996-09-16'),
+    age: 26,
   },
   {
     id: '43',
@@ -16,6 +17,7 @@ export const Users: User[] = [
     address: 'homagama',
     mobileNo: '07767223361',
     dateOfBirth: new Date('1996-09-16'),
+    age: 26,
   },
   {
     id: '44',
@@ -24,6 +26,7 @@ export const Users: User[] = [
     address: '58/10, 1st lane ',
     mobileNo: '07767223361',
     dateOfBirth: new Date('1996-07-21'),
+    age: 26,
   },
   {
     id: '45',
@@ -32,6 +35,7 @@ export const Users: User[] = [
     address: '58/10, 1st lane ',
     mobileNo: '07767223361',
     dateOfBirth: new Date('1996-07-21'),
+    age: 26,
   },
   {
     id: '46',
@@ -40,5 +44,6 @@ export const Users: User[] = [
     address: 'homagama ',
     mobileNo: '0112748768',
     dateOfBirth: new Date('1997-07-21'),
+    age: 25,
   },
 ]
