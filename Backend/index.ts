@@ -12,6 +12,7 @@ dotenv.config();
 
 const app = express();
 const port = process.env.PORT;
+const httpServer = http.createServer(app);
 
 app.use(express.json());
 app.use(bodyParser.json());
@@ -24,8 +25,6 @@ app.use(
 );
 
 app.use('/student', studentRoutes);
-
-const httpServer = http.createServer(app);
 
 app.get('/', (req: Request, res: Response) => {
   res.send('This is a test web page!');

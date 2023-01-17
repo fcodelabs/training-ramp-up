@@ -45,7 +45,7 @@ export const updateStudentService = async (id: number, student: StudentType) => 
   try {
     const studentRepo = appDataSource.getRepository(Student);
     const res = await studentRepo.update(id, student);
-    return res;
+    return { ...student, ...res };
   } catch (error) {
     throw new Error('Error in updating student');
   }
