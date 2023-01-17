@@ -59,8 +59,6 @@ function Home() {
   const add = (dataItem: Student) => {
     if (Validate(dataItem)) {
       dispatch(addStudent(dataItem));
-    } else {
-      discard();
     }
   };
 
@@ -68,8 +66,6 @@ function Home() {
     if (Validate(dataItem)) {
       dispatch(updateStudent(dataItem));
       setData(students);
-    } else {
-      cancel();
     }
   };
 

@@ -23,7 +23,7 @@ const isPhonenumber = (number: string) => {
 };
 
 const isAddress = (address: string) => {
-  const adrs = /^[a-zA-Z0-9\s,'.-]*$/;
+  const adrs = /^[a-zA-Z0-9\s,'./-]*$/;
   if (address.match(adrs)) {
     return true;
   } else {
@@ -40,15 +40,9 @@ export const Validate = (data: Student) => {
     data.birthday &&
     data.mobile
   ) {
-    if (isAddress(data.address)) {
-      if (isPhonenumber(data.mobile)) {
-        return true;
-      } else {
-        toast.error("Please enter valid phone number");
-        return false;
-      }
+    if (isAddress(data.address) && isPhonenumber(data.mobile)) {
+      return true;
     } else {
-      toast.error("Please enter valid address");
       return false;
     }
   } else {
