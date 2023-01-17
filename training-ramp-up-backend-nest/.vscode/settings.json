@@ -1,0 +1,7 @@
+{
+  "prettier.endOfLine": "crlf",
+  "files.eol": "\r\n",
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true
+  }
+}
