@@ -12,16 +12,10 @@ import {
 
 export const getAllStudents = async (req: Request, res: Response) => {
   try {
-    const students = await getAllStudentsService().catch((err: any) => {
-      res.status(500);
-      res.json(err);
-      return;
-    });
-    res.status(200);
-    res.json(students);
+    const students = await getAllStudentsService();
+    res.status(200).send(students);
   } catch (err) {
-    res.status(401);
-    res.json(err);
+    res.status(400).send({ err: 'students get failed' });
   }
 };
 
@@ -31,11 +25,9 @@ export const addStudent = async (req: Request, res: Response) => {
   try {
     await addStudentService(req.body);
     io.emit('message', 'Student ' + req.body.name + ' added');
-    res.status(200);
-    res.json({ message: 'Student added successfully' });
+    res.status(200).send({ message: 'Student added successfully' });
   } catch (err) {
-    res.status(401);
-    res.json(err);
+    res.status(400).send({ err: 'not success' });
   }
 };
 
@@ -43,13 +35,11 @@ export const addStudent = async (req: Request, res: Response) => {
 
 export const patchStudent = async (req: Request, res: Response): Promise<void> => {
   try {
-    console.log('Hello Update');
     const students = await updateStudent(req.body);
-    res.send(students);
+    res.status(200).send(students);
     io.emit('notification', 'The with id ' + req.body.id + ' student has been updated');
   } catch (err) {
-    res.status(401);
-    res.json(err);
+    res.status(400).send({ err: 'update failed' });
   }
 };
 
@@ -60,10 +50,8 @@ export const deleteStudent = async (req: Request, res: Response) => {
     const studentId = parseInt(req.params.id);
     await deleteStudentService(studentId);
     io.emit('message', 'Student Id : ' + studentId + ' deleted');
-    res.status(200);
-    res.json({ message: 'Student deleted successfully' });
+    res.status(200).send({ message: 'Student deleted successfully' });
   } catch (err) {
-    res.status(401);
-    res.json(err);
+    res.status(400).send({ err: 'Delete Failed' });
   }
 };

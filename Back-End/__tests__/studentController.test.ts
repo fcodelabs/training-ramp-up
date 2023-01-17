@@ -1,93 +1,186 @@
-// /* eslint-disable @typescript-eslint/no-explicit-any */
-// import { io } from '../server';
-// import { getAllStudents, addStudent } from '../src/controllers/studentController';
-// import * as studentServices from '../src/services/studentService';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { Request, Response } from 'express';
+import { addStudent, deleteStudent, getAllStudents, patchStudent } from '../src/controllers/studentController';
+import { Student } from '../src/entities/student';
+import * as studentServices from '../src/services/studentService';
 
-// describe('getAllStudents', () => {
-//   it('returns all students when service call is successful', async () => {
-//     const mockStudents = [
-//       { id: 1, name: 'John', gender: 'Male', address: 'Kohuwala', mobile: '0769099126', birthday: '1999-01-09' },
-//       { id: 2, name: 'Jim', gender: 'Male', address: 'Kohuwala', mobile: '0769099122', birthday: '1999-01-19' },
-//     ];
-//     // const mockGetAllStudentsService = jest.fn().mockResolvedValue(mockStudents);
+describe('Student Controller Test', () => {
+  const response = () => {
+    const res = {} as Response;
+    res.status = jest.fn().mockReturnValue(res);
+    res.send = jest.fn().mockReturnValue(res);
+    res.json = jest.fn().mockReturnValue(res);
+    return res;
+  };
 
-//     const mockReq: any = {} as Request;
-//     const mockRes: any = {
-//       status: jest.fn().mockReturnThis(),
-//       json: jest.fn().mockReturnThis(),
-//     } as unknown as Response;
-//     await getAllStudents(mockReq, mockRes);
-//     expect(mockRes.status).toHaveBeenCalledWith(200);
-//     expect(mockRes.json).toHaveBeenCalledWith(mockStudents);
-//   });
-//   it('returns an error when service call throws an error', async () => {
-//     const mockError = new Error('Error fetching students');
-//     const mockReq: any = {} as Request;
-//     const mockRes: any = {
-//       status: jest.fn().mockReturnThis(),
-//       json: jest.fn().mockReturnThis(),
-//     } as unknown as Response;
-//     await getAllStudents(mockReq, mockRes);
-//     expect(mockRes.status).toHaveBeenCalledWith(500);
-//     expect(mockRes.json).toHaveBeenCalledWith(mockError);
-//   });
-// });
+  describe('Add Student Test Case', () => {
+    const newStudent = {
+      id: 1,
+      name: 'stuname',
+      gender: 'Male',
+      address: 'newAddress1',
+      mobile: '0123456789',
+      birthday: new Date('1998-12-10'),
+      age: 24,
+    } as Student;
 
-// jest.mock('../src/services/studentService', () => ({
-//   addStudentService: jest.fn(),
-// }));
+    const req1 = {
+      body: {
+        name: 'stuname',
+        gender: 'Male',
+        address: 'newAddress1',
+        mobile: '0123456789',
+        birthday: '1998-12-10',
+        age: 24,
+      },
+    } as Request;
 
-// jest.mock('socket.io', () => {
-//   return jest.fn().mockImplementation(() => {
-//     return {
-//       emit: jest.fn(),
-//     };
-//   });
-// });
+    const req2 = {
+      body: {
+        name: 'stuname',
+        gender: 'Male',
+        address: 'newAddress1',
+        mobile: '01234569',
+        birthday: '1998-12-10',
+        age: 24,
+      },
+    } as Request;
 
-// describe('addStudent', () => {
-//   const req: any = {
-//     body: {
-//       name: 'John Doe',
-//       age: 25,
-//     },
-//   };
-//   const res: any = {
-//     status: jest.fn().mockReturnThis(),
-//     json: jest.fn().mockReturnThis(),
-//   };
+    const res = response();
 
-//   beforeEach(() => {
-//     jest.clearAllMocks();
-//   });
+    test('Add Student Success', async () => {
+      const spyAddStudent = jest.spyOn(studentServices, 'addStudentService').mockResolvedValue(newStudent as any);
+      await addStudent(req1, res);
+      expect(res.status).toHaveBeenCalledWith(200);
+      expect(res.send).toHaveBeenCalledWith({ message: 'Student added successfully' });
+      spyAddStudent.mockRestore();
+    });
 
-//   it('should call addStudentService with the correct arguments', async () => {
-//     await addStudent(req, res);
-//     expect(studentServices).toHaveBeenCalledWith(req.body);
-//   });
+    test('Add Student Fail', async () => {
+      await addStudent(req2, res);
+      expect(res.status).toHaveBeenCalledWith(400);
+      expect(res.send).toHaveBeenCalledWith({ err: 'not success' });
+    });
+  });
 
-//   it('should emit a message with the correct student name', async () => {
-//     await addStudent(req, res);
-//     expect(io.emit).toHaveBeenCalledWith('message', 'Student John Doe added');
-//   });
+  describe('Get All Students Test Case', () => {
+    const studentResults = [
+      {
+        id: 1,
+        name: 'student1',
+        gender: 'Male',
+        address: 'newAddress1',
+        mobile: '0112463256',
+        birthday: '1998-12-10',
+        age: 24,
+      },
+    ];
 
-//   it('should set the response status to 200', async () => {
-//     await addStudent(req, res);
-//     expect(res.status).toHaveBeenCalledWith(200);
-//   });
+    const req = {} as Request;
 
-//   it('should return a json object with a success message', async () => {
-//     await addStudent(req, res);
-//     expect(res.json).toHaveBeenCalledWith({ message: 'Student added successfully' });
-//   });
+    const res = response();
 
-//   it('should set the response status to 500 and return the error if there is a failure', async () => {
-//     const addStudentServiceSpy = jest.spyOn(studentServices, 'addStudentService');
-//     addStudentServiceSpy.mockImplementation(() => {
-//       throw new Error('Failed to add student');
-//     });
-//     await addStudent(req, res);
-//     expect(res.status).toHaveBeenCalledWith(500);
-//     expect(res.json).toHaveBeenCalledWith(new Error('Failed to add student'));
-//   });
-// });
+    test('Get All Students Success', async () => {
+      const spyGetStudents = jest
+        .spyOn(studentServices, 'getAllStudentsService')
+        .mockResolvedValue(studentResults as any);
+      await getAllStudents(req, res);
+      expect(res.status).toHaveBeenCalledWith(200);
+      expect(res.send).toHaveBeenCalledWith(studentResults);
+      spyGetStudents.mockRestore();
+    });
+
+    test('Get all students fail', async () => {
+      const spyGetStudents = jest.spyOn(studentServices, 'getAllStudentsService').mockResolvedValue(null as any);
+      await getAllStudents(req, res);
+      expect(res.status).toHaveBeenCalledWith(400);
+      expect(res.send).toHaveBeenCalledWith({ err: 'students get failed' });
+      spyGetStudents.mockRestore();
+    });
+  });
+
+  describe('Update Student Test Case', () => {
+    const alterStudent = {
+      id: 1,
+      name: 'stuname',
+      gender: 'Male',
+      address: 'newAddress1',
+      mobile: '0123456789',
+      birthday: '1998-12-10',
+      age: '24',
+    };
+
+    const req1 = {
+      body: {
+        id: 1,
+        name: 'stuname',
+        address: 'newAddress123',
+        mobileNo: '0123456459',
+      },
+    } as Request;
+
+    const req2 = {
+      body: {
+        id: 1,
+        name: '',
+        address: 'newAddress123',
+        mobileNo: '01256459',
+      },
+    } as Request;
+
+    const res = response();
+
+    test('Update Student Success', async () => {
+      const spyUpdateStudent = jest.spyOn(studentServices, 'updateStudent').mockResolvedValue(alterStudent as any);
+      await patchStudent(req1, res);
+      expect(res.status).toHaveBeenCalledWith(200);
+      expect(res.send).toHaveBeenCalledWith(alterStudent);
+      spyUpdateStudent.mockRestore();
+    });
+
+    test('Update student fail', async () => {
+      await patchStudent(req2, res);
+      expect(res.status).toHaveBeenCalledWith(400);
+      expect(res.send).toHaveBeenCalledWith({ err: 'update failed' });
+    });
+  });
+
+  describe('Delete Student Test Case', async () => {
+    const deleteResult1 = {
+      raw: [],
+      affected: 1,
+    };
+
+    const deleteResult2 = {
+      raw: [],
+      affected: 0,
+    };
+
+    const req: any = {
+      params: {
+        Id: '1',
+      },
+    };
+    const res = response();
+
+    test('Delete Student Success', async () => {
+      const spyDeleteStudent = jest
+        .spyOn(studentServices, 'deleteStudentService')
+        .mockResolvedValue(deleteResult1 as any);
+      await deleteStudent(req, res);
+      expect(res.status).toHaveBeenCalledWith(200);
+      expect(res.send).toHaveBeenCalledWith({ message: 'Student deleted successfully' });
+      spyDeleteStudent.mockRestore();
+    });
+
+    test('Delete Student Failed', async () => {
+      const spyDeleteStudent = jest
+        .spyOn(studentServices, 'deleteStudentService')
+        .mockResolvedValue(deleteResult2 as any);
+      await deleteStudent(req, res);
+      expect(res.status).toHaveBeenCalledWith(400);
+      expect(res.send).toHaveBeenCalledWith({ err: 'Delete Failed' });
+      spyDeleteStudent.mockRestore();
+    });
+  });
+});

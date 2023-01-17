@@ -15,17 +15,11 @@ const studentService_1 = require("../services/studentService");
 // get all students controller
 const getAllStudents = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const students = yield (0, studentService_1.getAllStudentsService)().catch((err) => {
-            res.status(500);
-            res.json(err);
-            return;
-        });
-        res.status(200);
-        res.json(students);
+        const students = yield (0, studentService_1.getAllStudentsService)();
+        res.status(200).send(students);
     }
     catch (err) {
-        res.status(500);
-        res.json(err);
+        res.status(400).send({ err: 'students get failed' });
     }
 });
 exports.getAllStudents = getAllStudents;
@@ -34,12 +28,10 @@ const addStudent = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     try {
         yield (0, studentService_1.addStudentService)(req.body);
         server_1.io.emit('message', 'Student ' + req.body.name + ' added');
-        res.status(200);
-        res.json({ message: 'Student added successfully' });
+        res.status(200).send({ message: 'Student added successfully' });
     }
     catch (err) {
-        res.status(500);
-        res.json(err);
+        res.status(400).send({ err: 'not success' });
     }
 });
 exports.addStudent = addStudent;
@@ -67,7 +59,7 @@ const deleteStudent = (req, res) => __awaiter(void 0, void 0, void 0, function* 
         res.json({ message: 'Student deleted successfully' });
     }
     catch (err) {
-        res.status(500);
+        res.status(400);
         res.json(err);
     }
 });
