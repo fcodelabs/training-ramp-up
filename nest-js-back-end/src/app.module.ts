@@ -18,7 +18,7 @@ import { StudentModule } from './student/student.module';
       database: 'Student',
       synchronize: true,
       logging: true,
-      entities: [Student, User],
+      entities: [Student],
     }),
   ],
   controllers: [AppController],

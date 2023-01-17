@@ -11,6 +11,8 @@ import {
   MinLength,
 } from 'class-validator';
 export class StudentDto {
+  id: number;
+
   @IsNotEmpty()
   @IsString()
   name: string;
@@ -24,14 +26,12 @@ export class StudentDto {
   address: string;
 
   @IsNotEmpty()
-  @IsNumberString()
-  @MinLength(9)
-  @MaxLength(10)
-  mobile: number;
+  @IsString()
+  mobileNo: string;
 
   @IsNotEmpty()
-  @IsDateString()
-  birthday: string;
+  // @IsDateString()
+  birth: Date;
 
   @IsNotEmpty()
   @IsInt()

@@ -10,6 +10,7 @@ export const getAllStudentService = async (): Promise<any> => {
     const allStudent = await studentsRepo.find({ order: { id: 'DESC' } });
     return allStudent;
   } catch (error) {
+    console.log(error)
     return { error: 'Can not get Student' };
   }
 };
@@ -25,6 +26,7 @@ export const saveStudentService = async (data: StudentModel): Promise<any> => {
     }
     return { message: 'Student added successfully !', newStudent };
   } catch (error) {
+    console.log(error)
     return { error: 'Faild to add student !' };
   }
 };
@@ -44,6 +46,7 @@ export const updateStudentService = async (data: StudentModel): Promise<any> => 
     }
     return { message: 'Student updated successfully !', newStudent };
   } catch (error) {
+    console.log(error)
     return { error: 'Faild to Update student !' };
   }
 };
