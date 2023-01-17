@@ -6,6 +6,7 @@ import { AppService } from './app.service';
 import Student from './entities/student.entity';
 import User from './entities/user.entity';
 import { StudentModule } from './student/student.module';
+import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { StudentModule } from './student/student.module';
       inject: [ConfigService],
     }),
     StudentModule,
+    UserModule,
   ],
   controllers: [AppController],
   providers: [AppService],

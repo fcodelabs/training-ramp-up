@@ -2,13 +2,13 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, Res } from '@nestjs/common';
 import { Response } from 'express';
 import { DeleteResult } from 'typeorm';
-import { CreateStudentDto, UpdateStudentDto } from './dto/create-student.dto';
+import { CreateStudentDto, UpdateStudentDto } from './dto/student.dto';
 import { StudentInterface } from './interfaces/student.interface';
 import { StudentService } from './student.service';
 
 @Controller('student')
 export class StudentController {
-  constructor(private studentService: StudentService) {}
+  constructor(private readonly studentService: StudentService) {}
 
   validate = (student: StudentInterface) => {
     const name = /^([A-z\s.]{3,20})$/
