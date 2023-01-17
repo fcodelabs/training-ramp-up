@@ -42,7 +42,8 @@ export class StudentService {
       return null
     } catch (err) {
       return null
-    }  }
+    }  
+  }
 
   async deleteStudentService(studentId: number) {
     try {
@@ -50,5 +51,6 @@ export class StudentService {
       return result
     } catch (err) {
       return null
-    }  }
+    }  
+  }
 }

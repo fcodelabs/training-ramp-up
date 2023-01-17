@@ -42,7 +42,7 @@ export class StudentController {
     return true
   }
 
-  @Get('get')
+  @Get()
   async getAllStudents(@Res() res: Response) {
     try {
       const students = await this.studentService.getAllStudentsService()
@@ -56,7 +56,7 @@ export class StudentController {
     }
   }
 
-  @Post('add')
+  @Post()
   async addStudent(@Body() newStudent: CreateStudentDto, @Res() res: Response) {
     try {
       const valid = this.validate(newStudent)
@@ -75,7 +75,7 @@ export class StudentController {
     }  
   } 
 
-  @Patch('update')
+  @Patch()
   async updateStudent(@Body() updateStudent: UpdateStudentDto, @Res() res: Response) {
     try {
       if (this.validate(updateStudent)) {
@@ -93,10 +93,11 @@ export class StudentController {
     }
   }
 
-  @Delete('delete')
+  @Delete(':Id')
   async deleteStudent(@Param('Id') deleteStudentId: string, @Res() res: Response) {
     try {
       const studentId = parseInt(deleteStudentId)
+      
       const result: DeleteResult = await this.studentService.deleteStudentService(studentId)
       if (result.affected !== 0) {
         return res.status(200).send(result)

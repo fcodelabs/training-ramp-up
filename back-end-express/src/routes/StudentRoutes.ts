@@ -9,14 +9,9 @@ import { authService } from '../services/AuthService'
 
 const studentRoutes = express.Router()
 
-studentRoutes.get('/get', authService(['Admin', 'Guest']), getAllStudents)
-studentRoutes.post('/add', authService(['Admin']), addStudent)
-studentRoutes.patch('/update', authService(['Admin']), updateStudent)
-studentRoutes.delete('/delete/:Id', authService(['Admin']), deleteStudent)
-
-// studentRoutes.get('/get', getAllStudents)
-// studentRoutes.post('/add', addStudent)
-// studentRoutes.patch('/update', updateStudent)
-// studentRoutes.delete('/delete/:Id', deleteStudent)
+studentRoutes.get('/', authService(['Admin', 'Guest']), getAllStudents)
+studentRoutes.post('/', authService(['Admin']), addStudent)
+studentRoutes.patch('/', authService(['Admin']), updateStudent)
+studentRoutes.delete('/:Id', authService(['Admin']), deleteStudent)
 
 export default studentRoutes
