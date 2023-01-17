@@ -18,25 +18,6 @@ export const homeSlice = createSlice({
   name: "home",
   initialState,
   reducers: {
-    enterEditMode: (state, action) => {
-      state.students.map((student) => {
-        if (student.id === action.payload) {
-          student.inEdit = true;
-        }
-        return student;
-      });
-    },
-    cancelEditMode: (state, action) => {
-      state.students.map((student) => {
-        if (student.id === action.payload) {
-          student.inEdit = false;
-        }
-        return student;
-      });
-    },
-    setStudent: (state, action) => {
-      state.students = action.payload;
-    },
     getStudents: (state) => {
       state.isLoading = true;
     },
@@ -76,7 +57,6 @@ export const homeSlice = createSlice({
       state.isLoading = true;
     },
     updateStudentSuccess: (state, action) => {
-      console.log("updateStudentSuccess", action.payload);
       state.isLoading = false;
       state.students = state.students.map((student) => {
         if (student.id === action.payload.id) {
@@ -105,9 +85,6 @@ export const {
   deleteStudent,
   deleteStudentSuccess,
   deleteStudentFailure,
-  enterEditMode,
-  cancelEditMode,
-  setStudent,
   updateStudent,
   updateStudentSuccess,
   updateStudentFailure,

@@ -18,7 +18,7 @@ export class Student extends BaseEntity {
   mobile!: string;
 
   @Column()
-  birthday!: string;
+  birthday!: Date;
 
   @Column()
   age!: number;

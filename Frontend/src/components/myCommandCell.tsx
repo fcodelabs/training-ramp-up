@@ -1,13 +1,13 @@
 import * as React from "react";
-import { User, Student } from "./interface";
+import { Student } from "./interface";
 
 interface Props {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   dataItem: any;
   editField: string;
-  add: (dataItem: User) => void;
-  update: (dataItem: User) => void;
-  discard: (dataItem: User) => void;
+  add: (dataItem: Student) => void;
+  update: (dataItem: Student) => void;
+  discard: (dataItem: Student) => void;
   edit: (dataItem: Student) => void;
   remove: (dataItem: Student) => void;
   cancel: (dataItem: Student) => void;
