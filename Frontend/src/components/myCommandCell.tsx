@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Student } from "./interface";
+import { Student } from "../utils/interface";
 
 interface Props {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

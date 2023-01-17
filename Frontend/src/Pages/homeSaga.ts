@@ -1,6 +1,6 @@
 import { takeEvery, put, call } from "redux-saga/effects";
-import { Student } from "../components/interface";
-import { calcAge } from "../components/services";
+import { Student } from "../utils/interface";
+import { calcAge } from "../utils/services";
 import { toast } from "react-toastify";
 import axios from "../axios";
 import {
@@ -36,7 +36,6 @@ function* getStudentsSaga(): Generator<any, any, any> {
 }
 
 function* addStudentSaga(action: any): Generator<any, any, any> {
-  console.log("start saga", action.payload);
   try {
     const data = {
       name: action.payload.name,
@@ -48,7 +47,6 @@ function* addStudentSaga(action: any): Generator<any, any, any> {
     };
     const response = yield call(() => axios.post("student", data));
     const student: Student = response.data;
-    console.log(student);
     yield put(addStudentSuccess({ ...student, inEdit: false }));
   } catch (error) {
     toast.error("Error in adding student");
