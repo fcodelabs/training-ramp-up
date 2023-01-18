@@ -6,7 +6,7 @@ export class CreateUserDto {
   role: string;
 }
 
-export interface LoginUserDto {
+export class LoginUserDto {
   email: string;
   password: string;
 }

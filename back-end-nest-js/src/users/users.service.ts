@@ -1,13 +1,13 @@
 /* eslint-disable prettier/prettier */
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import User from 'src/entities/user.entity';
+import User from 'src/users/entities/users.entity';
 import { Repository } from 'typeorm';
-import { LoginUserInterface, UserInterface } from './interfaces/user.interface';
+import { LoginUserInterface, UserInterface } from './interfaces/users.interface';
 import * as bcrypt from 'bcrypt';
 
 @Injectable()
-export class UserService {
+export class UsersService {
   constructor(
     @InjectRepository(User) private userRepository: Repository<User>,
   ) {}
@@ -33,10 +33,9 @@ export class UserService {
         const pwValid = await bcrypt.compare(loginUser.password, founduser.password)
         if (pwValid) return founduser
       }
-      console.log(new UnauthorizedException());
       return null
     } catch (err) {
-      return err
+      throw err    
     }
   }
 
@@ -56,33 +55,7 @@ export class UserService {
         return false
       }
     } catch (err) {
-      return err
+      throw err    
     }
   }
-
-  // async updateStudentService(updateStudent: UpdateStudentInterface) {
-  //   try {
-  //     const studentId = updateStudent.id
-  //     const student = await this.studentRepository.findOneBy({
-  //       id: studentId
-  //     })
-  //     if (student !== null) {
-  //       const updatedStudent = this.studentRepository.merge(student, updateStudent)
-  //       const result = await this.studentRepository.save(updatedStudent)
-  //       return result
-  //     }
-  //     return null
-  //   } catch (err) {
-  //     return null
-  //   }  
-  // }
-
-  // async deleteStudentService(studentId: number) {
-  //   try {
-  //     const result = await this.studentRepository.delete(studentId)
-  //     return result
-  //   } catch (err) {
-  //     return null
-  //   }  
-  // }
 }

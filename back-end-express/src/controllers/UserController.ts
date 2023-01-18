@@ -21,7 +21,6 @@ export const validate = (user: UserModel) => {
     return false
   }
   if (!emailReg.test(user.email)) {
-    // console.log('email', emailReg.test(user.email))
     return false
   }
   if (!validPw) {

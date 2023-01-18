@@ -1,11 +1,8 @@
 /* eslint-disable prettier/prettier */
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import * as dotenv from 'dotenv';
 
 declare const module: any;
-
-dotenv.config();
 
 const port = Number(process.env.PORT);
 
