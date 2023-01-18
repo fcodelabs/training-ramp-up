@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     /*Language and Environment*/
-    "target": "es5",
+    "target": "ES6",
 
     /* Modules */
     "module": "commonjs",
@@ -15,7 +15,9 @@
     "strict": true,
 
     /* Completeness */
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true
 
     /* Emit */
     //"outFile": "./",

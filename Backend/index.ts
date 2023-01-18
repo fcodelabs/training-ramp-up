@@ -1,15 +1,61 @@
-import express from "express";
-import dotenv from "dotenv";
+import 'reflect-metadata';
+import express, { Request, Response } from 'express';
+import dotenv from 'dotenv';
+import bodyParser from 'body-parser';
+import studentRoutes from './src/routes/Student';
+import cors from 'cors';
+import { appDataSource } from './src/utils/DataSource';
+import { Server } from 'socket.io';
+import http from 'http';
 
 dotenv.config();
 
 const app = express();
 const port = process.env.PORT;
 
-app.get("/", (req, res) => {
-  res.send("This is a test web page!");
+app.use(express.json());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(
+  cors({
+    credentials: true,
+    origin: ['http://localhost:3000', 'production domain'],
+  })
+);
+
+app.use('/student', studentRoutes);
+
+const httpServer = http.createServer(app);
+
+app.get('/', (req: Request, res: Response) => {
+  res.send('This is a test web page!');
 });
 
-app.listen(port, () => {
-  console.log("The application is listening on port 3000!");
+export const io = new Server(httpServer, {
+  cors: {
+    origin: 'http://localhost:3000/',
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  },
+});
+
+io.on('connection', (socket) => {
+  console.log(`connect ${socket.id}`);
+
+  socket.on('disconnect', (reason) => {
+    console.log('Got disconnect due to ' + reason + '!');
+  });
+});
+
+appDataSource
+  .initialize()
+  .then(() => {
+    console.log('Database is connected!');
+  })
+  .catch((err) => {
+    console.log('Database connection failed!');
+    console.log(err);
+  });
+
+httpServer.listen(port, () => {
+  console.log(`The application is listening on port ${port}!`);
 });
