@@ -1,12 +1,6 @@
 import { toast } from "react-toastify";
 import { Student } from "./interface";
 
-// const generateId = (data: User[]) =>
-//   data.reduce(
-//     (acc: number, current: { ID: number }) => Math.max(acc, current.ID),
-//     0
-//   ) + 1;
-
 export const calcAge = (date: Date) => {
   const today = new Date();
   const birthDate = new Date(date);
@@ -15,12 +9,7 @@ export const calcAge = (date: Date) => {
   if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
     age--;
   }
-  if (age >= 18) {
-    return age;
-  } else {
-    toast.error("Age must be greater than or equal to 18");
-    return age;
-  }
+  return age;
 };
 
 const isPhonenumber = (number: string) => {
@@ -34,7 +23,7 @@ const isPhonenumber = (number: string) => {
 };
 
 const isAddress = (address: string) => {
-  const adrs = /^[a-zA-Z0-9\s,'.-]*$/;
+  const adrs = /^[a-zA-Z0-9\s,'./-]*$/;
   if (address.match(adrs)) {
     return true;
   } else {
@@ -44,5 +33,20 @@ const isAddress = (address: string) => {
 };
 
 export const Validate = (data: Student) => {
-  console.log(data);
+  if (
+    data.name &&
+    data.address &&
+    data.gender &&
+    data.birthday &&
+    data.mobile
+  ) {
+    if (isAddress(data.address) && isPhonenumber(data.mobile)) {
+      return true;
+    } else {
+      return false;
+    }
+  } else {
+    toast.error("Please fill all the fields");
+    return false;
+  }
 };

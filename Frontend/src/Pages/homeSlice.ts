@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { Student } from "../components/interface";
+import { Student } from "../utils/interface";
 
 interface HomePageState {
   students: Student[];

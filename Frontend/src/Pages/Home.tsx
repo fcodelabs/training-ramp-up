@@ -10,8 +10,8 @@ import {
 } from "@progress/kendo-react-grid";
 
 import { MyCommandCell } from "../components/myCommandCell";
-import { Validate } from "../components/services";
-import { Student } from "../components/interface";
+import { Validate } from "../utils/services";
+import { Student } from "../utils/interface";
 import { DropDownCell } from "../components/dropDownCell";
 import { DatePickerCell } from "../components/datePickerCell";
 import { useDispatch, useSelector } from "react-redux";
@@ -57,12 +57,16 @@ function Home() {
   };
 
   const add = (dataItem: Student) => {
-    dispatch(addStudent(dataItem));
+    if (Validate(dataItem)) {
+      dispatch(addStudent(dataItem));
+    }
   };
 
   const update = (dataItem: Student) => {
-    dispatch(updateStudent(dataItem));
-    setData(students);
+    if (Validate(dataItem)) {
+      dispatch(updateStudent(dataItem));
+      setData(students);
+    }
   };
 
   // Local state operations
