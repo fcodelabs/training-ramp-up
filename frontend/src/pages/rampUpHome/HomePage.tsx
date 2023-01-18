@@ -93,9 +93,12 @@ export const Table = (): any => {
     dataItem.inEdit = true
     dataItem.DateOfBirth = birthday
     dataItem.PersonGender = personGen.value
+
     const newId = generateId(persondata)
     const errs = checkErr(dataItem)
+
     setErr(errs)
+
     if (errs.length > 0) {
       onToggle()
     } else {
@@ -128,7 +131,7 @@ export const Table = (): any => {
       onToggle()
     } else {
       distpatch(updatePersonDataStart(dataItem))
-      setBirthday(new Date())
+      
     }
   }
 
@@ -144,6 +147,8 @@ export const Table = (): any => {
 
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   const enterEdit = (dataItem: Person) => {
+    dataItem.DateOfBirth != null && setBirthday(new Date(dataItem.DateOfBirth))
+    dataItem.PersonGender != null && setGender({ value: dataItem.PersonGender })
     setData(
       data.map((item) => (item.PersonID === dataItem.PersonID ? { ...item, inEdit: true } : item)),
     )
@@ -250,13 +255,8 @@ export const Table = (): any => {
                 <DatePicker
                   min={new Date(1970, 1, 1)}
                   max={new Date()}
-                  value={
-                    props?.dataItem?.PersonID !== 0 &&
-                    birthday.toString()?.slice(0, 15) === new Date().toString()?.slice(0, 15)
-                      ? new Date(props?.dataItem?.DateOfBirth)
-                      : birthday
-                  }
                   onChange={handleChangeDatePicker}
+                  value={birthday}
                 />
               ) : (
                 new Date(props?.dataItem?.DateOfBirth)?.toString()?.slice(0, 15)
