@@ -1,8 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { User } from "../components/interface";
+import { Student } from "../components/interface";
 
 interface HomePageState {
-  students: User[];
+  students: Student[];
   error: string;
   isLoading: boolean;
 }
@@ -18,11 +18,27 @@ export const homeSlice = createSlice({
   name: "home",
   initialState,
   reducers: {
+    enterEditMode: (state, action) => {
+      state.students.map((student) => {
+        if (student.id === action.payload) {
+          student.inEdit = true;
+        }
+        return student;
+      });
+    },
+    cancelEditMode: (state, action) => {
+      state.students.map((student) => {
+        if (student.id === action.payload) {
+          student.inEdit = false;
+        }
+        return student;
+      });
+    },
+    setStudent: (state, action) => {
+      state.students = action.payload;
+    },
     getStudents: (state) => {
       state.isLoading = true;
-    },
-    setStudents: (state, action) => {
-      state.students = action.payload;
     },
     getStudentsSuccess: (state, action) => {
       state.isLoading = false;
@@ -43,17 +59,58 @@ export const homeSlice = createSlice({
       state.isLoading = false;
       state.error = action.payload;
     },
+    deleteStudent: (state, action) => {
+      state.isLoading = true;
+    },
+    deleteStudentSuccess: (state, action) => {
+      state.isLoading = false;
+      state.students = state.students.filter(
+        (student) => student.id !== action.payload
+      );
+    },
+    deleteStudentFailure: (state, action) => {
+      state.isLoading = false;
+      state.error = action.payload;
+    },
+    updateStudent: (state, action) => {
+      state.isLoading = true;
+    },
+    updateStudentSuccess: (state, action) => {
+      console.log("updateStudentSuccess", action.payload);
+      state.isLoading = false;
+      state.students = state.students.map((student) => {
+        if (student.id === action.payload.id) {
+          return {
+            ...action.payload,
+            inEdit: false,
+          };
+        }
+        return student;
+      });
+    },
+    updateStudentFailure: (state, action) => {
+      state.isLoading = false;
+      state.error = action.payload;
+    },
   },
 });
 
 export const {
-  setStudents,
   getStudents,
   getStudentsSuccess,
   getStudentsFailure,
   addStudent,
   addStudentSuccess,
   addStudentFailure,
+  deleteStudent,
+  deleteStudentSuccess,
+  deleteStudentFailure,
+  enterEditMode,
+  cancelEditMode,
+  setStudent,
+  updateStudent,
+  updateStudentSuccess,
+  updateStudentFailure,
 } = homeSlice.actions;
 
 export default homeSlice.reducer;
