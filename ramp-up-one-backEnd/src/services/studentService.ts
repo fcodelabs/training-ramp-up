@@ -10,7 +10,7 @@ export const getAllStudentService = async (): Promise<any> => {
     const allStudent = await studentsRepo.find({ order: { id: 'DESC' } });
     return allStudent;
   } catch (error) {
-    console.log(error)
+    console.log(error) 
     return { error: 'Can not get Student' };
   }
 };

@@ -1,16 +1,15 @@
+import { PartialType } from '@nestjs/mapped-types';
+import { CreateStudentDto } from './create-student.dto';
 /* eslint-disable indent */
 import {
-  IsDateString,
   IsEnum,
   IsInt,
   IsNotEmpty,
-  IsNumberString,
   IsString,
-  MaxLength,
   Min,
   MinLength,
 } from 'class-validator';
-export class StudentDto {
+export class UpdateStudentDto extends PartialType(CreateStudentDto) {
   id: number;
 
   @IsNotEmpty()
@@ -30,11 +29,10 @@ export class StudentDto {
   mobileNo: string;
 
   @IsNotEmpty()
-  // @IsDateString()
   birth: Date;
 
   @IsNotEmpty()
   @IsInt()
-  @Min(1)
+  @Min(18)
   age: number;
 }

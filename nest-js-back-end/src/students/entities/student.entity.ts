@@ -1,20 +1,25 @@
 /* eslint-disable indent */
 import { Entity, Column, PrimaryGeneratedColumn, BaseEntity } from 'typeorm';
-
 @Entity()
-export class User extends BaseEntity {
+export class Student {
   @PrimaryGeneratedColumn()
   id!: number;
-
-  @Column()
-  email!: string;
 
   @Column()
   name!: string;
 
   @Column()
-  password!: string;
+  gender!: string;
 
   @Column()
-  userRoll!: string;
+  address!: string;
+
+  @Column()
+  mobileNo!: string;
+
+  @Column({ type: 'date' })
+  birth!: Date;
+
+  @Column()
+  age!: number;
 }
