@@ -15,7 +15,11 @@ export const addStudentService = async (student: StudentType) => {
 export const getStudentsService = async () => {
   try {
     const studentRepo = appDataSource.getRepository(Student);
-    const res = await studentRepo.find({});
+    const res = await studentRepo.find({
+      order: {
+        id: 'ASC',
+      },
+    });
     return res;
   } catch (error) {
     throw new Error('Error in getting students');
