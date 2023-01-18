@@ -10,23 +10,16 @@ import {
 } from "@progress/kendo-react-grid";
 
 import { MyCommandCell } from "../components/myCommandCell";
-import {
-  insertItem,
-  getItems,
-  updateItem,
-  deleteItem,
-} from "../components/services";
-import { User, Student } from "../components/interface";
+import { Validate } from "../components/services";
+import { Student } from "../components/interface";
 import { DropDownCell } from "../components/dropDownCell";
 import { DatePickerCell } from "../components/datePickerCell";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getStudents,
   deleteStudent,
-  enterEditMode,
-  cancelEditMode,
-  setStudent,
   updateStudent,
+  addStudent,
 } from "./homeSlice";
 
 interface PageState {
@@ -48,77 +41,59 @@ function Home() {
 
   const editField = "inEdit";
 
-  const [data, setData] = React.useState<User[]>([]);
+  const [data, setData] = React.useState<Student[]>([]);
 
   React.useEffect(() => {
     dispatch(getStudents());
-    const newItems = getItems();
-    setData(newItems);
-  }, []);
+  }, [dispatch]);
+
+  React.useEffect(() => {
+    setData(students);
+  }, [students]);
 
   // modify the data in the store, db etc
   const remove = (dataItem: Student) => {
-    console.log(dataItem);
     dispatch(deleteStudent(dataItem.id));
-    // const newData = [...deleteItem(dataItem)];
-    // setData(newData);
   };
 
-  const add = (dataItem: User) => {
-    dataItem.inEdit = true;
-
-    const newData = insertItem(dataItem);
-    setData(newData);
+  const add = (dataItem: Student) => {
+    dispatch(addStudent(dataItem));
   };
 
-  const update = (dataItem: User) => {
-    // dataItem.inEdit = false;
-
+  const update = (dataItem: Student) => {
     dispatch(updateStudent(dataItem));
-    // const newData = updateItem(dataItem);
-    // setData(newData);
+    setData(students);
   };
 
   // Local state operations
   const discard = () => {
-    const newData = [...data];
-    newData.splice(0, 1);
-    setData(newData);
+    setData(students);
   };
 
-  const cancel = (dataItem: Student) => {
-    // const originalItem = getItems().find((p) => p.ID === dataItem.ID);
-    // const newData = data.map((item) =>
-    //   item.ID === originalItem?.ID ? originalItem : item
-    // );
-
-    // setData(newData);
-    dispatch(cancelEditMode(dataItem.id));
+  const cancel = () => {
+    setData(students);
   };
 
   const enterEdit = (dataItem: Student) => {
-    // setData(
-    //   data.map((item) =>
-    //     item.ID === dataItem.ID ? { ...item, inEdit: true } : item
-    //   )
-    // );
-    dispatch(enterEditMode(dataItem.id));
+    setData(
+      data.map((item) =>
+        item.id === dataItem.id ? { ...item, inEdit: true } : item
+      )
+    );
   };
 
   const itemChange = (event: GridItemChangeEvent) => {
-    const newData = students.map((item: Student) =>
+    const newData = data.map((item: Student) =>
       item.id === event.dataItem.id
         ? { ...item, [event.field || ""]: event.value }
         : item
     );
-
-    dispatch(setStudent(newData));
+    setData(newData);
   };
 
   const addNew = () => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const newDataItem: any = { inEdit: true };
-
     setData([newDataItem, ...data]);
   };
 
@@ -138,7 +113,7 @@ function Home() {
   return (
     <Grid
       style={{ height: "100%" }}
-      data={students.slice(page.skip, page.take + page.skip)}
+      data={data.slice(page.skip, page.take + page.skip)}
       onItemChange={itemChange}
       editField={editField}
       skip={page.skip}

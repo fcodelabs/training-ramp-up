@@ -1,5 +1,7 @@
 import { takeEvery, put, call } from "redux-saga/effects";
 import { Student } from "../components/interface";
+import { calcAge } from "../components/services";
+import { toast } from "react-toastify";
 import axios from "../axios";
 import {
   getStudents,
@@ -28,18 +30,28 @@ function* getStudentsSaga(): Generator<any, any, any> {
     });
     yield put(getStudentsSuccess(modified));
   } catch (error) {
+    toast.error("Something went wrong");
     yield put(getStudentsFailure(error));
   }
 }
 
 function* addStudentSaga(action: any): Generator<any, any, any> {
+  console.log("start saga", action.payload);
   try {
-    console.log("start saga", action.payload);
-    const response = yield call(() => axios.post("student", action.payload));
+    const data = {
+      name: action.payload.name,
+      address: action.payload.address,
+      birthday: action.payload.birthday,
+      gender: action.payload.gender,
+      mobile: action.payload.mobile,
+      age: calcAge(action.payload.birthday),
+    };
+    const response = yield call(() => axios.post("student", data));
     const student: Student = response.data;
     console.log(student);
-    yield put(addStudentSuccess(student));
+    yield put(addStudentSuccess({ ...student, inEdit: false }));
   } catch (error) {
+    toast.error("Error in adding student");
     yield put(addStudentFailure(error));
   }
 }
@@ -49,6 +61,7 @@ function* deleteStudentSaga(action: any): Generator<any, any, any> {
     yield call(() => axios.delete(`student/${action.payload}`));
     yield put(deleteStudentSuccess(action.payload));
   } catch (error) {
+    toast.error("Error in deleting student");
     yield put(deleteStudentFailure(error));
   }
 }
@@ -67,6 +80,7 @@ function* updateStudentSaga(action: any): Generator<any, any, any> {
 
     yield put(updateStudentSuccess(action.payload));
   } catch (error) {
+    toast.error("Error in updating student");
     yield put(updateStudentFailure(error));
   }
 }

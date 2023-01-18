@@ -12,8 +12,8 @@ export const getStudents = async (req: Request, res: Response): Promise<void> =>
 
 export const addStudent = async (req: Request, res: Response): Promise<void> => {
   try {
-    await addStudentService(req.body);
-    res.status(200).send('Student added Successfully');
+    const student = await addStudentService(req.body);
+    res.status(200).send(student);
   } catch (error) {
     res.status(400).send('Error in adding student');
   }
