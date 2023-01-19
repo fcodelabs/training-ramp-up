@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { takeEvery, put, call } from "redux-saga/effects";
-import { Student } from "../utils/interface";
-import { calcAge } from "../utils/services";
+import { Student } from "../../utils/interface";
+import { calcAge } from "../../utils/services";
 import { toast } from "react-toastify";
-import axios from "../axios";
+import axios from "../../axios";
 import {
   getStudents,
   getStudentsSuccess,

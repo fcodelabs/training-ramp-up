@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { createSlice } from "@reduxjs/toolkit";
-import { Student } from "../utils/interface";
+import { Student } from "../../utils/interface";
 
 interface HomePageState {
   students: Student[];
@@ -31,34 +31,29 @@ export const homeSlice = createSlice({
       state.error = action.payload;
     },
     addStudent: (state, action) => {
-      state.isLoading = true;
+      return state;
     },
     addStudentSuccess: (state, action) => {
-      state.isLoading = false;
       state.students = [...state.students, action.payload];
     },
     addStudentFailure: (state, action) => {
-      state.isLoading = false;
       state.error = action.payload;
     },
     deleteStudent: (state, action) => {
-      state.isLoading = true;
+      return state;
     },
     deleteStudentSuccess: (state, action) => {
-      state.isLoading = false;
       state.students = state.students.filter(
         (student) => student.id !== action.payload
       );
     },
     deleteStudentFailure: (state, action) => {
-      state.isLoading = false;
       state.error = action.payload;
     },
     updateStudent: (state, action) => {
-      state.isLoading = true;
+      return state;
     },
     updateStudentSuccess: (state, action) => {
-      state.isLoading = false;
       state.students = state.students.map((student) => {
         if (student.id === action.payload.id) {
           return {

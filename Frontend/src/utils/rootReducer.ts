@@ -1,5 +1,5 @@
 import { combineReducers } from "redux";
-import homeSlice from "../Pages/homeSlice";
+import homeSlice from "../Pages/Home/homeSlice";
 
 const rootReducer = combineReducers({
   home: homeSlice,

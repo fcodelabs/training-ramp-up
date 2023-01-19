@@ -9,24 +9,26 @@ import {
   GridToolbar,
 } from "@progress/kendo-react-grid";
 
-import { MyCommandCell } from "../components/myCommandCell";
-import { Validate } from "../utils/services";
-import { Student, PageState, State } from "../utils/interface";
-import { DropDownCell } from "../components/dropDownCell";
-import { DatePickerCell } from "../components/datePickerCell";
+import { MyCommandCell } from "../myCommandCell";
+import { Validate } from "../../utils/services";
+import { Student, PageState, State } from "../../utils/interface";
+import { DropDownCell } from "../dropDownCell";
+import { DatePickerCell } from "../datePickerCell";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getStudents,
   deleteStudent,
   updateStudent,
   addStudent,
-} from "./homeSlice";
+} from "../../Pages/Home/homeSlice";
+import { CircularProgress, Box } from "@mui/material";
 
 const initialDataState: PageState = { skip: 0, take: 17 };
 
-function Home() {
+function Table() {
   const dispatch = useDispatch();
   const students = useSelector((state: State) => state.home.students);
+  const isloading = useSelector((state: State) => state.home.isloading);
   const [page, setPage] = React.useState<PageState>(initialDataState);
   const pageChange = (event: GridPageChangeEvent) => {
     setPage({
@@ -110,6 +112,21 @@ function Home() {
     />
   );
 
+  if (isloading) {
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          p: 40,
+        }}
+      >
+        <CircularProgress />
+      </Box>
+    );
+  }
+
   return (
     <Grid
       style={{ height: "100%" }}
@@ -150,4 +167,4 @@ function Home() {
   );
 }
 
-export default Home;
+export default Table;
