@@ -1,6 +1,8 @@
 /* eslint-disable prettier/prettier */
-import { Body, Controller, Delete, Get, Param, Patch, Post, Res } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Res, SetMetadata, UseGuards } from '@nestjs/common';
 import { Response } from 'express';
+import { AppGateway } from 'src/app.gateway';
+import { AuthGuard } from 'src/auth/auth.guard';
 import { DeleteResult } from 'typeorm';
 import { CreateStudentDto, UpdateStudentDto } from './dto/students.dto';
 import { StudentInterface } from './interfaces/students.interface';
@@ -43,6 +45,8 @@ export class StudentsController {
   }
 
   @Get()
+  @UseGuards(AuthGuard)
+  @SetMetadata('roles', ['Admin','Guest'])
   async getAllStudents(@Res() res: Response) {
     const students = await this.studentService.getAllStudentsService()
     if (students !== null) {
@@ -53,11 +57,14 @@ export class StudentsController {
   }
 
   @Post()
+  @UseGuards(AuthGuard)
+  @SetMetadata('roles', ['Admin'])
   async addStudent(@Body() newStudent: CreateStudentDto, @Res() res: Response) {
     const valid = this.validate(newStudent)
     if (valid) {
       const result = await this.studentService.addStudentService(newStudent)
       if (result !== null) {
+        // this.appGateway.webSocketServer.emit('notification', 'Student has been added')
         return res.status(201).send(result)
       } else {
         return res.status(400).send('Could not add student')
@@ -68,10 +75,13 @@ export class StudentsController {
   } 
 
   @Patch()
+  @UseGuards(AuthGuard)
+  @SetMetadata('roles', ['Admin'])
   async updateStudent(@Body() updateStudent: UpdateStudentDto, @Res() res: Response) {
     if (this.validate(updateStudent)) {
       const result = await this.studentService.updateStudentService(updateStudent)
       if (result !== null) {
+        // this.appGateway.webSocketServer.emit('notification', 'Student has been updated')
         return res.status(200).send(result)
       } else {
         return res.status(400).send('Could not update student')
@@ -82,11 +92,14 @@ export class StudentsController {
   }
 
   @Delete(':Id')
+  @UseGuards(AuthGuard)
+  @SetMetadata('roles', ['Admin'])
   async deleteStudent(@Param('Id') deleteStudentId: string, @Res() res: Response) {
     const studentId = parseInt(deleteStudentId)
     
     const result: DeleteResult = await this.studentService.deleteStudentService(studentId)
     if (result.affected !== 0) {
+      // this.appGateway.webSocketServer.emit('notification', 'Student has been deleted')
       return res.status(200).send(result)
     } else {
       return res.status(400).send('Could not found student to delete')
