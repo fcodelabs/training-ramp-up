@@ -52,10 +52,9 @@ function* saveStudent(action: AnyAction): any {
       insertStudentService,
       action.payload
     );
-    if (response.status === 200) {
+    if (response) {
       yield put(getStudentAction());
-    } else {
-      alert(response.data.message);
+      alert('Student added successfully..!');
     }
   } catch (error) {
     console.log(error);
@@ -68,10 +67,9 @@ function* updateStudent(action: AnyAction) {
       updateStudentService,
       action.payload
     );
-    if (response.status === 200) {
+    if (response) {
       yield put(getStudentAction());
-    } else {
-      alert(response.data.message);
+      alert('Student updated successfully..!');
     }
   } catch (error) {
     console.log(error);
@@ -84,10 +82,9 @@ function* deleteStudent(action: AnyAction) {
       deleteStudentService,
       action.payload
     );
-    if (response.status === 200) {
+    if (response) {
       yield put(getStudentAction());
-    } else {
-      alert(response.data.message);
+      alert('Student deleted successfully..!');
     }
   } catch (error) {
     console.log(error);

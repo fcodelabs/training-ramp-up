@@ -28,8 +28,8 @@ export function* SignInSaga() {
 
 function* loginUser(action: AnyAction): any {
   try {
-    const response: LoginDetails = yield call(getUserService, action.payload);
-    if (response.data) {
+    const response: boolean = yield call(getUserService, action.payload);
+    if (response) {
       const userData: LoginDetails = yield call(getUserDetails);
       console.log(userData);
 
@@ -45,6 +45,7 @@ function* loginUser(action: AnyAction): any {
       alert('can not find user,check email & password..!');
     }
   } catch (error) {
+    alert('can not find user,check email & password..!');
     console.log(error);
   }
 }
@@ -52,7 +53,7 @@ function* loginUser(action: AnyAction): any {
 function* logOutUser(): any {
   try {
     const response: any = yield call(logoutUserService);
-    if (response.status === 200) {
+    if (response) {
       yield put(saveUserAction(false));
       yield put(setUserDetails([]));
     }
@@ -63,14 +64,13 @@ function* logOutUser(): any {
 
 function* registerUser(action: AnyAction): any {
   try {
-    const response: LoginDetails = yield call(
+    const response: boolean = yield call(
       insertUserService,
       action.payload
     );
-    if (response.data) {
+    if (response) {
       const userData: LoginDetails = yield call(getUserDetails);
       console.log(userData);
-
       const userDataCookie = cookies.get('userData');
       yield put(saveUserAction(true));
       yield put(
@@ -80,7 +80,7 @@ function* registerUser(action: AnyAction): any {
         })
       );
       // yield put(signUpSuccess(true));
-      // alert('User Added Successfully!');
+      alert('User Added Successfully!');
     } else {
       alert('User Already Exists!');
     }

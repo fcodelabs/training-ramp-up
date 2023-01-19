@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unnecessary-type-assertion */
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
@@ -8,17 +9,17 @@ import '@progress/kendo-theme-default/dist/all.css';
 import { Provider } from 'react-redux';
 import store from '../src/store';
 
-import { io } from 'socket.io-client';
-const socket = io('http://localhost:8000/', {
-  transports: ['websocket'],
-});
-socket.on('connect', () => {
-  console.log(socket.id);
-});
+// import { io } from 'socket.io-client';
+// const socket = io('http://localhost:8000/', {
+//   transports: ['websocket'],
+// });
+// socket.on('connect', () => {
+//   console.log(socket.id);
+// });
 
-socket.on('notification', (data: string) => {
-  alert(data);
-});
+// socket.on('notification', (data: string) => {
+//   alert(data);
+// });
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement

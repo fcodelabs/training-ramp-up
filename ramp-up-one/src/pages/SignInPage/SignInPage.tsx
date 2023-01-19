@@ -15,7 +15,7 @@ const SignInPage = () => {
   const [passwordError, setpasswordError] = React.useState('');
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
-  const pageName = 'signInPage';
+  // const pageName = 'signInPage';
   const userDetails = useSelector((state: any) => state.signIn.userDetail);
   const user = useSelector((state: any) => state.signIn.user);
   const dispatch = useDispatch();
@@ -54,7 +54,7 @@ const SignInPage = () => {
     return fieldStatus;
   }
   function logInFunction() {
-    const loginPerson = { email, password, pageName, navigate };
+    const loginPerson = { email, password };
     if (checkInputValidation(loginPerson)) {
       dispatch(loginUserAction(loginPerson));
     }

@@ -51,7 +51,7 @@ export const saveUser = async (req: Request, res: Response) => {
      res.status(201);
   }
 };
-
+ 
 export const loginUser = async (req: Request, res: Response) => {
   try {
     const response: any = await getUser(req.body);

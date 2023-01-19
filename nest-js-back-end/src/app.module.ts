@@ -2,12 +2,15 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { Student } from './students/entities/student.entity';
+import { User } from './users/entities/user.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 // import * as dotenv from 'dotenv';
 import { StudentsModule } from './students/students.module';
+import { UsersModule } from './users/users.module';
 @Module({
   imports: [
     StudentsModule,
+    UsersModule,
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: 'localhost',
@@ -17,9 +20,10 @@ import { StudentsModule } from './students/students.module';
       database: 'Student',
       synchronize: true,
       logging: true,
-      entities: [Student],
+      entities: [Student, User],
     }),
     StudentsModule,
+    UsersModule,
   ],
   controllers: [AppController],
   providers: [AppService],

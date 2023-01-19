@@ -1,7 +1,7 @@
 import axios from 'axios';
 import axiosAuth from '../utils/interceptor';
 import { LoginDetails } from '../utils/interfaces';
-const baseUrl = 'http://localhost:8000/user';
+const baseUrl = 'http://localhost:8000/users';
 
 // CRUD operations
 
@@ -12,8 +12,6 @@ export const getUserService = async (user: LoginDetails) => {
   return res;
 };
 
-
-
 export const insertUserService = async (user: LoginDetails) => {
   const res = await axios.post(baseUrl + '/register', user, {
     withCredentials: true,
@@ -22,7 +20,7 @@ export const insertUserService = async (user: LoginDetails) => {
 };
 
 export const logoutUserService = async () => {
-  const res = await axiosAuth.get('/user/logout', {
+  const res = await axiosAuth.get('/users/logout', {
     withCredentials: true,
   });
   return res;

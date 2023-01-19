@@ -11,7 +11,7 @@ axiosApiInstance.interceptors.response.use(
     const originalRequest = error.config;
     if (error.response.status === 403) {
       await axios.post(
-        'http://localhost:8000/user/refresh',
+        'http://localhost:8000/users/refresh',
         {},
         {
           withCredentials: true,

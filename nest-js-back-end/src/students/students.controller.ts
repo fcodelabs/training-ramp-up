@@ -11,7 +11,7 @@ import {
 import { StudentsService } from './students.service';
 import { CreateStudentDto } from './dto/create-student.dto';
 import { UpdateStudentDto } from './dto/update-student.dto';
-
+// import { io } from '../../socketServer';
 @Controller('students')
 export class StudentsController {
   private readonly logger = new Logger('studentsController');
@@ -21,7 +21,12 @@ export class StudentsController {
   async create(
     @Body() createStudentDto: CreateStudentDto
   ): Promise<CreateStudentDto> {
-    return this.studentsService.create(createStudentDto);
+    const response = await this.studentsService.create(createStudentDto);
+    // io.emit(
+    //   'notification',
+    //   'Student added successfully. Student:- ' + response.name
+    // );
+    return response;
   }
 
   @Get()
@@ -39,11 +44,17 @@ export class StudentsController {
   async update(
     @Body() updateStudentDto: UpdateStudentDto
   ): Promise<CreateStudentDto> {
-    return this.studentsService.update(updateStudentDto);
+    const response = await this.studentsService.update(updateStudentDto);
+    // io.emit(
+    //   'notification',
+    //   'Student has been updated, Student:- ' + response.name
+    // );
+    return response;
   }
 
   @Delete(':id')
   async remove(@Param('id') id: string): Promise<object> {
+    // io.emit('notification', 'Student has been deleted');
     return this.studentsService.remove(+id);
   }
 }
