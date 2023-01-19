@@ -1,11 +1,9 @@
-import { IsString,IsDate,IsNumber,IsNotEmpty } from 'class-validator';
-//import { IsNotEmpty } from 'class-validator/types/decorator/decorators';
+import { IsString, IsDate, IsNumber, IsNotEmpty } from 'class-validator';
 
 export class CreateStudentDto {
-
   @IsNumber()
   id: number;
-  
+
   @IsString()
   @IsNotEmpty()
   name: string;

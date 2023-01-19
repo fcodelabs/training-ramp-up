@@ -1,21 +1,27 @@
 import { Module } from '@nestjs/common';
-import { StudentsController } from './students/students.controller';
-import { StudentsService } from './students/students.service';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { StudentsModule } from './students/students.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Student } from './students/entities/student.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      host: 'localhost',
-      port: 5432,
-      username: 'postgres',
-      password: '1234',
-      database: 'studentdetailsnest',
-      entities: [Student],
-      synchronize: true,
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: (configService: ConfigService) => ({
+        type: 'postgres',
+        host: configService.get('DATABASE_HOST'),
+        port: +configService.get<number>('DATABASE_PORT'),
+        username: configService.get('DATABASE_USERNAME'),
+        password: configService.get('DATABASE_PASSWORD'),
+        database: configService.get('DATABASE_NAME'),
+        entities: [Student],
+        synchronize: true,
+      }),
+      inject: [ConfigService],
     }),
     StudentsModule,
   ],
