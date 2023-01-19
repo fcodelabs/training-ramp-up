@@ -10,7 +10,7 @@ import { StudentsService } from './students.service';
 
 @Controller('student')
 export class StudentsController {
-  constructor(private readonly studentService: StudentsService) {}
+  constructor(private readonly studentService: StudentsService, private appGateway: AppGateway) {}
 
   validate = (student: StudentInterface) => {
     const name = /^([A-z\s.]{3,20})$/
@@ -64,7 +64,7 @@ export class StudentsController {
     if (valid) {
       const result = await this.studentService.addStudentService(newStudent)
       if (result !== null) {
-        // this.appGateway.webSocketServer.emit('notification', 'Student has been added')
+        this.appGateway.webSocketServer.emit('notification', 'Student has been added')
         return res.status(201).send(result)
       } else {
         return res.status(400).send('Could not add student')
@@ -81,7 +81,7 @@ export class StudentsController {
     if (this.validate(updateStudent)) {
       const result = await this.studentService.updateStudentService(updateStudent)
       if (result !== null) {
-        // this.appGateway.webSocketServer.emit('notification', 'Student has been updated')
+        this.appGateway.webSocketServer.emit('notification', 'Student has been updated')
         return res.status(200).send(result)
       } else {
         return res.status(400).send('Could not update student')
@@ -99,7 +99,7 @@ export class StudentsController {
     
     const result: DeleteResult = await this.studentService.deleteStudentService(studentId)
     if (result.affected !== 0) {
-      // this.appGateway.webSocketServer.emit('notification', 'Student has been deleted')
+      this.appGateway.webSocketServer.emit('notification', 'Student has been deleted')
       return res.status(200).send(result)
     } else {
       return res.status(400).send('Could not found student to delete')
