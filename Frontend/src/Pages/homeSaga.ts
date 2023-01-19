@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { takeEvery, put, call } from "redux-saga/effects";
 import { Student } from "../utils/interface";
 import { calcAge } from "../utils/services";
@@ -18,6 +19,11 @@ import {
   updateStudentFailure,
 } from "./homeSlice";
 
+interface Action {
+  type: string;
+  payload: Student;
+}
+
 function* getStudentsSaga(): Generator<any, any, any> {
   try {
     const response = yield call(() => axios.get("student"));
@@ -35,7 +41,7 @@ function* getStudentsSaga(): Generator<any, any, any> {
   }
 }
 
-function* addStudentSaga(action: any): Generator<any, any, any> {
+function* addStudentSaga(action: Action): Generator<any, any, any> {
   try {
     const data = {
       name: action.payload.name,
@@ -54,7 +60,7 @@ function* addStudentSaga(action: any): Generator<any, any, any> {
   }
 }
 
-function* deleteStudentSaga(action: any): Generator<any, any, any> {
+function* deleteStudentSaga(action: Action): Generator<any, any, any> {
   try {
     yield call(() => axios.delete(`student/${action.payload}`));
     yield put(deleteStudentSuccess(action.payload));
@@ -64,7 +70,7 @@ function* deleteStudentSaga(action: any): Generator<any, any, any> {
   }
 }
 
-function* updateStudentSaga(action: any): Generator<any, any, any> {
+function* updateStudentSaga(action: Action): Generator<any, any, any> {
   try {
     const element = {
       name: action.payload.name,

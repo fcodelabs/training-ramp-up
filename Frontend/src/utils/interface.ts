@@ -8,3 +8,16 @@ export interface Student {
   age: number;
   inEdit?: boolean | string;
 }
+
+export interface PageState {
+  skip: number;
+  take: number;
+}
+
+export interface State {
+  home: {
+    students: Student[];
+    error: string;
+    isloading: boolean;
+  };
+}

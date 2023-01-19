@@ -11,7 +11,7 @@ import {
 
 import { MyCommandCell } from "../components/myCommandCell";
 import { Validate } from "../utils/services";
-import { Student } from "../utils/interface";
+import { Student, PageState, State } from "../utils/interface";
 import { DropDownCell } from "../components/dropDownCell";
 import { DatePickerCell } from "../components/datePickerCell";
 import { useDispatch, useSelector } from "react-redux";
@@ -22,15 +22,11 @@ import {
   addStudent,
 } from "./homeSlice";
 
-interface PageState {
-  skip: number;
-  take: number;
-}
 const initialDataState: PageState = { skip: 0, take: 17 };
 
 function Home() {
   const dispatch = useDispatch();
-  const students = useSelector((state: any) => state.home.students);
+  const students = useSelector((state: State) => state.home.students);
   const [page, setPage] = React.useState<PageState>(initialDataState);
   const pageChange = (event: GridPageChangeEvent) => {
     setPage({
