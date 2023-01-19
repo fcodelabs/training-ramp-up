@@ -1,6 +1,5 @@
 /* eslint-disable prettier/prettier */
 import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
-// const { Entity, PrimaryGeneratedColumn, Column } = require('typeorm');
 
 @Entity()
 export default class Student {

@@ -6,7 +6,7 @@ import { JwtModule } from '@nestjs/jwt';
 @Module({
   imports: [
     JwtModule.register({
-      secret: 'signintoken',
+      secret: process.env.SECRET,
     }),
   ],
   controllers: [AuthController],
