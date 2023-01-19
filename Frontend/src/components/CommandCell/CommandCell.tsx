@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Student } from "../utils/interface";
+import { Student } from "../../utils/interface";
 
 interface Props {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -13,7 +13,7 @@ interface Props {
   cancel: (dataItem: Student) => void;
 }
 
-export const MyCommandCell = (props: Props) => {
+export const CommandCell = (props: Props) => {
   const { dataItem } = props;
   const inEdit = dataItem[props.editField];
   const isNewItem = dataItem.id === undefined;

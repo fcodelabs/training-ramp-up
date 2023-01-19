@@ -1,5 +1,10 @@
 import { Request, Response } from 'express';
-import { addStudentService, getStudentsService, deleteStudentService, updateStudentService } from '../services/Student';
+import {
+  addStudentService,
+  getStudentsService,
+  deleteStudentService,
+  updateStudentService,
+} from '../services/studentServices';
 import { io } from '../..';
 
 export const getStudents = async (req: Request, res: Response): Promise<void> => {

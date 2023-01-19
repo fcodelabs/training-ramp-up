@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { Student } from '../models/Student';
+import { Student } from '../models/studentModel';
 import dotenv from 'dotenv';
 import { DataSource } from 'typeorm';
 
@@ -13,7 +13,6 @@ export const appDataSource = new DataSource({
   password: '12345',
   database: 'ramp-up',
   entities: [Student],
-  // entities: ['src/models/*{.ts,.js}'],
   synchronize: true,
   logging: false,
   subscribers: [],

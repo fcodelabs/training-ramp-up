@@ -9,21 +9,21 @@ import {
   GridToolbar,
 } from "@progress/kendo-react-grid";
 
-import { MyCommandCell } from "../myCommandCell";
+import { CommandCell } from "../CommandCell/CommandCell";
 import { Validate } from "../../utils/services";
 import { Student, PageState, State } from "../../utils/interface";
-import { DropDownCell } from "../dropDownCell";
-import { DatePickerCell } from "../datePickerCell";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getStudents,
   deleteStudent,
   updateStudent,
   addStudent,
-} from "../../Pages/Home/homeSlice";
+} from "../../pages/Home/homeSlice";
 import { CircularProgress, Box } from "@mui/material";
+import { DatePickerCell } from "../DatePickerCell/DatePickerCell";
+import { DropDownCell } from "../DropDownCell/DropDownCell";
 
-const initialDataState: PageState = { skip: 0, take: 17 };
+const initialDataState: PageState = { skip: 0, take: 15 };
 
 function Table() {
   const dispatch = useDispatch();
@@ -99,8 +99,8 @@ function Table() {
     setData([newDataItem, ...data]);
   };
 
-  const CommandCell = (props: GridCellProps) => (
-    <MyCommandCell
+  const MyCommandCell = (props: GridCellProps) => (
+    <CommandCell
       {...props}
       edit={enterEdit}
       remove={remove}
@@ -162,7 +162,7 @@ function Table() {
       />
 
       <Column field="age" title="Age" width="100px" editable={false} />
-      <Column title="Command" cell={CommandCell} width="200px" />
+      <Column title="Command" cell={MyCommandCell} width="200px" />
     </Grid>
   );
 }

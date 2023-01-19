@@ -1,8 +1,17 @@
-import { Student } from '../models/Student';
-import { appDataSource } from '../utils/DataSource';
-import StudentType from '../utils/interface';
+import { Student } from '../models/studentModel';
+import { appDataSource } from '../configs/dataSourceConfig';
 
-export const addStudentService = async (student: StudentType) => {
+interface StudentType {
+  id: number;
+  name: string;
+  gender: string;
+  address: string;
+  mobile: string;
+  birthday: Date;
+  age: number;
+}
+
+export const addStudentService = async (student: StudentType): Promise<StudentType | ErrorConstructor> => {
   try {
     const studentRepo = appDataSource.getRepository(Student);
     const res = await studentRepo.save(student);
@@ -12,7 +21,7 @@ export const addStudentService = async (student: StudentType) => {
   }
 };
 
-export const getStudentsService = async () => {
+export const getStudentsService = async (): Promise<StudentType[] | ErrorConstructor> => {
   try {
     const studentRepo = appDataSource.getRepository(Student);
     const res = await studentRepo.find({
@@ -26,7 +35,7 @@ export const getStudentsService = async () => {
   }
 };
 
-export const deleteStudentService = async (id: number) => {
+export const deleteStudentService = async (id: number): Promise<StudentType | null | ErrorConstructor> => {
   try {
     const studentRepo = appDataSource.getRepository(Student);
     const student = await studentRepo.findOne({
@@ -41,7 +50,10 @@ export const deleteStudentService = async (id: number) => {
   }
 };
 
-export const updateStudentService = async (id: number, student: StudentType) => {
+export const updateStudentService = async (
+  id: number,
+  student: StudentType
+): Promise<StudentType | ErrorConstructor> => {
   try {
     const studentRepo = appDataSource.getRepository(Student);
     const res = await studentRepo.update(id, student);
