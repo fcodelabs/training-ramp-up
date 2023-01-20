@@ -7,7 +7,7 @@ const data = [...sampleStudents];
 const generateId = (data: Student[]) =>
     data.reduce((acc, current) => Math.max(acc, current.ID), 0) + 1;
 
-const calcAge = (dateOfBirth: Date) => {
+const age = (dateOfBirth: Date) => {
         const today = new Date();
         const birthDate = new Date(dateOfBirth);
         let age = today.getFullYear() - birthDate.getFullYear();
@@ -22,7 +22,7 @@ const calcAge = (dateOfBirth: Date) => {
 export const insertItem = (item: Student) => {
     // console.log(item);
     if(validateName(item.Name) && validateMobile(item.MobileNo) && validateAddress(item.Address) && validateDate(item.DateofBirth)){
-        item.Age = calcAge(item.DateofBirth);
+        item.Age = age(item.DateofBirth);
         item.ID = generateId(data);
         item.inEdit = false;
         data.unshift(item);
@@ -40,7 +40,7 @@ export const updateItem = (item: Student) => {
     if(validateName(item.Name) && validateMobile(item.MobileNo) && validateAddress(item.Address) && validateDate(item.DateofBirth)){
         const index = data.findIndex(record => record.ID === item.ID);
         data[index] = item;
-        item.Age = calcAge(item.DateofBirth);
+        item.Age = age(item.DateofBirth);
         toast.success('Successfully Updated', {
             position: toast.POSITION.TOP_RIGHT
         });
