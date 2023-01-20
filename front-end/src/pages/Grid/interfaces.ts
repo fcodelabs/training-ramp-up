@@ -10,8 +10,8 @@ export interface Student {
 }
 
 export interface MyCommandCellProps {  
-    editField: string;
     dataItem: any;
+    editField: string;
     add: (dataItem: Student) => void;
     update: (dataItem: Student) => void;
     remove: (dataItem: Student) => void;
