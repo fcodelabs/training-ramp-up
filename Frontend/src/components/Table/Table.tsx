@@ -149,7 +149,7 @@ function Table() {
         </button>
       </GridToolbar>
       <Column field="id" title="Id" width="100px" editable={false} />
-      <Column field="name" title="Name" />
+      <Column field="name" title="Name" width="400px" />
       <Column field="gender" title="Gender" width="120px" cell={DropDownCell} />
       <Column field="address" title="Address" width="300px" />
       <Column field="mobile" title="Mobile No" width="150px" />
