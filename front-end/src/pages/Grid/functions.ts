@@ -5,7 +5,7 @@ import { toast } from 'react-toastify';
 const data = [...sampleStudents];
 
 const generateId = (data: Student[]) =>
-    data.reduce((acc: number, current:{ID:number}) => Math.max(acc, current.ID), 0) + 1;
+    data.reduce((acc, current) => Math.max(acc, current.ID), 0) + 1;
 
 const calcAge = (dateOfBirth: Date) => {
         const today = new Date();
