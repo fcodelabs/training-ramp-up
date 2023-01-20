@@ -91,7 +91,7 @@ const CommandCell = (props: GridCellProps) => (
     return (
       <div>
       <Grid
-        style={{ height: '400px', marginTop: '20px' }}
+        style={{ height: '600px', marginTop: '20px' }}
         data={data}
         onItemChange={itemChange}
         editField={editField}
@@ -112,8 +112,8 @@ const CommandCell = (props: GridCellProps) => (
         <GridColumn field="Address" title="Address" />
         <GridColumn field="MobileNo" title="Mobile No"/>
         <GridColumn field="DateofBirth" title="Date of Birth" editor="date" format="{0:D}"/>
-        <GridColumn field="Age" title="Age" editable = {false}/>
-        <GridColumn title= "command " cell = {CommandCell}  width="200px" />
+        <GridColumn field="Age" title="Age" editable = {false} width="100px"/>
+        <GridColumn title= "command " cell = {CommandCell}  width="150px" />
       </Grid>
       <ToastContainer/>
       </div>
