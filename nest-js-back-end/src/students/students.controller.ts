@@ -7,10 +7,13 @@ import {
   Param,
   Delete,
   Logger,
+  SetMetadata,
+  UseGuards,
 } from '@nestjs/common';
 import { StudentsService } from './students.service';
 import { CreateStudentDto } from './dto/create-student.dto';
 import { UpdateStudentDto } from './dto/update-student.dto';
+// import { AuthGuard } from '../auth/auth.guard';
 // import { io } from '../../socketServer';
 @Controller('students')
 export class StudentsController {
@@ -18,6 +21,8 @@ export class StudentsController {
   constructor(private readonly studentsService: StudentsService) {}
 
   @Post()
+  // @UseGuards(AuthGuard)
+  // @SetMetadata('roles', ['Admin'])
   async create(
     @Body() createStudentDto: CreateStudentDto
   ): Promise<CreateStudentDto> {
@@ -30,6 +35,8 @@ export class StudentsController {
   }
 
   @Get()
+  // @UseGuards(AuthGuard)
+  // @SetMetadata('roles', ['Admin', 'User'])
   async findAll(): Promise<Array<CreateStudentDto>> {
     //this.logger.log('Doing something...1');
     return this.studentsService.findAll();
@@ -41,6 +48,8 @@ export class StudentsController {
   }
 
   @Patch()
+  // @UseGuards(AuthGuard)
+  //@SetMetadata('roles', ['Admin', 'User'])
   async update(
     @Body() updateStudentDto: UpdateStudentDto
   ): Promise<CreateStudentDto> {
@@ -53,6 +62,8 @@ export class StudentsController {
   }
 
   @Delete(':id')
+  // @UseGuards(AuthGuard)
+  //@SetMetadata('roles', ['Admin', 'User'])
   async remove(@Param('id') id: string): Promise<object> {
     // io.emit('notification', 'Student has been deleted');
     return this.studentsService.remove(+id);

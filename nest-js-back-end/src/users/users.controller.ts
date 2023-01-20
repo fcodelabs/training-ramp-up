@@ -115,6 +115,7 @@ export class UsersController {
     @Body() req: Request,
     @Res({ passthrough: true }) res: Response
   ): Promise<boolean> {
+    console.log('refresh working...1');
     const secret = config.jwt_secret_key;
     const refToken = req.cookies.refreshToken;
     const userToken: any = await this.usersService.refreshService(refToken);

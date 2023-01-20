@@ -96,6 +96,7 @@ export class UsersService {
 
   async refreshService(refreshToken: string): Promise<CreateUserDto> {
     try {
+      console.log('refresh working...2');
       const verifyRefToken = jwt.verify(refreshToken, config.jwt_secretRe_key);
       if (!verifyRefToken) {
         console.log('Unauthorized');
