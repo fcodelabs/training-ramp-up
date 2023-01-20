@@ -11,7 +11,7 @@ import {
 
 import { CommandCell } from "../CommandCell/CommandCell";
 import { Validate } from "../../utils/services";
-import { Student, PageState, State } from "../../utils/interface";
+import { Student, PageState, HomeState } from "../../utils/interface";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getStudents,
@@ -27,8 +27,8 @@ const initialDataState: PageState = { skip: 0, take: 15 };
 
 function Table() {
   const dispatch = useDispatch();
-  const students = useSelector((state: State) => state.home.students);
-  const loading = useSelector((state: State) => state.home.loading);
+  const students = useSelector((state: HomeState) => state.home.students);
+  const loading = useSelector((state: HomeState) => state.home.loading);
   const [page, setPage] = React.useState<PageState>(initialDataState);
   const pageChange = (event: GridPageChangeEvent) => {
     setPage({

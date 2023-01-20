@@ -14,7 +14,7 @@ export interface PageState {
   take: number;
 }
 
-export interface State {
+export interface HomeState {
   home: {
     students: Student[];
     error: string;
