@@ -185,6 +185,9 @@ export const calcAge = (props: GridCellProps) => {
   let age = null
   if (props.dataItem.dateOfBirth) {
     age = calculateAge(props.dataItem.dateOfBirth)
+    if(age<0){
+      age=null
+    }
   }
   return <td>{age}</td>
 }

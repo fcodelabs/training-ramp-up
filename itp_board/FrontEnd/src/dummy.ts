@@ -14,7 +14,7 @@ export const Users: User[] = [
     name: 'ishara',
     gender: 'male',
     address: 'homagama',
-    mobileNo: '07767223361',
+    mobileNo: '0776722336',
     dateOfBirth: new Date('1996-09-16'),
   },
   {
@@ -22,7 +22,7 @@ export const Users: User[] = [
     name: 'ishara',
     gender: 'male',
     address: '58/10, 1st lane ',
-    mobileNo: '07767223361',
+    mobileNo: '0776722336',
     dateOfBirth: new Date('1996-07-21'),
   },
   {
@@ -30,7 +30,7 @@ export const Users: User[] = [
     name: 'ishara',
     gender: 'male',
     address: '58/10, 1st lane ',
-    mobileNo: '07767223361',
+    mobileNo: '0776722336',
     dateOfBirth: new Date('1996-07-21'),
   },
   {

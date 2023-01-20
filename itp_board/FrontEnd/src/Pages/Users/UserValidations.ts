@@ -26,6 +26,7 @@ export const isValidAddress = (address: string) => {
   }
   return { state: true, error: '' }
 }
+
 export const isValidTPNO = (tpNo: string) => {
   const reg: RegExp = /^(0|\+94)(11|71|70|77|76|75|78)-?\d{7}$/
   if (!tpNo.match(reg)) {
@@ -35,10 +36,14 @@ export const isValidTPNO = (tpNo: string) => {
 }
 export const isValidDateOfBirth = (dob: Date|null) => {
   if (!dob || calculateAge(dob)<18) {
+    if(dob && calculateAge(dob)<0){
+          return { state: false, error: 'Birthday can\'t be a feuture date!!!'}
+    }
     return { state: false, error: 'Age should be greater than or equal 18!!!' }
   }
   return { state: true, error: '' }
 }
+
 export const isValidGender = (gender: string) => {
   if (
     !(

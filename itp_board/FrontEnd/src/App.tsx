@@ -5,9 +5,10 @@ import Users from './Pages/Users/Users'
 function App() {
   return (
     <>
-      <Routes>
+      <Users/>
+      {/* <Routes>
         <Route path='users' element={<Users />} />
-      </Routes>
+      </Routes> */}
     </>
   )
 }
