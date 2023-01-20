@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import Student from 'src/students/entities/students.entity';
+import Student from './entities/students.entity';
 import { Repository } from 'typeorm';
 import { StudentInterface, UpdateStudentInterface } from './interfaces/students.interface';
 
@@ -16,16 +16,22 @@ export class StudentsService {
       const students = await this.studentRepository.find({ order: { id: 'ASC' } })
       return students
     } catch (err) {
-        throw err    
+        return null    
     }  
   }
 
   async addStudentService(newStudent: StudentInterface) {
     try {
-      const createdStudent = this.studentRepository.create(newStudent);
-      return this.studentRepository.save(createdStudent);
+      const createdStudent = new Student()
+      createdStudent.name = newStudent.name
+      createdStudent.address = newStudent.address
+      createdStudent.gender = newStudent.gender
+      createdStudent.mobileNo = newStudent.mobileNo
+      createdStudent.dob = newStudent.dob
+      const result = this.studentRepository.save(createdStudent)
+      return result
     } catch (err) {
-      throw err    
+      return null    
     }
   }
 
@@ -42,7 +48,7 @@ export class StudentsService {
       }
       return null
     } catch (err) {
-      throw err    
+      return null    
     }  
   }
 
@@ -51,7 +57,7 @@ export class StudentsService {
       const result = await this.studentRepository.delete(studentId)
       return result
     } catch (err) {
-      throw err    
+      return null    
     }  
   }
 }

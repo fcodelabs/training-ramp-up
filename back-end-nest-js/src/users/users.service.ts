@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import User from 'src/users/entities/users.entity';
+import User from './entities/users.entity';
 import { Repository } from 'typeorm';
 import { LoginUserInterface, UserInterface } from './interfaces/users.interface';
 import * as bcrypt from 'bcrypt';
@@ -35,11 +35,11 @@ export class UsersService {
       }
       return null
     } catch (err) {
-      throw err    
+      return null    
     }
   }
 
-  async addStudentService(newUser: UserInterface) {
+  async addUserService(newUser: UserInterface) {
     try {
       if (await this.checkUserValid(newUser.email)) {
         const salt = await bcrypt.genSalt(10)
@@ -55,7 +55,7 @@ export class UsersService {
         return false
       }
     } catch (err) {
-      throw err    
+      return null    
     }
   }
 }

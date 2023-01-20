@@ -55,7 +55,7 @@ export class UsersController {
   async signupUser(@Body() newStudent: CreateUserDto, @Res() res: Response) {
     const valid = this.validate(newStudent)
     if (valid) {
-      const result = await this.userService.addStudentService(newStudent)
+      const result = await this.userService.addUserService(newStudent)
       if (result !== false) {
         return res.status(201).send(result)
       } else {
@@ -79,7 +79,6 @@ export class UsersController {
     try {  
       const user = await req.cookies.user ?? ''
       const refreshToken = await req.cookies.refreshToken ?? ''
-      // console.log(user, refreshToken)
       if(user !== null && refreshToken !== null) {
         const isValid = await this.authService.verifyRefresh(user.email, refreshToken)
         
