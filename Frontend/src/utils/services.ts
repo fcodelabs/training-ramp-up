@@ -9,6 +9,10 @@ export const calcAge = (date: Date) => {
   if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
     age--;
   }
+  if (age < 18) {
+    toast.error("Age should be greater than 18");
+    return false;
+  }
   return age;
 };
 
@@ -40,7 +44,11 @@ export const Validate = (data: Student) => {
     data.birthday &&
     data.mobile
   ) {
-    if (isAddress(data.address) && isPhonenumber(data.mobile)) {
+    if (
+      isAddress(data.address) &&
+      isPhonenumber(data.mobile) &&
+      calcAge(data.birthday)
+    ) {
       return true;
     } else {
       return false;

@@ -75,14 +75,19 @@ function* updateStudentSaga(action: Action): Generator<any, any, any> {
     const element = {
       name: action.payload.name,
       address: action.payload.address,
-      age: action.payload.age,
+      age: calcAge(action.payload.birthday),
       birthday: action.payload.birthday,
       gender: action.payload.gender,
       mobile: action.payload.mobile,
     };
     yield call(() => axios.patch(`student/${action.payload.id}`, element));
 
-    yield put(updateStudentSuccess(action.payload));
+    yield put(
+      updateStudentSuccess({
+        ...action.payload,
+        age: calcAge(action.payload.birthday),
+      })
+    );
   } catch (error) {
     toast.error("Error in updating student");
     yield put(updateStudentFailure(error));
