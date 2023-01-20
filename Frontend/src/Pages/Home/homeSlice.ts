@@ -5,14 +5,14 @@ import { Student } from "../../utils/interface";
 interface HomePageState {
   students: Student[];
   error: string;
-  isLoading: boolean;
+  loading: boolean;
 }
 
 // Define the initial state using that type
 const initialState: HomePageState = {
   students: [],
   error: "",
-  isLoading: false,
+  loading: false,
 };
 
 export const homeSlice = createSlice({
@@ -20,14 +20,14 @@ export const homeSlice = createSlice({
   initialState,
   reducers: {
     getStudents: (state) => {
-      state.isLoading = true;
+      state.loading = true;
     },
     getStudentsSuccess: (state, action) => {
-      state.isLoading = false;
+      state.loading = false;
       state.students = action.payload;
     },
     getStudentsFailure: (state, action) => {
-      state.isLoading = false;
+      state.loading = false;
       state.error = action.payload;
     },
     addStudent: (state, action) => {
@@ -65,7 +65,7 @@ export const homeSlice = createSlice({
       });
     },
     updateStudentFailure: (state, action) => {
-      state.isLoading = false;
+      state.loading = false;
       state.error = action.payload;
     },
   },

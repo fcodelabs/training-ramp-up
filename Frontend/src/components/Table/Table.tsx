@@ -28,7 +28,7 @@ const initialDataState: PageState = { skip: 0, take: 15 };
 function Table() {
   const dispatch = useDispatch();
   const students = useSelector((state: State) => state.home.students);
-  const isloading = useSelector((state: State) => state.home.isloading);
+  const loading = useSelector((state: State) => state.home.loading);
   const [page, setPage] = React.useState<PageState>(initialDataState);
   const pageChange = (event: GridPageChangeEvent) => {
     setPage({
@@ -90,6 +90,7 @@ function Table() {
         ? { ...item, [event.field || ""]: event.value }
         : item
     );
+
     setData(newData);
   };
 
@@ -112,7 +113,7 @@ function Table() {
     />
   );
 
-  if (isloading) {
+  if (loading) {
     return (
       <Box
         sx={{
@@ -149,7 +150,7 @@ function Table() {
         </button>
       </GridToolbar>
       <Column field="id" title="Id" width="100px" editable={false} />
-      <Column field="name" title="Name" width="400px" />
+      <Column field="name" title="Name" />
       <Column field="gender" title="Gender" width="120px" cell={DropDownCell} />
       <Column field="address" title="Address" width="300px" />
       <Column field="mobile" title="Mobile No" width="150px" />

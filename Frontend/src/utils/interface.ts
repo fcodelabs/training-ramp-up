@@ -18,6 +18,6 @@ export interface State {
   home: {
     students: Student[];
     error: string;
-    isloading: boolean;
+    loading: boolean;
   };
 }
