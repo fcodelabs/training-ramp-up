@@ -1,16 +1,13 @@
 import { Student } from './interfaces';
 import { sampleStudents } from './sample-students';
-import { DropDownList } from '@progress/kendo-react-dropdowns';
 import { validateMobile, validateName, validateAddress,validateDate } from './validators'
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import { To } from 'react-router-dom';
+import { toast } from 'react-toastify';
 const data = [...sampleStudents];
 
-const generateId = (data: any[]) =>
-    data.reduce((acc, current) => Math.max(acc, current.ID), 0) + 1;
+const generateId = (data: Student[]) =>
+    data.reduce((acc: number, current:{ID:number}) => Math.max(acc, current.ID), 0) + 1;
 
-const calcAge = (dateOfBirth: string) => {
+const calcAge = (dateOfBirth: Date) => {
         const today = new Date();
         const birthDate = new Date(dateOfBirth);
         let age = today.getFullYear() - birthDate.getFullYear();
@@ -22,7 +19,7 @@ const calcAge = (dateOfBirth: string) => {
     
         return age;
 }
-export const insertItem = (item: any) => {
+export const insertItem = (item: Student) => {
     // console.log(item);
     if(validateName(item.Name) && validateMobile(item.MobileNo) && validateAddress(item.Address) && validateDate(item.DateofBirth)){
         item.Age = calcAge(item.DateofBirth);
@@ -39,11 +36,14 @@ export const getItems = () => {
     return data;
 };
 
-export const updateItem = (item: any) => {
+export const updateItem = (item: Student) => {
     if(validateName(item.Name) && validateMobile(item.MobileNo) && validateAddress(item.Address) && validateDate(item.DateofBirth)){
         const index = data.findIndex(record => record.ID === item.ID);
         data[index] = item;
         item.Age = calcAge(item.DateofBirth);
+        toast.success('Successfully Updated', {
+            position: toast.POSITION.TOP_RIGHT
+        });
         return data;
     } else {
         return data;
@@ -53,5 +53,8 @@ export const updateItem = (item: any) => {
 export const deleteItem = (item: Student) => {
     const index = data.findIndex(record => record.ID === item.ID);
     data.splice(index, 1);
+    toast.success('Successfully Removed', {
+        position: toast.POSITION.TOP_RIGHT
+    });
     return data;
 };

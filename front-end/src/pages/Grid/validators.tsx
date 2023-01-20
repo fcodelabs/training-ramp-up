@@ -37,8 +37,8 @@ export const validateAddress = (value: string) =>{
     }
 }
 
-export const validateDate = (value: string) =>{
-    if (value !== undefined && value !== '' ){
+export const validateDate = (value: Date) =>{
+    if (value !== undefined && value !== null && value.toDateString() !== 'Invalid Date' ){
         return true;
     } else {
         toast.error('Enter Date of Birth', {
