@@ -113,7 +113,7 @@ const CommandCell = (props: GridCellProps) => (
         <GridColumn field="MobileNo" title="Mobile No"/>
         <GridColumn field="DateofBirth" title="Date of Birth" editor="date" format="{0:D}"/>
         <GridColumn field="Age" title="Age" editable = {false} width="100px"/>
-        <GridColumn title= "command " cell = {CommandCell}  width="150px" />
+        <GridColumn title= "command " cell = {CommandCell}  width="200px" />
       </Grid>
       <ToastContainer/>
       </div>

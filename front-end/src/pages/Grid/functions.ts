@@ -48,13 +48,21 @@ export const getItems = () => {
 
 export const updateItem = (item: Student) => {
     if(validateName(item.Name) && validateMobile(item.MobileNo) && validateAddress(item.Address) && validateDate(item.DateofBirth)){
+        item.Age = age(item.DateofBirth);
+        if (item.Age < 18) {
+            toast.error('Age should be greater than 18', {
+                position: toast.POSITION.TOP_RIGHT
+            });
+            return data;
+        } else {
         const index = data.findIndex(record => record.ID === item.ID);
         data[index] = item;
-        item.Age = age(item.DateofBirth);
+        
         toast.success('Successfully Updated', {
             position: toast.POSITION.TOP_RIGHT
         });
         return data;
+    }
     } else {
         return data;
     }
