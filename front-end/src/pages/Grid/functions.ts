@@ -23,10 +23,20 @@ export const insertItem = (item: Student) => {
     // console.log(item);
     if(validateName(item.Name) && validateMobile(item.MobileNo) && validateAddress(item.Address) && validateDate(item.DateofBirth)){
         item.Age = age(item.DateofBirth);
+        if(item.Age >=18){
         item.ID = generateId(data);
         item.inEdit = false;
         data.unshift(item);
-        return data;
+        toast.success('Successfully Added', {
+            position: toast.POSITION.TOP_RIGHT
+        });
+        return data;}
+        else{
+            toast.error('Age should be greater than 18', {
+                position: toast.POSITION.TOP_RIGHT
+            });
+            return data;
+        }
     } else {
         return data;
     }
