@@ -1,21 +1,17 @@
 import {
   Grid,
   GridCellProps,
-  GridColumn as Column,
   GridColumn,
   GridToolbar,
   GridItemChangeEvent,
 } from '@progress/kendo-react-grid'
-import { Calendar, DatePicker } from '@progress/kendo-react-dateinputs'
 import '@progress/kendo-theme-default/dist/all.css'
-import { Button } from '@progress/kendo-react-buttons'
 import { MyCommandCell } from './MyCommandcell'
 import React from 'react'
 import { User } from '../../interfaces/interfaces'
 import { deleteItem, getItems, insertItem, updateItem, validationFunc } from '../../services/services'
 import { GenderCell } from './GenderCell'
-import DateCell from './DateCell'
-import { ToastContainer } from 'react-toastify'
+
 
 const editField = 'inEdit'
 
@@ -23,14 +19,12 @@ const DataGrid = () => {
   const [data, setData] = React.useState<any[]>([])
 
   React.useEffect(() => {
-    // eslint-disable-next-line prefer-const
-    let newItems = getItems()
+    const newItems = getItems()
     setData(newItems)
   }, [])
 
   const add = (dataItem: User) => {
     dataItem.inEdit = true
-    // console.log(dataItem.username)
     const newData = insertItem(dataItem)
     if (newData) setData(newData)
   }

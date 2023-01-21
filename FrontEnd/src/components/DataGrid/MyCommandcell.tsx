@@ -1,4 +1,5 @@
 import { Button } from '@progress/kendo-react-buttons';
+import { User } from '../../interfaces/interfaces'
 import * as React from 'react';
 
 export const MyCommandCell = (props: { editField?: any; add?: any; update?: any; discard?: any; cancel?: any; edit?: any; remove?: any; dataItem?: any; }) => {
