@@ -9,7 +9,7 @@ export interface Student {
     inEdit?: boolean | string,
 }
 
-export interface MyCommandCellProps {  
+export interface MyCommandCellProps {
     dataItem: any;
     editField: string;
     add: (dataItem: Student) => void;

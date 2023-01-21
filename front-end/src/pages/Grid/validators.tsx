@@ -1,11 +1,11 @@
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-export const validateMobile = (value: string) =>{
+export const validateMobile = (value: string) => {
     const regex = new RegExp(/^[0-9]+$/);
     if (value !== '' && regex.test(value) && value.length === 10) {
         return true;
-    } else {   
+    } else {
         toast.error('Enter Valid Mobile Number', {
             position: toast.POSITION.TOP_RIGHT
         });
@@ -13,11 +13,11 @@ export const validateMobile = (value: string) =>{
     }
 }
 
-export const validateName = (value: string) =>{
+export const validateName = (value: string) => {
     const regex = new RegExp(/^[a-zA-Z\s]*$/);
-    if (value !== undefined && value !== '' && regex.test(value) ) {
+    if (value !== undefined && value !== '' && regex.test(value)) {
         return true;
-    } else {   
+    } else {
         toast.error('Enter Valid Name', {
             position: toast.POSITION.TOP_RIGHT
         });
@@ -25,8 +25,8 @@ export const validateName = (value: string) =>{
     }
 }
 
-export const validateAddress = (value: string) =>{
-    if (value !== undefined && value !== '' ){
+export const validateAddress = (value: string) => {
+    if (value !== undefined && value !== '') {
         return true;
     } else {
         toast.error('Enter Valid Address', {
@@ -36,8 +36,8 @@ export const validateAddress = (value: string) =>{
     }
 }
 
-export const validateDate = (value: Date) =>{
-    if (value !== undefined && value !== null && value.toDateString() !== 'Invalid Date' ){
+export const validateDate = (value: Date) => {
+    if (value !== undefined && value !== null && value.toDateString() !== 'Invalid Date') {
         return true;
     } else {
         toast.error('Enter Date of Birth', {
