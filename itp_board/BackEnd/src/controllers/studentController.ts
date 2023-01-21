@@ -1,5 +1,6 @@
 import { AppDataSource } from '../configs/db.config'
 import { Student } from '../models/Student'
+import { sockets } from '../utils/sockets'
 
 const studentRepository = AppDataSource.getRepository(Student)
 
@@ -8,7 +9,14 @@ async function getAllStudents(): Promise<Student[]> {
 }
 
 async function createStudent(student: Student): Promise<Student> {
-  return await studentRepository.save(student)
+  const response = await studentRepository.save(student);
+  console.log(response);
+  if(response){
+    sockets.forEach((socket)=>{
+      socket.broadcast.emit('new_student_added', response);
+    })
+  }
+  return response;
 }
 
 async function updateStudentById(student: Student) {
