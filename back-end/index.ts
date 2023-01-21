@@ -1,12 +1,4 @@
-import express from 'express';
-import { Request, Response } from 'express';
+const appp = require("./server");
 
-const app = express();
-
-app.get('/', (req: Request, res: Response) => {
-  res.send('Application works!');
-});
-
-app.listen(5000, () => {
-  console.log('Application started on port 5000!');
-});
+const port = process.env.PORT || 9000;
+appp.listen(port);
