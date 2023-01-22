@@ -35,8 +35,9 @@ export class UsersService {
       //if (response) return response;
       //else return false;
       return response;
-    } catch (err) {
-      throw err;
+    } catch (error) {
+      // throw err;
+      return error;
     }
   }
 
@@ -63,8 +64,9 @@ export class UsersService {
         return false;
         //throw new NotFoundException('No such a User..!');
       }
-    } catch (err) {
-      throw err;
+    } catch (error) {
+      // throw err;
+      return false;
     }
   }
 
@@ -115,6 +117,7 @@ export class UsersService {
       throw err;
     }
   }
+
   update(id: number, updateUserDto: UpdateUserDto) {
     return `This action updates a #${id} user`;
   }

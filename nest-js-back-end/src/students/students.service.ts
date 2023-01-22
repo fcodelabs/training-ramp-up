@@ -18,19 +18,20 @@ export class StudentsService {
       const student = await this.studentRepository.save(createStudentDto);
       return student;
     } catch (err) {
-      throw err;
+      //throw err;
+      return err;
     }
   }
 
   async findAll(): Promise<Array<CreateStudentDto>> {
     try {
-      //this.logger.log('Doing something...2');
       const allStudents = await this.studentRepository.find({
         order: { id: 'DESC' },
       });
       return allStudents;
     } catch (err) {
-      throw err;
+      //throw err;
+      return err;
     }
   }
 
@@ -38,18 +39,18 @@ export class StudentsService {
     return `This action returns a #${id} student`;
   }
 
-  async update(updateStudentDto: UpdateStudentDto): Promise<CreateStudentDto> {
+  async update(
+    updateStudentDto: UpdateStudentDto
+  ): Promise<CreateStudentDto | boolean> {
     try {
       const student = await this.studentRepository.findOneBy({
         id: updateStudentDto.id,
       });
-      if (student) {
-        this.studentRepository.merge(student, updateStudentDto);
-        await this.studentRepository.save(student);
-        return student;
-      }
+      this.studentRepository.merge(student, updateStudentDto);
+      const updatedStudent = await this.studentRepository.save(student);
+      return updatedStudent;
     } catch (err) {
-      throw err;
+      return err;
     }
   }
 
@@ -58,7 +59,8 @@ export class StudentsService {
       const result = await this.studentRepository.delete(id);
       return result;
     } catch (err) {
-      throw err;
+      // throw err;
+      return err;
     }
   }
 }

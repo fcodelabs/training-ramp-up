@@ -9,10 +9,12 @@ import {
   Logger,
   SetMetadata,
   UseGuards,
+  Res,
 } from '@nestjs/common';
 import { StudentsService } from './students.service';
 import { CreateStudentDto } from './dto/create-student.dto';
 import { UpdateStudentDto } from './dto/update-student.dto';
+import { Request, Response } from 'express';
 // import { AuthGuard } from '../auth/auth.guard';
 // import { io } from '../../socketServer';
 @Controller('students')
@@ -24,22 +26,33 @@ export class StudentsController {
   // @UseGuards(AuthGuard)
   // @SetMetadata('roles', ['Admin'])
   async create(
-    @Body() createStudentDto: CreateStudentDto
+    @Body() createStudentDto: CreateStudentDto,
+    @Res() res: Response
   ): Promise<CreateStudentDto> {
-    const response = await this.studentsService.create(createStudentDto);
-    // io.emit(
-    //   'notification',
-    //   'Student added successfully. Student:- ' + response.name
-    // );
-    return response;
+    try {
+      const response = await this.studentsService.create(createStudentDto);
+      // io.emit(
+      //   'notification',
+      //   'Student added successfully. Student:- ' + response.name
+      // );
+      res.send(response);
+      return;
+    } catch (err) {
+      res.send(false);
+    }
   }
 
   @Get()
   // @UseGuards(AuthGuard)
   // @SetMetadata('roles', ['Admin', 'User'])
-  async findAll(): Promise<Array<CreateStudentDto>> {
-    //this.logger.log('Doing something...1');
-    return this.studentsService.findAll();
+  async findAll(@Res() res: Response) {
+    try {
+      const students = await this.studentsService.findAll();
+      res.send(students);
+      return;
+    } catch (err) {
+      res.send(false);
+    }
   }
 
   @Get(':id')
@@ -51,21 +64,33 @@ export class StudentsController {
   // @UseGuards(AuthGuard)
   //@SetMetadata('roles', ['Admin', 'User'])
   async update(
-    @Body() updateStudentDto: UpdateStudentDto
-  ): Promise<CreateStudentDto> {
-    const response = await this.studentsService.update(updateStudentDto);
-    // io.emit(
-    //   'notification',
-    //   'Student has been updated, Student:- ' + response.name
-    // );
-    return response;
+    @Body() updateStudentDto: UpdateStudentDto,
+    @Res() res: Response
+  ): Promise<CreateStudentDto | boolean> {
+    try {
+      const response = await this.studentsService.update(updateStudentDto);
+      // io.emit(
+      //   'notification',
+      //   'Student has been updated, Student:- ' + response.name
+      // );
+      res.send(response);
+      return;
+    } catch (err) {
+      res.send(false);
+    }
   }
 
   @Delete(':id')
   // @UseGuards(AuthGuard)
   //@SetMetadata('roles', ['Admin', 'User'])
-  async remove(@Param('id') id: string): Promise<object> {
+  async remove(@Param('id') id: string, @Res() res: Response): Promise<object> {
     // io.emit('notification', 'Student has been deleted');
-    return this.studentsService.remove(+id);
+    try {
+      const deletedStudentID = await this.studentsService.remove(+id);
+      res.send(deletedStudentID);
+      return;
+    } catch (err) {
+      res.send(err);
+    }
   }
 }

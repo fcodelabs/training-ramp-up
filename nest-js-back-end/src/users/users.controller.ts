@@ -22,9 +22,9 @@ export class UsersController {
 
   @Post('/register')
   async create(
-    @Body() createUserDto: CreateUserDto,
+    @Req() createUserDto: CreateUserDto,
     @Res({ passthrough: true }) res: Response
-  ): Promise<boolean> {
+  ): Promise<any> {
     //return this.usersService.create(createUserDto);
     const response = await this.usersService.create(createUserDto);
     if (response) {
@@ -50,45 +50,49 @@ export class UsersController {
         maxAge: 60 * 60 * 24 * 1000,
         httpOnly: true,
       });
-      return true;
+      res.send(true);
+      return;
+    } else {
+      res.send(false);
     }
-  }
-
-  @Get()
-  findAll() {
-    return this.usersService.findAll();
   }
 
   @Post('/login')
   async findOne(
     @Body() body: LoginUserDto,
     @Res({ passthrough: true }) res: Response
-  ): Promise<boolean> {
-    const response = await this.usersService.findOne(body);
-    if (response) {
-      const dataStoredInToken = {
-        email: response.email,
-        userRoll: response.userRoll,
-      };
-      const newAccessToken = jwt.sign(
-        dataStoredInToken,
-        config.jwt_secret_key,
-        { expiresIn: 60 * 60 }
-      );
-      const newRefreshToken = jwt.sign(
-        dataStoredInToken,
-        config.jwt_secretRe_key,
-        { expiresIn: 60 * 60 * 24 * 1000 }
-      );
-      res.cookie('accessToken', newAccessToken, {
-        maxAge: 60 * 60,
-        httpOnly: true,
-      });
-      res.cookie('refreshToken', newRefreshToken, {
-        maxAge: 60 * 60 * 24 * 1000,
-        httpOnly: true,
-      });
-      return true;
+  ): Promise<any> {
+    try {
+      const response = await this.usersService.findOne(body);
+      if (response) {
+        const dataStoredInToken = {
+          email: response.email,
+          userRoll: response.userRoll,
+        };
+        const newAccessToken = jwt.sign(
+          dataStoredInToken,
+          config.jwt_secret_key,
+          { expiresIn: 60 * 60 }
+        );
+        const newRefreshToken = jwt.sign(
+          dataStoredInToken,
+          config.jwt_secretRe_key,
+          { expiresIn: 60 * 60 * 24 * 1000 }
+        );
+        res.cookie('accessToken', newAccessToken, {
+          maxAge: 60 * 60,
+          httpOnly: true,
+        });
+        res.cookie('refreshToken', newRefreshToken, {
+          maxAge: 60 * 60 * 24 * 1000,
+          httpOnly: true,
+        });
+        res.send(true);
+        return;
+      }
+      res.send(false);
+    } catch (error) {
+      res.send(false);
     }
   }
 
@@ -135,18 +139,8 @@ export class UsersController {
     return true;
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.usersService.update(+id, updateUserDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.usersService.remove(+id);
-  }
-
   @Get('/logout')
-  async logout(@Res({ passthrough: true }) res: Response) {
+  async logout(@Res() res: Response) {
     try {
       res.cookie('accessToken', '', {
         maxAge: -1,
@@ -160,9 +154,24 @@ export class UsersController {
         maxAge: -1,
         httpOnly: true,
       });
-      return true;
+      res.send(true);
     } catch (err) {
-      return false;
+      res.send(err);
     }
+  }
+  //=====
+  @Patch(':id')
+  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
+    return this.usersService.update(+id, updateUserDto);
+  }
+
+  @Delete(':id')
+  remove(@Param('id') id: string) {
+    return this.usersService.remove(+id);
+  }
+
+  @Get()
+  findAll() {
+    return this.usersService.findAll();
   }
 }
