@@ -2,6 +2,10 @@ const expresss = require("express");
 const studentController = require("../controllers/studentController");
 const router = expresss.Router();
 
-router.get("/register", studentController.test);
+router.get("/", studentController.getStudents);
+router.post("/", studentController.addStudent);
+router.put("/:id", studentController.updateStudent);
+router.delete("/:id", studentController.deleteStudent);
+router.get("/:id", studentController.getOneStudent);
 
 module.exports = router;

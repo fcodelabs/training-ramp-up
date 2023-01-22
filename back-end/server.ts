@@ -1,18 +1,16 @@
 const express = require("express");
 const bodyParser = require("body-parser");
+
+import * as BodyParser from "body-parser";
+import cors from "cors";
 const app = express();
-
-
-
-
 //routers list
 const studentRouter = require("./src/routes/studentRouter");
 
 
+app.use(cors());
+app.use(BodyParser.json());
 
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
-app.use(express.json());
 
 
 //end point starting for the farmer routes
