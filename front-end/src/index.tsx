@@ -3,10 +3,18 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import { toast } from 'react-toastify';
+import socket from './socket';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
+
+socket.on('notify', (data: any) => {
+  console.log(data);
+  toast.info(data.message);
+});
+
 root.render(
   <React.StrictMode>
     <App />
