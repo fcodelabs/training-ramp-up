@@ -68,8 +68,8 @@ export const Table = (): any => {
 
   React.useEffect(() => {
     if (notifications.length > 0) {
-      // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-      const notificationTrigger = () => {
+     
+      const notificationTrigger = ():void => {
         notify(notifications[notifications.length - 1].toString())
       }
       notificationTrigger()
@@ -109,20 +109,20 @@ export const Table = (): any => {
   }
 
   // Local state operations
-  const discard = (): any => {
+  const discard = (): void => {
     const newData = [...data]
     newData.splice(0, 1)
     setData(newData)
     setBirthday(new Date())
   }
 
-  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-  const remove = (dataItem: Person) => {
+  
+  const remove = (dataItem: Person):void => {
     distpatch(deletePersonDataStart(dataItem.PersonID))
   }
 
-  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-  const update = (dataItem: Person) => {
+ 
+  const update = (dataItem: Person):void => {
     dataItem.DateOfBirth = birthday
     dataItem.PersonGender = personGen.value
     const errs = checkErr(dataItem)
@@ -131,12 +131,10 @@ export const Table = (): any => {
       onToggle()
     } else {
       distpatch(updatePersonDataStart(dataItem))
-      
     }
   }
 
-  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-  const cancel = (dataItem: Person) => {
+  const cancel = (dataItem: Person):void => {
     const originalItem = getItems().find((p) => p.PersonID === dataItem.PersonID)
     const newData = data.map((item) =>
       item.PersonID === originalItem?.PersonID ? originalItem : item,
@@ -145,16 +143,16 @@ export const Table = (): any => {
     setData(newData)
   }
 
-  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-  const enterEdit = (dataItem: Person) => {
+
+  const enterEdit = (dataItem: Person):void => {
     dataItem.DateOfBirth != null && setBirthday(new Date(dataItem.DateOfBirth))
     dataItem.PersonGender != null && setGender({ value: dataItem.PersonGender })
     setData(
       data.map((item) => (item.PersonID === dataItem.PersonID ? { ...item, inEdit: true } : item)),
     )
   }
-  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-  const addNew = () => {
+ 
+  const addNew = ():void => {
     const newDataItem: Person = {
       inEdit: true,
       Discontinued: false,
@@ -164,24 +162,24 @@ export const Table = (): any => {
     setData([newDataItem, ...data])
   }
 
-  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-  const handleChangeDropDown = (event: DropDownListChangeEvent) => {
+  
+  const handleChangeDropDown = (event: DropDownListChangeEvent):void => {
     setGender({
       value: event.target.value,
     })
   }
-  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-  const handleChangeDatePicker = (event: DatePickerChangeEvent) => {
+ 
+  const handleChangeDatePicker = (event: DatePickerChangeEvent):void => {
     event.value != null && setBirthday(event.value)
   }
 
-  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-  const pageChange = (event: GridPageChangeEvent) => {
+ 
+  const pageChange = (event: GridPageChangeEvent):void => {
     setPage(event.page)
   }
 
-  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-  const CommandCellFunc = (props: GridCellProps) => (
+ 
+  const CommandCellFunc = (props: GridCellProps):JSX.Element => (
     <CommandCell
       {...props}
       edit={enterEdit}
@@ -193,13 +191,16 @@ export const Table = (): any => {
       cancel={cancel}
     />
   )
-  console.log(persondata)
+ 
   return (
     <React.Fragment>
       <ToastContainer />
       <Grid
         style={{ height: '720px' }}
-        data={orderBy(data.slice(page.skip, page.take + page.skip), sort)}
+        data={orderBy(
+          data.length > page.take + page.skip ? data.slice(page.skip, page.take + page.skip) : data,
+          sort,
+        )}
         onItemChange={itemChange}
         editField={editField}
         skip={page.skip}
@@ -245,7 +246,7 @@ export const Table = (): any => {
           )}
         />
         <Column field='PersonAddress' title='Person Address' />
-        <Column field='PersonMobileNo' title='Person Mobile No' width='150px' />
+        <Column field='PersonMobileNo' title='Person Mobile No' width='200px' />
         <Column
           field='DateOfBirth'
           title='Date Of Birth'
