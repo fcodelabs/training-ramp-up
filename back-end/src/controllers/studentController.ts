@@ -26,6 +26,7 @@ async function addStudent(req: Request, res: Response) {
         };
         const student = AppDataSource.getRepository(Student).create(newStudent);
         const savedStudent = await AppDataSource.getRepository(Student).save(student);
+        global.io.emit('notify', {message : `New student added`});
         res.status(201).send(generateOutput(201, 'success', savedStudent));
     } catch (error) {
         res.status(500).send(generateOutput(500, 'error', 'Something went wrong'));
@@ -38,6 +39,7 @@ async function updateStudent(req: Request, res: Response) {
         if (student) {
             AppDataSource.getRepository(Student).merge(student, req.body);
             const updatedStudent = await AppDataSource.getRepository(Student).save(student);
+            // global.io.emit('notify', {message : `Details of ${updatedStudent.name} has updated`});
             res.status(201).send(generateOutput(201, 'success', updatedStudent));
         }
     } catch (error) {
@@ -48,6 +50,7 @@ async function updateStudent(req: Request, res: Response) {
 async function deleteStudent(req: Request, res: Response) {
     try {
         const student = await AppDataSource.getRepository(Student).delete(req.params.id);
+        global.io.emit('notify', {message : `A student deleted`});
         res.status(201).send(generateOutput(201, 'success', student));
     } catch (error) {
         res.status(500).send(generateOutput(500, 'error', 'Something went wrong'));
