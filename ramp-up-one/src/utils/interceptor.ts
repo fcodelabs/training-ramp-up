@@ -8,9 +8,10 @@ axiosApiInstance.interceptors.response.use(
     return response;
   },
   async function (error) {
+    console.log('ínterceptor caling...');
     const originalRequest = error.config;
     if (error.response.status === 403) {
-      await axios.post(
+      const res = await axios.post(
         'http://localhost:8000/users/refresh',
         {},
         {
@@ -20,6 +21,7 @@ axiosApiInstance.interceptors.response.use(
       originalRequest.headers = {
         ...originalRequest.headers,
       };
+      console.log(res);
       return await axiosApiInstance(originalRequest);
     }
     return await Promise.reject(error);

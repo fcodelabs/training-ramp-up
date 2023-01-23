@@ -138,7 +138,7 @@ export const logout = async (req: Request, res: Response) => {
 };
 
 export const userDetail = async (req: Request, res: Response) => {
-  console.log('user detail req.');
+  
   try {
     const userAccToken = req.cookies.accessToken;
     const response = await getUserDetails(userAccToken);

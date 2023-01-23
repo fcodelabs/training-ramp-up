@@ -15,7 +15,7 @@ import { StudentsService } from './students.service';
 import { CreateStudentDto } from './dto/create-student.dto';
 import { UpdateStudentDto } from './dto/update-student.dto';
 import { Request, Response } from 'express';
-// import { AuthGuard } from '../auth/auth.guard';
+import { RolesGuard } from 'src/auth/auth.guard';
 // import { io } from '../../socketServer';
 @Controller('students')
 export class StudentsController {
@@ -23,8 +23,8 @@ export class StudentsController {
   constructor(private readonly studentsService: StudentsService) {}
 
   @Post()
-  // @UseGuards(AuthGuard)
-  // @SetMetadata('roles', ['Admin'])
+  @UseGuards(RolesGuard)
+  @SetMetadata('roles', ['Admin'])
   async create(
     @Body() createStudentDto: CreateStudentDto,
     @Res() res: Response
@@ -35,6 +35,7 @@ export class StudentsController {
       //   'notification',
       //   'Student added successfully. Student:- ' + response.name
       // );
+      //console.log('new user- ', response);
       res.send(response);
       return;
     } catch (err) {
@@ -43,8 +44,8 @@ export class StudentsController {
   }
 
   @Get()
-  // @UseGuards(AuthGuard)
-  // @SetMetadata('roles', ['Admin', 'User'])
+  @UseGuards(RolesGuard)
+  @SetMetadata('roles', ['Admin', 'User'])
   async findAll(@Res() res: Response) {
     try {
       const students = await this.studentsService.findAll();
@@ -61,8 +62,8 @@ export class StudentsController {
   }
 
   @Patch()
-  // @UseGuards(AuthGuard)
-  //@SetMetadata('roles', ['Admin', 'User'])
+  @UseGuards(RolesGuard)
+  @SetMetadata('roles', ['Admin'])
   async update(
     @Body() updateStudentDto: UpdateStudentDto,
     @Res() res: Response
@@ -81,8 +82,8 @@ export class StudentsController {
   }
 
   @Delete(':id')
-  // @UseGuards(AuthGuard)
-  //@SetMetadata('roles', ['Admin', 'User'])
+  @UseGuards(RolesGuard)
+  @SetMetadata('roles', ['Admin'])
   async remove(@Param('id') id: string, @Res() res: Response): Promise<object> {
     // io.emit('notification', 'Student has been deleted');
     try {

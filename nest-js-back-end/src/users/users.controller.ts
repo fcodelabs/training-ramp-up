@@ -22,7 +22,7 @@ export class UsersController {
 
   @Post('/register')
   async create(
-    @Req() createUserDto: CreateUserDto,
+    @Body() createUserDto: CreateUserDto,
     @Res({ passthrough: true }) res: Response
   ): Promise<any> {
     //return this.usersService.create(createUserDto);
@@ -115,28 +115,30 @@ export class UsersController {
   }
 
   @Post('/refresh')
-  async refresh(
-    @Body() req: Request,
-    @Res({ passthrough: true }) res: Response
-  ): Promise<boolean> {
-    console.log('refresh working...1');
-    const secret = config.jwt_secret_key;
-    const refToken = req.cookies.refreshToken;
-    const userToken: any = await this.usersService.refreshService(refToken);
-    const dataStoredInToken = {
-      email: userToken.email,
-      userRoll: userToken.userRoll,
-    };
+  async refresh(@Req() req: Request, @Res() res: Response): Promise<boolean> {
+    try {
+      const secret = config.jwt_secret_key;
+      const refToken = req.cookies.refreshToken;
+      const userToken: any = await this.usersService.refreshService(refToken);
+      console.log('usertoken ', userToken);
+      const dataStoredInToken = {
+        email: userToken.email,
+        userRoll: userToken.userRoll,
+      };
 
-    const newAccessToken = jwt.sign(dataStoredInToken, secret, {
-      expiresIn: 60 * 60,
-    });
+      const newAccessToken = jwt.sign(dataStoredInToken, secret, {
+        expiresIn: 60 * 60,
+      });
 
-    res.cookie('accessToken', newAccessToken, {
-      maxAge: 60 * 60,
-      httpOnly: true,
-    });
-    return true;
+      res.cookie('accessToken', newAccessToken, {
+        maxAge: 60 * 60,
+        httpOnly: true,
+      });
+      res.send(true);
+      return;
+    } catch (err) {
+      return err;
+    }
   }
 
   @Get('/logout')

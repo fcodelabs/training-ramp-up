@@ -114,7 +114,8 @@ export class UsersService {
         }
       }
     } catch (err) {
-      throw err;
+      //throw err;
+      return err;
     }
   }
 

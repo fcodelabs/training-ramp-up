@@ -1,32 +1,28 @@
-// import {
-//   Injectable,
-//   CanActivate,
-//   ExecutionContext,
-//   ForbiddenException,
-// } from '@nestjs/common';
-// import { Reflector } from '@nestjs/core';
-// import { JwtService } from '@nestjs/jwt';
-// //import { JwtPayload } from 'src/users/interfaces/users.interface';
+import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
+import { Observable } from 'rxjs';
+import { Reflector } from '@nestjs/core';
+import { JwtService } from '@nestjs/jwt';
+import { NotFoundException } from '@nestjs/common/exceptions';
 
-// @Injectable()
-// export class AuthGuard implements CanActivate {
-//   constructor(private jwtService: JwtService, private reflector: Reflector) {}
+@Injectable()
+export class RolesGuard implements CanActivate {
+  constructor(private jwtService: JwtService, private reflector: Reflector) {}
+  async canActivate(context: ExecutionContext): Promise<boolean> {
+    const roles = this.reflector.get<string[]>('roles', context.getHandler());
+    const request = await context.switchToHttp().getRequest();
+    if (!roles) {
+      return true;
+    }
+    const accessToken = request.cookies.accessToken;
+    if (!accessToken) return false;
 
-//   async canActivate(context: ExecutionContext): Promise<boolean> {
-//     const roles = this.reflector.get<string[]>('roles', context.getHandler());
-//     const request = await context.switchToHttp().getRequest();
+    try {
+      const decoded = await this.jwtService.verify(accessToken);
+      if (decoded && roles.includes(decoded.userRoll)) return true;
 
-//     if (!roles) return true;
-//     const accessToken = request.cookies.accessToken;
-//     if (!accessToken) return false;
-
-//     try {
-//       const decoded = await this.jwtService.verify(accessToken);
-//       if (decoded && roles.includes(decoded.userRoll)) return true;
-
-//       throw new ForbiddenException('You are not Authorized');
-//     } catch (err) {
-//       throw err;
-//     }
-//   }
-// }
+      throw new NotFoundException('You are not Authorized');
+    } catch (err) {
+      throw err;
+    }
+  }
+}
