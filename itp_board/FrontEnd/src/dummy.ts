@@ -1,8 +1,8 @@
-import {User} from './Pages/Users/types'
+import { User } from './Pages/Users/utils/types'
 
 export const Users: User[] = [
   {
-    id: '42',
+    id: 1,
     name: 'shane',
     gender: 'male',
     address: 'homagama',
@@ -10,7 +10,7 @@ export const Users: User[] = [
     dateOfBirth: new Date('1996-09-16'),
   },
   {
-    id: '43',
+    id: 2,
     name: 'ishara',
     gender: 'male',
     address: 'homagama',
@@ -18,7 +18,7 @@ export const Users: User[] = [
     dateOfBirth: new Date('1996-09-16'),
   },
   {
-    id: '44',
+    id: 3,
     name: 'ishara',
     gender: 'male',
     address: '58/10, 1st lane ',
@@ -26,15 +26,15 @@ export const Users: User[] = [
     dateOfBirth: new Date('1996-07-21'),
   },
   {
-    id: '45',
+    id: 4,
     name: 'ishara',
-    gender: 'male',
+    gender: 'female',
     address: '58/10, 1st lane ',
     mobileNo: '0776722336',
     dateOfBirth: new Date('1996-07-21'),
   },
   {
-    id: '46',
+    id: 5,
     name: 'divyan',
     gender: 'male',
     address: 'homagama ',
