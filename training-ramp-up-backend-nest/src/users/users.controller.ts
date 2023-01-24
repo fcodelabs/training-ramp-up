@@ -19,6 +19,7 @@ import { Payload, Role } from 'src/auth/interfaces';
 import { AuthService } from 'src/auth/auth.service';
 import { Request, Response } from 'express';
 import { AuthGuard } from 'src/auth/auth.guard';
+import { InsertResult } from 'typeorm';
 
 @Controller('user')
 export class UsersController {
@@ -29,14 +30,14 @@ export class UsersController {
 
   @Post('signup')
   @Roles([Role.Admin, Role.User])
-  create(@Body() createUserDto: CreateUserDto) {
+  create(@Body() createUserDto: CreateUserDto) :Promise<InsertResult>{
     return this.usersService.create(createUserDto);
   }
 
 
   @Post()
   @Roles([Role.Admin,Role.User])
-  async login(@Req() req: Request, @Res() res: Response) {
+  async login(@Req() req: Request, @Res() res: Response) :Promise<void>{
     const user = await this.usersService.validateUser(
       req.body.username,
       req.body.password,
@@ -53,24 +54,9 @@ export class UsersController {
     res.send({ auth: true });
   }
 
-  @Get()
-  findAll() {
-    return this.usersService.findAll();
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.usersService.update(+id, updateUserDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.usersService.remove(+id);
-  }
-
   @Roles([Role.Admin, Role.User])
   @Post('userDetails')
-  async getUserDetails(@Req() req: Request, @Res() res: Response) {
+  async getUserDetails(@Req() req: Request, @Res() res: Response):Promise<void> {
     const userToken = await this.authService.getUserDetails(
       req.cookies.accessToken,
     );
@@ -84,7 +70,7 @@ export class UsersController {
 
   @Post('refresh')
   @Roles([Role.Admin,Role.User])
-  async refreshToken(@Req() req: Request, @Res() res: Response) {
+  async refreshToken(@Req() req: Request, @Res() res: Response):Promise<void> {
     const user:string = req.cookies.user;
     const refreshToken:string = req.cookies.refreshToken;
     const result = await this.authService.getNewAccessToken(user, refreshToken);
@@ -99,7 +85,7 @@ export class UsersController {
   @Delete()
   @UseGuards(AuthGuard)
   @Roles([Role.Admin,Role.User])
-  async signout(@Req() req: Request, @Res() res: Response) {
+  async signout(@Req() req: Request, @Res() res: Response):Promise<void> {
     res.cookie('accessToken', '', {
       maxAge: 0,
       httpOnly: true,
@@ -115,5 +101,20 @@ export class UsersController {
     res.status(200).send({
       logOut: true,
     });
+  }
+
+  @Get()
+  findAll() {
+    return this.usersService.findAll();
+  }
+
+  @Patch(':id')
+  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
+    return this.usersService.update(+id, updateUserDto);
+  }
+
+  @Delete(':id')
+  remove(@Param('id') id: string) {
+    return this.usersService.remove(+id);
   }
 }

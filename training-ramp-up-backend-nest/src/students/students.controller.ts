@@ -37,12 +37,6 @@ export class StudentsController {
     return this.studentsService.findAll();
   }
 
-  @Get(':id')
-  @Roles([Role.Admin])
-  findOne(@Param('id') id: string) {
-    return this.studentsService.findOne(+id);
-  }
-
   @Patch(':id')
   @Roles([Role.Admin])
   update(
@@ -56,5 +50,11 @@ export class StudentsController {
   @Roles([Role.Admin])
   remove(@Param('id') id: string): Promise<DeleteResult> {
     return this.studentsService.remove(+id);
+  }
+
+  @Get(':id')
+  @Roles([Role.Admin])
+  findOne(@Param('id') id: string) {
+    return this.studentsService.findOne(+id);
   }
 }
