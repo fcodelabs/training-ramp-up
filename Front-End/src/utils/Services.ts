@@ -11,7 +11,7 @@ export const loginUserService = async (user: any) => {
       password: user.password,
     };
 
-    const responseData = await axios.post(baseURL + "/user/login", userData, {
+    const responseData = await axios.post(baseURL + "/auth/login", userData, {
       withCredentials: true,
     });
     return responseData;
@@ -28,7 +28,7 @@ export const registerUserService = async (user: any) => {
       role: user.role,
     };
     console.log(userData);
-    const responseData = await axios.post(baseURL + "/user/signup", userData, {
+    const responseData = await axios.post(baseURL + "/auth/signup", userData, {
       withCredentials: true,
     });
     return responseData;
@@ -40,7 +40,7 @@ export const registerUserService = async (user: any) => {
 export const logoutUserService = async () => {
   try {
     const responseData = await axiosApiInstance.delete(
-      baseURL + "/user/logout",
+      baseURL + "/user/signout",
       {
         withCredentials: true,
       }
@@ -48,28 +48,25 @@ export const logoutUserService = async () => {
     return responseData;
   } catch (error) {
     console.log(error);
-    window.location.href = "/signin";
+    window.location.href = "/";
   }
 };
 
 export const getStudents = async () => {
   try {
-    // const accessToken = localStorage.getItem("accessToken");
-    // console.log(accessToken);
-
-    const responseData = await axiosApiInstance.get(baseURL + "/student", {
+    const responseData = await axiosApiInstance.get(baseURL + "/students", {
       withCredentials: true,
     });
     return responseData;
   } catch (error) {
     console.log(error);
-    window.location.href = "/";
+    // window.location.href = "/";
   }
 };
 
 export const addStudent = (student: any) => {
   try {
-    return axiosApiInstance.post(baseURL + "/student", student, {
+    return axiosApiInstance.post(baseURL + "/students", student, {
       withCredentials: true,
     });
   } catch (error) {
@@ -80,7 +77,7 @@ export const addStudent = (student: any) => {
 export const updateStudent = (student: any) => {
   try {
     console.log(student);
-    return axiosApiInstance.patch(baseURL + "/student", student, {
+    return axiosApiInstance.patch(baseURL + "/students", student, {
       withCredentials: true,
     });
   } catch (error) {
@@ -90,7 +87,7 @@ export const updateStudent = (student: any) => {
 
 export const deleteStudent = (id: number) => {
   try {
-    return axiosApiInstance.delete(baseURL + "/student/" + id, {
+    return axiosApiInstance.delete(baseURL + "/students/" + id, {
       withCredentials: true,
     });
   } catch (error) {

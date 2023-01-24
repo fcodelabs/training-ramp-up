@@ -45,7 +45,7 @@ const SignupPage: FC = () => {
   // ? Form Handler
   const onSubmitHandler: SubmitHandler<ISignUp> = async (values: ISignUp) => {
     const { email, password } = values;
-    const userData: any = { email: email, password: password, role: "user" };
+    const userData: any = { email: email, password: password, role: "User" };
     dispatch(registerUserAction(userData));
   };
 

@@ -25,10 +25,10 @@ axiosApiInstance.interceptors.response.use(
     const config = error?.config;
     if (error?.response?.status === 401 && !config?.sent) {
       config.sent = true;
-      const data = await axios.post("http://localhost:3000/user/refresh", {
+      await axios.post("http://localhost:8000/auth/refresh", {
         withCredentials: true,
       });
-      console.log(data);
+
       config.headers = {
         ...config.headers,
       };

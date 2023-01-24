@@ -5,7 +5,7 @@ import dataSource from './src/dataSource';
 import cors from 'cors';
 import { createServer } from 'http';
 import bodyParser from 'body-parser';
-import { Server } from 'socket.io';
+// import { Server } from 'socket.io';
 import cookieParser from 'cookie-parser';
 
 const app: Express = express();
@@ -34,20 +34,20 @@ app.get('/', (req: Request, res: Response) => {
   res.send('Express, TypeScript Server');
 });
 
-export const io = new Server(httpServer, {
-  cors: {
-    origin: 'http://localhost:3000/',
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  },
-});
+// export const io = new Server(httpServer, {
+//   cors: {
+//     origin: 'http://localhost:3000/',
+//     methods: ['GET', 'POST', 'PUT', 'DELETE'],
+//   },
+// });
 
-io.on('connection', (socket) => {
-  console.log(`connect ${socket.id}`);
+// io.on('connection', (socket) => {
+//   console.log(`connect ${socket.id}`);
 
-  socket.on('disconnect', (reason) => {
-    console.log('Got disconnect due to ' + reason + '!');
-  });
-});
+//   socket.on('disconnect', (reason) => {
+//     console.log('Got disconnect due to ' + reason + '!');
+//   });
+// });
 
 httpServer.listen(8000, () => {
   console.log('Application started on port 8000!');

@@ -9,7 +9,7 @@ import {
   registerUserService,
   loginUserService,
   logoutUserService,
-  userDetailsService,
+  // userDetailsService,
 } from "../utils/services";
 
 function* registerUserSaga(action: any): any {
@@ -28,15 +28,9 @@ function* registerUserSaga(action: any): any {
 
 function* loginUserSaga(action: any): any {
   try {
-    const responseData = yield call(loginUserService, action.payload);
-    if (responseData.data.success) {
-      const result = yield call(userDetailsService);
-
-      if (result.status === 200) {
-        window.location.href = "/home";
-        alert("Login successful");
-      }
-    }
+    yield call(loginUserService, action.payload);
+    window.location.href = "/home";
+    alert("Login successful");
   } catch (error) {
     alert("Incorrect Username or Password");
   }

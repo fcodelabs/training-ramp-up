@@ -22,12 +22,11 @@ import {
   updateStudentAction,
 } from "../../slice/homeSlice";
 import { logoutUserAction } from "../../slice/userSlice";
-import { io } from "socket.io-client";
-const socket = io("http://localhost:8000/", {
-  transports: ["websocket"],
-});
+// import { io } from "socket.io-client";
+// const socket = io("http://localhost:8000/", {
+//   transports: ["websocket"],
+// });
 import Cookies from "universal-cookie";
-import jwtDecode from "jwt-decode";
 import { Box, Container } from "@mui/material";
 
 const cookies = new Cookies();
@@ -43,34 +42,35 @@ export default function Datagrid() {
   );
 
   React.useEffect(() => {
-    const user = cookies.get("user");
+    console.log("Hello");
+    const user = cookies.get("user_res");
     if (user == undefined) {
       window.location.href = "/";
     }
-    const decoded: any = jwtDecode(user);
-    const adminUser = decoded.role == "admin" ? false : true;
+
+    const adminUser = user == "Admin" ? false : true;
     setDisabled(adminUser);
     dispatch(getStudentsAction());
   }, []);
 
-  React.useEffect(() => {
-    socket.on("connect", () => {
-      console.log("Socket Id ", socket.id);
-    });
+  // React.useEffect(() => {
+  //   socket.on("connect", () => {
+  //     console.log("Socket Id ", socket.id);
+  //   });
 
-    socket.on("message", (data) => {
-      alert(data);
-      dispatch(getStudentsAction());
-    });
+  //   socket.on("message", (data) => {
+  //     alert(data);
+  //     dispatch(getStudentsAction());
+  //   });
 
-    socket.on("connect_error", (err) => {
-      console.log(`connect_error due to ${err.message}`);
-    });
+  //   socket.on("connect_error", (err) => {
+  //     console.log(`connect_error due to ${err.message}`);
+  //   });
 
-    return () => {
-      socket.off();
-    };
-  }, [students, socket]);
+  //   return () => {
+  //     socket.off();
+  //   };
+  // }, [students, socket]);
 
   const validations = new Map([
     ["name", new RegExp("^([A-z\\s.]{3,80})$")],
