@@ -9,6 +9,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { InsertResult, Repository } from 'typeorm';
 import bcrypt = require('bcrypt');
+import { Payload } from 'src/auth/interfaces';
 
 @Injectable()
 export class UsersService {
@@ -50,7 +51,7 @@ export class UsersService {
     return `This action returns all users`;
   }
 
-  async findOne(username: string): Promise<User> {
+  async validateUser(username: string, password: string): Promise<User> {
     try {
       const user = await this.userRepository.findOne({
         where: {
@@ -58,7 +59,13 @@ export class UsersService {
         },
       });
       if (user) {
-        return user;
+        const validPassword = await bcrypt.compare(password, user.password);
+        if (validPassword) {
+          const { password, ...result } = user;
+          return user;
+        } else {
+          throw new NotFoundException('Incorrect Password');
+        }
       } else {
         throw new NotFoundException('User not found');
       }

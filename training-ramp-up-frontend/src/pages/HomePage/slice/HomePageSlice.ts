@@ -18,7 +18,7 @@ export const homeSlice = createSlice({
     name: 'home',
     initialState,
     reducers: {
-        getStudents: () => {},
+        getStudents: (state) => {},
         setStudents: (state, action: PayloadAction<Array<Person>>) => {
             state.students = action.payload
         },

@@ -1,34 +1,11 @@
-import {
-  Injectable,
-  NotFoundException,
-  UnauthorizedException,
-} from '@nestjs/common';
-import { UsersService } from '../users/users.service';
-import bcrypt = require('bcrypt');
+import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Logger } from '@nestjs/common/services';
 import { JwtService } from '@nestjs/jwt';
 import { Payload } from './interfaces';
 
 @Injectable()
 export class AuthService {
-  constructor(
-    private usersService: UsersService,
-    private jwtService: JwtService,
-  ) {}
-
-  async validateUser(username: string, password: string): Promise<any> {
-    try {
-      const user = await this.usersService.findOne(username);
-      const validPassword = await bcrypt.compare(password, user.password);
-      if (validPassword) {
-        const { password, ...result } = user;
-        return result;
-      } else {
-        throw new NotFoundException('Incorrect Password');
-      }
-    } catch (err) {
-      throw err;
-    }
-  }
+  constructor(private jwtService: JwtService) {}
 
   async login(user: any) {
     try {
@@ -43,33 +20,36 @@ export class AuthService {
           secret: process.env.ACCESS_KEY,
         }),
         refreshToken: this.jwtService.sign(payload, {
-          expiresIn: '20m',
+          expiresIn: '24h',
           secret: process.env.REFRESH_KEY,
         }),
-        user: payload,
       };
     } catch (err) {
       throw err;
     }
   }
 
-  async getNewAccessToken(user: Payload, refreshToken: string) {
+  async getNewAccessToken(user: string, refreshToken: string) {
     try {
       if (refreshToken) {
+        const decodedUser: Payload = await this.jwtService.verify(user, {
+          secret: process.env.USER_KEY,
+        });
+
         const decoded: Payload = await this.jwtService.verify(refreshToken, {
           secret: process.env.REFRESH_KEY,
         });
-        const validRefereshToken = decoded.sub == user.sub;
+        const validRefereshToken = decoded.sub == decodedUser.sub;
 
         if (validRefereshToken) {
-          const payload = {
-            username: user.name,
-            sub: user.sub,
-            role: user.role,
-          };
+          const payload={
+            name:decodedUser.name,
+            sub:decodedUser.sub,
+            role:decodedUser.role
+          }
           return {
             accessToken: this.jwtService.sign(payload, {
-              expiresIn: '5m',
+              expiresIn:'5m',
               secret: process.env.ACCESS_KEY,
             }),
           };
@@ -78,6 +58,25 @@ export class AuthService {
         }
       } else {
         throw new UnauthorizedException('Refresh token not found');
+      }
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  async getUserDetails(accessToken: string) {
+    try {
+      const payload: Payload = this.jwtService.verify(accessToken, {
+        secret: process.env.ACCESS_KEY,
+      });
+      if (payload) {
+        const user = this.jwtService.sign(payload, {
+          secret: process.env.USER_KEY,
+        });
+
+        return user;
+      } else {
+        throw new UnauthorizedException('Access token not found');
       }
     } catch (err) {
       throw err;

@@ -9,17 +9,17 @@ import store from './store'
 import { io } from 'socket.io-client'
 
 
-const socket = io('http://localhost:4000/', {
-    transports: ['websocket'],
-})
+// const socket = io('http://localhost:4000/', {
+//     transports: ['websocket'],
+// })
 
-socket.on('connect', () => {
-    console.log(socket.id) // x8WIv7-mJelg7on_ALbx
-})
+// socket.on('connect', () => {
+//     console.log(socket.id) // x8WIv7-mJelg7on_ALbx
+// })
 
-socket.on('notification', (...args) => {
-    alert(args[0])
-})
+// socket.on('notification', (...args) => {
+//     alert(args[0])
+// })
 
 
 

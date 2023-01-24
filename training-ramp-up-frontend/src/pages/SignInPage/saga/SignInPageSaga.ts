@@ -35,9 +35,8 @@ function* handleLogIn(action: {
                     withCredentials: true,
                 })
             )
-
             yield put(logInSuccess(user))
-            action.payload.navigate('/home')
+            action.payload.navigate('/home')            
         } else {
             alert('er' + res.data)
         }
