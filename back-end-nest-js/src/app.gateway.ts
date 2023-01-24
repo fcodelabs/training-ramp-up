@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 import { Logger } from '@nestjs/common';
-import { OnGatewayConnection, SubscribeMessage, WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
+import { OnGatewayConnection, WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
 import { Socket } from 'dgram';
 
 @WebSocketGateway()

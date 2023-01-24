@@ -7,6 +7,7 @@ import { UserInterface } from './interfaces/users.interface'
 import User from './entities/users.entity';
 import { AuthService } from '../auth/auth.service';
 import { AuthModule } from '../auth/auth.module';
+import { UsersModule } from './users.module';
 
 describe('User Controller Test', () => {  
   let usersController: UsersController;
@@ -15,9 +16,15 @@ describe('User Controller Test', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      // imports: [AuthModule],
+      imports: [AuthModule],
       controllers: [UsersController],
-      providers: [UsersService,{
+      providers: [{
+        provide: UsersService,
+        useValue: {
+          getUserService: jest.fn((x) => x),
+          addUserService: jest.fn((x) => x)
+        },
+      },{
         provide: AuthService,
         useValue: {
           getTokens: jest.fn(),

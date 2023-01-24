@@ -22,11 +22,11 @@ function * findUser (action: AnyAction) {
     if (response.status === 200) {
       yield put(setUser(response.data))
     } else {
-      console.log(response)
       alert(response.data)
     }
   } catch (err: any) {
-    alert(err.response.data)
+    alert(err.response.data.message)
+    // console.log(err)
     yield put(setError(err))
   }
 }
@@ -41,7 +41,7 @@ function * saveUser (action: AnyAction) {
       alert(response.data)
     }
   } catch (err: any) {
-    alert(err.response.data)
+    alert(err.response.data.message)
     yield put(setError(err))
   }
 }
@@ -53,7 +53,7 @@ function * signoutUser (action: AnyAction) {
       yield put(unSetUser())
     }
   } catch (err: any) {
-    alert(err.response.data)
+    alert(err.response.data.message)
     yield put(setError(err))
   }
 }

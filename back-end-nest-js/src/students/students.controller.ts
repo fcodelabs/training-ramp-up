@@ -1,8 +1,8 @@
 /* eslint-disable prettier/prettier */
 import { Body, Controller, Delete, Get, Param, Patch, Post, Res, SetMetadata, UseGuards } from '@nestjs/common';
 import { Response } from 'express';
-import { AppGateway } from 'src/app.gateway';
-import { AuthGuard } from 'src/auth/auth.guard';
+import { AppGateway } from '../app.gateway';
+import { AuthGuard } from '../auth/auth.guard';
 import { DeleteResult } from 'typeorm';
 import { CreateStudentDto, UpdateStudentDto } from './dto/students.dto';
 import { StudentInterface } from './interfaces/students.interface';
@@ -10,7 +10,7 @@ import { StudentsService } from './students.service';
 
 @Controller('student')
 export class StudentsController {
-  constructor(private readonly studentService: StudentsService, private appGateway: AppGateway) {}
+  constructor(private readonly studentService: StudentsService, private readonly appGateway: AppGateway) {}
 
   validate = (student: StudentInterface) => {
     const name = /^([A-z\s.]{3,20})$/
@@ -47,7 +47,7 @@ export class StudentsController {
   @Get()
   @UseGuards(AuthGuard)
   @SetMetadata('roles', ['Admin','Guest'])
-  async getAllStudents(@Res() res: Response) {
+  async getAllStudents(@Res({ passthrough: true }) res: Response) {
     const students = await this.studentService.getAllStudentsService()
     if (students !== null) {
       return res.status(200).send(students)

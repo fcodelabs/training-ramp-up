@@ -4,7 +4,7 @@ import { Request, Response } from 'express';
 import { CreateUserDto, LoginUserDto } from './dto/users.dto';
 import { UserInterface } from './interfaces/users.interface';
 import { UsersService } from './users.service';
-import { AuthService } from 'src/auth/auth.service';
+import { AuthService } from '../auth/auth.service';
 
 @Controller('user')
 export class UsersController {
@@ -35,7 +35,7 @@ export class UsersController {
   }
 
   @Post('signin')
-  async signinUser(@Body() loginUser: LoginUserDto, @Res() res: Response) {
+  async signinUser(@Body() loginUser: LoginUserDto, @Res({ passthrough: true }) res: Response) {
     try {  
       const user: any = await this.userService.getUserService(loginUser)
         if (user) {
@@ -52,7 +52,7 @@ export class UsersController {
   }
 
   @Post('signup')
-  async signupUser(@Body() newStudent: CreateUserDto, @Res() res: Response) {
+  async signupUser(@Body() newStudent: CreateUserDto, @Res({ passthrough: true }) res: Response) {
     const valid = this.validate(newStudent)
     if (valid) {
       const result = await this.userService.addUserService(newStudent)
@@ -67,7 +67,7 @@ export class UsersController {
   } 
 
   @Post('signout')
-  async signoutUser(@Res() res: Response) {
+  async signoutUser(@Res({ passthrough: true }) res: Response) {
     res.cookie('accessToken', '', { maxAge: -1, httpOnly: true })
     res.cookie('refreshToken', '', { maxAge: -1, httpOnly: true })
     res.cookie('user', '', { maxAge: -1, httpOnly: false })
@@ -75,10 +75,11 @@ export class UsersController {
   }
 
   @Post('refresh')
-  async refreshUser(@Req() req: Request, @Res() res: Response) {
-    try {  
-      const user = await req.cookies.user ?? ''
-      const refreshToken = await req.cookies.refreshToken ?? ''
+  async refreshUser(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
+    try {
+      console.log(req)
+      const user = null
+      const refreshToken = null
       if(user !== null && refreshToken !== null) {
         const isValid = await this.authService.verifyRefresh(user.email, refreshToken)
         

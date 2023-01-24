@@ -6,6 +6,8 @@ import { DeleteResult } from 'typeorm';
 import Student from './entities/students.entity';
 import { StudentsController } from './students.controller';
 import { StudentsService } from './students.service';
+import { StudentsModule } from './students.module';
+import { AppGateway } from '../app.gateway';
 
 describe('Student Controller Test', () => {  
   let studentsController: StudentsController;
@@ -15,7 +17,8 @@ describe('Student Controller Test', () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [AuthModule],
       controllers: [StudentsController],
-      providers: [{
+      providers: [AppGateway,
+        {
         provide: 'STUDENT_SERVICE',
         useValue: {
           getAllStudents: jest.fn((x) => x),
@@ -26,7 +29,7 @@ describe('Student Controller Test', () => {
       },],
     }).compile();
 
-    studentsService = module.get<StudentsService>('STUDENT_SERVICE');
+    studentsService = module.get<StudentsService>(StudentsService);
     studentsController = module.get<StudentsController>(StudentsController);
   });
 
