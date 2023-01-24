@@ -7,18 +7,23 @@ import {
   GridToolbar,
   GridCellProps,
   GridSortChangeEvent,
+  GridPageChangeEvent,
 } from '@progress/kendo-react-grid'
-import { Users } from '../dummy'
-import '../App.css'
-import { useState } from 'react'
-import { command, calcAge, addRecord, gender } from '../Pages/Users/utils/UserFunction'
+import '../../../../App.css'
+import { useState, useEffect } from 'react'
+import { command, calcAge, addRecord, gender } from '../../utils/UserFunction'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { orderBy, SortDescriptor } from '@progress/kendo-data-query'
+import { getData } from '../../utils/dataBaseInteractions'
+import { User,Res,PageState } from '../../utils/types'
+import { io } from 'socket.io-client'
+const socket = io('http://localhost:4000')
+
 
 const Table = () => {
-  const [data, setData] = useState(Users)
-  const [tempData, setTempData] = useState(Users)
+  const [data, setData] = useState<User[]>([])
+  const [tempData, setTempData] = useState<User[]>([])
   const [editId, setEditId] = useState<number | null>(null)
   const [newAdded, setNewAdded] = useState(false)
   const initialSort: Array<SortDescriptor> = [
@@ -27,7 +32,34 @@ const Table = () => {
       dir: 'asc',
     },
   ]
+  const initialPageState:PageState = {skip:0,take:10}
   const [sort, setSort] = useState(initialSort)
+  const [page, setPage] = useState(initialPageState)
+  const [notification, setNotification] = useState('');
+
+  useEffect(() => {
+    async function fetchData() {
+      const data = await getData(displayErrors)
+      setData(data);
+      setTempData(data)
+    }
+    socket.on('new_student_added', (response:Res) => {
+      setNotification(`New Student added with the id:${response.id}`)
+      fetchData()
+    })
+    socket.on('student_edited', (response:Res) => {
+      setNotification(`Student data edited with the id:${response.id}`)
+      fetchData()
+    })
+    socket.on('student_deleted', (response:Res) => {
+      console.log(response);
+      setNotification(`Student data deleted with the id:${response}`)
+
+      fetchData()
+    })
+
+    fetchData()
+  }, [socket])
 
   const itemChange = (event: GridItemChangeEvent) => {
     const field = event.field || ''
@@ -35,6 +67,10 @@ const Table = () => {
       return item.id === editId ? { ...item, [field]: event.value } : item
     })
     setData(newData)
+  }
+
+  const pageChange = (event:GridPageChangeEvent)=>{
+    setPage(event.page);
   }
 
   const displayErrors = (errors: string[]) => {
@@ -54,6 +90,7 @@ const Table = () => {
 
   return (
     <>
+    <h4>{notification}</h4>
       <ToastContainer
         position='top-right'
         autoClose={5000}
@@ -68,10 +105,12 @@ const Table = () => {
       />
       <Grid
         data={orderBy(
-          data.map((record) => ({
-            ...record,
-            inEdit: record.id === editId,
-          })),
+          data
+            .map((record) => ({
+              ...record,
+              inEdit: record.id === editId,
+            }))
+            .slice(page.skip, page.take + page.skip),
           sort,
         )}
         editField='inEdit'
@@ -81,6 +120,11 @@ const Table = () => {
         onSortChange={(e: GridSortChangeEvent) => {
           setSort(e.sort)
         }}
+        pageable={true}
+        skip={page.skip}
+        take={page.take}
+        total={data.length}
+        onPageChange={pageChange}
       >
         <GridToolbar>
           <div>

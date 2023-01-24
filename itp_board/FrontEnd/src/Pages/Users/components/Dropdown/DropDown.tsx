@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { DropDownList, DropDownListChangeEvent } from '@progress/kendo-react-dropdowns'
-import { User } from '../utils/types'
+import { User } from '../../utils/types'
 
 type DataCallback = (User: User[]) => void
 

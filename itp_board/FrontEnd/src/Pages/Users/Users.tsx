@@ -1,7 +1,7 @@
-import Table from '../../component/Table'
-import { io } from 'socket.io-client'
+import Table from './components/Table/Table'
 import { useEffect, useState } from 'react'
-const socket = io('http://localhost:4000')
+// import { io } from 'socket.io-client'
+// const socket = io('http://localhost:4000')
 
 type Student = {
   id: string
@@ -15,11 +15,11 @@ type Student = {
 
 const Users = () => {
   const [newStudent, setNewStudent] = useState<Student | null>(null)
-  useEffect(() => {
-    socket.on('new_student_added', (data: Student) => {
-      setNewStudent(data)
-    })
-  }, [socket])
+  // useEffect(() => {
+  //   socket.on('new_student_added', (data: Student) => {
+  //     setNewStudent(data)
+  //   })
+  // }, [socket])
   return (
     <>
       {newStudent && (

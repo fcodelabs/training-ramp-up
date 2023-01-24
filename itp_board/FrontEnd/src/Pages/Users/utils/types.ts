@@ -6,3 +6,17 @@ export type User = {
   mobileNo: string
   dateOfBirth: Date | null
 }
+
+export type Res = {
+address:string
+dateOfBirth:string
+gender:string
+id:string
+mobileNo:string
+name: string
+}
+
+export type PageState = {
+  skip:number;
+  take:number;
+}

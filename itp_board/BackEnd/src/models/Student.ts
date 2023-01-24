@@ -3,10 +3,7 @@ import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm'
 @Entity()
 class Student {
   @PrimaryGeneratedColumn()
-  index: number | undefined
-
-  @Column({ type: 'varchar', unique: true })
-  id: string | undefined
+  id: number | undefined
 
   @Column('varchar')
   name: string | undefined
@@ -15,8 +12,8 @@ class Student {
   address: string | undefined
 
   @Column('date')
-  dob: Date | undefined
-  
+  dateOfBirth: Date | undefined
+
   @Column('varchar')
   gender: string | undefined
 

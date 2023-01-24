@@ -1,14 +1,10 @@
 import { User } from './types'
 import { GridCellProps } from '@progress/kendo-react-grid'
-import {
-  isValidName,
-  isValidAddress,
-  isValidTPNO,
-  isValidDateOfBirth,
-} from './userValidations'
+import { isValidName, isValidAddress, isValidTPNO, isValidDateOfBirth } from './userValidations'
 import { SortDescriptor } from '@progress/kendo-data-query'
 
-import { DropDown } from '../components/DropDown'
+import { DropDown } from '../components/Dropdown/DropDown'
+import { createStudent, deleteStudent, editStudent } from './dataBaseInteractions'
 
 type EditIdCallBack = (id: number | null) => void
 type NewAddedCallBack = (NewAdded: boolean) => void
@@ -34,8 +30,10 @@ const validate = (data: User | null) => {
   return errors
 }
 
-const add = (
 
+
+
+const execute = async(
   editId: number,
   setEditId: EditIdCallBack,
   setNewAdded: NewAddedCallBack,
@@ -43,19 +41,39 @@ const add = (
   data: User[],
   displayErrors: DisplayErrorsCallBack,
   setSort: SortCallBack,
+  newAdded:boolean
 ) => {
-  console.log(data)
-  let record = null
+  let record:User|null = null
   data.forEach((item) => {
     if (item.id === editId) {
       record = item
     }
   })
   const errors = validate(record)
+  
   if (errors.length === 0) {
-    setEditId(null)
-    setNewAdded(false)
-    setTempData(data)
+
+    if (record !== null) {
+      let response = null;
+        try {
+          if(newAdded){
+           response = await createStudent(record);
+          }
+          else{
+             response = await editStudent(record);
+          }
+          if (response !== null) {
+            setEditId(null)
+            setNewAdded(false)
+            setTempData(data)
+          }
+        } catch (error:any) {
+          displayErrors([error.message])
+        }
+        
+      
+    }
+
     setSort([
       {
         field: 'id',
@@ -72,20 +90,26 @@ const edit = (newAdded: boolean, setEditId: EditIdCallBack, index: number) => {
     setEditId(index)
   }
 }
-const remove = (setData: DataCallback, dataIndex: number, data: User[]) => {
+const remove = async(setData: DataCallback,setTempData:TempDataCallback, dataIndex: number, data: User[],displayErrors: DisplayErrorsCallBack) => {
+
+  
+  const response = await deleteStudent(dataIndex);
+  console.log(response);
+  if(response.ok){
   const newData: User[] = []
-  // for (let index = 0; index < data.length; index++) {
-  //   const record = data[index]
-  //   if (index !== dataIndex-1) {
-  //     newData.push(record)
-  //   }
-  // }
   data.forEach((item) => {
     if (dataIndex !== item.id) {
       newData.push(item)
     }
   })
   setData(newData)
+  setTempData(newData);
+  
+  }
+  if(!response.ok){
+    displayErrors([response.statusText])
+  }
+
 }
 
 const discard = (
@@ -118,8 +142,7 @@ export const command = (
         <div className='table--button--group'>
           <button
             onClick={() => {
-              // console.log('before', data)
-              add(editId, setEditId, setNewAdded, setTempData, data, displayErrors, setSort)
+              execute(editId, setEditId, setNewAdded, setTempData, data, displayErrors, setSort,newAdded)
             }}
             className='table--button k-button k-button-md k-rounded-md k-button-solid k-button-solid-light k-grid-save-command'
           >
@@ -140,7 +163,7 @@ export const command = (
         <div className='table--button--group'>
           <button
             onClick={() => {
-              add(editId, setEditId, setNewAdded, setTempData, data, displayErrors, setSort)
+              execute(editId, setEditId, setNewAdded, setTempData, data, displayErrors, setSort,newAdded)
             }}
             className='table--button k-button k-button-md k-rounded-md k-button-solid k-button-solid-light k-grid-save-command'
           >
@@ -169,7 +192,7 @@ export const command = (
           </button>
           <button
             onClick={() => {
-              remove(setData, dataIndex, data)
+              remove(setData,setTempData, dataIndex, data,displayErrors);
             }}
             className='table--button k-button k-button-md k-rounded-md k-button-solid k-button-solid-light k-grid-save-command'
           >
@@ -188,7 +211,7 @@ export const calculateAge = (dob: Date) => {
 export const calcAge = (props: GridCellProps) => {
   let age = null
   if (props.dataItem.dateOfBirth) {
-    age = calculateAge(props.dataItem.dateOfBirth)
+    age = calculateAge(new Date(props.dataItem.dateOfBirth))
     if (age < 0) {
       age = null
     }
@@ -196,7 +219,7 @@ export const calcAge = (props: GridCellProps) => {
   return <td>{age}</td>
 }
 
-export const addRecord = (
+export const addRecord = async(
   newAdded: boolean,
   setEditId: EditIdCallBack,
   setNewAdded: NewAddedCallBack,
@@ -210,13 +233,15 @@ export const addRecord = (
       dir: 'desc',
     },
   ])
+
   let maxId = 0
   data.forEach((item) => {
     if (item.id > maxId) {
       maxId = item.id
     }
   })
-  if (!newAdded) {
+
+    if (!newAdded) {
     const newRecord = {
       id: maxId + 1,
       name: '',
@@ -229,7 +254,7 @@ export const addRecord = (
     setNewAdded(true)
     setData([newRecord, ...data])
     setEditId(maxId + 1)
-  }
+    }
 }
 
 export const gender = (
