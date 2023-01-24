@@ -1,9 +1,5 @@
 import { User } from './types'
 
-type EditIdCallBack = (id: number | null) => void
-type NewAddedCallBack = (NewAdded: boolean) => void
-type TempDataCallback = (User: User[]) => void
-type DataCallback = (User: User[]) => void
 type DisplayErrorsCallBack = (errors: string[]) => void
 export const createStudent = async (record: User) => {
   const data = record
