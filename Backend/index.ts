@@ -2,7 +2,7 @@ import 'reflect-metadata';
 import express, { Request, Response } from 'express';
 import dotenv from 'dotenv';
 import bodyParser from 'body-parser';
-import studentRoutes from '../Backend/src/routes/StudentRoutes';
+import studentRoutes from './src/routes/studentRoutes';
 import cors from 'cors';
 import { appDataSource } from './src/configs/dataSourceConfig';
 import { Server } from 'socket.io';
