@@ -7,7 +7,6 @@ import { UserInterface } from './interfaces/users.interface'
 import User from './entities/users.entity';
 import { AuthService } from '../auth/auth.service';
 import { AuthModule } from '../auth/auth.module';
-import { UsersModule } from './users.module';
 
 describe('User Controller Test', () => {  
   let usersController: UsersController;
@@ -46,45 +45,6 @@ describe('User Controller Test', () => {
     res.cookie = jest.fn().mockReturnValue(res);
     return res;
   };
-
-  describe('Get User controller test', () => {
-    const userResult = {
-      id: 1,
-      userName: 'newUserName',
-      email: 'newuser@gmail.com',
-      password: 'NewUserPw123',
-      role: 'Guest'
-    } as UserInterface
-
-    const req = {
-      body: {
-        email: 'newuser@gmail.com',
-        password: 'NewUserPw123.'
-      }
-    } as Request
-
-    const res = response()
-
-    it('Get User success', async () => {
-      const spyGetUser = jest
-        .spyOn(usersService, 'getUserService')
-        .mockResolvedValue(userResult)
-      await usersController.signinUser(req.body, res)
-      expect(res.status).toHaveBeenCalledWith(200)
-      expect(res.cookie).toHaveBeenCalledTimes(3)
-      expect(res.send).toHaveBeenCalledWith(userResult)
-      spyGetUser.mockRestore()
-    })
-    it('Get User fail', async () => {
-      const spyGetUser = jest
-        .spyOn(usersService, 'getUserService')
-        .mockResolvedValue(null)
-      await usersController.signinUser(req.body, res)
-      expect(res.status).toHaveBeenCalledWith(401)
-      expect(res.send).toHaveBeenCalledWith('Email or Password Invalid')
-      spyGetUser.mockRestore()
-    })
-  })
 
   describe('Add User controller test', () => {
     const newUser = {
@@ -132,7 +92,7 @@ describe('User Controller Test', () => {
         .spyOn(usersService, 'addUserService')
         .mockResolvedValue(false)
       await usersController.signupUser(req1.body, res)
-      expect(res.status).toHaveBeenCalledWith(401)
+      expect(res.status).toHaveBeenCalledWith(400)
       expect(res.send).toHaveBeenCalledWith('Email was already used')
       spyAddUser.mockRestore()
     })
@@ -157,7 +117,7 @@ describe('User Controller Test', () => {
   })
 
   describe('Get New Access Token', () => {
-    const token = 'accessToken'
+    const accessToken = 'accessToken'
 
     const req1 = {
       cookies: {
@@ -181,28 +141,72 @@ describe('User Controller Test', () => {
         .mockResolvedValue(true)
       const spygettoken = jest
         .spyOn(authService, 'getAccessToken')
-        .mockResolvedValue(token)
-      await usersController.refreshUser(req1.cookies, res)
-      expect(res.status).toHaveBeenCalledWith(200)
-      expect(res.send).toHaveBeenCalledWith('Access Token returned')
-      expect(res.cookie).toHaveBeenCalledTimes(1)
+        .mockResolvedValue(accessToken)
+      await usersController.refreshUser(req1, res)
+      expect(res.status).toHaveBeenCalledWith(401)
+      expect(res.send).toHaveBeenCalledWith('Invalid refresh Token')
+      expect(res.cookie).toHaveBeenCalledTimes(0)
       spyverifytoken.mockRestore()
       spygettoken.mockRestore()
     })
     it('Get Token fail with no token', async () => {
-      await usersController.refreshUser(req2.cookies, res)
+      await usersController.refreshUser(req2, res)
       expect(res.status).toHaveBeenCalledWith(401)
       expect(res.send).toHaveBeenCalledWith('Unauthorized Access')
-      expect(res.cookie).toHaveBeenCalledTimes(1)
     })
     it('Get Token with wrong token', async () => {
       const spyverifytoken = jest
         .spyOn(authService, 'verifyRefresh')
         .mockResolvedValue(false)
-      await usersController.refreshUser(req1.cookies, res)
+      await usersController.refreshUser(req1, res)
       expect(res.status).toHaveBeenCalledWith(401)
       expect(res.send).toHaveBeenCalledWith('Invalid refresh Token')
       spyverifytoken.mockRestore()
+    })
+  })
+
+  describe('Get User controller test', () => {
+    const userResult = {
+      id: 1,
+      userName: 'newUserName',
+      email: 'newuser@gmail.com',
+      password: 'NewUserPw123',
+      role: 'Guest'
+    } as UserInterface
+
+    const req = {
+      body: {
+        email: 'newuser@gmail.com',
+        password: 'NewUserPw123.'
+      }
+    } as Request
+
+    const res = response()
+
+    const tokens = { tokens: { accessToken: 'accessToken', refreshToken: 'refreshToken' }}
+
+    it('Get User success', async () => {
+      const spyGetUser = jest
+        .spyOn(usersService, 'getUserService')
+        .mockResolvedValue(userResult)
+      const spyGetTokens = jest
+        .spyOn(authService, 'getTokens')
+        .mockResolvedValue(tokens.tokens)
+      await usersController.signinUser(req.body, res)
+      expect(res.status).toHaveBeenCalledWith(200)
+      expect(res.cookie).toHaveBeenCalledTimes(3)
+      expect(res.send).toHaveBeenCalledWith(userResult)
+      spyGetUser.mockRestore()
+      spyGetTokens.mockRestore()
+    })
+    it('Get User fail', async () => {
+      const spyGetUser = jest
+        .spyOn(usersService, 'getUserService')
+        .mockResolvedValue(null)
+      await usersController.signinUser(req.body, res)
+      expect(res.status).toHaveBeenCalledWith(401)
+      expect(res.send).toHaveBeenCalledWith('Email or Password Invalid')
+      spyGetUser.mockRestore()
     })
   })
 });

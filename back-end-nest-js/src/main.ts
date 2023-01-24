@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 import { NestFactory } from '@nestjs/core';
-// import * as  cookieParser from 'cookie-parser';
+import * as  cookieParser from 'cookie-parser';
 import { AppModule } from './app.module';
 
 declare const module: any;
@@ -9,7 +9,7 @@ const port = Number(process.env.PORT);
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  // app.use(cookieParser());
+  app.use(cookieParser());
   app.enableCors({
     credentials: true,
     origin: ['http://localhost:3000'],

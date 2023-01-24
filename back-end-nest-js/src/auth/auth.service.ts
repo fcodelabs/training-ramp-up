@@ -18,7 +18,7 @@ export class AuthService {
     }
   }
 
-  async verifyRefresh(email: string, refreshToken: string) {
+  async verifyRefresh(email: string, refreshToken: string): Promise<boolean> {
     try {
       const decoded = this.jwtService.verify(refreshToken) as JwtPayload
       return decoded.user.email === email

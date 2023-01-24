@@ -11,6 +11,7 @@ import User from './users/entities/users.entity';
 import { APP_GUARD } from '@nestjs/core';
 import { AuthGuard } from './auth/auth.guard';
 import { EventsModule } from './events/events.module';
+import { AppGateway } from './app.gateway';
 
 @Module({
   imports: [

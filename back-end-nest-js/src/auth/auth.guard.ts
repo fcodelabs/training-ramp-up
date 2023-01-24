@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { Injectable, CanActivate, ExecutionContext, UnauthorizedException } from '@nestjs/common';
+import { Injectable, CanActivate, ExecutionContext, UnauthorizedException, ForbiddenException } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { GqlExecutionContext } from '@nestjs/graphql';
 import { JwtService } from '@nestjs/jwt';
@@ -19,15 +19,15 @@ export class AuthGuard implements CanActivate {
     const length = tokenWithColon.length;
 
     if (!roles) return true;
-    const accessToken = tokenWithColon.substring(0,length-1) ?? null;
+    const accessToken = tokenWithColon.substring(0,length-1);
 
-    if (!accessToken) return false;
+    if (!accessToken) throw new UnauthorizedException('You are not Authorized');
   
     try {
       const decoded = await this.jwtService.verify(accessToken) as JwtPayload
       if (decoded && roles.includes(decoded.user.role)) return true
 
-      throw new UnauthorizedException('You are not Authorized')
+      throw new ForbiddenException('You are not Authorized')
 
     } catch (err) {
       throw err

@@ -40,8 +40,8 @@ export class UsersController {
       const user: any = await this.userService.getUserService(loginUser)
         if (user) {
           const tokens = await this.authService.getTokens(user)
-          res.cookie('accessToken', tokens.accessToken, { maxAge: 1000 * 60 * 2, httpOnly: true })
-          res.cookie('refreshToken', tokens.refreshToken, { maxAge: 1000 * 60 * 20, httpOnly: true })
+          res.cookie('accessToken', tokens['accessToken'], { maxAge: 1000 * 60 * 2, httpOnly: true })
+          res.cookie('refreshToken', tokens['refreshToken'], { maxAge: 1000 * 60 * 20, httpOnly: true })
           res.cookie('user', user, { maxAge: 1000 * 60 * 20, httpOnly: false })
           return res.status(200).send(user)
         }
@@ -77,17 +77,15 @@ export class UsersController {
   @Post('refresh')
   async refreshUser(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
     try {
-      console.log(req)
-      const user = null
-      const refreshToken = null
+      const user = req.cookies['user']
+      const refreshToken = req.cookies['refreshToken']
       if(user !== null && refreshToken !== null) {
-        const isValid = await this.authService.verifyRefresh(user.email, refreshToken)
-        
+        const isValid: boolean = await this.authService.verifyRefresh(user.email, refreshToken)
         if (!isValid) return res.status(401).send('Invalid refresh Token')
 
         const accessToken = await this.authService.getAccessToken(user)
-        return res.cookie('accessToken', accessToken, { maxAge: 1000 * 60 * 2, httpOnly: true }).status(200)
-          .send('Access Token returned')
+        res.cookie('accessToken', accessToken, { maxAge: 1000 * 60 * 2, httpOnly: true })
+        return res.status(200).send('Access Token returned')
       } else {
         return res.status(401).send('Unauthorized Access')
       }

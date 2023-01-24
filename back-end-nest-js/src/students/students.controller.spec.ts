@@ -6,7 +6,6 @@ import { DeleteResult } from 'typeorm';
 import Student from './entities/students.entity';
 import { StudentsController } from './students.controller';
 import { StudentsService } from './students.service';
-import { StudentsModule } from './students.module';
 import { AppGateway } from '../app.gateway';
 
 describe('Student Controller Test', () => {  
@@ -19,12 +18,12 @@ describe('Student Controller Test', () => {
       controllers: [StudentsController],
       providers: [AppGateway,
         {
-        provide: 'STUDENT_SERVICE',
+        provide: StudentsService,
         useValue: {
-          getAllStudents: jest.fn((x) => x),
-          addStudent: jest.fn((x) => x),
-          updateStudent: jest.fn((x) => x),
-          deleteStudent: jest.fn((x) => x),
+          getAllStudentsService: jest.fn((x) => x),
+          addStudentService: jest.fn((x) => x),
+          updateStudentService: jest.fn((x) => x),
+          deleteStudentService: jest.fn((x) => x),
         },
       },],
     }).compile();

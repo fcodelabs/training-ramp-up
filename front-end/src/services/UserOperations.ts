@@ -20,8 +20,3 @@ export const logoutUserSession = async () => {
   const response = await axiosInstance.post('/user/signout')
   return response
 }
-
-// export const refreshUserToken = async () => {
-//   const response = await axios.post(baseURL + '/refresh', { withCredentials: true })
-//   return response
-// }

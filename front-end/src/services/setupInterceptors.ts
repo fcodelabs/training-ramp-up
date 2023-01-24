@@ -9,13 +9,14 @@ const axiosInstance = axios.create({
 axiosInstance.interceptors.response.use(
   function (response) {
     console.log('hoooo1')
+    console.log('response', response)
     return response
   },
   async function (error) {
     console.log('hoooo2222')
     console.log(error)
     const prevReq = error?.config
-    if (error.response.status === 500) {
+    if (error.response.status === 401) {
       console.log('hoooo2')
       await axios.post(
         'http://localhost:8000/user/refresh',
