@@ -3,8 +3,19 @@ import ReactDOM from 'react-dom/client'
 import './index.css'
 import App from './App'
 import reportWebVitals from './reportWebVitals'
+import { socket } from './services/services'
+import { toast } from 'react-toastify'
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
+socket.on('user_added', (data) => {
+  toast.info(data.username +' is added!')
+})
+socket.on('user_updated', (data) => {
+  toast.info(data.username +' is updated!')
+})
+socket.on('user_removed', (data) => {
+  toast.info(data.username +' is removed!')
+})
 root.render(
   <React.StrictMode>
     <App />

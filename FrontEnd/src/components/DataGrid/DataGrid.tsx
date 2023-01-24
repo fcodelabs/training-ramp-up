@@ -7,10 +7,11 @@ import {
 } from '@progress/kendo-react-grid'
 import '@progress/kendo-theme-default/dist/all.css'
 import { MyCommandCell } from './MyCommandcell'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { User } from '../../interfaces/interfaces'
-import { deleteItem, getItems, insertItem, updateItem, validationFunc } from '../../services/services'
+import { deleteItem, getItems, insertItem, updateItem, validationFunc, socket } from '../../services/services'
 import { GenderCell } from './GenderCell'
+import { toast } from 'react-toastify'
 
 
 const editField = 'inEdit'
@@ -21,7 +22,17 @@ const DataGrid = () => {
   React.useEffect(() => {
     const newItems = getItems()
     setData(newItems)
+    // const fetchData = async () => {
+    //   const result = await getItems()
+    //   setData(result)
+    // }
+    // fetchData()
+    // getItems()
+    // .then ( data => {
+    //   setData(data)
+    // })
   }, [])
+
 
   const add = (dataItem: User) => {
     dataItem.inEdit = true
@@ -116,3 +127,7 @@ const DataGrid = () => {
   )
 }
 export default DataGrid
+function sleep(arg0: number) {
+  throw new Error('Function not implemented.')
+}
+
