@@ -6,8 +6,6 @@ import { User } from './users/entities/user.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 // import * as dotenv from 'dotenv';
 import { APP_GUARD } from '@nestjs/core';
-import { permissions } from './middlewares/authPermissions';
-import { authorization } from './middlewares/loggingPermissions';
 import { StudentsModule } from './students/students.module';
 import { UsersModule } from './users/users.module';
 import { StudentsController } from './students/students.controller';
@@ -36,8 +34,4 @@ import { AuthModule } from './auth/auth.module';
   controllers: [AppController],
   providers: [AppService, { provide: APP_GUARD, useClass: RolesGuard }],
 })
-export class AppModule {
-  // configure(consumer: MiddlewareConsumer) {
-  //   consumer.apply(authorization).forRoutes(StudentsController);
-  // }
-}
+export class AppModule {}

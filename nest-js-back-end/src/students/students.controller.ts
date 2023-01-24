@@ -16,7 +16,7 @@ import { CreateStudentDto } from './dto/create-student.dto';
 import { UpdateStudentDto } from './dto/update-student.dto';
 import { Request, Response } from 'express';
 import { RolesGuard } from 'src/auth/auth.guard';
-// import { io } from '../../socketServer';
+
 @Controller('students')
 export class StudentsController {
   private readonly logger = new Logger('studentsController');
@@ -31,11 +31,7 @@ export class StudentsController {
   ): Promise<CreateStudentDto> {
     try {
       const response = await this.studentsService.create(createStudentDto);
-      // io.emit(
-      //   'notification',
-      //   'Student added successfully. Student:- ' + response.name
-      // );
-      //console.log('new user- ', response);
+
       res.send(response);
       return;
     } catch (err) {

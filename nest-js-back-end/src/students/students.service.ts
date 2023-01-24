@@ -54,7 +54,7 @@ export class StudentsService {
     }
   }
 
-  async remove(id: number): Promise<object> {
+  async remove(id: number) {
     try {
       const result = await this.studentRepository.delete(id);
       return result;

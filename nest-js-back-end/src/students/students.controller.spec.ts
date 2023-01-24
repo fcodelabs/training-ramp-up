@@ -3,6 +3,8 @@ import { StudentsController } from './students.controller';
 import { StudentsService } from './students.service';
 import { Request, Response } from 'express';
 import { CreateStudentDto } from './dto/create-student.dto';
+// import { RolesGuard } from 'src/auth/auth.guard';
+// import { AuthModule } from 'src/auth/auth.module';
 
 describe('StudentsController', () => {
   let controller: StudentsController;
@@ -10,6 +12,7 @@ describe('StudentsController', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
+      // imports: [AuthModule],
       controllers: [StudentsController],
       providers: [
         StudentsService,
