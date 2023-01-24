@@ -7,7 +7,7 @@ import { Socket } from 'dgram';
 export class AppGateway implements OnGatewayConnection{
 
   @WebSocketServer()
-  webSocketServer: { emit: (arg0: string, arg1: string) => void; };
+  webSocketServer;
 
   private logger = new Logger('AppGateway')
 
@@ -15,8 +15,4 @@ export class AppGateway implements OnGatewayConnection{
     this.logger.log(`Socket successfully connected ${client}`)
   }
 
-  // @SubscribeMessage('notification')
-  // async handleEvent(client: Socket, data: string): Promise<string> {
-  //   return data;
-  // }
 }
