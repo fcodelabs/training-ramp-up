@@ -43,7 +43,7 @@ export class UsersController {
     );
     const result = await this.authService.login(user);
     res.cookie('accessToken', result.accessToken, {
-      maxAge: 1000 * 60 * 5,
+      maxAge: 1000 * 60 * 20,
       httpOnly: true,
     });
     res.cookie('refreshToken', result.refreshToken, {
@@ -89,7 +89,7 @@ export class UsersController {
     const refreshToken:string = req.cookies.refreshToken;
     const result = await this.authService.getNewAccessToken(user, refreshToken);
     res.cookie('accessToken', result.accessToken, {
-      maxAge: 1000 * 60 * 5,
+      maxAge: 1000 * 60 * 20,
       httpOnly: true,
     });
 

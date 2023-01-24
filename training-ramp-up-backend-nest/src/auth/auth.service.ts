@@ -16,7 +16,7 @@ export class AuthService {
       };
       return {
         accessToken: this.jwtService.sign(payload, {
-          expiresIn: '5m',
+          expiresIn: '20m',
           secret: process.env.ACCESS_KEY,
         }),
         refreshToken: this.jwtService.sign(payload, {
@@ -49,7 +49,7 @@ export class AuthService {
           }
           return {
             accessToken: this.jwtService.sign(payload, {
-              expiresIn:'5m',
+              expiresIn:'20m',
               secret: process.env.ACCESS_KEY,
             }),
           };
