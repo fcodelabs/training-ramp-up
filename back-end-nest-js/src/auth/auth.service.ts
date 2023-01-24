@@ -11,7 +11,7 @@ export class AuthService {
     try {
       return {
         accessToken: this.jwtService.sign({user}, {expiresIn: '2m'}),
-        refreshToken: this.jwtService.sign({user}, {expiresIn: '20m'})
+        refreshToken: this.jwtService.sign({user}, {expiresIn: '24h'})
       }
     } catch (error) {
       throw error

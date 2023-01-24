@@ -11,16 +11,10 @@ export class AuthGuard implements CanActivate {
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const roles = this.reflector.get<string[]>('roles', context.getHandler());
-
-    const ctx = GqlExecutionContext.create(context);
-    const request = ctx.getContext();
-
-    const tokenWithColon = request.req.rawHeaders[request.req.rawHeaders.indexOf('Cookie')+1].split(" refreshToken")[0].split("=")[1];
-    const length = tokenWithColon.length;
+    const request = context.switchToHttp().getRequest();
 
     if (!roles) return true;
-    const accessToken = tokenWithColon.substring(0,length-1);
-
+    const accessToken = request.cookies.accessToken;
     if (!accessToken) throw new UnauthorizedException('You are not Authorized');
   
     try {

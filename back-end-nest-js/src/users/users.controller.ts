@@ -41,7 +41,7 @@ export class UsersController {
         if (user) {
           const tokens = await this.authService.getTokens(user)
           res.cookie('accessToken', tokens['accessToken'], { maxAge: 1000 * 60 * 2, httpOnly: true })
-          res.cookie('refreshToken', tokens['refreshToken'], { maxAge: 1000 * 60 * 20, httpOnly: true })
+          res.cookie('refreshToken', tokens['refreshToken'], { maxAge: 1000 * 60 * 60 * 24, httpOnly: true })
           res.cookie('user', user, { maxAge: 1000 * 60 * 20, httpOnly: false })
           return res.status(200).send(user)
         }
