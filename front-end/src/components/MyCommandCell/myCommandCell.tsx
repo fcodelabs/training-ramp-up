@@ -5,7 +5,7 @@ import { MyCommandCellProps } from '../../pages/Grid/interfaces';
 export const MyCommandCell = (props: MyCommandCellProps) => {
   const { dataItem } = props;
   const inEdit = dataItem[props.editField];
-  const isNewItem = dataItem.ID === undefined;
+  const isNewItem = dataItem.id === undefined;
 
   return inEdit ? (
     <td className='k-command-cell'>

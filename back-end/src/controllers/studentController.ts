@@ -20,6 +20,7 @@ async function addStudent(req: Request, res: Response) {
         const newStudent = {
             name: req.body.name,
             gender: req.body.gender,
+            address: req.body.address,
             mobile: req.body.mobile,
             dob: req.body.dob,
             age: req.body.age,
@@ -29,6 +30,7 @@ async function addStudent(req: Request, res: Response) {
         global.io.emit('notify', {message : `New student added`});
         res.status(201).send(generateOutput(201, 'success', savedStudent));
     } catch (error) {
+        console.log(error);
         res.status(500).send(generateOutput(500, 'error', 'Something went wrong'));
     }
 };
@@ -53,6 +55,7 @@ async function deleteStudent(req: Request, res: Response) {
         global.io.emit('notify', {message : `A student deleted`});
         res.status(201).send(generateOutput(201, 'success', student));
     } catch (error) {
+        console.log(error);
         res.status(500).send(generateOutput(500, 'error', 'Something went wrong'));
     }
 };

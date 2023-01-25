@@ -10,7 +10,7 @@ const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
 
-socket.on('notify', (data: any) => {
+socket.on('notify', (data) => {
   console.log(data);
   toast.info(data.message);
 });
