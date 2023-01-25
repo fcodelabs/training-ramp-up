@@ -4,12 +4,16 @@ import { eventChannel, EventChannel } from 'redux-saga'
 import { Person } from '../../helpers/interface'
 import {
   addPersonDataFailure,
+  addPersonDataStart,
   addPersonDataSuccess,
   deletePersonDataFailure,
+  deletePersonDataStart,
   deletePersonDataSuccess,
   getPersonDataFailure,
+  getPersonDataStart,
   getPersonDataSuccess,
   updatePersonDataFailure,
+  updatePersonDataStart,
   updatePersonDataSuccess,
 } from './PersonDataSlice'
 import {
@@ -18,7 +22,7 @@ import {
   getAllPersonServise,
   updatePersonService,
 } from '../../services/PersonServices'
-import { getNotificationSuccess } from './NotificationSlice'
+import { getNotificationStart, getNotificationSuccess } from './NotificationSlice'
 import { io, Socket } from 'socket.io-client'
 
 // get notifications with event chanell
@@ -62,10 +66,10 @@ function* fetchPersonData() {
 }
 
 // addNewDataSucces
-function* addNewPersonSaga(action: any) {
+function* addNewPersonSaga(payload: any) {
   try {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const insertData: Person = yield addNewPersonService(action.payload)
+    const insertData: Person = yield addNewPersonService(payload)
     yield put(addPersonDataSuccess(insertData))
   } catch (e) {
     yield put(addPersonDataFailure())
@@ -73,21 +77,19 @@ function* addNewPersonSaga(action: any) {
 }
 
 // addNewDataSucces
-function* updatePersonSaga(action: any) {
+function* updatePersonSaga(payload: any) {
   try {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const updateData: Person = yield updatePersonService(action.payload)
+    const updateData: Person = yield updatePersonService(payload)
     yield put(updatePersonDataSuccess(updateData))
   } catch (e) {
     yield put(updatePersonDataFailure())
   }
 }
 // addNewDataSucces
-function* deletePersonSaga(action: any) {
+function* deletePersonSaga(payload: any) {
   try {
-    console.log('sdsdf')
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const deleteData: Person = yield deletePersonService(action.payload)
+    const deleteData: Person = yield deletePersonService(payload)
     yield put(deletePersonDataSuccess(deleteData))
   } catch (e) {
     yield put(deletePersonDataFailure())
@@ -97,25 +99,30 @@ function* deletePersonSaga(action: any) {
   Starts fetchUser on each dispatched `USER_FETCH_REQUESTED` action.
   Allows concurrent fetches of user.
 */
-function* getAllPerson() {
-  yield takeEvery('personData/getPersonDataStart', fetchPersonData) // fetchMessages
-}
-function* deletePerson() {
-  yield takeLatest('personData/deletePersonDataStart', deletePersonSaga) // fetchMessages
-}
-function* addNewPerson() {
-  yield takeLatest('personData/addPersonDataStart', addNewPersonSaga)
+function* handlePersonActions() {
+  yield takeEvery((action: any) => action.type.match('Person'), function*({ type, payload }) {
+   console.log(payload)
+    switch (type) {
+      case getPersonDataStart.type:
+        yield fetchPersonData();
+        break;
+      case deletePersonDataStart.type:
+        yield deletePersonSaga(payload);
+        break;
+      case addPersonDataStart.type:
+        yield addNewPersonSaga(payload);
+        break;
+      case updatePersonDataStart.type:
+        yield updatePersonSaga(payload);
+        break;
+    }
+  });
 }
 
 function* getNotifications() {
-  yield takeEvery('notification/getNotificationStart', fetchNotications)
-}
-function* updatePerson() {
-  yield takeLatest('personData/updatePersonDataStart', updatePersonSaga)
+  yield takeEvery(getNotificationStart, fetchNotications)
 }
 
-// notice how we now only export the rootSaga
-// single entry point to start all Sagas at once
 export default function* rootSaga() {
-  yield all([getAllPerson(), getNotifications(), updatePerson(), addNewPerson(), deletePerson()])
+  yield all([handlePersonActions(), getNotifications()])
 }

@@ -55,8 +55,7 @@ export const Table = (): any => {
   const persondata = useSelector((state: any) => state.personData.person)
   const notifications = useSelector((state: any) => state.notification.notifications)
 
-  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-  const notify = (mdg: string) => toast(mdg)
+  const notify = (mdg: string): any => toast(mdg)
   React.useEffect(() => {
     distpatch(getPersonDataStart())
     distpatch(getNotificationStart())
@@ -68,8 +67,7 @@ export const Table = (): any => {
 
   React.useEffect(() => {
     if (notifications.length > 0) {
-     
-      const notificationTrigger = ():void => {
+      const notificationTrigger = (): void => {
         notify(notifications[notifications.length - 1].toString())
       }
       notificationTrigger()
@@ -105,6 +103,7 @@ export const Table = (): any => {
       data.shift()
       distpatch(addPersonDataStart([dataItem, newId]))
       setBirthday(new Date())
+      setGender({ value: 'Male' })
     }
   }
 
@@ -114,15 +113,14 @@ export const Table = (): any => {
     newData.splice(0, 1)
     setData(newData)
     setBirthday(new Date())
+    setGender({ value: 'Male' })
   }
 
-  
-  const remove = (dataItem: Person):void => {
+  const remove = (dataItem: Person): void => {
     distpatch(deletePersonDataStart(dataItem.PersonID))
   }
 
- 
-  const update = (dataItem: Person):void => {
+  const update = (dataItem: Person): void => {
     dataItem.DateOfBirth = birthday
     dataItem.PersonGender = personGen.value
     const errs = checkErr(dataItem)
@@ -131,10 +129,12 @@ export const Table = (): any => {
       onToggle()
     } else {
       distpatch(updatePersonDataStart(dataItem))
+      setBirthday(new Date())
+      setGender({ value: 'Male' })
     }
   }
 
-  const cancel = (dataItem: Person):void => {
+  const cancel = (dataItem: Person): void => {
     const originalItem = getItems().find((p) => p.PersonID === dataItem.PersonID)
     const newData = data.map((item) =>
       item.PersonID === originalItem?.PersonID ? originalItem : item,
@@ -143,16 +143,15 @@ export const Table = (): any => {
     setData(newData)
   }
 
-
-  const enterEdit = (dataItem: Person):void => {
+  const enterEdit = (dataItem: Person): void => {
     dataItem.DateOfBirth != null && setBirthday(new Date(dataItem.DateOfBirth))
     dataItem.PersonGender != null && setGender({ value: dataItem.PersonGender })
     setData(
       data.map((item) => (item.PersonID === dataItem.PersonID ? { ...item, inEdit: true } : item)),
     )
   }
- 
-  const addNew = ():void => {
+
+  const addNew = (): void => {
     const newDataItem: Person = {
       inEdit: true,
       Discontinued: false,
@@ -162,24 +161,21 @@ export const Table = (): any => {
     setData([newDataItem, ...data])
   }
 
-  
-  const handleChangeDropDown = (event: DropDownListChangeEvent):void => {
+  const handleChangeDropDown = (event: DropDownListChangeEvent): void => {
     setGender({
       value: event.target.value,
     })
   }
- 
-  const handleChangeDatePicker = (event: DatePickerChangeEvent):void => {
+
+  const handleChangeDatePicker = (event: DatePickerChangeEvent): void => {
     event.value != null && setBirthday(event.value)
   }
 
- 
-  const pageChange = (event: GridPageChangeEvent):void => {
+  const pageChange = (event: GridPageChangeEvent): void => {
     setPage(event.page)
   }
 
- 
-  const CommandCellFunc = (props: GridCellProps):JSX.Element => (
+  const CommandCellFunc = (props: GridCellProps): JSX.Element => (
     <CommandCell
       {...props}
       edit={enterEdit}
@@ -191,7 +187,7 @@ export const Table = (): any => {
       cancel={cancel}
     />
   )
- 
+
   return (
     <React.Fragment>
       <ToastContainer />
