@@ -11,12 +11,12 @@ export const loginUserService = async (user: any) => {
       password: user.password,
     };
 
-    const responseData = await axios.post(baseURL + "/auth/login", userData, {
+    const success = await axios.post(baseURL + "/auth/login", userData, {
       withCredentials: true,
     });
-    return responseData;
+    return success;
   } catch (error) {
-    console.log(error);
+    return error;
   }
 };
 
@@ -40,7 +40,7 @@ export const registerUserService = async (user: any) => {
 export const logoutUserService = async () => {
   try {
     const responseData = await axiosApiInstance.delete(
-      baseURL + "/user/signout",
+      baseURL + "/auth/signout",
       {
         withCredentials: true,
       }
@@ -48,7 +48,7 @@ export const logoutUserService = async () => {
     return responseData;
   } catch (error) {
     console.log(error);
-    window.location.href = "/";
+    // window.location.href = "/home";
   }
 };
 
@@ -61,7 +61,7 @@ export const getStudents = async () => {
     return responseData;
   } catch (error) {
     console.log(error);
-    // window.location.href = "/";
+    window.location.href = "/";
   }
 };
 

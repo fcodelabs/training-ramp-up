@@ -47,7 +47,7 @@ export default function Datagrid() {
       window.location.href = "/";
     }
 
-    const adminUser = user == "Admin" ? false : true;
+    const adminUser = user.role == "Admin" ? false : true;
     setDisabled(adminUser);
     dispatch(getStudentsAction());
   }, []);

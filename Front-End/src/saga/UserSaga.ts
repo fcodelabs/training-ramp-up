@@ -28,23 +28,24 @@ function* registerUserSaga(action: any): any {
 
 function* loginUserSaga(action: any): any {
   try {
-    yield call(loginUserService, action.payload);
-    window.location.href = "/home";
-    alert("Login successful");
+    const login = yield call(loginUserService, action.payload);
+    if (login) {
+      window.location.href = "/home";
+      alert("Login successful");
+    } else {
+      alert("Incorrect Username or Password");
+    }
   } catch (error) {
-    alert("Incorrect Username or Password");
+    console.log(error);
   }
 }
 
 function* logoutUserSaga(): any {
   try {
-    const response = yield call(logoutUserService);
-    if (response) {
-      window.location.href = "/";
-      alert("Logout successful");
-    } else {
-      alert("Logout failed");
-    }
+    yield call(logoutUserService);
+
+    window.location.href = "/";
+    alert("Logout successful");
   } catch (error) {
     console.log(error);
   }
