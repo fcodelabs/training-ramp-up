@@ -2,9 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { StudentsController } from './students.controller';
 import { StudentsService } from './students.service';
 import { Request, Response } from 'express';
-import { CreateStudentDto } from './dto/create-student.dto';
-// import { RolesGuard } from 'src/auth/auth.guard';
-// import { AuthModule } from 'src/auth/auth.module';
+import { AuthModule } from 'src/auth/auth.module';
 
 describe('StudentsController', () => {
   let controller: StudentsController;
@@ -12,22 +10,22 @@ describe('StudentsController', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      // imports: [AuthModule],
+      imports: [AuthModule],
       controllers: [StudentsController],
       providers: [
         StudentsService,
         {
-          provide: StudentsService,
+          provide: 'STUDENT_SERVICE',
           useValue: {
-            create: jest.fn(),
-            findAll: jest.fn(),
-            update: jest.fn(),
-            remove: jest.fn(),
+            create: jest.fn((x) => x),
+            findAll: jest.fn((x) => x),
+            update: jest.fn((x) => x),
+            remove: jest.fn((x) => x),
           },
         },
       ],
     }).compile();
-    service = module.get<StudentsService>(StudentsService);
+    service = module.get<StudentsService>('STUDENT_SERVICE');
     controller = module.get<StudentsController>(StudentsController);
   });
 
@@ -51,7 +49,6 @@ describe('StudentsController', () => {
       },
     ];
 
-    const req = {} as Request;
     const res = mockResponse();
 
     test('Get All Student Success', async () => {

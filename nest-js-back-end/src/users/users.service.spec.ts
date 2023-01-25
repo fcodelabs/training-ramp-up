@@ -3,11 +3,8 @@ import { UsersService } from './users.service';
 import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
-import * as jwt from 'jsonwebtoken';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { config } from '../config';
 import { CreateUserDto, LoginUserDto } from './dto/create-user.dto';
-import { error } from 'console';
 
 describe('UsersService', () => {
   let service: UsersService;

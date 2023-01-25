@@ -1,8 +1,7 @@
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
-import { Observable } from 'rxjs';
 import { Reflector } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
-import { NotFoundException } from '@nestjs/common/exceptions';
+import { ForbiddenException } from '@nestjs/common/exceptions';
 
 @Injectable()
 export class RolesGuard implements CanActivate {
@@ -20,7 +19,7 @@ export class RolesGuard implements CanActivate {
       const decoded = await this.jwtService.verify(accessToken);
       if (decoded && roles.includes(decoded.userRoll)) return true;
 
-      throw new NotFoundException('You are not Authorized');
+      throw new ForbiddenException('You are not Authorized');
     } catch (err) {
       throw err;
     }

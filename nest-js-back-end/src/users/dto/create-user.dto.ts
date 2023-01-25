@@ -1,11 +1,5 @@
 /* eslint-disable indent */
-import {
-  IsEmail,
-  IsNotEmpty,
-  IsString,
-  Matches,
-  MinLength,
-} from 'class-validator';
+import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
 export class CreateUserDto {
   id: number;
 
@@ -33,9 +27,6 @@ export class LoginUserDto {
   @IsNotEmpty()
   @IsString()
   password: string;
-
-  // @IsString()
-  // userRoll: string;
 }
 export class UserDetailDto {
   @IsNotEmpty()

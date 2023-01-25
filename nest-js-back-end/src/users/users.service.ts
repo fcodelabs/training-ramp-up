@@ -32,11 +32,8 @@ export class UsersService {
       user.password = hash;
 
       const response: CreateUserDto = await this.userRepository.save(user);
-      //if (response) return response;
-      //else return false;
       return response;
     } catch (error) {
-      // throw err;
       return error;
     }
   }
@@ -57,15 +54,12 @@ export class UsersService {
         } else {
           this.logger.log('invalid password..!');
           return false;
-          //throw new NotFoundException('invalid password..!');
         }
       } else {
         this.logger.log('No such a User..!');
         return false;
-        //throw new NotFoundException('No such a User..!');
       }
     } catch (error) {
-      // throw err;
       return false;
     }
   }
@@ -114,7 +108,6 @@ export class UsersService {
         }
       }
     } catch (err) {
-      //throw err;
       return err;
     }
   }

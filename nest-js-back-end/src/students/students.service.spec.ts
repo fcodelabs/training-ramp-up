@@ -4,7 +4,6 @@ import { Student } from './entities/student.entity';
 import { Repository } from 'typeorm';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { CreateStudentDto } from './dto/create-student.dto';
-import { UpdateStudentDto } from './dto/update-student.dto';
 
 describe('StudentsService', () => {
   let service: StudentsService;

@@ -24,8 +24,7 @@ export class UsersController {
   async create(
     @Body() createUserDto: CreateUserDto,
     @Res({ passthrough: true }) res: Response
-  ): Promise<any> {
-    //return this.usersService.create(createUserDto);
+  ): Promise<boolean> {
     const response = await this.usersService.create(createUserDto);
     if (response) {
       const dataStoredInToken = {
@@ -61,7 +60,7 @@ export class UsersController {
   async findOne(
     @Body() body: LoginUserDto,
     @Res({ passthrough: true }) res: Response
-  ): Promise<any> {
+  ): Promise<boolean> {
     try {
       const response = await this.usersService.findOne(body);
       if (response) {
@@ -161,7 +160,7 @@ export class UsersController {
       res.send(err);
     }
   }
-  //=====
+  //===============
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
     return this.usersService.update(+id, updateUserDto);

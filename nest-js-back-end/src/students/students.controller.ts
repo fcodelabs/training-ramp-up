@@ -15,7 +15,7 @@ import { StudentsService } from './students.service';
 import { CreateStudentDto } from './dto/create-student.dto';
 import { UpdateStudentDto } from './dto/update-student.dto';
 import { Request, Response } from 'express';
-import { RolesGuard } from 'src/auth/auth.guard';
+import { RolesGuard } from 'src/auth/roles.guard';
 
 @Controller('students')
 export class StudentsController {
@@ -66,10 +66,6 @@ export class StudentsController {
   ): Promise<CreateStudentDto | boolean> {
     try {
       const response = await this.studentsService.update(updateStudentDto);
-      // io.emit(
-      //   'notification',
-      //   'Student has been updated, Student:- ' + response.name
-      // );
       res.send(response);
       return;
     } catch (err) {
@@ -81,7 +77,6 @@ export class StudentsController {
   @UseGuards(RolesGuard)
   @SetMetadata('roles', ['Admin'])
   async remove(@Param('id') id: string, @Res() res: Response): Promise<object> {
-    // io.emit('notification', 'Student has been deleted');
     try {
       const deletedStudentID = await this.studentsService.remove(+id);
       res.send(deletedStudentID);
