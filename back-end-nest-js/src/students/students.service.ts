@@ -16,7 +16,7 @@ export class StudentsService {
       const students = await this.studentRepository.find({ order: { id: 'ASC' } })
       return students
     } catch (err) {
-        return null    
+      throw err    
     }  
   }
 
@@ -31,7 +31,7 @@ export class StudentsService {
       const result = this.studentRepository.save(createdStudent)
       return result
     } catch (err) {
-      return null    
+      throw err    
     }
   }
 
@@ -48,7 +48,7 @@ export class StudentsService {
       }
       return null
     } catch (err) {
-      return null    
+      throw err    
     }  
   }
 
@@ -57,7 +57,7 @@ export class StudentsService {
       const result = await this.studentRepository.delete(studentId)
       return result
     } catch (err) {
-      return null    
+      throw err    
     }  
   }
 }

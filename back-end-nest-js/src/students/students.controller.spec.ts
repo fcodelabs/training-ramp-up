@@ -20,10 +20,10 @@ describe('Student Controller Test', () => {
         {
         provide: StudentsService,
         useValue: {
-          getAllStudentsService: jest.fn((x) => x),
-          addStudentService: jest.fn((x) => x),
-          updateStudentService: jest.fn((x) => x),
-          deleteStudentService: jest.fn((x) => x),
+          getAllStudentsService: jest.fn(),
+          addStudentService: jest.fn(),
+          updateStudentService: jest.fn(),
+          deleteStudentService: jest.fn(),
         },
       },],
     }).compile();
@@ -39,7 +39,7 @@ describe('Student Controller Test', () => {
     return res
   }
   describe('Get all students controller test', () => {
-    const studentsresult = [
+    const studentsresult: Student[] = [
       {
         id: 1,
         name: 'newName1',
@@ -48,7 +48,7 @@ describe('Student Controller Test', () => {
         mobileNo: '0112463256',
         dob: new Date('1999-10-10')
       }
-    ] as Student[]
+    ]
 
     const res = response()
 
@@ -73,14 +73,14 @@ describe('Student Controller Test', () => {
   })
 
   describe('Add student controller test', () => {
-    const newStudent = {
+    const newStudent: Student = {
       id: 1,
       name: 'stuname',
       gender: 'Male',
       address: 'newAddress1',
       mobileNo: '0123456789',
       dob: new Date('1998-12-10')
-    } as Student
+    }
 
     const req1 = {
       body: {
@@ -88,16 +88,6 @@ describe('Student Controller Test', () => {
         gender: 'Male',
         address: 'newAddress1',
         mobileNo: '0123456789',
-        dob: '1998-12-10'
-      }
-    } as Request
-
-    const req2 = {
-      body: {
-        name: 'stuname',
-        gender: 'Male',
-        address: 'newAddress1',
-        mobileNo: '01234569',
         dob: '1998-12-10'
       }
     } as Request
@@ -122,22 +112,17 @@ describe('Student Controller Test', () => {
       expect(res.send).toHaveBeenCalledWith('Could not add student')
       spyAddStudent.mockRestore()
     })
-    it('Add student fail', async () => {
-      await studentsController.addStudent(req2.body, res)
-      expect(res.status).toHaveBeenCalledWith(400)
-      expect(res.send).toHaveBeenCalledWith('Can not add student. Enter Valid Data')
-    })
   })
 
   describe('Update student controller test', () => {
-    const alterStudent = {
+    const alterStudent: Student = {
       id: 1,
       name: 'stuname',
       gender: 'Male',
       address: 'newAddress1',
       mobileNo: '0123456789',
       dob: new Date('1998-12-10')
-    } as Student
+    }
 
     const req1 = {
       body: {
@@ -145,15 +130,6 @@ describe('Student Controller Test', () => {
         name: 'stuname',
         address: 'newAddress123',
         mobileNo: '0123456459'
-      }
-    } as Request
-
-    const req2 = {
-      body: {
-        id: 1,
-        name: '',
-        address: 'newAddress123',
-        mobileNo: '01256459'
       }
     } as Request
 
@@ -169,9 +145,13 @@ describe('Student Controller Test', () => {
       spyUpdateStudent.mockRestore()
     })
     it('Update student fail', async () => {
-      await studentsController.updateStudent(req2.body, res)
+      const spyUpdateStudent = jest
+        .spyOn(studentsService, 'updateStudentService')
+        .mockResolvedValue(null)
+      await studentsController.updateStudent(req1.body, res)
       expect(res.status).toHaveBeenCalledWith(400)
-      expect(res.send).toHaveBeenCalledWith('Can not update student. Enter Valid Data')
+      expect(res.send).toHaveBeenCalledWith('Could not update student')
+      spyUpdateStudent.mockRestore()
     })
   })
 

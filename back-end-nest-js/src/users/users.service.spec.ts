@@ -30,18 +30,18 @@ describe('User Service Test', () => {
   });
 
   describe('Get User service test', () => {
-    const userLoginData = {
+    const userLoginData: LoginUserInterface = {
       email: 'user@gmail.com',
       password: 'UserPw123.'
-    } as LoginUserInterface
+    }
   
-    const userResult = {
+    const userResult: UserInterface = {
       id: 1,
       userName: 'userName',
       email: 'user@gmail.com',
       password: 'UserPw123.',
       role: 'Admin'
-    } as UserInterface
+    }
 
     it('Get User success', async () => {
       userRepository.findOneBy = jest.fn().mockResolvedValue(userResult)
@@ -66,22 +66,22 @@ describe('User Service Test', () => {
   })
 
   describe('Add User service test', () => {
-    const addUser = {
+    const addUser: UserInterface = {
       userName: 'newUser',
       email: 'newUser@gmail.com',
       password: 'NewU1234',
       confirmPassword: 'NewU1234',
       role: 'Admin'
-    } as UserInterface
+    }
 
-    const addUserResult = {
+    const addUserResult: UserInterface = {
       id: 1,
       userName: 'newUser',
       email: 'newUser@gmail.com',
       password: 'NewU1234',
       confirmPassword: 'NewU1234',
       role: 'Admin'
-    } as UserInterface
+    }
 
     it('Add User success', async () => {
       userRepository.findOneBy = jest.fn().mockResolvedValue(null)

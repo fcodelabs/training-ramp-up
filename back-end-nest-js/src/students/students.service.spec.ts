@@ -32,7 +32,7 @@ describe('Students Service Test', () => {
   });
 
   describe('Get all students service test', () => {
-    const allStudents = [
+    const allStudents: Student[] = [
       {
         id: 1,
         name: 'newName1',
@@ -41,7 +41,7 @@ describe('Students Service Test', () => {
         mobileNo: '0112463256',
         dob: new Date('1999-10-10')
       }
-    ] as Student[]
+    ]
 
     it('Get all students success', async () => {
       studentRepository.find = jest.fn().mockResolvedValue(allStudents)
@@ -56,58 +56,58 @@ describe('Students Service Test', () => {
   })
 
   describe('Add student service test', () => {
-    const addNewStudent = {
+    const addNewStudent: StudentInterface = {
       name: 'newName',
       gender: 'Male',
       address: 'newAddress',
       mobileNo: '0112463268',
       dob: new Date('1997-11-15')
-    } as StudentInterface
+    }
 
-    const addNewStudentResult = {
+    const addNewStudentResult: Student = {
       id: 1,
       name: 'newName',
       gender: 'Male',
       address: 'newAddress',
       mobileNo: '0112463268',
       dob: new Date('1997-11-15')
-    } as Student
+    }
 
     it('Add student success', async () => {
       studentRepository.save = jest.fn().mockResolvedValue(addNewStudentResult)
       const result = await studentsService.addStudentService(addNewStudent)
       expect(result).toEqual(addNewStudentResult)
     })
-    // it('Add student fail', async () => {
-    //   studentRepository.save = jest.fn().mockRejectedValue(null)
-    //   const result = await studentsService.addStudentService(addNewStudent)
-    //   expect(result).toEqual(null)
-    // })
+    it('Add student fail', async () => {
+      studentRepository.save = jest.fn().mockRejectedValue(null)
+      const result = await studentsService.addStudentService(addNewStudent)
+      expect(result).toEqual(null)
+    })
   })
 
   describe('Update student service test', () => {
-    const findStudent = {
+    const findStudent: Student = {
       id: 1,
       name: 'userName',
       gender: 'Male',
       address: 'userAddress1',
       mobileNo: '0112463256',
       dob: new Date('1999-10-10')
-    } as Student
+    }
 
-    const changesStudent = {
+    const changesStudent: UpdateStudentInterface = {
       id: 1,
       address: 'UpdateAddress1'
-    } as UpdateStudentInterface
+    }
 
-    const updatedStudent = {
+    const updatedStudent: Student = {
       id: 1,
       name: 'userName',
       gender: 'Male',
       address: 'UpdateAddress1',
       mobileNo: '0112463256',
       dob: new Date('1999-10-10')
-    } as Student
+    }
 
     it('Update student success', async () => {
       studentRepository.findOneBy = jest.fn().mockResolvedValue(findStudent)
@@ -124,10 +124,10 @@ describe('Students Service Test', () => {
   })
 
   describe('Delete student service test', () => {
-    const deleteResult = {
+    const deleteResult: DeleteResult = {
       raw: [],
       affected: 1
-    } as DeleteResult
+    }
 
     const id = 1
 

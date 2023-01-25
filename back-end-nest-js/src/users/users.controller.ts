@@ -2,37 +2,12 @@
 import { Body, Controller, Post, Req, Res } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { CreateUserDto, LoginUserDto } from './dto/users.dto';
-import { UserInterface } from './interfaces/users.interface';
 import { UsersService } from './users.service';
 import { AuthService } from '../auth/auth.service';
 
 @Controller('user')
 export class UsersController {
   constructor(private readonly userService: UsersService, private readonly authService: AuthService) {}
-  
-  validate = (user: UserInterface) => {
-    const nameReg = /^([A-z\s]{3,30})$/
-    const emailReg = /^([\w-.]+@([\w-]+\.)+[\w-]{2,4})$/
-    const validPw: boolean = user.password.length >= 8 && /[0-9]/.test(user.password)
-    const validConfirmPw: boolean = !validPw || user.password === user.confirmPassword
-  
-    if (!nameReg.test(user.userName)) {
-      return false
-    }
-    if (!emailReg.test(user.email)) {
-      return false
-    }
-    if (!validPw) {
-      return false
-    }
-    if (!validConfirmPw) {
-      return false
-    }
-    if (user.role === '') {
-      return false
-    }
-    return true
-  }
 
   @Post('signin')
   async signinUser(@Body() loginUser: LoginUserDto, @Res({ passthrough: true }) res: Response) {
@@ -53,16 +28,15 @@ export class UsersController {
 
   @Post('signup')
   async signupUser(@Body() newStudent: CreateUserDto, @Res({ passthrough: true }) res: Response) {
-    const valid = this.validate(newStudent)
-    if (valid) {
+    try {
       const result = await this.userService.addUserService(newStudent)
       if (result !== false) {
         return res.status(201).send(result)
       } else {
-        return res.status(400).send('Email was already used')
+        return res.status(401).send('Email was already used')
       }
-    } else {
-      return res.status(400).send('Can not add student. Enter Valid Data')
+    } catch (err) {
+      throw err
     }
   } 
 

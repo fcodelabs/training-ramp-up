@@ -20,8 +20,8 @@ describe('User Controller Test', () => {
       providers: [{
         provide: UsersService,
         useValue: {
-          getUserService: jest.fn((x) => x),
-          addUserService: jest.fn((x) => x)
+          getUserService: jest.fn(),
+          addUserService: jest.fn()
         },
       },{
         provide: AuthService,
@@ -47,13 +47,13 @@ describe('User Controller Test', () => {
   };
 
   describe('Add User controller test', () => {
-    const newUser = {
+    const newUser: User = {
       id: 1,
       userName: 'newUser',
       email: 'newuser@gmail.com',
       password: 'NewUserPw123.',
       role: 'Admin'
-    } as User
+    }
 
     const req1 = {
       body: {
@@ -62,17 +62,6 @@ describe('User Controller Test', () => {
         password: 'NewUserPw123.',
         confirmPassword: 'NewUserPw123.',
         role: 'Admin'
-      }
-    } as Request
-
-    const req2 = {
-      body: {
-        userName: 'newUser',
-        email: 'newUsergmail.com',
-        password: 'NewUserPw123.',
-        confirmPassword: 'NewUserPw3.',
-        role: 'Admin'
-
       }
     } as Request
 
@@ -92,20 +81,13 @@ describe('User Controller Test', () => {
         .spyOn(usersService, 'addUserService')
         .mockResolvedValue(false)
       await usersController.signupUser(req1.body, res)
-      expect(res.status).toHaveBeenCalledWith(400)
+      expect(res.status).toHaveBeenCalledWith(401)
       expect(res.send).toHaveBeenCalledWith('Email was already used')
       spyAddUser.mockRestore()
-    })
-    it('Add User fail with Invalid Data', async () => {
-      await usersController.signupUser(req2.body, res)
-      expect(res.status).toHaveBeenCalledWith(400)
-      expect(res.send).toHaveBeenCalledWith('Can not add student. Enter Valid Data')
     })
   })
 
   describe('Signout User controller test', () => {
-    const req = {} as Request
-
     const res = response()
 
     it('Signout User success', async () => {
@@ -166,13 +148,13 @@ describe('User Controller Test', () => {
   })
 
   describe('Get User controller test', () => {
-    const userResult = {
+    const userResult: UserInterface = {
       id: 1,
       userName: 'newUserName',
       email: 'newuser@gmail.com',
       password: 'NewUserPw123',
       role: 'Guest'
-    } as UserInterface
+    }
 
     const req = {
       body: {
@@ -183,7 +165,7 @@ describe('User Controller Test', () => {
 
     const res = response()
 
-    const tokens = { tokens: { accessToken: 'accessToken', refreshToken: 'refreshToken' }}
+    const tokens = { accessToken: 'accessToken', refreshToken: 'refreshToken' }
 
     it('Get User success', async () => {
       const spyGetUser = jest
@@ -191,7 +173,7 @@ describe('User Controller Test', () => {
         .mockResolvedValue(userResult)
       const spyGetTokens = jest
         .spyOn(authService, 'getTokens')
-        .mockResolvedValue(tokens.tokens)
+        .mockResolvedValue(tokens)
       await usersController.signinUser(req.body, res)
       expect(res.status).toHaveBeenCalledWith(200)
       expect(res.cookie).toHaveBeenCalledTimes(3)

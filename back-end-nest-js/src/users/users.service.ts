@@ -35,7 +35,7 @@ export class UsersService {
       }
       return null
     } catch (err) {
-      return null    
+      throw err    
     }
   }
 
@@ -55,7 +55,7 @@ export class UsersService {
         return false
       }
     } catch (err) {
-      return null    
+      throw err    
     }
   }
 }

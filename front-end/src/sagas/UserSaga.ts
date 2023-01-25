@@ -25,8 +25,7 @@ function * findUser (action: AnyAction) {
       alert(response.data)
     }
   } catch (err: any) {
-    alert(err.response.data.message)
-    // console.log(err)
+    alert(err.response.data)
     yield put(setError(err))
   }
 }
@@ -41,7 +40,7 @@ function * saveUser (action: AnyAction) {
       alert(response.data)
     }
   } catch (err: any) {
-    alert(err.response.data.message)
+    alert(err.response.data)
     yield put(setError(err))
   }
 }
@@ -53,26 +52,13 @@ function * signoutUser (action: AnyAction) {
       yield put(unSetUser())
     }
   } catch (err: any) {
-    alert(err.response.data.message)
+    alert(err.response.data)
     yield put(setError(err))
   }
 }
-
-// function * getNewToken () {
-//   try {
-//     const response: ResponseGenerator = yield call(refreshUserToken)
-//     if (response.status === 401) {
-//       yield put(unSetUser())
-//     }
-//   } catch (err) {
-//     console.error('error:', err)
-//     yield put(setError(err))
-//   }
-// }
 
 export function * UserSaga () {
   yield takeEvery(getUser.type, findUser)
   yield takeEvery(addUser.type, saveUser)
   yield takeEvery(logoutUser.type, signoutUser)
-  // yield takeEvery(refreshUser.type, getNewToken)
 }
