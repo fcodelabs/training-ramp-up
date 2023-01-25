@@ -4,6 +4,7 @@ import { MyCommandCell } from '../../components/MyCommandCell/myCommandCell';
 import { DropDownCell } from '../../components/MyDropDownCell/myDropDownCell';
 import { insertItem, getItems, updateItem, deleteItem } from './functions';
 import { ToastContainer } from 'react-toastify';
+import api from '../../api'
 import axios from 'axios';
 import 'react-toastify/dist/ReactToastify.css';
 import { Student } from './interfaces';
@@ -14,24 +15,22 @@ export default function Grids() {
 
     const [data, setData] = React.useState<Student[]>([]);
     const [loading, setLoading] = React.useState<boolean>(false);
-    React.useEffect(() => {
 
-        axios.get('http://localhost:8080/api/student').then( async function (response) {
-            // console.log(response.data.data);
+    async function getStudents() {
+        try {
+            const response = await api.student.getStudents();
             response.data.data.map((item: Student) => {
                 item.dob = new Date(item.dob);
                 return item;
             })
             setData(response.data.data);
-        }).catch(function (error) {
+        } catch (error) {
             console.log(error);
-        });
-        
-
-        // const newItems = getItems();
-
-        // setData(newItems);
-    },[loading])
+        }
+    }
+    React.useEffect(() => {
+        getStudents();
+    }, [loading])
 
 
     const remove = async (dataItem: Student) => {
@@ -47,7 +46,7 @@ export default function Grids() {
         const newData = await insertItem(dataItem, data);
         setData(newData);
         setLoading(!loading);
-        
+
     };
 
     const update = async (dataItem: Student) => {
