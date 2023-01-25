@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { MyCommandCellProps } from '../../pages/Grid/interfaces';
+import { MyCommandCellProps } from '../../utils/interfaces';
 
 
 export const MyCommandCell = (props: MyCommandCellProps) => {
@@ -33,6 +33,7 @@ export const MyCommandCell = (props: MyCommandCellProps) => {
       <button
         className='k-button k-button-md k-rounded-md k-button-solid k-button-solid-base k-grid-remove-command'
         onClick={() =>
+          confirm('Confirm deleting: ' + dataItem.name) &&
           props.remove(dataItem)
         }
       >

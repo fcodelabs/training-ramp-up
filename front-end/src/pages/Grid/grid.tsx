@@ -1,78 +1,51 @@
 import * as React from 'react';
 import { Grid, GridColumn, GridCellProps, GridItemChangeEvent, GridToolbar } from '@progress/kendo-react-grid';
-import { MyCommandCell } from '../../components/MyCommandCell/myCommandCell';
-import { DropDownCell } from '../../components/MyDropDownCell/myDropDownCell';
-import { insertItem, getItems, updateItem, deleteItem } from './functions';
+import { MyCommandCell } from '../../components/CommandCell/CommandCell';
+import { DropDownCell } from '../../components/DropDownCell/DropDownCell';
 import { ToastContainer } from 'react-toastify';
-import axios from 'axios';
+import { useSelector, useDispatch } from 'react-redux';
 import 'react-toastify/dist/ReactToastify.css';
-import { Student } from './interfaces';
+import { Student } from '../../utils/interfaces';
+import { addStudent, deleteStudent, getStudents, updateStudent } from './gridSlice';
 const editField = 'inEdit';
 
 
 export default function Grids() {
-
+    const dispatch = useDispatch();
+    const students = useSelector((state: any) => state.grid.students);
     const [data, setData] = React.useState<Student[]>([]);
-    const [loading, setLoading] = React.useState<boolean>(false);
+    
+
     React.useEffect(() => {
+        dispatch(getStudents());
+    }, [])
 
-        axios.get('http://localhost:8080/api/student').then( async function (response) {
-            // console.log(response.data.data);
-            response.data.data.map((item: Student) => {
-                item.dob = new Date(item.dob);
-                return item;
-            })
-            setData(response.data.data);
-        }).catch(function (error) {
-            console.log(error);
-        });
-        
-
-        // const newItems = getItems();
-
-        // setData(newItems);
-    },[loading])
+    React.useEffect(() => {
+        setData(students);
+    }, [students])
 
 
     const remove = async (dataItem: Student) => {
-        const newData = [...await deleteItem(dataItem, data)];
-        setData(newData);
-
-
+        dispatch(deleteStudent(dataItem))
     };
 
-    const add = async (dataItem: Student) => {
-        dataItem.inEdit = true;
-        console.log(data);
-        const newData = await insertItem(dataItem, data);
-        setData(newData);
-        setLoading(!loading);
+    const add =  (dataItem: Student) => {
+        dispatch(addStudent(dataItem));
         
+
     };
 
-    const update = async (dataItem: Student) => {
-        dataItem.inEdit = false;
-        const newData = await updateItem(dataItem, data);
-        setData(newData);
-        setLoading(!loading);
+    const update =  (dataItem: Student) => {
+        dispatch(updateStudent(dataItem));
     };
 
 
     const discard = () => {
-        const newData = [...data];
-        newData.splice(0, 1)
-        setData(newData);
+        setData(students);
     };
 
-    const cancel = (dataItem: Student) => {
-        const originalItem = getItems().find(
-            p => p.id === dataItem.id
-        );
-        const newData = data.map((item) =>
-            item.id === originalItem?.id ? originalItem : item
-        );
-
-        setData(newData);
+    const cancel = async () => {
+        setData(students);
     };
 
     const enterEdit = (dataItem: Student) => {
@@ -123,21 +96,21 @@ export default function Grids() {
             >
                 <GridToolbar>
                     <button
-                        title="Add new"
-                        className="k-button k-button-md k-rounded-md k-button-solid k-button-solid-primary"
+                        title='Add new'
+                        className='k-button k-button-md k-rounded-md k-button-solid k-button-solid-primary'
                         onClick={addNew}
                     >
                         Add new
                     </button>
                 </GridToolbar>
-                <GridColumn field="id" title="id" width="40px" editable={false} />
-                <GridColumn field="name" title="Name" width="250px" />
-                <GridColumn field="gender" title="Gender" cell={DropDownCell} />
-                <GridColumn field="address" title="Address" />
-                <GridColumn field="mobile" title="Mobile No" />
-                <GridColumn field="dob" title="Date of Birth" editor="date" format="{0:D}" />
-                <GridColumn field="age" title="Age" editable={false} width="100px" />
-                <GridColumn title="command " cell={CommandCell} width="200px" />
+                <GridColumn field='id' title='id' width='40px' editable={false} />
+                <GridColumn field='name' title='Name' width='250px' />
+                <GridColumn field='gender' title='Gender' cell={DropDownCell} />
+                <GridColumn field='address' title='Address' />
+                <GridColumn field='mobile' title='Mobile No' />
+                <GridColumn field='dob' title='Date of Birth' editor='date' format='{0:D}' />
+                <GridColumn field='age' title='Age' editable={false} width='100px' />
+                <GridColumn title='command ' cell={CommandCell} width='200px' />
             </Grid>
             <ToastContainer />
         </div>
