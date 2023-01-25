@@ -1,7 +1,23 @@
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { age } from './functions';
+import { Student } from './interfaces';
 
-export const validateMobile = (value: string) => {
+export const checkValid = (student: Student) => {
+    if (!student.name || !student.mobile || !student.address || !student.dob) {
+        toast.error('Please fill all the fields', {
+            position: toast.POSITION.TOP_RIGHT
+        });
+        return false;
+
+    } else if (validateName(student.name) && validateMobile(student.mobile) && validateAge(age(student.dob))) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+const validateMobile = (value: string) => {
     const regex = new RegExp(/^[0-9]+$/);
     if (value !== '' && regex.test(value) && value.length === 10) {
         return true;
@@ -13,7 +29,7 @@ export const validateMobile = (value: string) => {
     }
 }
 
-export const validateName = (value: string) => {
+const validateName = (value: string) => {
     const regex = new RegExp(/^[a-zA-Z\s]*$/);
     if (value !== undefined && value !== '' && regex.test(value)) {
         return true;
@@ -25,24 +41,17 @@ export const validateName = (value: string) => {
     }
 }
 
-export const validateAddress = (value: string) => {
-    if (value !== undefined && value !== '') {
+const validateAge = (value: number) => {
+    if (value >= 18) {
         return true;
     } else {
-        toast.error('Enter Valid Address', {
+        toast.error('Age should be greater than 18', {
             position: toast.POSITION.TOP_RIGHT
         });
         return false;
     }
 }
 
-export const validateDate = (value: Date) => {
-    if (value !== undefined && value !== null && value.toDateString() !== 'Invalid Date') {
-        return true;
-    } else {
-        toast.error('Enter Date of Birth', {
-            position: toast.POSITION.TOP_RIGHT
-        });
-        return false;
-    }
-}
+
+
+

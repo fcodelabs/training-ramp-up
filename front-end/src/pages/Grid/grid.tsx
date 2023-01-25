@@ -44,16 +44,22 @@ export default function Grids() {
         dataItem.inEdit = true;
         console.log(data);
         const newData = await insertItem(dataItem, data);
-        setData(newData);
-        setLoading(!loading);
+        if (newData) {
+            setData(newData);
+            setLoading(!loading);
+        }
+        
 
     };
 
     const update = async (dataItem: Student) => {
-        dataItem.inEdit = false;
+        
         const newData = await updateItem(dataItem, data);
-        setData(newData);
-        setLoading(!loading);
+        if (newData) {
+            setData(newData);
+            setLoading(!loading);
+            dataItem.inEdit = false;
+        }
     };
 
 

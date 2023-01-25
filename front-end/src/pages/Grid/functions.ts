@@ -1,6 +1,6 @@
 import { Student } from './interfaces';
 import { sampleStudents } from './sample-students';
-import { validateMobile, validateName, validateAddress, validateDate } from './validators'
+import { checkValid } from './validators'
 import { toast } from 'react-toastify';
 import axios from 'axios';
 import api from '../../api';
@@ -9,7 +9,7 @@ const data = [...sampleStudents];
 const generateId = (data: Student[]) =>
     data.reduce((acc, current) => Math.max(acc, current.id), 0) + 1;
 
-const age = (dateOfBirth: Date) => {
+export const age = (dateOfBirth: Date) => {
     const today = new Date();
     const birthDate = new Date(dateOfBirth);
     let age = today.getFullYear() - birthDate.getFullYear();
@@ -19,38 +19,25 @@ const age = (dateOfBirth: Date) => {
         age--;
     }
 
+
     return age;
+
 }
 export const insertItem = async (item: Student, data: Student[]) => {
-    // console.log(item);
-    if (validateName(item.name) && validateMobile(item.mobile) && validateAddress(item.address) && validateDate(item.dob)) {
-        item.age = age(item.dob);
-        if (item.age >= 18) {
-            // item.id = generateId(data);
-            if (item.gender === undefined) {
-                item.gender = 'Male'
-            }
-            item.inEdit = false;
-            data.unshift(item);
-            try {
-                const response = await api.student.postStudent(item);
-            } catch (error) {
-                console.log(error);
-            }
-
+    if (checkValid(item)) {
+        if (!item.gender) {
+            item.gender = 'Male'
+        }
+        item.inEdit = false;
+        try {
+            const response = await api.student.postStudent(item);
             toast.success('Successfully Added', {
                 position: toast.POSITION.TOP_RIGHT
             });
             return data;
+        } catch (error) {
+            console.log(error);
         }
-        else {
-            toast.error('Age should be greater than 18', {
-                position: toast.POSITION.TOP_RIGHT
-            });
-            return data;
-        }
-    } else {
-        return data;
     }
 };
 
@@ -59,30 +46,20 @@ export const getItems = () => {
 };
 
 export const updateItem = async (item: Student, data: Student[]) => {
-    if (validateName(item.name) && validateMobile(item.mobile) && validateAddress(item.address) && validateDate(item.dob)) {
-        item.age = age(item.dob);
-        if (item.age < 18) {
-            toast.error('Age should be greater than 18', {
-                position: toast.POSITION.TOP_RIGHT
-            });
-            return data;
-        } else {
-            const index = data.findIndex(record => record.id === item.id);
-            data[index] = item;
-            const itemToUpdate = item.id;
-
-            try {
-                const response = await api.student.putStudent(itemToUpdate, item);
-            } catch (error) {
-                console.log(error);
-            }
+    if (checkValid(item)) {
+        const index = data.findIndex(record => record.id === item.id);
+        data[index] = item;
+        const itemToUpdate = item.id;
+        try {
+            const response = await api.student.putStudent(itemToUpdate, item);
             toast.success('Successfully Updated', {
                 position: toast.POSITION.TOP_RIGHT
             });
             return data;
+        } catch (error) {
+            console.log(error);
         }
-    } else {
-        return data;
+
     }
 };
 
