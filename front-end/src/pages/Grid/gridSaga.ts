@@ -3,8 +3,8 @@ import { addStudent,addStudentSuccess, addStudentFailure, getStudents,getStudent
 , updateStudentSuccess, updateStudentFailure, deleteStudent, deleteStudentSuccess, deleteStudentFailure} from './gridSlice';
 import  api  from '../../api';
 import { toast } from 'react-toastify';
-import { Student } from './interfaces';
-import { checkValid } from './validators';
+import { Student } from '../../utils/interfaces';
+import { checkValid } from '../../utils/validators';
 
 
 function* getStudentsSaga(): Generator <any, any, any> {

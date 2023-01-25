@@ -1,7 +1,7 @@
 import { useEffect, useState} from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import '@progress/kendo-theme-default/dist/all.css';
-import Grids from './pages/Grid/grid';
+import Grids from './pages/Grid/Grid';
 import { ToastContainer } from 'react-toastify';
 
 

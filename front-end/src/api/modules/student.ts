@@ -1,4 +1,4 @@
-import { Student } from '../../pages/Grid/interfaces';
+import { Student } from '../../utils/interfaces';
 import { axiosClient, resolver } from '../client';
 
 export default{

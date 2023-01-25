@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { Grid, GridColumn, GridCellProps, GridItemChangeEvent, GridToolbar } from '@progress/kendo-react-grid';
-import { MyCommandCell } from '../../components/MyCommandCell/myCommandCell';
-import { DropDownCell } from '../../components/MyDropDownCell/myDropDownCell';
+import { MyCommandCell } from '../../components/CommandCell/CommandCell';
+import { DropDownCell } from '../../components/DropDownCell/DropDownCell';
 import { ToastContainer } from 'react-toastify';
 import { useSelector, useDispatch } from 'react-redux';
 import 'react-toastify/dist/ReactToastify.css';
-import { Student } from './interfaces';
+import { Student } from '../../utils/interfaces';
 import { addStudent, deleteStudent, getStudents, updateStudent } from './gridSlice';
 const editField = 'inEdit';
 

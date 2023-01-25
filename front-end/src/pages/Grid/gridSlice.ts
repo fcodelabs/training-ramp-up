@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { Student } from './interfaces';
+import { Student } from '../../utils/interfaces';
 
 const students: Student[] = [];
 
