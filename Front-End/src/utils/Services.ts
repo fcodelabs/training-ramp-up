@@ -57,6 +57,7 @@ export const getStudents = async () => {
     const responseData = await axiosApiInstance.get(baseURL + "/students", {
       withCredentials: true,
     });
+
     return responseData;
   } catch (error) {
     console.log(error);
@@ -95,18 +96,18 @@ export const deleteStudent = (id: number) => {
   }
 };
 
-export const userDetailsService = async () => {
-  try {
-    console.log("userDetailsService");
-    const responseData = await axiosApiInstance.post(
-      baseURL + "/user/userDetails",
-      "",
-      {
-        withCredentials: true,
-      }
-    );
-    return responseData;
-  } catch (error) {
-    console.log(error);
-  }
-};
+// export const userDetailsService = async () => {
+//   try {
+//     console.log("userDetailsService");
+//     const responseData = await axiosApiInstance.post(
+//       baseURL + "/user/userDetails",
+//       "",
+//       {
+//         withCredentials: true,
+//       }
+//     );
+//     return responseData;
+//   } catch (error) {
+//     console.log(error);
+//   }
+// };

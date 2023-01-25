@@ -22,16 +22,21 @@ axiosApiInstance.interceptors.response.use(
     return response;
   },
   async (error) => {
+    console.log("error", error);
     const config = error?.config;
-    if (error?.response?.status === 401 && !config?.sent) {
+    console.log("config", config);
+    if (error.response.status === 401 && !config.sent) {
+      console.log("If condition");
       config.sent = true;
-      await axios.post("http://localhost:8000/auth/refresh", {
+      await axios.post("http://localhost:3000/auth/refresh", {
         withCredentials: true,
       });
 
       config.headers = {
         ...config.headers,
       };
+
+      // console.log("afterConfig", config.headers);
 
       return axios(config);
     }

@@ -42,7 +42,6 @@ export default function Datagrid() {
   );
 
   React.useEffect(() => {
-    console.log("Hello");
     const user = cookies.get("user_res");
     if (user == undefined) {
       window.location.href = "/";
