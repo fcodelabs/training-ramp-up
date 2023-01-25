@@ -14,7 +14,6 @@ const root = ReactDOM.createRoot(
 );
 
 socket.on('notify', (data) => {
-  console.log(data);
   toast.info(data.message);
 });
 
