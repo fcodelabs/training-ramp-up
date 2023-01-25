@@ -1,6 +1,5 @@
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { age } from './functions';
 import { Student } from './interfaces';
 
 export const checkValid = (student: Student) => {
@@ -11,10 +10,26 @@ export const checkValid = (student: Student) => {
         return false;
 
     } else if (validateName(student.name) && validateMobile(student.mobile) && validateAge(age(student.dob))) {
+        student.age = age(student.dob);
         return true;
     } else {
         return false;
     }
+}
+
+const age = (dateOfBirth: Date) => {
+    const today = new Date();
+    const birthDate = new Date(dateOfBirth);
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const m = today.getMonth() - birthDate.getMonth();
+
+    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+        age--;
+    }
+
+
+    return age;
+
 }
 
 const validateMobile = (value: string) => {
