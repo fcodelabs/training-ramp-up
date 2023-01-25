@@ -14,9 +14,9 @@ import { CreateStudentDto } from './dto/create-student.dto';
 import { UpdateStudentDto } from './dto/update-student.dto';
 import { DeleteResult, InsertResult, UpdateResult } from 'typeorm';
 import { Student } from './entities/student.entity';
-import { Roles } from 'src/auth/roles.decorator';
-import { Role } from 'src/auth/interfaces';
-import { AuthGuard } from 'src/auth/auth.guard';
+import { Roles } from '../auth/roles.decorator';
+import { Role } from '../auth/interfaces';
+import { AuthGuard } from '../auth/auth.guard';
 
 
 @Controller('student')

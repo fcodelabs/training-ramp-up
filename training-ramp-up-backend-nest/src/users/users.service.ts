@@ -9,7 +9,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { InsertResult, Repository } from 'typeorm';
 import bcrypt = require('bcrypt');
-import { Payload } from 'src/auth/interfaces';
+import { Logger } from '@nestjs/common/services';
+import { ConflictException } from '@nestjs/common/exceptions/conflict.exception';
 
 @Injectable()
 export class UsersService {
@@ -20,15 +21,11 @@ export class UsersService {
 
   async create(createUserDto: CreateUserDto): Promise<InsertResult> {
     try {
-      if (!this.isUserAlreadyExist(createUserDto.username)) {
-        const password = await bcrypt.hash(createUserDto.password, 12);
-        createUserDto.password = password;
-        createUserDto.role = process.env.USER_ROLE;
-        const result = this.userRepository.insert(createUserDto);
-        return result;
-      } else {
-        throw new BadRequestException('User already exists');
-      }
+      const password = await bcrypt.hash(createUserDto.password, 12);
+      createUserDto.password = password;
+      createUserDto.role = process.env.USER_ROLE;
+      const result = this.userRepository.insert(createUserDto);
+      return result;
     } catch (err) {
       throw err;
     }
@@ -41,7 +38,11 @@ export class UsersService {
           username: username,
         },
       });
-      return user != null ? true : false;
+      if (user != null) {
+        throw new BadRequestException('User already exists');
+      } else {
+        return false;
+      }
     } catch (err) {
       throw err;
     }

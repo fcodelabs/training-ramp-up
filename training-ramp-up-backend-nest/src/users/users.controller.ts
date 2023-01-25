@@ -14,11 +14,11 @@ import {
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { Roles } from 'src/auth/roles.decorator';
-import { Payload, Role } from 'src/auth/interfaces';
-import { AuthService } from 'src/auth/auth.service';
+import { Roles } from '../auth/roles.decorator';
+import { Role } from '../auth/interfaces';
+import { AuthService } from '../auth/auth.service';
 import { Request, Response } from 'express';
-import { AuthGuard } from 'src/auth/auth.guard';
+import { AuthGuard } from '../auth/auth.guard';
 import { InsertResult } from 'typeorm';
 
 @Controller('user')
@@ -30,14 +30,15 @@ export class UsersController {
 
   @Post('signup')
   @Roles([Role.Admin, Role.User])
-  create(@Body() createUserDto: CreateUserDto) :Promise<InsertResult>{
-    return this.usersService.create(createUserDto);
+  create(@Body() createUserDto: CreateUserDto): Promise<InsertResult> {
+    if (!this.usersService.isUserAlreadyExist(createUserDto.username)) {
+      return this.usersService.create(createUserDto);
+    }
   }
 
-
   @Post()
-  @Roles([Role.Admin,Role.User])
-  async login(@Req() req: Request, @Res() res: Response) :Promise<void>{
+  @Roles([Role.Admin, Role.User])
+  async login(@Req() req: Request, @Res() res: Response): Promise<void> {
     const user = await this.usersService.validateUser(
       req.body.username,
       req.body.password,
@@ -56,7 +57,10 @@ export class UsersController {
 
   @Roles([Role.Admin, Role.User])
   @Post('userDetails')
-  async getUserDetails(@Req() req: Request, @Res() res: Response):Promise<void> {
+  async getUserDetails(
+    @Req() req: Request,
+    @Res() res: Response,
+  ): Promise<void> {
     const userToken = await this.authService.getUserDetails(
       req.cookies.accessToken,
     );
@@ -65,27 +69,27 @@ export class UsersController {
       httpOnly: false,
     });
 
-    res.send('OK')
+    res.send('OK');
   }
 
   @Post('refresh')
-  @Roles([Role.Admin,Role.User])
-  async refreshToken(@Req() req: Request, @Res() res: Response):Promise<void> {
-    const user:string = req.cookies.user;
-    const refreshToken:string = req.cookies.refreshToken;
+  @Roles([Role.Admin, Role.User])
+  async refreshToken(@Req() req: Request, @Res() res: Response): Promise<void> {
+    const user: string = req.cookies.user;
+    const refreshToken: string = req.cookies.refreshToken;
     const result = await this.authService.getNewAccessToken(user, refreshToken);
     res.cookie('accessToken', result.accessToken, {
       maxAge: 1000 * 60 * 20,
       httpOnly: true,
     });
 
-    res.send('OK')
+    res.send('OK');
   }
 
   @Delete()
   @UseGuards(AuthGuard)
-  @Roles([Role.Admin,Role.User])
-  async signout(@Req() req: Request, @Res() res: Response):Promise<void> {
+  @Roles([Role.Admin, Role.User])
+  async signout(@Req() req: Request, @Res() res: Response): Promise<void> {
     res.cookie('accessToken', '', {
       maxAge: 0,
       httpOnly: true,
@@ -98,7 +102,7 @@ export class UsersController {
       maxAge: 0,
       httpOnly: false,
     });
-    res.status(200).send({
+    res.send({
       logOut: true,
     });
   }
