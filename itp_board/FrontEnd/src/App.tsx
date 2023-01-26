@@ -1,14 +1,14 @@
 import './App.css'
 import { Routes, Route } from 'react-router-dom'
-import Users from './Pages/Users/Users'
+import Students from './Pages/Students/Students'
 
 
 function App() {
   return (
     <>
-      <Users/>
+      <Students/>
       {/* <Routes>
-        <Route path='users' element={<Users />} />
+        <Route path='users' element={<Students />} />
       </Routes> */}
     </>
   )

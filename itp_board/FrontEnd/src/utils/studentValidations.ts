@@ -1,4 +1,4 @@
-import { calculateAge } from './UserFunction'
+import { calculateAge } from './StudentFunctions'
 /* eslint-disable @typescript-eslint/no-inferrable-types */
 
 const stringValidation = (reg:RegExp,data:string,type:string) =>{
@@ -9,7 +9,8 @@ const stringValidation = (reg:RegExp,data:string,type:string) =>{
 }
 
 export const isValidName = (name: string) => {
-  const reg: RegExp = /^([A-Z]+)([a-z]+)(\s)?$|^([a-z]+)(\s)?$|^([A-Z]+)(\s)?$/
+  // const reg: RegExp = /^([A-Z]+)([a-z]+)(\s)?$|^([a-z]+)(\s)?$|^([A-Z]+)(\s)?$/
+  const reg: RegExp = /^[A-Z][a-z]+((\s[A-Z][a-z]*)*)$|^[a-z]+((\s[A-Z][a-z]*)*)$|^[a-z]+((\s[a-z]*)*)$|^[A-Z][a-z]+((\s[a-z]*)*)$/
   return stringValidation(reg,name,'name');
 }
 

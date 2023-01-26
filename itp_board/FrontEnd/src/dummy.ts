@@ -1,13 +1,13 @@
-import { User } from './Pages/Users/utils/types'
+import { Student } from './utils/types'
 
-export const Users: User[] = [
+export const studentData: Student[] = [
   {
     id: 1,
     name: 'shane',
     gender: 'male',
     address: 'homagama',
     mobileNo: '0112748768',
-    dateOfBirth: new Date('1996-09-16'),
+    dateOfBirth: '1996-09-16'
   },
   {
     id: 2,
@@ -15,7 +15,7 @@ export const Users: User[] = [
     gender: 'male',
     address: 'homagama',
     mobileNo: '0776722336',
-    dateOfBirth: new Date('1996-09-16'),
+    dateOfBirth: '1996-09-16'
   },
   {
     id: 3,
@@ -23,7 +23,7 @@ export const Users: User[] = [
     gender: 'male',
     address: '58/10, 1st lane ',
     mobileNo: '0776722336',
-    dateOfBirth: new Date('1996-07-21'),
+    dateOfBirth: '1996-07-21'
   },
   {
     id: 4,
@@ -31,7 +31,7 @@ export const Users: User[] = [
     gender: 'female',
     address: '58/10, 1st lane ',
     mobileNo: '0776722336',
-    dateOfBirth: new Date('1996-07-21'),
+    dateOfBirth: '1996-07-21'
   },
   {
     id: 5,
@@ -39,6 +39,6 @@ export const Users: User[] = [
     gender: 'male',
     address: 'homagama ',
     mobileNo: '0112748768',
-    dateOfBirth: new Date('1997-07-21'),
+    dateOfBirth: '1997-07-21'
   },
 ]
