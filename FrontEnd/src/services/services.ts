@@ -1,13 +1,12 @@
 import { useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
 import { User } from '../interfaces/interfaces'
-import {sampleProducts} from '../products'
 import 'react-toastify/dist/ReactToastify.css'
-import axios from 'axios';
+import axios from 'axios'
 import * as io from 'socket.io-client'
 
 // eslint-disable-next-line prefer-const
-let data = [...sampleProducts]
+// let data = [...sampleProducts]
 // eslint-disable-next-line prefer-const
 let validations: string[] = []
 // const [validations, setValidations] = useState<string[]>([]);
@@ -15,12 +14,11 @@ let validations: string[] = []
 export const socket = io.connect('http://localhost:3001')
 
 const client = axios.create({
-  baseURL: 'http://localhost:3001/home' 
-});
-
+  baseURL: 'http://localhost:3001/home',
+})
 
 const isEmpty = (item: any) => {
-  if (!item.username || !item.address || !item.mobile || !item.dob) {
+  if (!item.name || !item.address || !item.mobile || !item.dob) {
     validations.push('Please input all fields!')
     return true
   }
@@ -52,7 +50,7 @@ export const validationFunc = (arr: any) => {
     toast.error('Please input all fields!')
     return false
   }
-  if (isUsernameInvalid(arr.username)) {
+  if (isUsernameInvalid(arr.name)) {
     toast.error('Please provide a valid Name')
     return false
   }
@@ -75,45 +73,80 @@ const calculateAge = (dob: string) => {
   }
   return ageNow
 }
-const generateId = (data: any[]) =>
-  data.reduce((acc, current) => Math.max(acc, current.userId), 0) + 1
+const generateId = (data: any[]) => data.reduce((acc, current) => Math.max(acc, current.id), 0) + 1
 
-export const insertItem = (item: any) => {
-  if (validationFunc(item)) {
-    item.userId = generateId(data)
-    item.inEdit = false
-    item.age = calculateAge(item.dob)
-    data.unshift(item)
-    
-    socket.emit('user_added', { username : item.username})
-    toast.success('User added successfully!')
+export const modifyAdd = (item: any) => {
+  item.inEdit = false
+  item.age = calculateAge(item.dob)
 
-    return data
+  // delete item.inEdit
+
+  if (!item.gender) {
+    // add gender as male if new user is not a female
+    item.gender = 'male'
   }
+
+  // post request for adding data to the database
+  // client.post('http://localhost:3001/home/', item).then((response) => {
+  //   console.log('response', response.data)
+  // }).catch((error) => {
+  //   console.log('error', error)
+  // })
+
+  // data.unshift(item)
+
+  // socket.emit('user_added', { name: item.name })
+  // toast.success('User added successfully!')
+
+  return item
 }
 
-export const getItems = () => {
-  socket.emit('send_message', { message: 'hello'})
+// export const getItems = async () => {
 //   client.get('/').then((response) => {
 //     console.log('response', response.data);
 //     return response.data
 //  });
-  return data
-    // const response = await client.get('/')
-    // return response.data
-}
-export const updateItem = (item: any) => {
-  const index = data.findIndex((record) => record.userId === item.userId)
-    item.age = calculateAge(item.dob)
-    socket.emit('user_updated', { username : item.username})
-    data[index] = item
+// return data
 
-    toast.success('User Updated Successfully!')
-  return data
+// const response = await client.get('/')
+// // console.log('response dob',new Date(response.data[0].dob) )
+// const responceData = response.data.map((item: any) => {
+//   item.dob = new Date(item.dob)
+//   return item
+// })
+// return responceData
+// }
+
+export const modifyUpdate = (item: any) => {
+  // const index = data.findIndex((record) => record.id === item.id)
+  item.age = calculateAge(item.dob)
+  socket.emit('user_updated', { name: item.name })
+  // data[index] = item
+  item.inEdit = false
+
+  // client
+  //   .put(`/${item.id}`, item)
+  //   .then((response) => {
+  //     console.log('response', response.data)
+  //   })
+  //   .catch((error) => {
+  //     console.log('error', error)
+  //   })
+
+  toast.success('User Updated Successfully!')
+  return item
 }
-export const deleteItem = (item: any) => {
-  const index = data.findIndex((record) => record.userId === item.userId)
-  socket.emit('user_removed', { username : item.username})
-  data.splice(index, 1)
-  return data
-}
+// export const deleteItem = (item: any) => {
+//   // const index = data.findIndex((record) => record.id === item.id)
+//   socket.emit('user_removed', { name: item.name })
+//   // data.splice(index, 1)
+//   client
+//     .delete(`/${item.id}`, item)
+//     .then((response) => {
+//       console.log('response', response.data)
+//     })
+//     .catch((error) => {
+//       console.log('error', error)
+//     })
+//   return data
+// }

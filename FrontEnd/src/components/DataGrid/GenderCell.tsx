@@ -28,7 +28,6 @@ export const GenderCell = (props: GridCellProps) => {
   const field = props.field || '';
   const dataValue = dataItem[field] === null ? '' : dataItem[field];
 
-  console.log('line 31 find :',localizedData.find((item) => item.value === dataValue))
   return (
     <td>
       {dataItem.inEdit ? (

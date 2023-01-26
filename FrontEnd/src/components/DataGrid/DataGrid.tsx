@@ -8,80 +8,93 @@ import {
 import '@progress/kendo-theme-default/dist/all.css'
 import { MyCommandCell } from './MyCommandcell'
 import React, { useEffect } from 'react'
-import { User } from '../../interfaces/interfaces'
-import { deleteItem, getItems, insertItem, updateItem, validationFunc, socket } from '../../services/services'
+import { HomeState, User } from '../../interfaces/interfaces'
+import {
+  modifyAdd,
+  modifyUpdate,
+  validationFunc,
+  socket,
+} from '../../services/services'
 import { GenderCell } from './GenderCell'
 import { toast } from 'react-toastify'
-
+import { useDispatch, useSelector } from 'react-redux'
+import { addUserRecord, deleteUserRecord, deleteUserRecordSuccess, getUserRecords, updateUserRecord } from '../../pages/Home/homeSlice'
 
 const editField = 'inEdit'
 
 const DataGrid = () => {
   const [data, setData] = React.useState<any[]>([])
+  const dispatch = useDispatch()
+  const users = useSelector((state: HomeState) => state.home.users)
+  // React.useEffect(() => {
+  //   // const newItems = getItems()
+  //   // setData(newItems)
 
-  React.useEffect(() => {
-    const newItems = getItems()
-    setData(newItems)
-    // const fetchData = async () => {
-    //   const result = await getItems()
-    //   setData(result)
-    // }
-    // fetchData()
-    // getItems()
-    // .then ( data => {
-    //   setData(data)
-    // })
-  }, [])
+  //   // const fetchData = async () => {
+  //   //   const result = await getItems()
+  //   //   setData(result)
+  //   // }
+  //   // fetchData()
 
+  //   getItems().then((data) => {
+  //     setData(data)
+  //   })
 
-  const add = (dataItem: User) => {
-    dataItem.inEdit = true
-    const newData = insertItem(dataItem)
-    if (newData) setData(newData)
+  // }, [])
+
+  useEffect(() => {
+    dispatch(getUserRecords())
+  }, [dispatch])
+
+  useEffect(() => {
+    setData(users)
+  }, [users])
+
+  const add = (dataItem: any) => {
+    // dataItem.inEdit = true
+    // const newData = modifyAdd(dataItem)
+    console.log('dataItem in line 57', dataItem)
+    if (validationFunc(dataItem)) {
+      dispatch(addUserRecord(dataItem))
+    }
   }
 
   const remove = (dataItem: User) => {
-    const newData = [...deleteItem(dataItem)]
-    setData(newData)
+    // const newData = [...deleteItem(dataItem)]
+    dispatch(deleteUserRecord(dataItem.id))
   }
 
   const update = (dataItem: User) => {
-    dataItem.inEdit = false
-    if(validationFunc(dataItem)){
-      const newData = updateItem(dataItem)
-      setData(newData)
+    // dataItem.inEdit = false
+    if (validationFunc(dataItem)) {
+      // modifyUpdate(dataItem)
+      dispatch(updateUserRecord(dataItem))
+      // const newData = updateItem(dataItem)
+      setData(users)
     }
   }
   // Local state operations
   const discard = () => {
-    const newData = [...data]
-    newData.splice(0, 1)
-    setData(newData)
+    setData(users)
   }
   const cancel = (dataItem: User) => {
-    const originalItem = getItems().find((p) => p.userId === dataItem.userId)
-    const newData = data.map((item) =>
-      item.userId === originalItem?.userId ? originalItem : item,
-    )
-    setData(newData)
+    setData(users)
   }
 
   const enterEdit = (dataItem: User) => {
-    setData(
-      data.map((item) => (item.userId === dataItem.userId ? { ...item, inEdit: true } : item)),
-    )
+    setData(data.map((item) => (item.id === dataItem.id ? { ...item, inEdit: true } : item)))
   }
 
   const itemChange = (event: GridItemChangeEvent) => {
     const newData = data.map((item) =>
-      item.userId === event.dataItem.userId ? { ...item, [event.field || '']: event.value } : item,
+      item.id === event.dataItem.id ? { ...item, [event.field || '']: event.value } : item,
     )
 
     setData(newData)
   }
 
   const addNew = () => {
-    const newDataItem = { inEdit: true, Discontinued: false }
+    const newDataItem = { inEdit: true }
 
     setData([newDataItem, ...data])
   }
@@ -115,8 +128,8 @@ const DataGrid = () => {
           Add new
         </button>
       </GridToolbar>
-      <GridColumn editable={false} field='userId' title='ID' width='150px' />
-      <GridColumn field='username' title='Name' width='150px' />
+      <GridColumn editable={false} field='id' title='ID' width='150px' />
+      <GridColumn field='name' title='Name' width='150px' />
       <GridColumn field='gender' title='Gender' width='150px' cell={GenderCell} />
       <GridColumn field='address' title='address' width='150px' />
       <GridColumn field='mobile' title='mobile' width='150px' />
@@ -130,4 +143,3 @@ export default DataGrid
 function sleep(arg0: number) {
   throw new Error('Function not implemented.')
 }
-

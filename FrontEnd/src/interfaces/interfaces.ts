@@ -1,11 +1,18 @@
 export interface User {
-    userId: number,
-    username?: string,
-    gender?: string,
-    address?: string,
-    mobile?: string,
-    dob?: string,
-    age?: number,
-    Discontinued?: boolean | string,
-    inEdit?: boolean
+  id: number
+  name?: string
+  gender?: string
+  address?: string
+  mobile?: string
+  dob?: string
+  age?: number
+  inEdit?: boolean | string
+}
+
+export interface HomeState {
+  home: {
+    users: User[]
+    error: string
+    isLoading: boolean
+  }
 }
