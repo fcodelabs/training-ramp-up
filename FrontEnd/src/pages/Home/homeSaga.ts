@@ -3,7 +3,6 @@ import { toast } from 'react-toastify'
 import { User } from '../../interfaces/interfaces'
 import {  addUserr, deleteUser, getUsers, updateUser } from '../../api/api'
 import { addUserRecord, addUserRecordFailure, addUserRecordSuccess, deleteUserRecord, deleteUserRecordFailure, deleteUserRecordSuccess, getUserRecords, getUserRecordsFailure, getUserRecordsSuccess, updateUserRecord, updateUserRecordFailure, updateUserRecordSuccess } from './homeSlice'
-import axios from 'axios'
 import { modifyAdd, modifyUpdate, socket, validationFunc } from '../../services/services'
 
 interface Action {
@@ -74,7 +73,6 @@ function* updateUserSaga(action: Action): Generator<any, any, any> {
     toast.error('Something went wrong!')
   }
 }
-
 
 export default function* homeSaga() {
     yield takeEvery(getUserRecords, getUserRecordsSaga)

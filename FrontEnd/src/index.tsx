@@ -15,7 +15,7 @@ socket.on('user_added', (data) => {
 socket.on('user_updated', (data) => {
   toast.info(data.name +' is updated!')
 })
-socket.on('user_removed', (data) => {
+socket.on('user_removed', () => {
   toast.info('A user is removed!')
 })
 root.render(

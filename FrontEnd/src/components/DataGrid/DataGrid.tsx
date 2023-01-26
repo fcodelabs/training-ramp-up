@@ -6,19 +6,17 @@ import {
   GridItemChangeEvent,
 } from '@progress/kendo-react-grid'
 import '@progress/kendo-theme-default/dist/all.css'
-import { MyCommandCell } from './MyCommandcell'
+import { MyCommandCell } from './Commandcell'
 import React, { useEffect } from 'react'
 import { HomeState, User } from '../../interfaces/interfaces'
 import {
-  modifyAdd,
-  modifyUpdate,
+
   validationFunc,
-  socket,
 } from '../../services/services'
 import { GenderCell } from './GenderCell'
-import { toast } from 'react-toastify'
 import { useDispatch, useSelector } from 'react-redux'
-import { addUserRecord, deleteUserRecord, deleteUserRecordSuccess, getUserRecords, updateUserRecord } from '../../pages/Home/homeSlice'
+import { addUserRecord, deleteUserRecord, getUserRecords, updateUserRecord } from '../../pages/Home/homeSlice'
+import DatePickerCell from './DatePickerCell'
 
 const editField = 'inEdit'
 
@@ -26,21 +24,6 @@ const DataGrid = () => {
   const [data, setData] = React.useState<any[]>([])
   const dispatch = useDispatch()
   const users = useSelector((state: HomeState) => state.home.users)
-  // React.useEffect(() => {
-  //   // const newItems = getItems()
-  //   // setData(newItems)
-
-  //   // const fetchData = async () => {
-  //   //   const result = await getItems()
-  //   //   setData(result)
-  //   // }
-  //   // fetchData()
-
-  //   getItems().then((data) => {
-  //     setData(data)
-  //   })
-
-  // }, [])
 
   useEffect(() => {
     dispatch(getUserRecords())
@@ -50,26 +33,19 @@ const DataGrid = () => {
     setData(users)
   }, [users])
 
-  const add = (dataItem: any) => {
-    // dataItem.inEdit = true
-    // const newData = modifyAdd(dataItem)
-    console.log('dataItem in line 57', dataItem)
+  const add = (dataItem: User) => {
     if (validationFunc(dataItem)) {
       dispatch(addUserRecord(dataItem))
     }
   }
 
   const remove = (dataItem: User) => {
-    // const newData = [...deleteItem(dataItem)]
     dispatch(deleteUserRecord(dataItem.id))
   }
 
   const update = (dataItem: User) => {
-    // dataItem.inEdit = false
     if (validationFunc(dataItem)) {
-      // modifyUpdate(dataItem)
       dispatch(updateUserRecord(dataItem))
-      // const newData = updateItem(dataItem)
       setData(users)
     }
   }
@@ -77,7 +53,7 @@ const DataGrid = () => {
   const discard = () => {
     setData(users)
   }
-  const cancel = (dataItem: User) => {
+  const cancel = () => {
     setData(users)
   }
 
@@ -133,13 +109,10 @@ const DataGrid = () => {
       <GridColumn field='gender' title='Gender' width='150px' cell={GenderCell} />
       <GridColumn field='address' title='address' width='150px' />
       <GridColumn field='mobile' title='mobile' width='150px' />
-      <GridColumn field='dob' editor='date' format='{0:D}' title='dob' width='200px' />
+      <GridColumn field='dob' format='{0:D}' title='dob' width='200px' cell={DatePickerCell}/>
       <GridColumn field='age' title='age' width='150px' editable={false} />
       <GridColumn title='command' cell={CommandCell} width='200px' />
     </Grid>
   )
 }
 export default DataGrid
-function sleep(arg0: number) {
-  throw new Error('Function not implemented.')
-}

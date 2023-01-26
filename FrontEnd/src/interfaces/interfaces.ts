@@ -1,11 +1,11 @@
 export interface User {
   id: number
-  name?: string
-  gender?: string
-  address?: string
-  mobile?: string
-  dob?: string
-  age?: number
+  name: string
+  gender: string
+  address: string
+  mobile: string
+  dob: string | Date
+  age: number
   inEdit?: boolean | string
 }
 

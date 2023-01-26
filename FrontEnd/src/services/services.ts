@@ -1,8 +1,6 @@
-import { useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
 import { User } from '../interfaces/interfaces'
 import 'react-toastify/dist/ReactToastify.css'
-import axios from 'axios'
 import * as io from 'socket.io-client'
 
 // eslint-disable-next-line prefer-const
@@ -10,7 +8,7 @@ let validations: string[] = []
 
 export const socket = io.connect('http://localhost:3001')
 
-const isEmpty = (item: any) => {
+const isEmpty = (item: User) => {
   if (!item.name || !item.address || !item.mobile || !item.dob) {
     validations.push('Please input all fields!')
     return true
@@ -37,7 +35,7 @@ const isMobileInvalid = (item: string) => {
   return false
 }
 
-const isOver18 = (item: string) => {
+const isOver18 = (item: User) => {
   const age = calculateAge(item)
   if (age < 18) {
     validations.push('User should be 18+')
@@ -46,7 +44,7 @@ const isOver18 = (item: string) => {
   return false
 }
 
-export const validationFunc = (arr: any) => {
+export const validationFunc = (arr: User) => {
   console.log('is empty function :', isEmpty(arr))
   if (isEmpty(arr)) {
     toast.error('Please input all fields!')
@@ -60,18 +58,18 @@ export const validationFunc = (arr: any) => {
     toast.error('Please provide a valid Mobile No.')
     return false
   }
-  if (isOver18(arr.dob)) {
+  if (isOver18(arr)) {
     toast.error('User should be 18+')
     return false
   }
   return true
 }
 
-const calculateAge = (dob: string) => {
+const calculateAge = (user: User) => {
   // eslint-disable-next-line no-var
   const today = new Date()
   // eslint-disable-next-line no-var
-  const birthDate = new Date(dob)
+  const birthDate = new Date(user.dob)
   let ageNow = today.getFullYear() - birthDate.getFullYear()
   const m = today.getMonth() - birthDate.getMonth()
   if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
@@ -80,9 +78,9 @@ const calculateAge = (dob: string) => {
   return ageNow
 }
 
-export const modifyAdd = (item: any) => {
+export const modifyAdd = (item: User) => {
   item.inEdit = false
-  item.age = calculateAge(item.dob)
+  item.age = calculateAge(item)
   if (!item.gender) {
     // add gender as male if new user is not a female
     item.gender = 'male'
@@ -90,8 +88,8 @@ export const modifyAdd = (item: any) => {
   return item
 }
 
-export const modifyUpdate = (item: any) => {
-  item.age = calculateAge(item.dob)
+export const modifyUpdate = (item: User) => {
+  item.age = calculateAge(item)
   item.inEdit = false
   toast.success('User Updated Successfully!')
   return item
