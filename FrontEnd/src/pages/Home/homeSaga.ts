@@ -4,7 +4,7 @@ import { User } from '../../interfaces/interfaces'
 import {  addUserr, deleteUser, getUsers, updateUser } from '../../api/api'
 import { addUserRecord, addUserRecordFailure, addUserRecordSuccess, deleteUserRecord, deleteUserRecordFailure, deleteUserRecordSuccess, getUserRecords, getUserRecordsFailure, getUserRecordsSuccess, updateUserRecord, updateUserRecordFailure, updateUserRecordSuccess } from './homeSlice'
 import axios from 'axios'
-import { modifyAdd, modifyUpdate, validationFunc } from '../../services/services'
+import { modifyAdd, modifyUpdate, socket, validationFunc } from '../../services/services'
 
 interface Action {
   type: string
@@ -37,8 +37,10 @@ function* addUserSaga(action: Action): Generator<any, any, any> {
         console.log('line 37 saga', modifiedData)
         const response = yield call(() => addUserr(modifiedData))
         const addedUser = response.data
-        console.log('line 39 saga', response)
+        console.log('line 39 saga', addedUser.name)
         yield put(addUserRecordSuccess({...addedUser, inEdit: false}))
+        socket.emit('user_added', { name: addedUser.name })
+        toast.success('User added successfully!')
     }
   } catch (error) {
     yield put(addUserRecordFailure(error))
@@ -48,8 +50,10 @@ function* addUserSaga(action: Action): Generator<any, any, any> {
 }
 function* deleteUserSaga(action: Action): Generator<any, any, any> {
   try {
+    const name = action.payload.name
      yield call(() => deleteUser(action.payload))
     yield put(deleteUserRecordSuccess(action.payload))
+    socket.emit('user_removed', { name: name } )
   } catch (error) {
     yield put(deleteUserRecordFailure(error))
     toast.error('Something went wrong!')
@@ -63,6 +67,7 @@ function* updateUserSaga(action: Action): Generator<any, any, any> {
         const updatedUser = response.data
         console.log('line 64 update saga', updatedUser)
         yield put(updateUserRecordSuccess(updatedUser))
+        socket.emit('user_updated', { name: updatedUser.name })
     }
   } catch (error) {
     yield put(updateUserRecordFailure(error))

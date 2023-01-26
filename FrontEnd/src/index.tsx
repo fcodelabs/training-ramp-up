@@ -10,13 +10,13 @@ import { Provider } from 'react-redux'
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 socket.on('user_added', (data) => {
-  toast.info(data.username +' is added!')
+  toast.info(data.name +' is added!')
 })
 socket.on('user_updated', (data) => {
-  toast.info(data.username +' is updated!')
+  toast.info(data.name +' is updated!')
 })
 socket.on('user_removed', (data) => {
-  toast.info(data.username +' is removed!')
+  toast.info('A user is removed!')
 })
 root.render(
   <React.StrictMode>

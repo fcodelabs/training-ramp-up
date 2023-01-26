@@ -6,16 +6,9 @@ import axios from 'axios'
 import * as io from 'socket.io-client'
 
 // eslint-disable-next-line prefer-const
-// let data = [...sampleProducts]
-// eslint-disable-next-line prefer-const
 let validations: string[] = []
-// const [validations, setValidations] = useState<string[]>([]);
 
 export const socket = io.connect('http://localhost:3001')
-
-const client = axios.create({
-  baseURL: 'http://localhost:3001/home',
-})
 
 const isEmpty = (item: any) => {
   if (!item.name || !item.address || !item.mobile || !item.dob) {
@@ -44,6 +37,15 @@ const isMobileInvalid = (item: string) => {
   return false
 }
 
+const isOver18 = (item: string) => {
+  const age = calculateAge(item)
+  if (age < 18) {
+    validations.push('User should be 18+')
+    return true
+  }
+  return false
+}
+
 export const validationFunc = (arr: any) => {
   console.log('is empty function :', isEmpty(arr))
   if (isEmpty(arr)) {
@@ -56,6 +58,10 @@ export const validationFunc = (arr: any) => {
   }
   if (isMobileInvalid(arr.mobile)) {
     toast.error('Please provide a valid Mobile No.')
+    return false
+  }
+  if (isOver18(arr.dob)) {
+    toast.error('User should be 18+')
     return false
   }
   return true
@@ -73,80 +79,20 @@ const calculateAge = (dob: string) => {
   }
   return ageNow
 }
-const generateId = (data: any[]) => data.reduce((acc, current) => Math.max(acc, current.id), 0) + 1
 
 export const modifyAdd = (item: any) => {
   item.inEdit = false
   item.age = calculateAge(item.dob)
-
-  // delete item.inEdit
-
   if (!item.gender) {
     // add gender as male if new user is not a female
     item.gender = 'male'
   }
-
-  // post request for adding data to the database
-  // client.post('http://localhost:3001/home/', item).then((response) => {
-  //   console.log('response', response.data)
-  // }).catch((error) => {
-  //   console.log('error', error)
-  // })
-
-  // data.unshift(item)
-
-  // socket.emit('user_added', { name: item.name })
-  // toast.success('User added successfully!')
-
   return item
 }
 
-// export const getItems = async () => {
-//   client.get('/').then((response) => {
-//     console.log('response', response.data);
-//     return response.data
-//  });
-// return data
-
-// const response = await client.get('/')
-// // console.log('response dob',new Date(response.data[0].dob) )
-// const responceData = response.data.map((item: any) => {
-//   item.dob = new Date(item.dob)
-//   return item
-// })
-// return responceData
-// }
-
 export const modifyUpdate = (item: any) => {
-  // const index = data.findIndex((record) => record.id === item.id)
   item.age = calculateAge(item.dob)
-  socket.emit('user_updated', { name: item.name })
-  // data[index] = item
   item.inEdit = false
-
-  // client
-  //   .put(`/${item.id}`, item)
-  //   .then((response) => {
-  //     console.log('response', response.data)
-  //   })
-  //   .catch((error) => {
-  //     console.log('error', error)
-  //   })
-
   toast.success('User Updated Successfully!')
   return item
 }
-// export const deleteItem = (item: any) => {
-//   // const index = data.findIndex((record) => record.id === item.id)
-//   socket.emit('user_removed', { name: item.name })
-//   // data.splice(index, 1)
-//   client
-//     .delete(`/${item.id}`, item)
-//     .then((response) => {
-//       console.log('response', response.data)
-//     })
-//     .catch((error) => {
-//       console.log('error', error)
-//     })
-//   return data
-// }
