@@ -1,30 +1,36 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, PrimaryColumn } from "typeorm";
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  CreateDateColumn,
+  PrimaryColumn,
+} from "typeorm";
 
 @Entity()
 export class Student {
-    @PrimaryGeneratedColumn()
-    // @PrimaryColumn()
-    id: number;
+  @PrimaryGeneratedColumn()
+  // @PrimaryColumn()
+  id: number;
 
-    @Column()
-    name: string;
+  @Column()
+  name: string;
 
-    @Column()
-    gender: string;
+  @Column()
+  gender: string;
 
-    @Column()
-    address: string;
+  @Column()
+  address: string;
 
-    @Column()
-    mobile: string;
+  @Column()
+  mobile: string;
 
-    @Column()
-    dob!: Date;
+  @Column()
+  dob!: Date;
 
-    @Column()
-    age: number;
+  @Column()
+  age: number;
 
-    @Column()
-    @CreateDateColumn()
-    createdAt: Date;
+  @Column()
+  @CreateDateColumn()
+  createdAt: Date;
 }
