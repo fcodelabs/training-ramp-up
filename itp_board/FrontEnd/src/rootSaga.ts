@@ -1,5 +1,5 @@
 import { spawn } from 'redux-saga/effects';
-import studentSaga from "./Pages/Students/studentSaga";
+import studentSaga from "./pages/students/studentSaga";
 
 export default function* rootSaga() {
     yield spawn(studentSaga);

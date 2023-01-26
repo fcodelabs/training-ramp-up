@@ -1,6 +1,6 @@
 import './App.css'
 import { Routes, Route } from 'react-router-dom'
-import Students from './Pages/Students/Students'
+import Students from './pages/students/Students'
 
 
 function App() {
@@ -8,7 +8,7 @@ function App() {
     <>
       <Students/>
       {/* <Routes>
-        <Route path='users' element={<Students />} />
+        <Route path='users' element={<students />} />
       </Routes> */}
     </>
   )

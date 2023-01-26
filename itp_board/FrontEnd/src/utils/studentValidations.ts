@@ -1,4 +1,4 @@
-import { calculateAge } from './StudentFunctions'
+import { calculateAge } from './studentFunctions'
 /* eslint-disable @typescript-eslint/no-inferrable-types */
 
 const stringValidation = (reg:RegExp,data:string,type:string) =>{

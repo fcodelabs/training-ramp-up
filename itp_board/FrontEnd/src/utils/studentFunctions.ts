@@ -1,5 +1,5 @@
 import {GridCellProps} from "@progress/kendo-react-grid";
-import {DropDown2} from "../Pages/Students/components/Dropdown/DropDown2";
+import {DropDown2} from "../pages/students/components/dropdown/DropDown2";
 import {useAppDispatch, useAppSelector} from "../hooks";
 import {
     addNew,
@@ -9,7 +9,7 @@ import {
     editData,
     startAddNew,
     startDataEditing, startRemove
-} from "../Pages/Students/studentSlice";
+} from "../pages/students/studentSlice";
 import {Student,pageCallBack} from "./types";
 import type {AppDispatch} from "../store";
 import {isValidAddress, isValidDateOfBirth, isValidName, isValidTPNO} from "./studentValidations";
@@ -49,24 +49,7 @@ export const calculateAge = (dob: Date) => {
     return Math.floor((Date.now() - dob.getTime()) / (1000 * 3600 * 24) / 365.25)
 }
 
-export const calcAge = (props: GridCellProps) => {
-    let age = null
-    if (props.dataItem.dateOfBirth) {
-        age = calculateAge(new Date(props.dataItem.dateOfBirth))
-        if (age < 0) {
-            age = null
-        }
-    }
-    return <td>{age}</td>
-}
 
-export const gender = (gender: string) => {
-    return (
-        <td>
-            <DropDown2 gender={gender}/>
-        </td>
-    )
-}
 
 export const addRecord = (data: Student[], newAdded: boolean, dispatch: AppDispatch,setPage:pageCallBack) => {
     const recordCount = data.length;
@@ -107,7 +90,7 @@ export const addRecord = (data: Student[], newAdded: boolean, dispatch: AppDispa
         dispatch(changeEditId(maxId + 1));
     }
 }
-const validate = (data: Student | null) => {
+export const validate = (data: Student | null) => {
     const errors: string[] = []
     if (data !== null && !isValidName(data.name).state) {
         errors.push(isValidName(data.name).error)
@@ -123,7 +106,7 @@ const validate = (data: Student | null) => {
     }
     return errors
 }
-const execute = (
+export const execute = (
     editId: number,
     data: Student[],
     newAdded: boolean,
@@ -168,12 +151,12 @@ const execute = (
     }
 }
 
-const cancel = (dispatch:AppDispatch)=>{
+export const cancel = (dispatch:AppDispatch)=>{
     dispatch(changeEditId(null));
     dispatch(changeNewAdded(false));
 }
 
-const discard = (data: Student[], editId: number | null, dispatch: AppDispatch) => {
+export const discard = (data: Student[], editId: number | null, dispatch: AppDispatch) => {
     // setEditId(null)
     if (editId !== null) {
         const newData: Student[] = [];
@@ -191,89 +174,11 @@ const discard = (data: Student[], editId: number | null, dispatch: AppDispatch) 
     dispatch(changeNewAdded(false));
 
 }
-const edit = (newAdded: boolean, dispatch:AppDispatch, index: number) => {
+export const edit = (newAdded: boolean, dispatch:AppDispatch, index: number) => {
     if (!newAdded) {
         dispatch(changeEditId(index));
     }
 }
-const remove = (data: Student[], dataIndex: number, dispatch:AppDispatch) => {
+export const remove = (data: Student[], dataIndex: number, dispatch:AppDispatch) => {
     dispatch(startRemove(dataIndex));
-}
-export const command = (dataIndex: number, editId: number | null, newAdded: boolean, data: Student[], dispatch: AppDispatch,setPage:pageCallBack) => {
-    return (
-        <td className='k-command-cell'>
-            {dataIndex === editId && newAdded && (
-                <div className='table--button--group'>
-                    <button
-                        onClick={() => {
-                            execute(editId,
-                                data,
-                                newAdded,
-                                dispatch,
-                                setPage
-                            )
-                        }}
-                        className='table--button k-button k-button-md k-rounded-md k-button-solid k-button-solid-light k-grid-save-command'
-                    >
-                        Add
-                    </button>
-                    <button
-                        onClick={() => {
-                            discard(data, editId, dispatch);
-                        }}
-                        className='table--button k-button k-button-md k-rounded-md k-button-solid k-button-solid-light k-grid-save-command'
-                    >
-                        Discard Changes
-                    </button>
-                </div>
-            )}
-
-            {dataIndex === editId && !newAdded && (
-                <div className='table--button--group'>
-                    <button
-                        onClick={() => {
-                            execute(editId,
-                                data,
-                                newAdded,
-                                dispatch,
-                                setPage
-                            )
-                        }}
-                        className='table--button k-button k-button-md k-rounded-md k-button-solid k-button-solid-light k-grid-save-command'
-                    >
-                        Update
-                    </button>
-                    <button
-                        onClick={() => {
-                            cancel( dispatch);
-                        }}
-                        className='table--button k-button k-button-md k-rounded-md k-button-solid k-button-solid-light k-grid-save-command'
-                    >
-                        Cancel
-                    </button>
-                </div>
-            )}
-
-            {dataIndex !== editId && (
-                <div className='table--button--group'>
-                    <button
-                        onClick={() => {
-                            edit(newAdded, dispatch, dataIndex)
-                        }}
-                        className='table--button k-button k-button-md k-rounded-md k-button-solid k-button-solid-primary k-grid-save-command'
-                    >
-                        Edit
-                    </button>
-                    <button
-                        onClick={() => {
-                            remove(data, dataIndex,dispatch);
-                        }}
-                        className='table--button k-button k-button-md k-rounded-md k-button-solid k-button-solid-light k-grid-save-command'
-                    >
-                        Remove
-                    </button>
-                </div>
-            )}
-        </td>
-    )
 }

@@ -16,14 +16,14 @@ import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { orderBy } from '@progress/kendo-data-query'
 import { PageState, SockeResponse } from '../../utils/types'
-
-import { io } from 'socket.io-client'
-
-const socket = io('http://localhost:4000')
-
-import { calcAge, gender, addRecord, getStoreData, command } from '../../utils/StudentFunctions'
+import { addRecord, getStoreData } from '../../utils/studentFunctions'
 import { changeSort, editData, startGetData } from './studentSlice'
 import { displayNotifications } from '../../utils/toasts'
+
+import { io } from 'socket.io-client'
+import {command, gender,calcAge} from "./components/cellComponent/CellComponent";
+const socket = io('http://localhost:4000')
+
 
 
 const Student = () => {

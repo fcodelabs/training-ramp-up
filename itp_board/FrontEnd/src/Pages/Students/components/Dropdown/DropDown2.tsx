@@ -3,7 +3,7 @@ import { DropDownList, DropDownListChangeEvent } from '@progress/kendo-react-dro
 import {Student} from '../../../../utils/types'
 import { useAppSelector, useAppDispatch } from "../../../../hooks";
 import {addNew, editData} from "../../studentSlice";
-import {getStoreData} from '../../../../utils/StudentFunctions'
+import {getStoreData} from '../../../../utils/studentFunctions'
 
 
 

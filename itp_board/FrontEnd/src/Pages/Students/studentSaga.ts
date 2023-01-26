@@ -16,7 +16,7 @@ import {
 } from "./studentSlice";
 import {isMutationDefinition} from "@reduxjs/toolkit/dist/query/endpointDefinitions";
 import {createData, deleteData, fetchData, updateData} from '../../utils/databaseInteractions2'
-import {getStoreData} from "../../utils/StudentFunctions";
+import {getStoreData} from "../../utils/studentFunctions";
 import {displayErrors} from "../../utils/toasts";
 
 import { io,Socket } from 'socket.io-client'
