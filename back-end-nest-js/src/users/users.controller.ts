@@ -15,9 +15,9 @@ export class UsersController {
       const user: any = await this.userService.getUserService(loginUser)
         if (user) {
           const tokens = await this.authService.getTokens(user)
-          res.cookie('accessToken', tokens['accessToken'], { maxAge: 1000 * 60 * 2, httpOnly: true })
+          res.cookie('accessToken', tokens['accessToken'], { maxAge: 1000 * 60 * 60 * 24, httpOnly: true })
           res.cookie('refreshToken', tokens['refreshToken'], { maxAge: 1000 * 60 * 60 * 24, httpOnly: true })
-          res.cookie('user', user, { maxAge: 1000 * 60 * 20, httpOnly: false })
+          res.cookie('user', user, { maxAge: 1000 * 60 * 60 * 24, httpOnly: false })
           return res.status(200).send(user)
         }
         return res.status(401).send('Email or Password Invalid')
@@ -58,7 +58,7 @@ export class UsersController {
         if (!isValid) return res.status(401).send('Invalid refresh Token')
 
         const accessToken = await this.authService.getAccessToken(user)
-        res.cookie('accessToken', accessToken, { maxAge: 1000 * 60 * 2, httpOnly: true })
+        res.cookie('accessToken', accessToken, { maxAge: 1000 * 60 * 60 * 24, httpOnly: true })
         return res.status(200).send('Access Token returned')
       } else {
         return res.status(401).send('Unauthorized Access')

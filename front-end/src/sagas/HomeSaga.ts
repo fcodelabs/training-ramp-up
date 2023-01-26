@@ -25,7 +25,7 @@ function * getStudents () {
       alert(response)
     }
   } catch (err: any) {
-    alert(err.response.data.message)
+    alert(err.response.data)
     console.log(err)
     yield put(setError(err))
   }
@@ -40,7 +40,7 @@ function * saveStudent (action: AnyAction) {
       alert(response)
     }
   } catch (err: any) {
-    alert(err.response.data.message)
+    alert(err.response.data)
     yield put(setError(err))
   }
 }
@@ -54,7 +54,7 @@ function * updateStudent (action: AnyAction) {
       alert(response)
     }
   } catch (err: any) {
-    alert(err.response.data.message)
+    alert(err.response.data)
     yield put(setError(err))
   }
 }
@@ -68,7 +68,7 @@ function * deleteStudent (action: AnyAction) {
       alert(response)
     }
   } catch (err: any) {
-    alert(err.response.data.message)
+    alert(err.response.data)
     yield put(setError(err))
   }
 }
