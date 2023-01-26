@@ -1,5 +1,3 @@
-import {SortDescriptor} from "@progress/kendo-data-query";
-import {Page} from "@progress/kendo-react-dropdowns";
 
 
 export type Student = {

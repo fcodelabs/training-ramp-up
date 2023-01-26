@@ -11,30 +11,23 @@ import {
     GridPageChangeEvent,
 } from '@progress/kendo-react-grid'
 import '../../App.css'
-import {useEffect, useMemo, useState} from 'react'
-import {ToastContainer, toast} from 'react-toastify'
+import { useEffect, useState } from 'react'
+import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
-import {orderBy, SortDescriptor} from '@progress/kendo-data-query'
-import {PageState, SockeResponse} from "../../utils/types";
+import { orderBy } from '@progress/kendo-data-query'
+import { PageState, SockeResponse } from '../../utils/types'
 
-import {io} from 'socket.io-client'
+import { io } from 'socket.io-client'
 
 const socket = io('http://localhost:4000')
 
-import {studentData} from '../../dummy'
-import {calcAge, gender, addRecord, getStoreData, command} from '../../utils/StudentFunctions'
-import {useAppSelector, useAppDispatch} from "../../hooks";
-import {addNew, changeEditId, changeNewAdded, changeSort, editData, startGetData} from "./studentSlice";
-import {displayErrors, displayNotifications} from "../../utils/toasts";
+import { calcAge, gender, addRecord, getStoreData, command } from '../../utils/StudentFunctions'
+import { changeSort, editData, startGetData } from './studentSlice'
+import { displayNotifications } from '../../utils/toasts'
 
 
 const Student = () => {
-    const initialSort: Array<SortDescriptor> = [
-        {
-            field: 'id',
-            dir: 'asc',
-        },
-    ]
+
     const initialPageState: PageState = {skip: 0, take: 10}
     const [page, setPage] = useState(initialPageState)
     const [notification, setNotification] = useState('');

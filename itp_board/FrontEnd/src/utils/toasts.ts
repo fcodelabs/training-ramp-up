@@ -1,4 +1,4 @@
-import {toast} from "react-toastify";
+import {toast} from 'react-toastify';
 
 export const displayErrors = (errors: string[]) => {
     errors.forEach((error) => {
@@ -17,13 +17,13 @@ export const displayErrors = (errors: string[]) => {
 
 export const displayNotifications = (notification:string)=>{
     toast(notification, {
-        position: "top-center",
+        position: 'top-center',
         autoClose: 5000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-        theme: "light",
+        theme: 'light',
     });
 }

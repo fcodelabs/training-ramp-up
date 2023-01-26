@@ -10,8 +10,12 @@
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "node.js.selected.package.tslint": "(autodetect)",
     "ts.external.directory.path": "E:\\Fcode labs\\Training Project 02\\training-ramp-up\\itp_board\\FrontEnd\\node_modules\\typescript\\lib"
   }
 }]]></component>
