@@ -70,7 +70,7 @@ function Header() {
   );
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="static" sx={{ backgroundColor: "#FF8E9E" }}>
+      <AppBar position="static" sx={{ backgroundColor: "#84a8f1" }}>
         <Toolbar>
           <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ display: { xs: "none", md: "flex" } }}>
