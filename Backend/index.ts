@@ -9,6 +9,7 @@ import { appDataSource } from './src/configs/dataSourceConfig';
 import { Server } from 'socket.io';
 import http from 'http';
 import cookieParser from 'cookie-parser';
+import passport from 'passport';
 
 dotenv.config();
 
@@ -19,13 +20,15 @@ const httpServer = http.createServer(app);
 app.use(express.json());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cookieParser());
 app.use(
   cors({
     credentials: true,
     origin: ['http://localhost:3000', 'production domain'],
   })
 );
-app.use(cookieParser());
+
+app.use(passport.initialize());
 
 app.use('/student', studentRoutes);
 app.use('/user', userRoutes);
