@@ -44,7 +44,7 @@ export const signUp = async (req: Request, res: Response) => {
       },
     });
   } catch (err) {
-    res.status(400).json({ message: 'User not created', err });
+    res.status(400).json({ err });
   }
 };
 
@@ -80,7 +80,7 @@ export const signIn = async (req: Request, res: Response) => {
       },
     });
   } catch (err) {
-    res.status(400).json({ message: 'User not found', err });
+    res.status(400).json({ err });
   }
 };
 
@@ -107,8 +107,8 @@ export const signOut = async (req: Request, res: Response) => {
 
 export const refresh = async (req: Request, res: Response) => {
   try {
-    const refresh = req.rawHeaders[req.rawHeaders.indexOf('Cookie') + 1].split('=')[1].split(';')[0];
-    if (!refresh) throw new Error('No refresh token found');
+    const refresh = req.cookies.refresh;
+    if (!refresh) throw new Error('No refresh token found').message;
     const { email, role } = jwt.verify(refresh, process.env.JWT_SECRET as string) as { email: string; role: string };
     const jwtToken = jwt.sign({ email, role }, process.env.JWT_SECRET as string, {
       expiresIn: '1h',
@@ -130,6 +130,6 @@ export const refresh = async (req: Request, res: Response) => {
     res.setHeader('Set-Cookie', [jwtCookie, refreshCookie]);
     res.status(200).json({ message: 'User refreshed successfully' });
   } catch (err) {
-    res.status(400).json({ message: 'User not found', err });
+    res.status(400).json({ err });
   }
 };
