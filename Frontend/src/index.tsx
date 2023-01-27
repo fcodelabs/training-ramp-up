@@ -7,6 +7,7 @@ import { Provider } from "react-redux";
 import { store } from "./store";
 import { io } from "socket.io-client";
 import { toast } from "react-toastify";
+import { BrowserRouter } from "react-router-dom";
 
 const socket = io("http://localhost:3500/", {
   transports: ["websocket"],
@@ -16,8 +17,8 @@ socket.on("connect", () => {
   console.log(socket.id);
 });
 
-socket.on("notification", (...args) => {
-  toast.info(args[0]);
+socket.on("notification", (information) => {
+  toast.info(information);
 });
 
 const root = ReactDOM.createRoot(
@@ -25,9 +26,11 @@ const root = ReactDOM.createRoot(
 );
 root.render(
   <React.StrictMode>
-    <Provider store={store}>
-      <App />
-    </Provider>
+    <BrowserRouter>
+      <Provider store={store}>
+        <App />
+      </Provider>
+    </BrowserRouter>
   </React.StrictMode>
 );
 
