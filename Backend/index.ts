@@ -8,6 +8,7 @@ import cors from 'cors';
 import { appDataSource } from './src/configs/dataSourceConfig';
 import { Server } from 'socket.io';
 import http from 'http';
+import cookieParser from 'cookie-parser';
 
 dotenv.config();
 
@@ -24,6 +25,7 @@ app.use(
     origin: ['http://localhost:3000', 'production domain'],
   })
 );
+app.use(cookieParser());
 
 app.use('/student', studentRoutes);
 app.use('/user', userRoutes);

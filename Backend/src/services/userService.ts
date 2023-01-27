@@ -17,18 +17,18 @@ interface UserType {
 export const createUser = async (user: DeepPartial<UserType>) => {
   try {
     const hashedPassword = await bcrypt.hash(user.password as string, 10);
-    const newUser = await appDataSource.manager.save(User, {
-      email: user.email,
-      password: hashedPassword,
-      role: RoleEnumType.USER,
-    });
-
-    if (!newUser) throw new Error('Already exists for this email');
-    else {
+    try {
+      const newUser = await appDataSource.manager.save(User, {
+        email: user.email,
+        password: hashedPassword,
+        role: RoleEnumType.USER,
+      });
       return newUser;
+    } catch (error) {
+      throw new Error('Already exists for this email').message;
     }
   } catch (err) {
-    throw new Error('User not created');
+    throw new Error(err as string).message;
   }
 };
 
@@ -36,11 +36,13 @@ export const loginUser = async (email: string, password: string) => {
   try {
     const userRepo = appDataSource.getRepository(User);
     const user = await userRepo.findOneBy({ email: email });
-    if (!user) throw new Error('User not found1');
+    if (!user) throw new Error('User not found').message;
     const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) throw new Error('Incorrect password');
+    if (!isMatch) {
+      throw new Error('Incorrect password').message;
+    }
     return user;
   } catch (error) {
-    throw new Error('User not found2');
+    throw new Error(error as string).message;
   }
 };
