@@ -15,7 +15,8 @@ const initialState: HomePageState = {
   loading: false,
 };
 
-export const homeSlice = createSlice({
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const homeSlice: any = createSlice({
   name: "home",
   initialState,
   reducers: {
