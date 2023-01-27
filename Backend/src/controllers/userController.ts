@@ -25,12 +25,14 @@ export const signUp = async (req: Request, res: Response) => {
     const jwtCookie = cookie.serialize('jwt', jwtToken, {
       httpOnly: true,
       secure: true,
+      path: '/',
       sameSite: 'strict',
       maxAge: 3600, // expires in 1 hour
     });
     const refreshCookie = cookie.serialize('refresh', refreshToken, {
       httpOnly: true,
       secure: true,
+      path: '/',
       sameSite: 'strict',
       maxAge: 86400, // expires in 1 day
     });
@@ -61,12 +63,14 @@ export const signIn = async (req: Request, res: Response) => {
     const jwtCookie = cookie.serialize('jwt', jwtToken, {
       httpOnly: true,
       secure: true,
+      path: '/',
       sameSite: 'strict',
       maxAge: 3600, // expires in 1 hour
     });
     const refreshCookie = cookie.serialize('refresh', refreshToken, {
       httpOnly: true,
       secure: true,
+      path: '/',
       sameSite: 'strict',
       maxAge: 86400, // expires in 1 day
     });
@@ -89,12 +93,14 @@ export const signOut = async (req: Request, res: Response) => {
     const jwtCookie = cookie.serialize('jwt', '', {
       httpOnly: true,
       secure: true,
+      path: '/',
       sameSite: 'strict',
       maxAge: 0, // expires in 1 hour
     });
     const refreshCookie = cookie.serialize('refresh', '', {
       httpOnly: true,
       secure: true,
+      path: '/',
       sameSite: 'strict',
       maxAge: 0, // expires in 1 day
     });
@@ -116,12 +122,14 @@ export const refresh = async (req: Request, res: Response) => {
 
     const jwtCookie = cookie.serialize('jwt', jwtToken, {
       httpOnly: true,
+      path: '/',
       secure: true,
       sameSite: 'strict',
       maxAge: 3600, // expires in 1 hour
     });
     const refreshCookie = cookie.serialize('refresh', refresh, {
       httpOnly: true,
+      path: '/',
       secure: true,
       sameSite: 'strict',
       maxAge: 86400, // expires in 1 day
