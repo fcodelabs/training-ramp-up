@@ -3,6 +3,7 @@ import express, { Request, Response } from 'express';
 import dotenv from 'dotenv';
 import bodyParser from 'body-parser';
 import studentRoutes from './src/routes/studentRoutes';
+import userRoutes from './src/routes/userRoutes';
 import cors from 'cors';
 import { appDataSource } from './src/configs/dataSourceConfig';
 import { Server } from 'socket.io';
@@ -25,6 +26,7 @@ app.use(
 );
 
 app.use('/student', studentRoutes);
+app.use('/user', userRoutes);
 
 app.get('/', (req: Request, res: Response) => {
   res.send('This is a test web page!');

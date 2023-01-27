@@ -1,5 +1,6 @@
 import 'reflect-metadata';
 import { Student } from '../models/studentModel';
+import { User } from '../models/userModel';
 import dotenv from 'dotenv';
 import { DataSource } from 'typeorm';
 
@@ -12,7 +13,7 @@ export const appDataSource = new DataSource({
   username: 'postgres',
   password: '12345',
   database: 'ramp-up',
-  entities: [Student],
+  entities: [Student, User],
   synchronize: true,
   logging: false,
   subscribers: [],
