@@ -4,12 +4,16 @@ interface SignInPageState {
   error: string;
   loading: boolean;
   isLogged: boolean;
+  email: string;
+  role: string;
 }
 
 const initialState: SignInPageState = {
   error: "",
   loading: false,
   isLogged: false,
+  email: "",
+  role: "",
 };
 
 export const signInSlice = createSlice({
@@ -20,9 +24,11 @@ export const signInSlice = createSlice({
       state.loading = true;
     },
 
-    signInSuccess: (state) => {
+    signInSuccess: (state, action) => {
       state.loading = false;
       state.isLogged = true;
+      state.email = action.payload.email;
+      state.role = action.payload.role;
     },
     signInFailure: (state, action) => {
       state.loading = false;
