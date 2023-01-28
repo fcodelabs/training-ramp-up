@@ -36,7 +36,7 @@ passport.use(
       const { expiration } = jwtPayload;
 
       if (Date.now() > expiration) {
-        done('Unauthorized--', false);
+        done('Unauthorized', false);
       }
 
       done(null, jwtPayload);
