@@ -100,23 +100,26 @@ function* deletePersonSaga(payload: any) {
   Allows concurrent fetches of user.
 */
 function* handlePersonActions() {
-  yield takeEvery((action: any) => action.type.match('Person'), function*({ type, payload }) {
-   console.log(payload)
-    switch (type) {
-      case getPersonDataStart.type:
-        yield fetchPersonData();
-        break;
-      case deletePersonDataStart.type:
-        yield deletePersonSaga(payload);
-        break;
-      case addPersonDataStart.type:
-        yield addNewPersonSaga(payload);
-        break;
-      case updatePersonDataStart.type:
-        yield updatePersonSaga(payload);
-        break;
-    }
-  });
+  yield takeEvery(
+    (action: any) => action.type.match('Person'),
+    function* ({ type, payload }) {
+      console.log(payload)
+      switch (type) {
+        case getPersonDataStart.type:
+          yield fetchPersonData()
+          break
+        case deletePersonDataStart.type:
+          yield deletePersonSaga(payload)
+          break
+        case addPersonDataStart.type:
+          yield addNewPersonSaga(payload)
+          break
+        case updatePersonDataStart.type:
+          yield updatePersonSaga(payload)
+          break
+      }
+    },
+  )
 }
 
 function* getNotifications() {
