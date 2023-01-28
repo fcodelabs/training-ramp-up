@@ -12,6 +12,8 @@ import InputAdornment from "@mui/material/InputAdornment";
 import IconButton from "@mui/material/IconButton";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
+import { useSelector, useDispatch } from "react-redux";
+import { signUp } from "../SignIn/signInSlice";
 
 interface Values {
   email: string;
@@ -41,6 +43,10 @@ const HeightBox = () => {
 function SignUp() {
   const navigate = useNavigate();
   const classes = useStyles();
+  const dispatch = useDispatch();
+  const { error, isLogged, loading } = useSelector(
+    (state: any) => state.signIn
+  );
   const [showPassword, setShowPassword] = React.useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = React.useState(false);
 
@@ -71,8 +77,7 @@ function SignUp() {
 
   const handleSubmit = (values: any) => {
     if (values.password !== values.confirmPassword) return;
-    console.log(values);
-    navigate("/home");
+    dispatch(signUp(values));
   };
 
   return (
@@ -190,6 +195,16 @@ function SignUp() {
               >
                 Sign up
               </Button>
+              {error && (
+                <Typography
+                  variant="body2"
+                  align="center"
+                  sx={{ color: "red" }}
+                  mt={2}
+                >
+                  {error}
+                </Typography>
+              )}
               <HeightBox />
             </Box>
           );

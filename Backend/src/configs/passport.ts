@@ -15,11 +15,40 @@ const cookieExtractor = (req: Request) => {
   return jwt;
 };
 
+const cookieExtractorForRefresh = (req: Request) => {
+  let jwt = null;
+
+  if (req && req.cookies) {
+    jwt = req.cookies.refresh;
+  }
+
+  return jwt;
+};
+
 passport.use(
   'jwt',
   new JWTStrategy(
     {
       jwtFromRequest: cookieExtractor,
+      secretOrKey: secret,
+    },
+    (jwtPayload, done) => {
+      const { expiration } = jwtPayload;
+
+      if (Date.now() > expiration) {
+        done('Unauthorized--', false);
+      }
+
+      done(null, jwtPayload);
+    }
+  )
+);
+
+passport.use(
+  'jwt-refresh',
+  new JWTStrategy(
+    {
+      jwtFromRequest: cookieExtractorForRefresh,
       secretOrKey: secret,
     },
     (jwtPayload, done) => {

@@ -1,5 +1,7 @@
 import * as React from "react";
 import { Student } from "../../utils/interface";
+import { useSelector } from "react-redux";
+import { SignInState } from "../../utils/interface";
 
 interface Props {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -14,6 +16,7 @@ interface Props {
 }
 
 export const CommandCell = (props: Props) => {
+  const role = useSelector((state: SignInState) => state.signIn.role);
   const { dataItem } = props;
   const inEdit = dataItem[props.editField];
   const isNewItem = dataItem.id === undefined;
@@ -42,6 +45,7 @@ export const CommandCell = (props: Props) => {
       <button
         className="k-button k-button-md k-rounded-md k-button-solid k-button-solid-primary k-grid-edit-command"
         onClick={() => props.edit(dataItem)}
+        disabled={role !== "admin"}
       >
         Edit
       </button>
@@ -51,6 +55,7 @@ export const CommandCell = (props: Props) => {
           window.confirm("Confirm deleting: " + dataItem.name) &&
           props.remove(dataItem)
         }
+        disabled={role !== "admin"}
       >
         Remove
       </button>

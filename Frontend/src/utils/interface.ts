@@ -9,6 +9,12 @@ export interface Student {
   inEdit?: boolean | string;
 }
 
+export interface User {
+  id: number;
+  email: string;
+  role: string;
+}
+
 export interface PageState {
   skip: number;
   take: number;
@@ -19,5 +25,15 @@ export interface HomeState {
     students: Student[];
     error: string;
     loading: boolean;
+  };
+}
+
+export interface SignInState {
+  signIn: {
+    isLogged: boolean;
+    error: string;
+    loading: boolean;
+    email: string;
+    role: string;
   };
 }

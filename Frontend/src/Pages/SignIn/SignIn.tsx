@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React from "react";
+import React, { useEffect } from "react";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import TextField from "@mui/material/TextField";
@@ -12,6 +12,8 @@ import InputAdornment from "@mui/material/InputAdornment";
 import IconButton from "@mui/material/IconButton";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
+import { useSelector, useDispatch } from "react-redux";
+import { signIn } from "./signInSlice";
 
 interface Values {
   email: string;
@@ -40,7 +42,11 @@ const HeightBox = () => {
 function SignIn() {
   const navigate = useNavigate();
   const classes = useStyles();
+  const dispatch = useDispatch();
   const [showPassword, setShowPassword] = React.useState(false);
+  const { error, isLogged, loading } = useSelector(
+    (state: any) => state.signIn
+  );
 
   const handleClickShowPassword = () => {
     setShowPassword(!showPassword);
@@ -59,9 +65,8 @@ function SignIn() {
     password: Yup.string().required("Required").min(8, "Too Short!"),
   });
 
-  const handleSubmit = (values: any) => {
-    console.log(values);
-    navigate("/home");
+  const handleSubmit = (values: Values) => {
+    dispatch(signIn(values));
   };
 
   return (
@@ -137,6 +142,16 @@ function SignIn() {
               >
                 Sign In
               </Button>
+              {error && (
+                <Typography
+                  variant="body2"
+                  align="center"
+                  sx={{ color: "red" }}
+                  mt={2}
+                >
+                  {error}
+                </Typography>
+              )}
               <HeightBox />
               <Typography variant="body2" align="center">
                 Do not have an account ? <Link to={"/signup"}>SignUp</Link>
