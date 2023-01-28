@@ -8,8 +8,13 @@ import Menu from "@mui/material/Menu";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import PowerSettingsNewIcon from "@mui/icons-material/PowerSettingsNew";
 import MoreIcon from "@mui/icons-material/MoreVert";
+import { useDispatch } from "react-redux";
+import { logout } from "./../../pages/SignIn/signInSlice";
+import { useNavigate } from "react-router-dom";
 
 function Header() {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
     React.useState<null | HTMLElement>(null);
 
@@ -24,7 +29,8 @@ function Header() {
   };
 
   const handleLogout = () => {
-    console.log("Logout");
+    dispatch(logout());
+    navigate("/");
   };
 
   const mobileMenuId = "primary-search-account-menu-mobile";

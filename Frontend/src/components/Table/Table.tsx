@@ -11,7 +11,12 @@ import {
 
 import { CommandCell } from "../CommandCell/CommandCell";
 import { Validate } from "../../utils/services";
-import { Student, PageState, HomeState } from "../../utils/interface";
+import {
+  Student,
+  PageState,
+  HomeState,
+  SignInState,
+} from "../../utils/interface";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getStudents,
@@ -29,6 +34,7 @@ function Table() {
   const dispatch = useDispatch();
   const students = useSelector((state: HomeState) => state.home.students);
   const loading = useSelector((state: HomeState) => state.home.loading);
+  const role = useSelector((state: SignInState) => state.signIn.role);
   const [page, setPage] = React.useState<PageState>(initialDataState);
   const pageChange = (event: GridPageChangeEvent) => {
     setPage({
@@ -145,6 +151,7 @@ function Table() {
           title="Add new"
           className="k-button k-button-md k-rounded-md k-button-solid k-button-solid-primary"
           onClick={addNew}
+          disabled={role !== "admin"}
         >
           Add new
         </button>
