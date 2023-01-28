@@ -40,7 +40,8 @@ instance.interceptors.response.use(
           return instance(originalRequest);
         }
       } catch (err) {
-        console.log("Refresh token failed");
+        window.location.href =
+          "/" + "?error=Session expired!, Please login again";
       }
     }
     return Promise.reject(error);

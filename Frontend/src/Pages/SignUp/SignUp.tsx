@@ -5,7 +5,6 @@ import * as Yup from "yup";
 import TextField from "@mui/material/TextField";
 import LoadingButton from "@mui/lab/LoadingButton";
 import Box from "@mui/material/Box";
-import { useNavigate } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@mui/material/Typography";
 import InputAdornment from "@mui/material/InputAdornment";
@@ -41,12 +40,9 @@ const HeightBox = () => {
 };
 
 function SignUp() {
-  const navigate = useNavigate();
   const classes = useStyles();
   const dispatch = useDispatch();
-  const { error, isLogged, loading } = useSelector(
-    (state: any) => state.signIn
-  );
+  const { error, loading } = useSelector((state: any) => state.signIn);
   const [showPassword, setShowPassword] = React.useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = React.useState(false);
 
