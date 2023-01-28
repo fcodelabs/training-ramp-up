@@ -4,6 +4,7 @@ import Home from "../pages/Home/Home";
 import SignIn from "../pages/SignIn/SignIn";
 import SignUp from "../pages/SignUp/SignUp";
 import ProtectedRoute from "../utils/protectedRoute";
+import NotFound from "../components/NotFound/NotFound";
 
 function Routers() {
   return (
@@ -18,6 +19,7 @@ function Routers() {
           </ProtectedRoute>
         }
       />
+      <Route path="*" element={<NotFound />} />
     </Routes>
   );
 }
