@@ -3,8 +3,8 @@ import React from "react";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import TextField from "@mui/material/TextField";
+import LoadingButton from "@mui/lab/LoadingButton";
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
 import { useNavigate } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@mui/material/Typography";
@@ -187,14 +187,16 @@ function SignUp() {
                 }}
               />
               <HeightBox />
-              <Button
+              <LoadingButton
                 variant="contained"
                 color="primary"
                 onClick={handleSubmit}
                 fullWidth
+                loading={loading}
+                loadingIndicator="Loading…"
               >
                 Sign up
-              </Button>
+              </LoadingButton>
               {error && (
                 <Typography
                   variant="body2"
