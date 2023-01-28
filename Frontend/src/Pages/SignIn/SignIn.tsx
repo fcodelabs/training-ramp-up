@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React from "react";
+import React, { useState } from "react";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
 import LoadingButton from "@mui/lab/LoadingButton";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@mui/material/Typography";
 import InputAdornment from "@mui/material/InputAdornment";
@@ -14,6 +14,7 @@ import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { useSelector, useDispatch } from "react-redux";
 import { signIn } from "./signInSlice";
+import { toast } from "react-toastify";
 
 interface Values {
   email: string;
@@ -40,13 +41,10 @@ const HeightBox = () => {
 };
 
 function SignIn() {
-  const navigate = useNavigate();
   const classes = useStyles();
   const dispatch = useDispatch();
   const [showPassword, setShowPassword] = React.useState(false);
-  const { error, isLogged, loading } = useSelector(
-    (state: any) => state.signIn
-  );
+  const { error, loading } = useSelector((state: any) => state.signIn);
 
   const handleClickShowPassword = () => {
     setShowPassword(!showPassword);
@@ -68,6 +66,15 @@ function SignIn() {
   const handleSubmit = (values: Values) => {
     dispatch(signIn(values));
   };
+
+  useState(() => {
+    const { search } = window.location;
+    const params = new URLSearchParams(search);
+    const error = params.get("error");
+    if (error) {
+      toast.error(error);
+    }
+  });
 
   return (
     <div className={classes.div}>

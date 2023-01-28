@@ -24,6 +24,7 @@ function* signInUser(action: Action): Generator<any, any, any> {
     );
     const user: User = response.data.user;
     yield put(signInSuccess(user));
+    window.location.href = "/home";
   } catch (error: any) {
     const err = error.response.data.err;
     yield put(signInFailure(err));
