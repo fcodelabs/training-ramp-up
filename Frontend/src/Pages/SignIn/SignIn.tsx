@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useEffect } from "react";
+import React from "react";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
+import LoadingButton from "@mui/lab/LoadingButton";
 import { Link, useNavigate } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@mui/material/Typography";
@@ -134,14 +134,16 @@ function SignIn() {
                 }}
               />
               <HeightBox />
-              <Button
+              <LoadingButton
                 variant="contained"
                 color="primary"
+                loading={loading}
+                loadingIndicator="Loading…"
                 onClick={handleSubmit}
                 fullWidth
               >
-                Sign In
-              </Button>
+                <span>Sign In</span>
+              </LoadingButton>
               {error && (
                 <Typography
                   variant="body2"
