@@ -1,21 +1,11 @@
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
-import {Student} from "../../utils/types";
+import {Student,StudentInitialState} from "../../utils/types";
 import {SortDescriptor} from "@progress/kendo-data-query";
 
 
-type InitialState = {
-    editId: number | null;
-    dataFetchingRequested: boolean
-    data: Student[];
-    dataEditingRequested: boolean;
 
-    dataAddRequested: boolean;
-    dataRemoveRequested:boolean;
-    sort: Array<SortDescriptor>;
-    newAdded: boolean
-}
 
-const initialState: InitialState = {
+const initialState: StudentInitialState = {
     editId: null,
     dataFetchingRequested: false,
     dataEditingRequested: false,

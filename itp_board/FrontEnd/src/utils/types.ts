@@ -1,4 +1,25 @@
+import {SortDescriptor} from "@progress/kendo-data-query";
 
+
+export type UserInitialState = {
+  firstName:string;
+  lastName: string;
+  email:string;
+  admin:boolean;
+  signIn:boolean;
+}
+
+export type StudentInitialState = {
+  editId: number | null;
+  dataFetchingRequested: boolean
+  data: Student[];
+  dataEditingRequested: boolean;
+
+  dataAddRequested: boolean;
+  dataRemoveRequested:boolean;
+  sort: Array<SortDescriptor>;
+  newAdded: boolean
+}
 
 export type Student = {
   id: number

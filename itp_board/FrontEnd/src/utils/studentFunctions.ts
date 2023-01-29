@@ -20,29 +20,35 @@ import {Page} from "@progress/kendo-react-dropdowns";
 export const getStoreData = () => {
     const editId = useAppSelector(
         (state) => {
-            return state.studentData.editId;
+            return state.persistedReducer.studentData.editId;
         }
     );
     const data = useAppSelector(
         (state) => {
-            return state.studentData.data;
+            return state.persistedReducer.studentData.data;
         }
     );
 
     const sort = useAppSelector(
         (state) => {
-            return state.studentData.sort;
+            return state.persistedReducer.studentData.sort;
         }
     );
 
     const newAdded = useAppSelector(
         (state) => {
-            return state.studentData.newAdded;
+            return state.persistedReducer.studentData.newAdded;
+        }
+    );
+
+    const admin = useAppSelector(
+        (state) => {
+            return state.persistedReducer.useData.admin;
         }
     );
 
     const dispatch = useAppDispatch();
-    return {data, editId, sort, newAdded, dispatch}
+    return {data, editId, sort, newAdded,admin, dispatch}
 }
 
 export const calculateAge = (dob: Date) => {

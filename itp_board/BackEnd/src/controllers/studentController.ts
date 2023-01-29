@@ -1,6 +1,6 @@
 import { AppDataSource } from '../configs/db.config'
 import { Student } from '../models/Student'
-import { sockets } from '../utils/sockets'
+import {io} from  '../utils/app'
 
 const studentRepository = AppDataSource.getRepository(Student)
 
@@ -15,9 +15,7 @@ async function createStudent(student: Student): Promise<Student> {
   const response = await studentRepository.save(student);
   console.log(response);
   if(response){
-    sockets.forEach((socket)=>{
-      socket.broadcast.emit('new_student_added', response);
-    })
+    io.emit('new_student_added',student);
   }
   return response;
 }
@@ -29,9 +27,8 @@ async function updateStudentById(student: Student) {
     { name, gender, address, dateOfBirth, mobileNo }
   )
   if (response) {
-    sockets.forEach(socket => {
-      socket.broadcast.emit('student_edited', student)
-    })
+    io.emit('student_edited',student);
+
   }
   return response;
 }
@@ -39,9 +36,7 @@ async function updateStudentById(student: Student) {
 async function deleteStudentById(id:number){
   const response = await studentRepository.delete({id})
   if (response) {
-    sockets.forEach(socket => {
-      socket.broadcast.emit('student_deleted', id)
-    })
+    io.emit('student_deleted',id);
   }
   return response
 }

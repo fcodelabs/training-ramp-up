@@ -55,7 +55,6 @@ function* create(action:PayloadAction<Student>){
 
 function* update(action:PayloadAction<Student>){
     const record = action.payload
-    console.log("inside update",record)
     try {
         const response:Student = yield call(updateData,record);
         if(response!==null){

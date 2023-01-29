@@ -4,7 +4,7 @@ import {GridCellProps} from "@progress/kendo-react-grid";
 import {calculateAge, discard, edit, execute, remove,cancel} from "../../../../utils/studentFunctions";
 import {DropDown2} from "../dropdown/DropDown2";
 
-export const command = (dataIndex: number, editId: number | null, newAdded: boolean, data: Student[], dispatch: AppDispatch,setPage:pageCallBack) => {
+export const command = (dataIndex: number, editId: number | null, newAdded: boolean, data: Student[], dispatch: AppDispatch,setPage:pageCallBack,admin:boolean) => {
     return (
         <td className='k-command-cell'>
             {dataIndex === editId && newAdded && (
@@ -62,6 +62,7 @@ export const command = (dataIndex: number, editId: number | null, newAdded: bool
             {dataIndex !== editId && (
                 <div className='table--button--group'>
                     <button
+                        disabled={!admin}
                         onClick={() => {
                             edit(newAdded, dispatch, dataIndex)
                         }}
@@ -70,6 +71,7 @@ export const command = (dataIndex: number, editId: number | null, newAdded: bool
                         Edit
                     </button>
                     <button
+                        disabled={!admin}
                         onClick={() => {
                             remove(data, dataIndex,dispatch);
                         }}

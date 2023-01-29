@@ -22,6 +22,7 @@ import { displayNotifications } from '../../utils/toasts'
 
 import { io } from 'socket.io-client'
 import {command, gender,calcAge} from "./components/cellComponent/CellComponent";
+import NavigationBar from "./components/navigatonBar/NavigationBar";
 const socket = io('http://localhost:4000')
 
 
@@ -30,41 +31,30 @@ const Student = () => {
 
     const initialPageState: PageState = {skip: 0, take: 10}
     const [page, setPage] = useState(initialPageState)
-    const [notification, setNotification] = useState('');
-    const [previousNotification, setPreviousNotification] = useState('');
-    const {data, editId, newAdded, sort, dispatch} = getStoreData();
+    const {data, editId, newAdded, sort,admin, dispatch} = getStoreData();
 
-
-    useEffect(
-        ()=>{
-
-            if(notification!=='' && notification!==previousNotification){
-                displayNotifications(notification);
-                setPreviousNotification(notification);
-            }
-        },
-        [notification]
-    )
 
     useEffect(() => {
-        dispatch(startGetData())
-        socket.on('new_student_added', (response: SockeResponse) => {
-            setNotification(`New Student added with the id:${response.id}`)
-            dispatch(startGetData());
-        })
-        socket.on('student_edited', (response: SockeResponse) => {
-            setNotification(`Student data edited with the id:${response.id}`)
-            dispatch(startGetData());
+        dispatch(startGetData());
+    }, []);
 
-        })
-        socket.on('student_deleted', (response: SockeResponse) => {
-            console.log(response);
-            setNotification(`Student data deleted with the id:${response}`)
-            dispatch(startGetData());
 
-        })
+    socket.off('student_deleted').on('student_deleted', (response: SockeResponse) => {
+        displayNotifications(`Student data deleted with the id:${response}`);
+        dispatch(startGetData());
+    })
 
-    }, [socket])
+    socket.off('new_student_added').on('new_student_added', (response: SockeResponse) => {
+        displayNotifications(`New Student added with the id:${response.id}`)
+        dispatch(startGetData());
+    })
+
+    socket.off('student_edited').on('student_edited', (response: SockeResponse) => {
+        displayNotifications(`Student data edited with the id:${response.id}`)
+        dispatch(startGetData());
+    })
+
+
 
     const pageChange = (event: GridPageChangeEvent) => {
         setPage(event.page);
@@ -84,7 +74,7 @@ const Student = () => {
 
     return (
         <>
-
+            <NavigationBar/>
             <ToastContainer
                 position="top-center"
                 autoClose={5000}
@@ -137,6 +127,7 @@ const Student = () => {
                         <button
                             title='Add new'
                             className='k-button k-button-md k-rounded-md k-button-solid k-button-solid-light'
+                            disabled={!admin}
                             onClick={
                                 () => {
                                     addRecord(data, newAdded, dispatch, setPage)
@@ -168,7 +159,7 @@ const Student = () => {
                     field='command'
                     title='Command'
                     cell={(props: GridCellProps) => {
-                        return command(props.dataItem.id, editId, newAdded, data, dispatch,setPage)
+                        return command(props.dataItem.id, editId, newAdded, data, dispatch,setPage,admin)
                     }}
                     className='k-text-center'
                 />
