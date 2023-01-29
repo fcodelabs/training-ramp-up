@@ -9,8 +9,10 @@ export const registerUserService = async (user: User) => {
     user.Password = hashedPassword;
     const userRepo = AppDataSource.getRepository(User);
     const userInsert = await userRepo.save(user);
-    return userInsert;
+    const { Role,Email, ...others } = userInsert;
+    return {Role,Email};
   } catch (err) {
+    
     throw new Error("Error in creating user");
   }
 };

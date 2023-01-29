@@ -33,7 +33,7 @@ const gender = ['Female', 'Male']
 const initialSort: SortDescriptor[] = [{ field: 'PersonID', dir: 'asc' }]
 const initialDataState: PageState = { skip: 0, take: 10 }
 
-export const Table = (): any => {
+export const HomePage = (): any => {
   const [data, setData] = React.useState<Person[]>([])
   const [errs, setErr] = React.useState<string[]>([])
   const [personGen, setGender] = React.useState({ value: 'Male' })

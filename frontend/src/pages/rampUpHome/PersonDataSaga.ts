@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
-import { put, takeEvery, all, call, take, takeLatest } from 'redux-saga/effects'
+import { put, takeEvery, call, take } from 'redux-saga/effects'
 import { eventChannel, EventChannel } from 'redux-saga'
 import { Person } from '../../models/interface'
 import {
@@ -99,7 +99,7 @@ function* deletePersonSaga(payload: any) {
   Starts fetchUser on each dispatched `USER_FETCH_REQUESTED` action.
   Allows concurrent fetches of user.
 */
-function* handlePersonActions() {
+export function* handlePersonActions() {
   yield takeEvery(
     (action: any) => action.type.match('Person'),
     function* ({ type, payload }) {
@@ -122,10 +122,6 @@ function* handlePersonActions() {
   )
 }
 
-function* getNotifications() {
+export function* getNotifications() {
   yield takeEvery(getNotificationStart, fetchNotications)
-}
-
-export default function* rootSaga() {
-  yield all([handlePersonActions(), getNotifications()])
 }

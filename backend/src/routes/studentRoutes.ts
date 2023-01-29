@@ -10,7 +10,7 @@ import { verifyJWT } from "../middleware/verifyJWT";
 
 const router = Router();
 
-router.get("/", verifyJWT,getAllStudents);
+router.get("/", getAllStudents);
 router.get("/:id", getStudentById);
 router.post("/", createStudent);
 router.put("/", updateStudent);

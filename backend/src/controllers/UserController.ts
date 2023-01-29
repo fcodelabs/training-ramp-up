@@ -11,14 +11,10 @@ import jwt from "jsonwebtoken";
 export const signUpController = async (req: Request, res: Response) => {
   try {
     const user = req.body.data;
-
+    console.log(user);
     const userInsert = await registerUserService(user);
-    const socket = req.app.get("socket");
-    socket.emit(
-      "notification",
-      `New user created successfully Name: ${"nuwan"}  !`
-    );
-    res.status(201).send(userInsert);
+
+    res.status(201).json(userInsert);
   } catch (err) {
     res.status(400).send(err);
   }
@@ -42,7 +38,7 @@ export const loginController = async (req: Request, res: Response) => {
       //   );
 
       const accessToken = jwt.sign(
-        { user: userLogin.Email },
+        { userInfo: { userRole: userLogin.Role, userEmail: userLogin.Email } },
         process.env.ACCESS_TOKEN_SECRET as string,
         { expiresIn: "30s" }
       );
@@ -55,8 +51,11 @@ export const loginController = async (req: Request, res: Response) => {
       res.cookie("jwt", refreshToken, {
         httpOnly: true,
         maxAge: 3600 * 24 * 1000,
+        path: "/",
+        sameSite: "strict",
+        secure: process.env.NODE_ENV !== "development",
       });
-      res.send(refreshToken);
+      res.send(accessToken);
     }
   } catch (err) {
     res.status(400).send(err);
@@ -78,7 +77,9 @@ export const refreshTokenController = async (req: Request, res: Response) => {
         if (err || decoded.user !== foundUser.Email) return res.sendStatus(403);
 
         const accessToken = jwt.sign(
-          { user: foundUser.Email },
+          {
+            userInfo: { userRole: foundUser.Role, userEmail: foundUser.Email },
+          },
           process.env.ACCESS_TOKEN_SECRET as string,
           { expiresIn: "30s" }
         );

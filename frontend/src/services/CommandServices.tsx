@@ -38,13 +38,13 @@ export const checkErr = (item: Person): string[] => {
     if (
       item.PersonMobileNo != null &&
       // eslint-disable-next-line no-useless-escape
-      !regValidate(item.PersonMobileNo,/^[+]*[(]{0,1}[0-9]{3}[)]{0,1}[-\s\.\/0-9]{7}$/g)
+      !regValidate(item.PersonMobileNo,/^[+]*[-\s\.\/0-9]{10}$/g)
     )
       tempErr.push('phone number should be in valid format')
  if (
       item.PersonName != null &&
       // eslint-disable-next-line no-useless-escape 
-      !regValidate(item.PersonName,/(^[a-zA-Z][a-zA-Z\s]{5,10}$)/)
+      !regValidate(item.PersonName,/(^[a-zA-Z\s]{5,15}$)/)
     )
       tempErr.push('person name should bein valid format')
 if (

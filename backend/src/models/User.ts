@@ -11,6 +11,7 @@ import {
 enum Role {
   ADMIN = "admin",
   GUEST = "guest",
+  EDITOR = "editor",
 }
 
 @Entity()

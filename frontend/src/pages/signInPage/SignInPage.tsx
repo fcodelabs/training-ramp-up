@@ -2,18 +2,21 @@ import { useEffect, useState } from 'react'
 import './signInPage.css'
 import { Formik, Form, Field } from 'formik'
 import * as Yup from 'yup'
+import { userLoginStart, userRegisterStart } from './userSlice'
+import { useDispatch } from 'react-redux'
 
 export const SignInPage = (): JSX.Element => {
   const [isRightPanelActive, setIsRightPanelActive] = useState('')
+  const distpatch = useDispatch()
 
   const SignUpSchema = Yup.object().shape({
     email: Yup.string().email('Invalid email').required('Required'),
-    password: Yup.string().min(8, 'Too Short!').max(50, 'Too Long!').required('Required'),
+    password: Yup.string().min(2, 'Too Short!').max(50, 'Too Long!').required('Required'),
     confirmPassword: Yup.string().oneOf([Yup.ref('password')], 'Passwords must match'),
   })
   const SignInSchema = Yup.object().shape({
-    email: Yup.string().email('Invalid email').required('Required'),
-    password: Yup.string().min(8, 'Too Short!').max(50, 'Too Long!').required('Required'),
+    email: Yup.string().required('Required'),
+    password: Yup.string().min(2, 'Too Short!').max(50, 'Too Long!').required('Required'),
   })
   const navigateSignIn = (): void => {
     setIsRightPanelActive('')
@@ -51,17 +54,18 @@ export const SignInPage = (): JSX.Element => {
             </div>
             <span>or use your email for registration</span>
             <Formik
-              initialValues={{ email: '', password: '',confirmPassword: '' }}
+              initialValues={{ email: '', password: '', confirmPassword: '' }}
               validationSchema={SignUpSchema}
               onSubmit={(values) => {
-                // submit the form
+                const { email, password } = values
+                distpatch(userRegisterStart({ Email: email, Password: password, Role: 'guest' }))
               }}
             >
               {({ errors, touched }) => (
                 <Form>
                   <div>
                     <Field className='input-field' name='email' placeholder='Email' />
-                    {((errors.email ?? "").length > 0) && (touched.email ?? false) ? (
+                    {(errors.email ?? '').length > 0 && (touched.email ?? false) ? (
                       <div className='login-err'>{errors.email}</div>
                     ) : null}
                   </div>
@@ -72,7 +76,7 @@ export const SignInPage = (): JSX.Element => {
                       name='password'
                       placeholder='Password'
                     />
-                    {((errors.password ?? "").length > 0) && (touched.password ?? false) ? (
+                    {(errors.password ?? '').length > 0 && (touched.password ?? false) ? (
                       <div className='login-err'>{errors.password}</div>
                     ) : null}
                   </div>
@@ -83,7 +87,8 @@ export const SignInPage = (): JSX.Element => {
                       name='confirmPassword'
                       placeholder='Password'
                     />
-                    {((errors.confirmPassword ?? "").length > 0) && (touched.confirmPassword ?? false) ? (
+                    {(errors.confirmPassword ?? '').length > 0 &&
+                    (touched.confirmPassword ?? false) ? (
                       <div className='login-err'>{errors.confirmPassword}</div>
                     ) : null}
                   </div>
@@ -110,15 +115,17 @@ export const SignInPage = (): JSX.Element => {
             <Formik
               initialValues={{ email: '', password: '' }}
               validationSchema={SignInSchema}
-              onSubmit={(values) => {
-                // submit the form
+              onSubmit={(values, { resetForm }) => {
+                const { email, password } = values
+                distpatch(userLoginStart({ Email: email, Password: password }))
+                resetForm()
               }}
             >
               {({ errors, touched }) => (
                 <Form>
                   <div>
                     <Field className='input-field' name='email' placeholder='Email' />
-                    {((errors.email ?? "").length > 0) && (touched.email ?? false) ? (
+                    {(errors.email ?? '').length > 0 && (touched.email ?? false) ? (
                       <div className='login-err'>{errors.email}</div>
                     ) : null}
                   </div>
@@ -129,7 +136,7 @@ export const SignInPage = (): JSX.Element => {
                       name='password'
                       placeholder='Password'
                     />
-                    {((errors.password ?? "").length > 0) && (touched.password ?? false) ? (
+                    {(errors.password ?? '').length > 0 && (touched.password ?? false) ? (
                       <div className='login-err'>{errors.password}</div>
                     ) : null}
                   </div>
