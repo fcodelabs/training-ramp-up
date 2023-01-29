@@ -5,7 +5,7 @@ import {
   deleteStudentService,
   updateStudentService,
 } from '../services/studentServices';
-import { io } from '../..';
+import { io } from '../../app';
 
 export const getStudents = async (req: Request, res: Response): Promise<void> => {
   try {
