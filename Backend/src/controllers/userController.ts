@@ -13,9 +13,9 @@ interface UserType {
 export const signUp = async (req: Request, res: Response) => {
   try {
     const { email, password } = req.body;
+
     if (!email || !password) throw new Error('Email and password are required').message;
     const newUser: UserType = await createUser({ email, password });
-
     const jwtToken = jwt.sign({ email: newUser.email, role: newUser.role }, process.env.JWT_SECRET as string, {
       expiresIn: '15m',
     });
@@ -56,7 +56,7 @@ export const signIn = async (req: Request, res: Response) => {
     if (!email || !password) throw new Error('Email and password are required').message;
     const user = await loginUser(email, password);
     const jwtToken = jwt.sign({ email: user.email, role: user.role }, process.env.JWT_SECRET as string, {
-      expiresIn: '1h',
+      expiresIn: '15m',
     });
     const refreshToken = jwt.sign({ email: user.email, role: user.role }, process.env.JWT_SECRET as string, {
       expiresIn: '1d',
@@ -118,7 +118,7 @@ export const refresh = async (req: Request, res: Response) => {
     if (!refresh) throw new Error('No refresh token found').message;
     const { email, role } = jwt.verify(refresh, process.env.JWT_SECRET as string) as { email: string; role: string };
     const jwtToken = jwt.sign({ email, role }, process.env.JWT_SECRET as string, {
-      expiresIn: '1h',
+      expiresIn: '15m',
     });
 
     const jwtCookie = cookie.serialize('jwt', jwtToken, {
