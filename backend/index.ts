@@ -2,11 +2,17 @@ import express, { Express } from "express";
 import "reflect-metadata";
 import { AppDataSource } from "./src/configs/DataSourceConfig";
 import cors from "cors";
-import { User } from "./src/models/User";
 import { createServer } from "http";
 import { Server } from "socket.io";
-import userRoutes from "./src/routes/UserRoutes";
+import studentRoutes from "./src/routes/studentRoutes";
+import userRoutes from "./src/routes/userRoutes";
+import passport from "passport";
+import cookieparser from "cookie-parser";
+import dotenv from "dotenv";
+
 const PORT = "5000";
+
+dotenv.config();
 
 const app: Express = express();
 const httpServer = createServer(app);
@@ -19,6 +25,8 @@ app.use(
   })
 );
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieparser());
+app.use(passport.initialize());
 
 //socket io
 const io: Server = new Server(httpServer, {
@@ -34,29 +42,10 @@ io.on("connection", (socket: any) => {
 });
 
 //routes
+app.use("/api/students", studentRoutes);
 app.use("/api/users", userRoutes);
-
-app.get("api/", async function (_req, res) {
-  const userRepo = AppDataSource.getRepository(User);
-  const allrecords = await userRepo.find();
-
-  // res.send(allrecords);
-
-  let user: User = new User();
-  user.PersonID = 11;
-  user.PersonName = "tessadsat";
-  user.DateOfBirth = new Date();
-  user.PersonGender = "tesasdt";
-  user.PersonMobileNo = "tasdest";
-  user.PersonAddress = "test";
-  const userInsert = await userRepo.save(user);
-  console.log(allrecords);
-  res.send(allrecords);
-});
-
-
-
 //typeorm connection
+
 AppDataSource.initialize()
   .then(() => {
     console.log("success connected to the database!");

@@ -1,80 +1,99 @@
-
 import {
-  createUserService,
-  deleteAllUserService,
-  deleteUserService,
-  getAllUsersService,
-  getUserByIdService,
-  updateUserService,
-} from "../services/UserServices";
+  findUserByRefreshTokenService,
+  loginUserService,
+  registerUserService,
+  updateRefreshTokenService,
+} from "../services/userServices";
 import { Request, Response } from "express";
-import { User } from "../models/User";
+import cookie from "cookie";
+import jwt from "jsonwebtoken";
 
-export const getAllUsers = async (req: Request, res: Response) => {
-  try {
-    console.log("getAllUsers");
-    const allrecords = await getAllUsersService();
-
-    res.send(allrecords);
-  } catch (err) {
-    // console.log(err);
-    res.send(err);
-  }
-};
-
-export const getUserById = async (req: Request, res: Response) => {
-  try {
-    const id = parseInt(req.params.id);
-    const user = await getUserByIdService(id);
-
-    res.send(user);
-  } catch (err) {
-    res.send(err);
-  }
-};
-
-export const createUser = async (req: Request, res: Response) => {
+export const signUpController = async (req: Request, res: Response) => {
   try {
     const user = req.body.data;
-    console.log(req.body.data);
-    const userInsert = await createUserService(user);
+
+    const userInsert = await registerUserService(user);
     const socket = req.app.get("socket");
-    socket.emit("notification", `New user created successfully Name: ${userInsert?.PersonName}  !`);
+    socket.emit(
+      "notification",
+      `New user created successfully Name: ${"nuwan"}  !`
+    );
     res.status(201).send(userInsert);
   } catch (err) {
     res.status(400).send(err);
   }
 };
 
-export const updateUser = async (req: Request, res: Response) => {
+export const loginController = async (req: Request, res: Response) => {
+  const user = req.body.data;
   try {
-    const user = req.body.data;
-    const userUpdate = await updateUserService(user);
-    
-     const socket = req.app.get("socket");
-    socket.emit("notification", `User updated successfully Name: ${userUpdate?.PersonName}  !`);
-    res.send(userUpdate);
+    const userLogin = await loginUserService(user);
+    if (userLogin !== null) {
+      //   const token = userLogin.generateAuthToken();
+      //   res.setHeader(
+      //     "Set-Cookie",
+      //     cookie.serialize("token", token, {
+      //       httpOnly: true,
+      //       secure: process.env.NODE_ENV !== "development",
+      //       sameSite: "strict",
+      //       maxAge: 3600,
+      //       path: "/",
+      //     })
+      //   );
+
+      const accessToken = jwt.sign(
+        { user: userLogin.Email },
+        process.env.ACCESS_TOKEN_SECRET as string,
+        { expiresIn: "30s" }
+      );
+      const refreshToken = jwt.sign(
+        { user: userLogin.Email },
+        process.env.REFRESH_TOKEN_SECRET as string,
+        { expiresIn: "1d" }
+      );
+      await updateRefreshTokenService(userLogin, refreshToken);
+      res.cookie("jwt", refreshToken, {
+        httpOnly: true,
+        maxAge: 3600 * 24 * 1000,
+      });
+      res.send(refreshToken);
+    }
   } catch (err) {
-    res.send(err);
+    res.status(400).send(err);
   }
 };
 
-export const deleteUser = async (req: Request, res: Response) => {
+export const refreshTokenController = async (req: Request, res: Response) => {
+  const cookie = req.cookies;
+
+  if (cookie.jwt === null) return res.sendStatus(401);
+  const refreshToken = cookie.jwt;
   try {
-    const id = parseInt(req.params.id);
-    const userDelete = await deleteUserService(id);
-     const socket = req.app.get("socket");
-    socket.emit("notification", `User deleted successfully Name: ${userDelete?.PersonName}  !`);
-    res.send(userDelete);
+    const foundUser = await findUserByRefreshTokenService(refreshToken);
+    if (foundUser === null) return res.sendStatus(403);
+    const accessToken = jwt.verify(
+      refreshToken,
+      process.env.REFRESH_TOKEN_SECRET as string,
+      (err: any, decoded: any) => {
+        if (err || decoded.user !== foundUser.Email) return res.sendStatus(403);
+
+        const accessToken = jwt.sign(
+          { user: foundUser.Email },
+          process.env.ACCESS_TOKEN_SECRET as string,
+          { expiresIn: "30s" }
+        );
+        res.send(accessToken);
+      }
+    );
   } catch (err) {
-    res.send(err);
+    res.status(403).send(err);
   }
 };
-export const deleteAllUser = async (req: Request, res: Response) => {
-  try {
-    const userDelete = await deleteAllUserService();
-    res.send(userDelete);
-  } catch (err) {
-    res.send(err);
-  }
+
+export const logoutController = async (req: Request, res: Response) => {
+  const cookie = req.cookies;
+  if (cookie.jwt === null) return res.sendStatus(204); //No content
+  res.clearCookie("jwt", { httpOnly: true });
+
+  res.status(204).send("logout");
 };

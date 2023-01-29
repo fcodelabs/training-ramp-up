@@ -9,3 +9,5 @@ configure eslint/prettier
 * touch .prettierrc
 
 * tsc init
+create keys
+* require('crypto').randomBytes(64).toString('hex') 

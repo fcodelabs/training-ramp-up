@@ -1,15 +1,14 @@
-import { Person } from '../helpers/interface'
+import { Person } from '../models/interface'
 import { publicRequest } from '../utils/requestMethods'
 
 export const addNewPersonService = async (dataArr: [Person, number]): Promise<Person | unknown> => {
-  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   try {
     const personData = dataArr[0]
     personData.PersonID = dataArr[1]
     const config = {
       data: personData,
     }
-    const res = await publicRequest.post(`/users`, config)
+    const res = await publicRequest.post(`/students`, config)
     console.log(res.data)
     return res.data
   } catch (err) {
@@ -18,12 +17,12 @@ export const addNewPersonService = async (dataArr: [Person, number]): Promise<Pe
 }
 
 export const updatePersonService = async (updateValue: Person): Promise<Person | unknown> => {
-  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+ 
   try {
     const config = {
       data: updateValue,
     }
-    const res = await publicRequest.put(`/users`, config)
+    const res = await publicRequest.put(`/students`, config)
     console.log(res.data)
     return res.data
   } catch (err) {
@@ -32,10 +31,10 @@ export const updatePersonService = async (updateValue: Person): Promise<Person |
 }
 
 export const deletePersonService = async (Id: number): Promise<Person | unknown> => {
-  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+ 
   try {
-    console.log("asd")
-    const res = await publicRequest.delete(`/users/${Id}`)
+    console.log('asd')
+    const res = await publicRequest.delete(`/students/${Id}`)
 
     return res.data
   } catch (err) {
@@ -44,10 +43,10 @@ export const deletePersonService = async (Id: number): Promise<Person | unknown>
 }
 
 // get project
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+
 export const getAllPersonServise = async (): Promise<Person[] | unknown> => {
   try {
-    const res = await publicRequest.get('/users')
+    const res = await publicRequest.get('/students')
     return res.data
   } catch (err) {
     return err

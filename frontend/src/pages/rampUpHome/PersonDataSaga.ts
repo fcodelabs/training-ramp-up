@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { put, takeEvery, all, call, take, takeLatest } from 'redux-saga/effects'
 import { eventChannel, EventChannel } from 'redux-saga'
-import { Person } from '../../helpers/interface'
+import { Person } from '../../models/interface'
 import {
   addPersonDataFailure,
   addPersonDataStart,

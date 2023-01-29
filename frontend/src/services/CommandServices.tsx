@@ -1,5 +1,5 @@
-import { Person } from './interface'
-import { sampleData } from './sample-products'
+import { Person } from '../models/interface'
+import { sampleData } from '../helpers/sampleProducts'
 import { durationInYears } from '@progress/kendo-date-math'
 
 let personData: Person[]= [];

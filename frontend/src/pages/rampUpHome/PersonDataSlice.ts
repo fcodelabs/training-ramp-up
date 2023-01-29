@@ -1,4 +1,4 @@
-import { Person } from '../../helpers/interface'
+import { Person } from '../../models/interface'
 import { createSlice } from '@reduxjs/toolkit'
 
 const temp: Person[] = []

@@ -1,22 +1,46 @@
-import { Column, Entity, PrimaryColumn } from "typeorm";
+import { text } from "node:stream/consumers";
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  Index,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from "typeorm";
+
+enum Role {
+  ADMIN = "admin",
+  GUEST = "guest",
+}
 
 @Entity()
 export class User {
-  @PrimaryColumn()
-  PersonID: number;
+  @PrimaryGeneratedColumn()
+  UserID: number;
 
   @Column()
-  PersonName!: string;
+  @Index({
+    unique: true,
+  })
+  Email: string;
 
   @Column()
-  PersonGender!: string;
+  Password: string;
 
-  @Column()
-  PersonAddress!: string;
+  @Column({
+    type: "enum",
+    enum: Role,
+  })
+  Role: Role;
 
-  @Column()
-  PersonMobileNo!: string;
+  @CreateDateColumn()
+  createdAt: Date;
 
-  @Column()
-  DateOfBirth!: Date;
+  @UpdateDateColumn()
+  updatedAt: Date;
+
+  //   @Column("text", { array: true, default: "{}" })
+  //   RefreshToken: string[];
+  @Column("text", { default: "" })
+  RefreshToken: string;
 }

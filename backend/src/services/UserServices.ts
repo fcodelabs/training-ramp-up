@@ -1,20 +1,12 @@
 import { AppDataSource } from "../configs/DataSourceConfig";
 import { User } from "../models/User";
+import bcrypt from "bcrypt";
+import { Any, In } from "typeorm";
 
-export const getAllUsersService = async (): Promise<User[]> => {
-  const userRepo = AppDataSource.getRepository(User);
-  const allrecords = await userRepo.find();
-  return allrecords;
-};
-
-export const getUserByIdService = async (id: number): Promise<User | null> => {
-  const userRepo = AppDataSource.getRepository(User);
-  const user = await userRepo.findOneBy({ PersonID: id });
-  return user;
-};
-
-export const createUserService = async (user: User): Promise<User> => {
+export const registerUserService = async (user: User) => {
   try {
+    const hashedPassword = await bcrypt.hash(user.Password, 10);
+    user.Password = hashedPassword;
     const userRepo = AppDataSource.getRepository(User);
     const userInsert = await userRepo.save(user);
     return userInsert;
@@ -23,37 +15,64 @@ export const createUserService = async (user: User): Promise<User> => {
   }
 };
 
-export const updateUserService = async (user: User): Promise<User> => {
+export const loginUserService = async (user: User) => {
   try {
     const userRepo = AppDataSource.getRepository(User);
-    const userUpdate = await userRepo.save(user);
-    const updateUser = await userRepo.findOneBy({ PersonID: user.PersonID });
-    if (updateUser !== null) {
-      return updateUser;
+    const userLogin = await userRepo.findOneBy({ Email: user.Email });
+    if (userLogin !== null) {
+      const passwordMatch = await bcrypt.compare(
+        user.Password,
+        userLogin.Password
+      );
+      if (passwordMatch) {
+        return userLogin;
+      } else {
+        throw new Error("Incorrect password");
+      }
     } else {
-      throw new Error("Error in updating user");
+      throw new Error("User not found");
+    }
+  } catch (err) {
+    throw new Error("Error in login user");
+  }
+};
+
+export const updateRefreshTokenService = async (
+  user: User,
+  refreshToken: string
+) => {
+  try {
+    const userRepo = AppDataSource.getRepository(User);
+    const currentUser = await userRepo.findOneBy({ UserID: user.UserID });
+    if (currentUser !== null) {
+      const newUser = {
+        ...currentUser,
+        RefreshToken: refreshToken,
+        //   RefreshToken: [...currentUser?.RefreshToken, refreshToken],
+      };
+      const userUpdate = await userRepo.save(newUser);
     }
   } catch (err) {
     throw new Error("Error in updating user");
   }
 };
 
-export const deleteUserService = async (id: number): Promise<User> => {
-  const userRepo = AppDataSource.getRepository(User);
-  const user = await userRepo.findOneBy({ PersonID: id });
+export const findUserByRefreshTokenService = async (
+  refreshToken: string
+): Promise<User> => {
+  try {
+    const userRepo = AppDataSource.getRepository(User);
 
-  if (user !== null) {
-    const userDelete = await userRepo.remove(user);
-    userDelete.PersonID = id;
-    return userDelete;
-  } else {
-   throw new Error("Error in updating user");
+    const user = await userRepo.findOne({
+      where: { RefreshToken: refreshToken },
+    });
+
+    if (user !== null) {
+      return user;
+    } else {
+      throw new Error("User not found");
+    }
+  } catch (err) {
+    throw new Error("Error in finding user");
   }
-};
-
-export const deleteAllUserService = async (): Promise<User[]> => {
-  const userRepo = AppDataSource.getRepository(User);
-  const allrecords = await userRepo.find();
-  const userDelete = await userRepo.remove(allrecords);
-  return userDelete;
 };

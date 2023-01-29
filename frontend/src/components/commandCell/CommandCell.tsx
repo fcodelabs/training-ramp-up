@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Person } from './interface'
+import { Person } from '../../models/interface'
 
 export const CommandCell = (props: {
   editField: any
