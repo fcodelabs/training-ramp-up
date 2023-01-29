@@ -6,7 +6,8 @@
   "scripts": {
     "test": "jest",
     "test:watch": "jest --watch",
-    "start": "nodemon index.ts"
+    "start": "nodemon index.ts",
+    "coverage": "jest --coverage"
   },
   "keywords": [],
   "author": "",
