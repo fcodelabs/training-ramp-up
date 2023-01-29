@@ -90,10 +90,11 @@ describe('User Controller Test', () => {
   });
 
   describe('Refresh Test', () => {
+    //If you fail this test, you need to change the refresh token in the code with a new one
     const req_refresh = {
       cookies: {
         refresh:
-          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluQGdtYWlsLmNvbSIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTY3NDk5MDA1NywiZXhwIjoxNjc1MDc2NDU3fQ.6Sv4kgWH_bVc60UU7ee3OGIrXEucSJBsyhkS8Nj1OHw',
+          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InVzZXJAZ21haWwuY29tIiwicm9sZSI6InVzZXIiLCJpYXQiOjE2NzQ5OTYxMDUsImV4cCI6MTY4MzYzNjEwNX0.ciyOXNZ989VJvgttcdGupRtMnO6Co6G9xXFTcrkuVDU',
       },
     } as Request;
 
