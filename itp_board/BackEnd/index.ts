@@ -10,6 +10,7 @@ app.use(morgan('tiny'))
 app.use(express.json())
 
 app.use('/student', studentRouter)
+app.use('/user', studentRouter)
 
 server.listen(port, () => {
   console.log(`[Server]:Running at localhost:${port}`)

@@ -1,5 +1,5 @@
 import express, { Request, Response } from 'express'
-import { Student } from '../models/Student'
+import { Student } from '../models/student'
 import { createStudent, getAllStudents, updateStudentById, deleteStudentById } from '../controllers/studentController'
 
 const studentRouter:express.Router = express.Router()

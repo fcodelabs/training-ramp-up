@@ -1,5 +1,5 @@
 import { AppDataSource } from '../configs/db.config'
-import { Student } from '../models/Student'
+import { Student } from '../models/student'
 import {io} from  '../utils/app'
 
 const studentRepository = AppDataSource.getRepository(Student)
@@ -13,7 +13,6 @@ async function getAllStudents(): Promise<Student[]> {
 
 async function createStudent(student: Student): Promise<Student> {
   const response = await studentRepository.save(student);
-  console.log(response);
   if(response){
     io.emit('new_student_added',student);
   }

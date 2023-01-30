@@ -1,5 +1,5 @@
 import { DataSource } from 'typeorm'
-import { Student } from '../models/Student'
+import { Student } from '../models/student'
 import dotenv from 'dotenv'
 dotenv.config()
 
