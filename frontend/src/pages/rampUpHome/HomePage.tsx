@@ -55,9 +55,10 @@ export const HomePage = (): any => {
     }
   }
   const persondata = useSelector((state: any) => state.personData.person)
+  const isFetching = useSelector((state: any) => state.personData.isFetching)
   const notifications = useSelector((state: any) => state.notification.notifications)
 
-  const notify = (mdg: string): any => toast(mdg)
+  const notify = (msg: string): any => toast(msg)
   React.useEffect(() => {
     distpatch(getPersonDataStart())
     distpatch(getNotificationStart())
@@ -78,6 +79,11 @@ export const HomePage = (): any => {
       }, 1000)
     }
   }, [notifications])
+
+  React.useEffect(() => {
+    setBirthday(new Date())
+    setGender({ value: 'Male' })
+  }, [persondata])
 
   const itemChange = (event: GridItemChangeEvent): any => {
     const newData = data.map((item) =>
@@ -104,8 +110,6 @@ export const HomePage = (): any => {
     } else {
       data.shift()
       distpatch(addPersonDataStart([dataItem, newId]))
-      setBirthday(new Date())
-      setGender({ value: 'Male' })
     }
   }
 
@@ -131,8 +135,6 @@ export const HomePage = (): any => {
       onToggle()
     } else {
       distpatch(updatePersonDataStart(dataItem))
-      setBirthday(new Date())
-      setGender({ value: 'Male' })
     }
   }
 
@@ -177,7 +179,7 @@ export const HomePage = (): any => {
     setPage(event.page)
   }
 
- const logOut=()=>{
+  const logOut = () => {
     distpatch(userLogOutSuccess())
   }
   const CommandCellFunc = (props: GridCellProps): JSX.Element => (
