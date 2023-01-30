@@ -1,5 +1,6 @@
 import { DataSource } from 'typeorm'
 import { Student } from '../models/student'
+import {User} from '../models/user'
 import dotenv from 'dotenv'
 dotenv.config()
 
@@ -13,7 +14,7 @@ const AppDataSource = new DataSource({
   password: process.env.DB_PASSWORD,
   database: process.env.DB_DATABASE,
   logging: true,
-  entities:[Student]
+  entities:[Student,User]
 })
 
 AppDataSource.initialize()

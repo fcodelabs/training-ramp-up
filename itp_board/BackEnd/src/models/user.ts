@@ -1,9 +1,9 @@
-import { Entity, Column, PrimaryColumn  } from 'typeorm'
+import { Entity, Column,PrimaryColumn } from 'typeorm'
 
 @Entity()
 class User {
 
-    @Column('PrimaryColumn ')
+    @PrimaryColumn('varchar')
     email: string | undefined
 
     @Column('varchar')
