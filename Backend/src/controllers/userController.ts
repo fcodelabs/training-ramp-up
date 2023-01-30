@@ -90,26 +90,22 @@ export const signIn = async (req: Request, res: Response) => {
 };
 
 export const signOut = async (req: Request, res: Response) => {
-  try {
-    const jwtCookie = cookie.serialize('jwt', '', {
-      httpOnly: true,
-      secure: true,
-      path: '/',
-      sameSite: 'strict',
-      maxAge: 0, // expires in 1 hour
-    });
-    const refreshCookie = cookie.serialize('refresh', '', {
-      httpOnly: true,
-      secure: true,
-      path: '/',
-      sameSite: 'strict',
-      maxAge: 0, // expires in 1 day
-    });
-    res.setHeader('Set-Cookie', [jwtCookie, refreshCookie]);
-    res.status(200).json({ message: 'User logged out successfully' });
-  } catch (err) {
-    res.status(400).json({ message: 'User not found', err });
-  }
+  const jwtCookie = cookie.serialize('jwt', '', {
+    httpOnly: true,
+    secure: true,
+    path: '/',
+    sameSite: 'strict',
+    maxAge: 0, // expires in 1 hour
+  });
+  const refreshCookie = cookie.serialize('refresh', '', {
+    httpOnly: true,
+    secure: true,
+    path: '/',
+    sameSite: 'strict',
+    maxAge: 0, // expires in 1 day
+  });
+  res.setHeader('Set-Cookie', [jwtCookie, refreshCookie]);
+  res.status(200).json({ message: 'User logged out successfully' });
 };
 
 export const refresh = async (req: Request, res: Response) => {
