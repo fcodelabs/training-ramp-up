@@ -25,14 +25,14 @@ import { InsertResult } from 'typeorm';
 export class UsersController {
   constructor(
     private readonly usersService: UsersService,
-    private authService: AuthService,
+    private readonly authService: AuthService,
   ) {}
 
-  @Post('signup')
+  @Post('signUp')
   @Roles([Role.Admin, Role.User])
-  create(@Body() createUserDto: CreateUserDto): Promise<InsertResult> {
-    if (!this.usersService.isUserAlreadyExist(createUserDto.username)) {
-      return this.usersService.create(createUserDto);
+  async create(@Body() createUserDto: CreateUserDto): Promise<InsertResult> {   
+    if (! await this.usersService.isUserAlreadyExist(createUserDto.username)) {
+      return await this.usersService.create(createUserDto);
     }
   }
 
@@ -55,6 +55,7 @@ export class UsersController {
     res.send({ auth: true });
   }
 
+  @UseGuards(AuthGuard)
   @Roles([Role.Admin, Role.User])
   @Post('userDetails')
   async getUserDetails(
@@ -86,6 +87,7 @@ export class UsersController {
     res.send('OK');
   }
 
+  @UseGuards(AuthGuard)
   @Delete()
   @UseGuards(AuthGuard)
   @Roles([Role.Admin, Role.User])

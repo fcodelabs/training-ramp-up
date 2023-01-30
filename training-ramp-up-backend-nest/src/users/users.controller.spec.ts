@@ -77,11 +77,13 @@ describe('UsersController', () => {
 
     it('Signup failed', async () => {
       try {
-        const spySignupUser = jest
+        var spySignupUser = jest
           .spyOn(userService, 'create')
           .mockResolvedValue(null);
         const response = await controller.create(user);
+        
       } catch (err) {
+        spySignupUser.mockRestore()
         expect(err).toEqual(null);
       }
     });
@@ -127,14 +129,16 @@ describe('UsersController', () => {
 
     it('Signin failed', async () => {
       try {
-        const spyValidateUser = jest
+        var spyValidateUser = jest
           .spyOn(userService, 'validateUser')
           .mockRejectedValue(null);
-        const spyLogin = jest
+        var spyLogin = jest
           .spyOn(authService, 'login')
           .mockRejectedValue(null);
         await controller.login(req, res);
       } catch (err) {
+        spyValidateUser.mockRestore()
+        spyLogin.mockRestore()
         expect(err).toEqual(null);
       }
     });
@@ -165,12 +169,13 @@ describe('UsersController', () => {
 
     it('Get user details failed', async () => {
       try {
-        const spyGetUserDetails = jest
+        var spyGetUserDetails = jest
           .spyOn(authService, 'getUserDetails')
           .mockRejectedValue(null);
 
         await controller.getUserDetails(req, res);
       } catch (err) {
+        spyGetUserDetails.mockRestore()
         expect(err).toEqual(null);
       }
     });
@@ -203,11 +208,12 @@ describe('UsersController', () => {
 
     it('Refresh token failed', async () => {
       try {
-        const spyGetNewAccessToken = jest
+        var spyGetNewAccessToken = jest
           .spyOn(authService, 'getNewAccessToken')
           .mockRejectedValue(null);
         await controller.refreshToken(req, res);
       } catch (err) {
+        spyGetNewAccessToken.mockRestore()
         expect(err).toEqual(null);
       }
     });

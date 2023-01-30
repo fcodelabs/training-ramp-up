@@ -58,11 +58,12 @@ describe('StudentsController', () => {
 
     it('Find all failed', async () => {
       try {
-        const spyGetStudents = jest
+        var spyGetStudents = jest
           .spyOn(service, 'findAll')
           .mockRejectedValue(null);
         const response = await controller.findAll();
       } catch (err) {
+        spyGetStudents.mockRestore()
         expect(err).toEqual(null);
       }
     });
@@ -96,11 +97,12 @@ describe('StudentsController', () => {
 
     it('Add student failed', async () => {
       try {
-        const spyAddStudent = jest
+        var spyAddStudent = jest
           .spyOn(service, 'create')
           .mockResolvedValue(null);
         const response = await controller.create(student);
       } catch (err) {
+        spyAddStudent.mockRestore()
         expect(err).toEqual(null);
       }
     });
@@ -134,11 +136,12 @@ describe('StudentsController', () => {
 
     it('Update student failed', async () => {
       try {
-        const spyUpdateStudent = jest
+        var spyUpdateStudent = jest
           .spyOn(service, 'update')
           .mockResolvedValue(null);
         const response = await controller.update(id, student);
       } catch (err) {
+        spyUpdateStudent.mockRestore()
         expect(err).toEqual(null);
       }
     });
@@ -162,11 +165,12 @@ describe('StudentsController', () => {
 
     it('Delete student failed', async () => {
       try {
-        const spyDeleteStudent = jest
+        var spyDeleteStudent = jest
           .spyOn(service, 'remove')
           .mockResolvedValue(null);
         const response = await controller.remove(id);
       } catch (err) {
+        spyDeleteStudent.mockRestore()
         expect(err).toEqual(null);
       }
     });

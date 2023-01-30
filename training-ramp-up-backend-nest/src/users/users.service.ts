@@ -9,8 +9,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { InsertResult, Repository } from 'typeorm';
 import bcrypt = require('bcrypt');
-import { Logger } from '@nestjs/common/services';
-import { ConflictException } from '@nestjs/common/exceptions/conflict.exception';
 
 @Injectable()
 export class UsersService {
@@ -48,10 +46,6 @@ export class UsersService {
     }
   }
 
-  findAll() {
-    return `This action returns all users`;
-  }
-
   async validateUser(username: string, password: string): Promise<User> {
     try {
       const user = await this.userRepository.findOne({
@@ -81,5 +75,9 @@ export class UsersService {
 
   remove(id: number) {
     return `This action removes a #${id} user`;
+  }
+
+  findAll() {
+    return `This action returns all users`;
   }
 }
