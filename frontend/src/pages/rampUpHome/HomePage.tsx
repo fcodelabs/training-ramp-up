@@ -23,10 +23,12 @@ import {
   deletePersonDataStart,
   getPersonDataStart,
   updatePersonDataStart,
-} from './PersonDataSlice'
-import { delteNotification, getNotificationStart } from './NotificationSlice'
+} from './personDataSlice'
+import { delteNotification, getNotificationStart } from './notificationSlice'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
+import { Button } from '@progress/kendo-react-buttons'
+import { userLogOutSuccess } from '../signInPage/userSlice'
 
 const editField: string = 'inEdit'
 const gender = ['Female', 'Male']
@@ -175,6 +177,9 @@ export const HomePage = (): any => {
     setPage(event.page)
   }
 
+ const logOut=()=>{
+    distpatch(userLogOutSuccess())
+  }
   const CommandCellFunc = (props: GridCellProps): JSX.Element => (
     <CommandCell
       {...props}
@@ -211,13 +216,21 @@ export const HomePage = (): any => {
         }}
       >
         <GridToolbar>
-          <button
-            title='Add new'
-            onClick={addNew}
-            className='k-button k-button-md k-rounded-md k-button-solid k-button-solid-error'
-          >
-            Add new
-          </button>
+          <div className='buttons-container'>
+            <button
+              title='Add new'
+              onClick={addNew}
+              className='k-button k-button-md k-rounded-md k-button-solid k-button-solid-error'
+            >
+              Add new
+            </button>
+
+            <Button
+              onClick={logOut}
+              className='buttons-container-button logout-button'
+              imageUrl='https://firebasestorage.googleapis.com/v0/b/dailydiary-96e2f.appspot.com/o/th.jpeg?alt=media&token=3970264f-c4e1-42e4-9d48-0f37af5d4206'
+            ></Button>
+          </div>
         </GridToolbar>
         <Column field='PersonID' title='Id' width='100px' editable={false} />
         <Column field='PersonName' title='Person Name' width='200px' />

@@ -21,3 +21,13 @@ export const loginService = async (userCredintials: any): Promise<string> => {
     throw err
   }
 }
+
+export const refreshAccessTokenService = async (): Promise<string> => {
+  // eslint-disable-next-line no-useless-catch
+  try {
+    const res = await publicRequest.get('/users/refresh')
+    return res.data
+  } catch (err) {
+    throw err
+  }
+}

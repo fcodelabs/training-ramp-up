@@ -1,5 +1,8 @@
 import { Person } from '../models/interface'
-import { publicRequest } from '../utils/requestMethods'
+import privateRequest, { publicRequest } from '../utils/requestMethods'
+
+
+
 
 export const addNewPersonService = async (dataArr: [Person, number]): Promise<Person | unknown> => {
   try {
@@ -46,7 +49,7 @@ export const deletePersonService = async (Id: number): Promise<Person | unknown>
 
 export const getAllPersonServise = async (): Promise<Person[] | unknown> => {
   try {
-    const res = await publicRequest.get('/students')
+    const res = await privateRequest.get('/students')
     return res.data
   } catch (err) {
     return err

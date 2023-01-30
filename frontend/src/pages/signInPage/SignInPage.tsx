@@ -3,11 +3,24 @@ import './signInPage.css'
 import { Formik, Form, Field } from 'formik'
 import * as Yup from 'yup'
 import { userLoginStart, userRegisterStart } from './userSlice'
-import { useDispatch } from 'react-redux'
-
+import { useDispatch, useSelector } from 'react-redux'
+import {  useNavigate, useLocation } from 'react-router-dom'
 export const SignInPage = (): JSX.Element => {
   const [isRightPanelActive, setIsRightPanelActive] = useState('')
+
+  const auth = useSelector((state: any) => state.userData?.user)
+
+  const navigate = useNavigate()
+  const location = useLocation()
+  const from = location.state.from.pathname || { from: { pathname: '/' } }
+
   const distpatch = useDispatch()
+
+  useEffect(() => {
+    if (auth?.user) {
+     navigate(from, { replace: true })  
+    }
+  }, [auth, navigate, from])
 
   const SignUpSchema = Yup.object().shape({
     email: Yup.string().email('Invalid email').required('Required'),

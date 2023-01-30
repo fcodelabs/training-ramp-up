@@ -15,14 +15,14 @@ import {
   updatePersonDataFailure,
   updatePersonDataStart,
   updatePersonDataSuccess,
-} from './PersonDataSlice'
+} from './personDataSlice'
 import {
   addNewPersonService,
   deletePersonService,
   getAllPersonServise,
   updatePersonService,
-} from '../../services/PersonServices'
-import { getNotificationStart, getNotificationSuccess } from './NotificationSlice'
+} from '../../services/personServices'
+import { getNotificationStart, getNotificationSuccess } from './notificationSlice'
 import { io, Socket } from 'socket.io-client'
 
 // get notifications with event chanell

@@ -1,17 +1,45 @@
 import axios from 'axios'
+import { refreshAccessTokenService } from '../services/authServices'
 
 const BASE_URL = 'http://localhost:5000/api/'
-
-//const TOKEN =JSON.parse(JSON.parse(localStorage.getItem("persist:root")).user).currentUser?
-//JSON.parse(JSON.parse(localStorage.getItem("persist:root")).user).currentUser.accessToken :"none";
-//const TOKEN=sessionStorage.getItem("accessToken")
 
 export const publicRequest = axios.create({
   withCredentials: true,
   baseURL: BASE_URL,
 })
 
-// export const userRequest = axios.create({
-//   baseURL: BASE_URL,
-//   headers: { token: `Bearer ${TOKEN}` },
-// });
+const privateRequest = axios.create({
+  baseURL: BASE_URL,
+  headers: { 'Content-Type': 'application/json' },
+  withCredentials: true,
+})
+
+privateRequest.interceptors.request.use(
+  async (config: any) => {
+    const accessToken = localStorage.getItem('accessToken')
+    if (accessToken != null) {
+      // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+      config.headers.Authorization = `Bearer ${accessToken}`
+    }
+    return config
+  },
+  async (error) => await Promise.reject(error),
+)
+
+privateRequest.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    const prevRequest = error?.config
+    if (error?.response?.status === 403 && !prevRequest?.sent) {
+      prevRequest.sent = true
+      const newAccessToken = await refreshAccessTokenService()
+      // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+      localStorage.setItem('accessToken', newAccessToken)
+      prevRequest.headers.Authorization = `Bearer ${newAccessToken}`
+      return await privateRequest(prevRequest)
+    }
+    return await Promise.reject(error)
+  },
+)
+
+export default privateRequest

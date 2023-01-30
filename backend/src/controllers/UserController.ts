@@ -1,12 +1,12 @@
+import { Request, Response } from "express";
+import cookie from "cookie";
+import jwt from "jsonwebtoken";
 import {
   findUserByRefreshTokenService,
   loginUserService,
   registerUserService,
   updateRefreshTokenService,
-} from "../services/userServices";
-import { Request, Response } from "express";
-import cookie from "cookie";
-import jwt from "jsonwebtoken";
+} from "../services/UserServices";
 
 export const signUpController = async (req: Request, res: Response) => {
   try {
@@ -40,7 +40,7 @@ export const loginController = async (req: Request, res: Response) => {
       const accessToken = jwt.sign(
         { userInfo: { userRole: userLogin.Role, userEmail: userLogin.Email } },
         process.env.ACCESS_TOKEN_SECRET as string,
-        { expiresIn: "30s" }
+        { expiresIn: "1s" }
       );
       const refreshToken = jwt.sign(
         { user: userLogin.Email },
@@ -55,7 +55,8 @@ export const loginController = async (req: Request, res: Response) => {
         sameSite: "strict",
         secure: process.env.NODE_ENV !== "development",
       });
-      res.send(accessToken);
+      const user = { user: userLogin, accessToken: accessToken };
+      res.send(user);
     }
   } catch (err) {
     res.status(400).send(err);
@@ -64,16 +65,18 @@ export const loginController = async (req: Request, res: Response) => {
 
 export const refreshTokenController = async (req: Request, res: Response) => {
   const cookie = req.cookies;
-
+  console.log(cookie)
   if (cookie.jwt === null) return res.sendStatus(401);
   const refreshToken = cookie.jwt;
   try {
     const foundUser = await findUserByRefreshTokenService(refreshToken);
+
     if (foundUser === null) return res.sendStatus(403);
     const accessToken = jwt.verify(
       refreshToken,
       process.env.REFRESH_TOKEN_SECRET as string,
       (err: any, decoded: any) => {
+         
         if (err || decoded.user !== foundUser.Email) return res.sendStatus(403);
 
         const accessToken = jwt.sign(
@@ -81,7 +84,7 @@ export const refreshTokenController = async (req: Request, res: Response) => {
             userInfo: { userRole: foundUser.Role, userEmail: foundUser.Email },
           },
           process.env.ACCESS_TOKEN_SECRET as string,
-          { expiresIn: "30s" }
+          { expiresIn: "1s" }
         );
         res.send(accessToken);
       }

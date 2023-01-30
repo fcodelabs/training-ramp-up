@@ -1,3 +1,4 @@
+import { verifyJWT } from "./../middleware/verifyJWT";
 import {
   loginController,
   logoutController,
@@ -8,7 +9,7 @@ import { signUpController } from "../controllers/userController";
 
 const router = Router();
 
-router.post("/signup", signUpController);
+router.post("/signup",  signUpController);
 router.post("/login", loginController);
 router.get("/refresh", refreshTokenController);
 router.get("/logout", logoutController);
