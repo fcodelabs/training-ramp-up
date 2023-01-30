@@ -3,23 +3,23 @@ import { Entity, PrimaryGeneratedColumn, Column } from "typeorm"
 @Entity()
 export class Student {
     @PrimaryGeneratedColumn()
-    id!: number
+    id: number
 
-    @Column()
-    name!: string
+    @Column({nullable:false})
+    name: string
 
-    @Column()
-    gender!: string
+    @Column({nullable:false})
+    gender: string
 
-    @Column()
-    address!: string
+    @Column({nullable:false})
+    address: string
 
-    @Column()
-    mobileNo!: string
+    @Column({nullable:false})
+    mobileNo: string
 
-    @Column()
-    dateOfBirth!: Date
+    @Column({nullable:false})
+    dateOfBirth: Date
 
-    @Column()
-    age!: number
+    @Column({nullable:false})
+    age: number
 }
