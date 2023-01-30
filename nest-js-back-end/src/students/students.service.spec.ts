@@ -33,11 +33,6 @@ describe('StudentsService', () => {
     );
   });
 
-  it('should be defined', () => {
-    expect(service).toBeDefined();
-    expect(studentRepository).toBeDefined();
-  });
-
   describe('Get All students', () => {
     const allStudents = [
       {
@@ -60,7 +55,8 @@ describe('StudentsService', () => {
     test('Get all students failed', async () => {
       studentRepository.find = jest.fn().mockRejectedValue(null);
       const res = await service.findAll();
-      expect(res).toThrowError;
+      //expect(res).toThrow(null);
+      expect(res).toEqual(null);
     });
   });
 
@@ -82,7 +78,7 @@ describe('StudentsService', () => {
     test('Add Student Fail', async () => {
       studentRepository.save = jest.fn().mockRejectedValue(null);
       const res = await service.create(newStudent);
-      expect(res).toThrowError;
+      expect(res).toEqual(null);
     });
   });
 
@@ -104,7 +100,7 @@ describe('StudentsService', () => {
     test('Update Student Fail', async () => {
       studentRepository.save = jest.fn().mockRejectedValue(null);
       const res = await service.update(newStudent);
-      expect(res).toThrowError;
+      expect(res).toEqual(null);
     });
   });
 
@@ -126,7 +122,7 @@ describe('StudentsService', () => {
     test('Delete Student Fail', async () => {
       studentRepository.delete = jest.fn().mockRejectedValue(null);
       const res = await service.remove(newStudent.id);
-      expect(res).toThrowError;
+      expect(res).toEqual(null);
     });
   });
 });

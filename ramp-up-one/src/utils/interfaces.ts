@@ -23,6 +23,7 @@ export interface UpdatedPerson {
 }
 
 export interface LoginDetails {
+  userRoll?: any;
   data?: any;
   status?: number;
   email: string;

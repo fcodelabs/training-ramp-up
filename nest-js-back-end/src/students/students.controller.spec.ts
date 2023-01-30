@@ -3,6 +3,7 @@ import { StudentsController } from './students.controller';
 import { StudentsService } from './students.service';
 import { Request, Response } from 'express';
 import { AuthModule } from 'src/auth/auth.module';
+import { error } from 'console';
 
 describe('StudentsController', () => {
   let controller: StudentsController;
@@ -65,7 +66,7 @@ describe('StudentsController', () => {
         .spyOn(service, 'findAll')
         .mockRejectedValue(null);
       await controller.findAll(res);
-      expect(res.send).toHaveBeenCalledWith(false);
+      expect(res.send).toHaveBeenCalledWith(error);
       spyGetStudents.mockRestore();
     });
   });
@@ -107,7 +108,7 @@ describe('StudentsController', () => {
         .spyOn(service, 'create')
         .mockRejectedValue(null);
       await controller.create(req.body, res);
-      expect(res.send).toHaveBeenCalledWith(false);
+      expect(res.send).toHaveBeenCalledWith(error);
       spyGetStudents.mockRestore();
     });
   });
@@ -149,7 +150,7 @@ describe('StudentsController', () => {
         .spyOn(service, 'update')
         .mockRejectedValue(null);
       await controller.update(req.body, res);
-      expect(res.send).toHaveBeenCalledWith(false);
+      expect(res.send).toHaveBeenCalledWith(error);
       spyGetStudents.mockRestore();
     });
   });

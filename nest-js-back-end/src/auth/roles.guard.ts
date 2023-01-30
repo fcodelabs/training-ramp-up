@@ -18,7 +18,6 @@ export class RolesGuard implements CanActivate {
     try {
       const decoded = await this.jwtService.verify(accessToken);
       if (decoded && roles.includes(decoded.userRoll)) return true;
-
       throw new ForbiddenException('You are not Authorized');
     } catch (err) {
       throw err;

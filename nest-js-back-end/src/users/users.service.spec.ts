@@ -57,10 +57,10 @@ describe('UsersService', () => {
   });
 
   describe('Login User', () => {
-    const loginData: LoginUserDto = {
-      email: 'user@gmail.com',
-      password: 'User1234',
-    };
+    // const loginData: LoginUserDto = {
+    //   email: 'user@gmail.com',
+    //   password: 'User1234',
+    // };
     const user: CreateUserDto = {
       id: 1,
       name: 'newUser',

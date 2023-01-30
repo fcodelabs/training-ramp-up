@@ -18,7 +18,6 @@ export class StudentsService {
       const student = await this.studentRepository.save(createStudentDto);
       return student;
     } catch (err) {
-      //throw err;
       return err;
     }
   }
@@ -30,7 +29,6 @@ export class StudentsService {
       });
       return allStudents;
     } catch (err) {
-      //throw err;
       return err;
     }
   }
@@ -59,7 +57,6 @@ export class StudentsService {
       const result = await this.studentRepository.delete(id);
       return result;
     } catch (err) {
-      // throw err;
       return err;
     }
   }

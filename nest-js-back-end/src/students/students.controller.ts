@@ -35,7 +35,7 @@ export class StudentsController {
       res.send(response);
       return;
     } catch (err) {
-      res.send(false);
+      res.send(err);
     }
   }
 
@@ -48,7 +48,7 @@ export class StudentsController {
       res.send(students);
       return;
     } catch (err) {
-      res.send(false);
+      res.send(err);
     }
   }
 
@@ -69,7 +69,7 @@ export class StudentsController {
       res.send(response);
       return;
     } catch (err) {
-      res.send(false);
+      res.send(err);
     }
   }
 

@@ -60,7 +60,7 @@ export class UsersService {
         return false;
       }
     } catch (error) {
-      return false;
+      return error;
     }
   }
 
@@ -86,7 +86,7 @@ export class UsersService {
         }
       }
     } catch (err) {
-      throw err;
+      return err;
     }
   }
 

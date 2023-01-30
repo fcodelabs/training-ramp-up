@@ -108,7 +108,7 @@ describe('UsersController', () => {
         .spyOn(service, 'findOne')
         .mockRejectedValue(null);
       await controller.findOne(req.body, res);
-      expect(res.send).toHaveBeenCalledWith(false);
+      expect(res.send).toHaveBeenCalledWith(null);
       spyLoginUser.mockRestore();
     });
   });

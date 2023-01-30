@@ -91,7 +91,7 @@ export class UsersController {
       }
       res.send(false);
     } catch (error) {
-      res.send(false);
+      res.send(error);
     }
   }
 
