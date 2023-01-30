@@ -1,16 +1,40 @@
 const { check, validationResult } = require("express-validator");
 
 export const validateData = [
-  check("data.PersonID").not().isEmpty().withMessage("Invalid value"),
-  check("data.PersonName").not().isEmpty().withMessage("Invalid value"),
-  check("data.PersonGender").not().isEmpty().withMessage("Invalid value"),
+  check("data.PersonID")
+    .not()
+    .isEmpty()
+    .isInt({ gt: 0 })
+    .withMessage("Invalid value"),
+  check("data.PersonName")
+    .not()
+    .isEmpty()
+    .isLength({ min: 5, max: 15 })
+    .withMessage("Invalid value"),
+  check("data.PersonGender")
+    .not()
+    .isEmpty()
+    .isIn(["Female", "Male"])
+    .withMessage("Invalid value"),
   check("data.PersonAddress").not().isEmpty().withMessage("Invalid value"),
   check("data.PersonMobileNo")
     .not()
     .isEmpty()
     .matches(/^[+]*[0-9]{10}$/)
     .withMessage("Invalid value"),
-  check("data.DateOfBirth").not().isEmpty().withMessage("Invalid value"),
+  check("data.DateOfBirth")
+    .not()
+    .isEmpty()
+    .withMessage("Invalid value")
+    .custom((value: string | number | Date) => {
+      const today = new Date();
+      const birthDate = new Date(value);
+      const age = today.getFullYear() - birthDate.getFullYear();
+      if (age < 18) {
+        throw new Error("Age must be 18 or above");
+      }
+      return true;
+    }),
 ];
 
 export const validata = (req: any, res: any, next: () => void) => {
