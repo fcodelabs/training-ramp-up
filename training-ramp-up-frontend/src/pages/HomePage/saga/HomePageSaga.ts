@@ -13,7 +13,7 @@ import {
 import axios from '../../../utils/authorization'
 import { Person } from '../../../utils/interfaces'
 
-function* handleGetStudents(): any {
+function* handleGetStudents():any {
     try {
         const res = yield call(() =>
             axios.get('student', {
@@ -58,8 +58,9 @@ function* handleDeleteStudent(action: any): any {
 
 function* handleUpdateStudent(action: any): any {
     try {
+        const {id,...payload}=action.payload
         const res = yield call(() =>
-            axios.patch('student', action.payload, {
+            axios.patch('student/'+id, payload, {
                 withCredentials: true,
             })
         )

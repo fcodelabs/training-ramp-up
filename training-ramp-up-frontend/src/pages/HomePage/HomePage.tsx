@@ -72,7 +72,6 @@ export default function HomePage() {
             dateOfBirth: dataItem.dateOfBirth,
             age: dataItem.age,
             mobileNo: dataItem.mobileNo,
-            inEdit: false,
         }
         if (validate(student)) {
             dispatch(addStudent(student))
