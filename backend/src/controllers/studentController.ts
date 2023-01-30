@@ -34,7 +34,6 @@ export const getStudentById = async (req: Request, res: Response) => {
 export const createStudent = async (req: Request, res: Response) => {
   try {
     const user = req.body.data;
-    console.log(user);
     const userInsert = await createStudentService(user);
     const socket = req.app.get("socket");
     socket.emit(
@@ -50,6 +49,7 @@ export const createStudent = async (req: Request, res: Response) => {
 export const updateStudent = async (req: Request, res: Response) => {
   try {
     const user = req.body.data;
+
     const userUpdate = await createStudentService(user);
     const socket = req.app.get("socket");
     socket.emit(
