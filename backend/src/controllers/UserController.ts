@@ -1,5 +1,4 @@
 import { Request, Response } from "express";
-import cookie from "cookie";
 import jwt from "jsonwebtoken";
 import {
   findUserByRefreshTokenService,
@@ -11,7 +10,6 @@ import {
 export const signUpController = async (req: Request, res: Response) => {
   try {
     const user = req.body.data;
-    console.log(user);
     const userInsert = await registerUserService(user);
 
     res.status(201).json(userInsert);
@@ -25,22 +23,10 @@ export const loginController = async (req: Request, res: Response) => {
   try {
     const userLogin = await loginUserService(user);
     if (userLogin !== null) {
-      //   const token = userLogin.generateAuthToken();
-      //   res.setHeader(
-      //     "Set-Cookie",
-      //     cookie.serialize("token", token, {
-      //       httpOnly: true,
-      //       secure: process.env.NODE_ENV !== "development",
-      //       sameSite: "strict",
-      //       maxAge: 3600,
-      //       path: "/",
-      //     })
-      //   );
-
       const accessToken = jwt.sign(
         { userInfo: { userRole: userLogin.Role, userEmail: userLogin.Email } },
         process.env.ACCESS_TOKEN_SECRET as string,
-        { expiresIn: "1s" }
+        { expiresIn: "30s" }
       );
       const refreshToken = jwt.sign(
         { user: userLogin.Email },
@@ -48,6 +34,7 @@ export const loginController = async (req: Request, res: Response) => {
         { expiresIn: "1d" }
       );
       await updateRefreshTokenService(userLogin, refreshToken);
+
       res.cookie("jwt", refreshToken, {
         httpOnly: true,
         maxAge: 3600 * 24 * 1000,
@@ -65,7 +52,7 @@ export const loginController = async (req: Request, res: Response) => {
 
 export const refreshTokenController = async (req: Request, res: Response) => {
   const cookie = req.cookies;
-  console.log(cookie)
+
   if (cookie.jwt === null) return res.sendStatus(401);
   const refreshToken = cookie.jwt;
   try {
@@ -76,7 +63,6 @@ export const refreshTokenController = async (req: Request, res: Response) => {
       refreshToken,
       process.env.REFRESH_TOKEN_SECRET as string,
       (err: any, decoded: any) => {
-         
         if (err || decoded.user !== foundUser.Email) return res.sendStatus(403);
 
         const accessToken = jwt.sign(
@@ -84,7 +70,7 @@ export const refreshTokenController = async (req: Request, res: Response) => {
             userInfo: { userRole: foundUser.Role, userEmail: foundUser.Email },
           },
           process.env.ACCESS_TOKEN_SECRET as string,
-          { expiresIn: "1s" }
+          { expiresIn: "30s" }
         );
         res.send(accessToken);
       }

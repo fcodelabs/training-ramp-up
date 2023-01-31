@@ -11,7 +11,6 @@ export const verifyJWT = (req: any, res: any, next: any) => {
   if (!authHeader?.startsWith("Bearer")) return res.sendStatus(401);
   const token = authHeader && authHeader.split(" ")[1];
   if (token == null) return res.sendStatus(401);
-  console.log(token);
   jwt.verify(
     token,
     process.env.ACCESS_TOKEN_SECRET as string,

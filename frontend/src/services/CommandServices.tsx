@@ -32,7 +32,7 @@ export const checkErr = (item: Person): string[] => {
   ) {
     tempErr.push('every field required!')
   } else {
-    if (item.DateOfBirth != null && durationInYears(item.DateOfBirth, new Date()) < 1) {
+    if (item.DateOfBirth != null && durationInYears(item.DateOfBirth, new Date()) < 18) {
       tempErr.push('student needs to be 18 years or older!')
     }
     if (
@@ -58,6 +58,21 @@ if (
 
   return tempErr
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

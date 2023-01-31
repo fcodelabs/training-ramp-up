@@ -55,7 +55,6 @@ export const HomePage = (): any => {
     }
   }
   const persondata = useSelector((state: any) => state.personData.person)
-  const isFetching = useSelector((state: any) => state.personData.isFetching)
   const notifications = useSelector((state: any) => state.notification.notifications)
 
   const notify = (msg: string): any => toast(msg)
@@ -179,7 +178,7 @@ export const HomePage = (): any => {
     setPage(event.page)
   }
 
-  const logOut = () => {
+  const logOut = ():void => {
     distpatch(userLogOutSuccess())
   }
   const CommandCellFunc = (props: GridCellProps): JSX.Element => (
