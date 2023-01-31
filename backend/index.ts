@@ -2,19 +2,18 @@ import express, { Express } from "express";
 import "reflect-metadata";
 import { AppDataSource } from "./src/configs/DataSourceConfig";
 import cors from "cors";
-import { createServer } from "http";
-import { Server } from "socket.io";
 import userRoutes from "./src/routes/userRoutes";
 import studentRoutes from "./src/routes/studentRoutes";
 import passport from "passport";
 import cookieparser from "cookie-parser";
 import dotenv from "dotenv";
+import { app, httpServer, io } from "./app";
 const PORT = process.env.PORT || 5000;
 
 dotenv.config();
 
-const app: Express = express();
-const httpServer = createServer(app);
+//const app: Express = express();
+//const httpServer = createServer(app);
 
 app.use(express.json());
 app.use(
@@ -28,9 +27,9 @@ app.use(cookieparser());
 app.use(passport.initialize());
 
 //socket io
-const io: Server = new Server(httpServer, {
-  cors: { origin: "http://localhost:3000" },
-});
+// const io: Server = new Server(httpServer, {
+//   cors: { origin: "http://localhost:3000" },
+// });
 
 io.on("connection", (socket: any) => {
   console.log("a user connected");
