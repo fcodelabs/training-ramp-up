@@ -85,7 +85,7 @@ export default function Grids() {
   return (
     <div>
       <Grid
-        style={{ height: '600px', marginTop: '20px' }}
+        style={{ height: '90%', marginTop: '20px' }}
         data={data}
         onItemChange={itemChange}
         editField={editField}
