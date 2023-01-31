@@ -29,7 +29,6 @@ const personSlice = createSlice({
     addPersonDataSuccess: (state, action) => {
       state.isFetching = false
       state.error = false
-      // console.log(action.payload)
       action.payload.inEdit = false
       state.person.push(action.payload)
     },
@@ -44,7 +43,6 @@ const personSlice = createSlice({
       action.payload.inEdit = false
       state.isFetching = false
       state.error = false
-      // console.log(action.payload);
       state.person[state.person.findIndex((item) => item.PersonID === action.payload.PersonID)] =
         action.payload
     },

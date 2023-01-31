@@ -1,9 +1,6 @@
 import { Person } from '../models/interface'
 import privateRequest, { publicRequest } from '../utils/requestMethods'
 
-
-
-
 export const addNewPersonService = async (dataArr: [Person, number]): Promise<Person | unknown> => {
   try {
     const personData = dataArr[0]
@@ -20,7 +17,6 @@ export const addNewPersonService = async (dataArr: [Person, number]): Promise<Pe
 }
 
 export const updatePersonService = async (updateValue: Person): Promise<Person | unknown> => {
- 
   try {
     const config = {
       data: updateValue,
@@ -34,7 +30,6 @@ export const updatePersonService = async (updateValue: Person): Promise<Person |
 }
 
 export const deletePersonService = async (Id: number): Promise<Person | unknown> => {
- 
   try {
     console.log('asd')
     const res = await publicRequest.delete(`/students/${Id}`)

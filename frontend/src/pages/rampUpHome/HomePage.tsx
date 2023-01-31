@@ -207,10 +207,7 @@ export const HomePage = (): any => {
       <ToastContainer />
       <Grid
         style={{ height: '720px' }}
-        data={orderBy(
-         data.slice(page.skip, page.take + page.skip) ,
-          sort,
-        )}
+        data={orderBy(data.slice(page.skip, page.take + page.skip), sort)}
         onItemChange={itemChange}
         editField={editField}
         skip={page.skip}

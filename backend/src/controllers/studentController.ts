@@ -16,7 +16,7 @@ export const getAllStudents = async (req: Request, res: Response) => {
     res.send(allrecords);
   } catch (err) {
     // console.log(err);
-    res.send(err);
+    res.status(400).send(err);
   }
 };
 
@@ -27,7 +27,7 @@ export const getStudentById = async (req: Request, res: Response) => {
 
     res.send(user);
   } catch (err) {
-    res.send(err);
+    res.status(400).send(err);
   }
 };
 

@@ -61,6 +61,7 @@ function* fetchPersonData() {
     const personDataArray: Person[] = yield getAllPersonServise()
     yield put(getPersonDataSuccess(personDataArray))
   } catch (e) {
+    alert(e)
     yield put(getPersonDataFailure())
   }
 }
@@ -72,6 +73,7 @@ function* addNewPersonSaga(payload: any) {
     const insertData: Person = yield addNewPersonService(payload)
     yield put(addPersonDataSuccess(insertData))
   } catch (e) {
+    alert(e)
     yield put(addPersonDataFailure())
   }
 }
@@ -83,6 +85,7 @@ function* updatePersonSaga(payload: any) {
     const updateData: Person = yield updatePersonService(payload)
     yield put(updatePersonDataSuccess(updateData))
   } catch (e) {
+    alert(e)
     yield put(updatePersonDataFailure())
   }
 }
@@ -92,6 +95,7 @@ function* deletePersonSaga(payload: any) {
     const deleteData: Person = yield deletePersonService(payload)
     yield put(deletePersonDataSuccess(deleteData))
   } catch (e) {
+    alert(e)
     yield put(deletePersonDataFailure())
   }
 }
