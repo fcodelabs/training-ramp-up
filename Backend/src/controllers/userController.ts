@@ -10,32 +10,38 @@ interface UserType {
   role: string;
 }
 
+const cookieGenerator = (email: string, role: string) => {
+  const jwtToken = jwt.sign({ email, role }, process.env.JWT_SECRET as string, {
+    expiresIn: '15m',
+  });
+  const refreshToken = jwt.sign({ email, role }, process.env.JWT_SECRET as string, {
+    expiresIn: '1d',
+  });
+  const jwtCookie = cookie.serialize('jwt', jwtToken, {
+    httpOnly: true,
+    secure: true,
+    path: '/',
+    sameSite: 'strict',
+    maxAge: 3600, // expires in 1 hour
+  });
+
+  const refreshCookie = cookie.serialize('refresh', refreshToken, {
+    httpOnly: true,
+    secure: true,
+    path: '/',
+    sameSite: 'strict',
+    maxAge: 86400, // expires in 1 day
+  });
+  return [jwtCookie, refreshCookie];
+};
+
 export const signUp = async (req: Request, res: Response) => {
   try {
     const { email, password } = req.body;
 
     if (!email || !password) throw new Error('Email and password are required').message;
     const newUser: UserType = await createUser({ email, password });
-    const jwtToken = jwt.sign({ email: newUser.email, role: newUser.role }, process.env.JWT_SECRET as string, {
-      expiresIn: '15m',
-    });
-    const refreshToken = jwt.sign({ email: newUser.email, role: newUser.role }, process.env.JWT_SECRET as string, {
-      expiresIn: '1d',
-    });
-    const jwtCookie = cookie.serialize('jwt', jwtToken, {
-      httpOnly: true,
-      secure: true,
-      path: '/',
-      sameSite: 'strict',
-      maxAge: 3600, // expires in 1 hour
-    });
-    const refreshCookie = cookie.serialize('refresh', refreshToken, {
-      httpOnly: true,
-      secure: true,
-      path: '/',
-      sameSite: 'strict',
-      maxAge: 86400, // expires in 1 day
-    });
+    const [jwtCookie, refreshCookie] = cookieGenerator(newUser.email, newUser.role);
     res.setHeader('Set-Cookie', [jwtCookie, refreshCookie]);
     res.status(200).json({
       message: 'User created successfully',
@@ -55,26 +61,7 @@ export const signIn = async (req: Request, res: Response) => {
     const { email, password } = req.body;
     if (!email || !password) throw new Error('Email and password are required').message;
     const user = await loginUser(email, password);
-    const jwtToken = jwt.sign({ email: user.email, role: user.role }, process.env.JWT_SECRET as string, {
-      expiresIn: '15m',
-    });
-    const refreshToken = jwt.sign({ email: user.email, role: user.role }, process.env.JWT_SECRET as string, {
-      expiresIn: '1d',
-    });
-    const jwtCookie = cookie.serialize('jwt', jwtToken, {
-      httpOnly: true,
-      secure: true,
-      path: '/',
-      sameSite: 'strict',
-      maxAge: 3600, // expires in 1 hour
-    });
-    const refreshCookie = cookie.serialize('refresh', refreshToken, {
-      httpOnly: true,
-      secure: true,
-      path: '/',
-      sameSite: 'strict',
-      maxAge: 86400, // expires in 1 day
-    });
+    const [jwtCookie, refreshCookie] = cookieGenerator(user.email, user.role);
     res.setHeader('Set-Cookie', [jwtCookie, refreshCookie]);
     res.status(200).json({
       message: 'User logged in successfully',
@@ -113,26 +100,8 @@ export const refresh = async (req: Request, res: Response) => {
     const refresh = req.cookies.refresh;
     if (!refresh) throw new Error('No refresh token found').message;
     const { email, role } = jwt.verify(refresh, process.env.JWT_SECRET as string) as { email: string; role: string };
-    const jwtToken = jwt.sign({ email, role }, process.env.JWT_SECRET as string, {
-      expiresIn: '15m',
-    });
-
-    const jwtCookie = cookie.serialize('jwt', jwtToken, {
-      httpOnly: true,
-      path: '/',
-      secure: true,
-      sameSite: 'strict',
-      maxAge: 3600, // expires in 1 hour
-    });
-    const refreshCookie = cookie.serialize('refresh', refresh, {
-      httpOnly: true,
-      path: '/',
-      secure: true,
-      sameSite: 'strict',
-      maxAge: 86400, // expires in 1 day
-    });
-
-    res.setHeader('Set-Cookie', [jwtCookie, refreshCookie]);
+    const [jwtCookie] = cookieGenerator(email, role);
+    res.setHeader('Set-Cookie', [jwtCookie, refresh]);
     res.status(200).json({ message: 'User refreshed successfully' });
   } catch (err) {
     res.status(400).json({ err });
