@@ -50,6 +50,22 @@ appDataSource
     console.log(err);
   });
 
+app.use(
+  (
+    err: {
+      statusCode: number;
+      message: string;
+    },
+    req: Request,
+    res: Response
+  ) => {
+    const statusCode = err.statusCode || 500;
+    res.status(statusCode).send(err.message);
+
+    return;
+  }
+);
+
 httpServer.listen(port, () => {
   console.log(`The application is listening on port ${port}!`);
 });

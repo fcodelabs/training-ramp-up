@@ -36,7 +36,7 @@ export const homeSlice: any = createSlice({
       return state;
     },
     addStudentSuccess: (state, action) => {
-      state.students = [...state.students, action.payload];
+      state.students = action.payload;
       state.error = "";
     },
     addStudentFailure: (state, action) => {
@@ -46,9 +46,7 @@ export const homeSlice: any = createSlice({
       return state;
     },
     deleteStudentSuccess: (state, action) => {
-      state.students = state.students.filter(
-        (student) => student.id !== action.payload
-      );
+      state.students = action.payload;
       state.error = "";
     },
     deleteStudentFailure: (state, action) => {
@@ -58,15 +56,7 @@ export const homeSlice: any = createSlice({
       return state;
     },
     updateStudentSuccess: (state, action) => {
-      state.students = state.students.map((student) => {
-        if (student.id === action.payload.id) {
-          return {
-            ...action.payload,
-            inEdit: false,
-          };
-        }
-        return student;
-      });
+      state.students = action.payload;
       state.error = "";
     },
     updateStudentFailure: (state, action) => {
