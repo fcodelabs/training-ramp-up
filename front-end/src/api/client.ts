@@ -8,7 +8,6 @@ export async function resolver(axiosResponse: any) {
     const response = await axiosResponse
     return response
   } catch (e: any) {
-    const response = e.response
     return [408, 'connectiion error']
   }
 }
