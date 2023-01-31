@@ -57,9 +57,9 @@ export const updateStudent = async (req: Request, res: Response) => {
       "notification",
       `User updated successfully Name: ${userUpdate?.PersonName}  !`
     );
-    res.send(userUpdate);
+    res.status(201).send(userUpdate);
   } catch (err) {
-    res.send(err);
+     res.status(400).send(err);
   }
 };
 

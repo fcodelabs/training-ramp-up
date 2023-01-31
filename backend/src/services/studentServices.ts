@@ -18,9 +18,13 @@ export const getAllStudentsService = async (): Promise<Student[]> => {
 export const getStudentByIdService = async (
   id: number
 ): Promise<Student | null> => {
-  const userRepo = AppDataSource.getRepository(Student);
-  const user = await userRepo.findOneBy({ PersonID: id });
-  return user;
+  try {
+    const userRepo = AppDataSource.getRepository(Student);
+    const user = await userRepo.findOneBy({ PersonID: id });
+    return user;
+  } catch (err) {
+    throw new Error("Error in getting user by id");
+  }
 };
 
 export const createStudentService = async (user: Student): Promise<Student> => {
@@ -38,7 +42,7 @@ export const updateStudentService = async (user: Student): Promise<Student> => {
     const userRepo = AppDataSource.getRepository(Student);
     const userUpdate = await userRepo.save(user);
     const updateUser = await userRepo.findOneBy({ PersonID: user.PersonID });
-    if (updateUser !== null) {
+    if (updateUser) {
       return updateUser;
     } else {
       throw new Error("Error in updating user");
@@ -52,7 +56,7 @@ export const deleteStudentService = async (id: number): Promise<Student> => {
   const userRepo = AppDataSource.getRepository(Student);
   const user = await userRepo.findOneBy({ PersonID: id });
 
-  if (user !== null) {
+  if (user) {
     const userDelete = await userRepo.remove(user);
     userDelete.PersonID = id;
     return userDelete;
