@@ -11,7 +11,7 @@ export const addNewPersonService = async (dataArr: [Person, number]): Promise<Pe
     const config = {
       data: personData,
     }
-    const res = await publicRequest.post(`/students`, config)
+    const res = await privateRequest.post(`/students`, config)
     console.log(res.data)
     return res.data
   } catch (err) {

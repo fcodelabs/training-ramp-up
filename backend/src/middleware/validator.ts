@@ -30,7 +30,7 @@ export const validateData = [
       const today = new Date();
       const birthDate = new Date(value);
       const age = today.getFullYear() - birthDate.getFullYear();
-      if (age < 18) {
+      if (age < 19) {
         throw new Error("Age must be 18 or above");
       }
       return true;

@@ -77,10 +77,10 @@ export const {
   addPersonDataStart,
   addPersonDataFailure,
   addPersonDataSuccess,
- updatePersonDataStart,
+  updatePersonDataStart,
   updatePersonDataFailure,
   updatePersonDataSuccess,
- deletePersonDataStart,
+  deletePersonDataStart,
   deletePersonDataFailure,
   deletePersonDataSuccess,
 } = personSlice.actions

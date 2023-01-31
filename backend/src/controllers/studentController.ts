@@ -34,6 +34,7 @@ export const getStudentById = async (req: Request, res: Response) => {
 export const createStudent = async (req: Request, res: Response) => {
   try {
     const user = req.body.data;
+    
     const userInsert = await createStudentService(user);
     const socket = req.app.get("socket");
     socket.emit(

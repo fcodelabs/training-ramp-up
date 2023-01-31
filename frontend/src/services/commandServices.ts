@@ -64,13 +64,18 @@ export const checkSimilarity = (prevState: Person, currentState: Person): boolea
     prevState.PersonGender === currentState.PersonGender &&
     prevState.DateOfBirth !== undefined &&
     currentState.DateOfBirth !== undefined &&
-    (new Date(prevState.DateOfBirth)).toString().slice(0, 10) === (new Date(currentState.DateOfBirth)).toString().slice(0, 10)
+    new Date(prevState.DateOfBirth).toString().slice(0, 10) ===
+      new Date(currentState.DateOfBirth).toString().slice(0, 10)
   ) {
     return true
   }
-  console.log(prevState.DateOfBirth, currentState.DateOfBirth)
   return false
 }
+
+
+
+
+
 
 export const insertItem = (item: Person): any => {
   item.PersonID = generateId(personData)

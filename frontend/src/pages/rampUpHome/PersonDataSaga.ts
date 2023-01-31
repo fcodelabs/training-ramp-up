@@ -103,7 +103,6 @@ export function* handlePersonActions() {
   yield takeEvery(
     (action: any) => action.type.match('Person'),
     function* ({ type, payload }) {
-      console.log(payload)
       switch (type) {
         case getPersonDataStart.type:
           yield fetchPersonData()
