@@ -40,9 +40,9 @@ function* addStudentSaga(action: any): Generator<any, any, any> {
     item.inEdit = false
     try {
       const response = yield api.student.postStudent(item)
-      toast.success('Successfully Added', {
-        position: toast.POSITION.TOP_RIGHT,
-      })
+      // toast.success('Successfully Added', {
+      //   position: toast.POSITION.TOP_RIGHT,
+      // })
       const addedStudent = response.data.data
       addedStudent.dob = new Date(addedStudent.dob)
       yield put(addStudentSuccess(addedStudent))
@@ -76,9 +76,9 @@ function* deleteStudentSaga(action: any): Generator<any, any, any> {
   const itemToDelete = item.id
   try {
     yield api.student.deleteStudent(itemToDelete)
-    toast.success('Successfully Deleted', {
-      position: toast.POSITION.TOP_RIGHT,
-    })
+    // toast.success('Successfully Deleted', {
+    //   position: toast.POSITION.TOP_RIGHT,
+    // })
     yield put(deleteStudentSuccess(itemToDelete))
   } catch (error) {
     yield put(deleteStudentFailure())
