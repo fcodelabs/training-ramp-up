@@ -1,9 +1,13 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { takeEvery, put, call } from "redux-saga/effects";
 import { Student } from "../../utils/interface";
 import { calcAge } from "../../utils/services";
 import { toast } from "react-toastify";
-import axios from "../../axios";
+import {
+  getStudentsService,
+  addStudentService,
+  deleteStudentService,
+  updateStudentService,
+} from "../../utils/apiService";
 import {
   getStudents,
   getStudentsSuccess,
@@ -24,26 +28,25 @@ interface Action {
   payload: Student;
 }
 
-function* getStudentsSaga(): Generator<any, any, any> {
+interface ActionId {
+  type: string;
+  payload: number;
+}
+
+function* getStudentsSaga() {
   try {
-    const response = yield call(() => axios.get("student"));
-    const students: Student[] = response.data;
-    const modified = students.map((student) => {
-      return {
-        ...student,
-        inEdit: false,
-      };
-    });
-    yield put(getStudentsSuccess(modified));
+    const response: Student[] = yield call(getStudentsService);
+
+    yield put(getStudentsSuccess(response));
   } catch (error) {
     toast.error("Something went wrong");
     yield put(getStudentsFailure(error));
   }
 }
 
-function* addStudentSaga(action: Action): Generator<any, any, any> {
+function* addStudentSaga(action: Action) {
   try {
-    const data = {
+    const data: Student = {
       name: action.payload.name,
       address: action.payload.address,
       birthday: action.payload.birthday,
@@ -51,28 +54,32 @@ function* addStudentSaga(action: Action): Generator<any, any, any> {
       mobile: action.payload.mobile,
       age: calcAge(action.payload.birthday),
     };
-    const response = yield call(() => axios.post("student", data));
-    const student: Student = response.data;
-    yield put(addStudentSuccess({ ...student, inEdit: false }));
+    yield call(addStudentService, data);
+    const student: Student[] = yield call(getStudentsService);
+    yield put(addStudentSuccess(student));
   } catch (error) {
     toast.error("Error in adding student");
     yield put(addStudentFailure(error));
   }
 }
 
-function* deleteStudentSaga(action: Action): Generator<any, any, any> {
+function* deleteStudentSaga(action: ActionId) {
   try {
-    yield call(() => axios.delete(`student/${action.payload}`));
-    yield put(deleteStudentSuccess(action.payload));
+    if (!action.payload) return toast.error("Error in deleting student");
+    const id: number = action.payload;
+    yield call(deleteStudentService, id);
+    const students: Student[] = yield call(getStudentsService);
+    yield put(deleteStudentSuccess(students));
   } catch (error) {
     toast.error("Error in deleting student");
     yield put(deleteStudentFailure(error));
   }
 }
 
-function* updateStudentSaga(action: Action): Generator<any, any, any> {
+function* updateStudentSaga(action: Action) {
   try {
-    const element = {
+    if (!action.payload.id) return toast.error("Error in updating student");
+    const element: Student = {
       name: action.payload.name,
       address: action.payload.address,
       age: calcAge(action.payload.birthday),
@@ -80,14 +87,10 @@ function* updateStudentSaga(action: Action): Generator<any, any, any> {
       gender: action.payload.gender,
       mobile: action.payload.mobile,
     };
-    yield call(() => axios.patch(`student/${action.payload.id}`, element));
+    yield call(updateStudentService, action.payload.id, element);
+    const students: Student[] = yield call(getStudentsService);
 
-    yield put(
-      updateStudentSuccess({
-        ...action.payload,
-        age: calcAge(action.payload.birthday),
-      })
-    );
+    yield put(updateStudentSuccess(students));
   } catch (error) {
     toast.error("Error in updating student");
     yield put(updateStudentFailure(error));

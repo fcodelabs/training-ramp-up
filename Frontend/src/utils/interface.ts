@@ -1,11 +1,11 @@
 export interface Student {
-  id: number;
+  id?: number;
   name: string;
   gender: string;
   address: string;
   mobile: string;
   birthday: Date;
-  age: number;
+  age: number | boolean;
   inEdit?: boolean | string;
 }
 
