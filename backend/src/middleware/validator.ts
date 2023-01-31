@@ -20,7 +20,7 @@ export const validateData = [
   check("data.PersonMobileNo")
     .not()
     .isEmpty()
-    .matches(/^[+]*[0-9]{10}$/)
+    .matches(/^(\+\d{11}|\d{10})$/g)
     .withMessage("Invalid value"),
   check("data.DateOfBirth")
     .not()

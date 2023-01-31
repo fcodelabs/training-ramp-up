@@ -5,7 +5,7 @@ import {
   loginUserService,
   registerUserService,
   updateRefreshTokenService,
-} from "../services/UserServices";
+} from "../services/userServices";
 
 export const signUpController = async (req: Request, res: Response) => {
   try {

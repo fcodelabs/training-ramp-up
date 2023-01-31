@@ -4,7 +4,6 @@ import { useLocation, Outlet, Navigate } from 'react-router-dom'
 interface Props {
   allowedRoles: string[]
 }
-
 const ProtectedRoute: React.FC<Props> = (props): JSX.Element => {
   const auth = useSelector((state: any) => state.userData)
   const location = useLocation()

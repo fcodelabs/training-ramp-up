@@ -9,6 +9,6 @@ export const AppDataSource = new DataSource({
   database: "test_db",
   entities: ["src/models/*{.ts,.js}"],
   synchronize: true,
-  // logging: true,
+  logging: false,
   // logger: "file",
 });

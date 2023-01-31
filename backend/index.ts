@@ -4,12 +4,11 @@ import { AppDataSource } from "./src/configs/DataSourceConfig";
 import cors from "cors";
 import { createServer } from "http";
 import { Server } from "socket.io";
-import studentRoutes from "./src/routes/studentRoutes";
 import userRoutes from "./src/routes/userRoutes";
+import studentRoutes from "./src/routes/studentRoutes";
 import passport from "passport";
 import cookieparser from "cookie-parser";
 import dotenv from "dotenv";
-
 const PORT = "5000";
 
 dotenv.config();

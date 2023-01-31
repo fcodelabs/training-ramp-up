@@ -1,9 +1,14 @@
+
 import { AppDataSource } from "../configs/DataSourceConfig";
 import { Student } from "../models/Student";
 
 export const getAllStudentsService = async (): Promise<Student[]> => {
-  const userRepo = AppDataSource.getRepository(Student);
-  const allrecords = await userRepo.find();
+  const userRepo = AppDataSource.getRepository(Student)
+  const allrecords = await userRepo.find({
+    order: {
+      PersonID: "ASC"
+    }
+  });
   return allrecords;
 };
 

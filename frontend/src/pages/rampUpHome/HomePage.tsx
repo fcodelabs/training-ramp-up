@@ -13,7 +13,7 @@ import { CommandCell } from '../../components/commandCell/CommandCell'
 import { PageState, Person } from '../../models/interface'
 import { DropDownList, DropDownListChangeEvent } from '@progress/kendo-react-dropdowns'
 import { DatePicker, DatePickerChangeEvent } from '@progress/kendo-react-dateinputs'
-import { getItems, checkErr, generateId } from '../../services/CommandServices'
+import { getItems, checkErr, generateId, checkSimilarity } from '../../services/commandServices'
 import { Notification, NotificationGroup } from '@progress/kendo-react-notification'
 import { Fade } from '@progress/kendo-react-animation'
 import { orderBy, SortDescriptor } from '@progress/kendo-data-query'
@@ -33,7 +33,7 @@ import { userLogOutSuccess } from '../signInPage/userSlice'
 const editField: string = 'inEdit'
 const gender = ['Female', 'Male']
 const initialSort: SortDescriptor[] = [{ field: 'PersonID', dir: 'asc' }]
-const initialDataState: PageState = { skip: 0, take: 10 }
+const initialDataState: PageState = { skip: 0, take: 8 }
 
 export const HomePage = (): any => {
   const [data, setData] = React.useState<Person[]>([])
@@ -43,6 +43,8 @@ export const HomePage = (): any => {
   const [success, setSuccess] = React.useState(false)
   const [sort, setSort] = React.useState(initialSort)
   const [page, setPage] = React.useState<PageState>(initialDataState)
+  const [prevState, setPrevState] = React.useState<Person | object>({})
+
   const distpatch = useDispatch()
 
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
@@ -128,12 +130,17 @@ export const HomePage = (): any => {
   const update = (dataItem: Person): void => {
     dataItem.DateOfBirth = birthday
     dataItem.PersonGender = personGen.value
-    const errs = checkErr(dataItem)
-    setErr(errs)
-    if (errs.length > 0) {
-      onToggle()
+    // eslint-disable-next-line @typescript-eslint/no-base-to-string
+    if (checkSimilarity(dataItem, prevState as Person)) {
+      alert('No changes made')
     } else {
-      distpatch(updatePersonDataStart(dataItem))
+      const errs = checkErr(dataItem)
+      setErr(errs)
+      if (errs.length > 0) {
+        onToggle()
+      } else {
+        distpatch(updatePersonDataStart(dataItem))
+      }
     }
   }
 
@@ -149,6 +156,7 @@ export const HomePage = (): any => {
   const enterEdit = (dataItem: Person): void => {
     dataItem.DateOfBirth != null && setBirthday(new Date(dataItem.DateOfBirth))
     dataItem.PersonGender != null && setGender({ value: dataItem.PersonGender })
+    setPrevState(dataItem)
     setData(
       data.map((item) => (item.PersonID === dataItem.PersonID ? { ...item, inEdit: true } : item)),
     )
@@ -178,7 +186,7 @@ export const HomePage = (): any => {
     setPage(event.page)
   }
 
-  const logOut = ():void => {
+  const logOut = (): void => {
     distpatch(userLogOutSuccess())
   }
   const CommandCellFunc = (props: GridCellProps): JSX.Element => (
@@ -200,7 +208,7 @@ export const HomePage = (): any => {
       <Grid
         style={{ height: '720px' }}
         data={orderBy(
-          data.length > page.take + page.skip ? data.slice(page.skip, page.take + page.skip) : data,
+         data.slice(page.skip, page.take + page.skip) ,
           sort,
         )}
         onItemChange={itemChange}
