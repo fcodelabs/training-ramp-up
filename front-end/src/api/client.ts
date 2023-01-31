@@ -7,7 +7,7 @@ export async function resolver(axiosResponse: any) {
   try {
     const response = await axiosResponse
     return response
-  } catch (e: any) {
+  } catch (error) {
     return [408, 'connectiion error']
   }
 }
