@@ -2,6 +2,7 @@
   "devDependencies": {
     "@types/bcrypt": "^5.0.0",
     "@types/express": "^4.17.15",
+    "@types/jsonwebtoken": "^9.0.1",
     "@types/node": "^18.11.18",
     "@typescript-eslint/eslint-plugin": "^5.48.2",
     "@typescript-eslint/parser": "^5.48.2",
@@ -74,6 +75,7 @@
     "js-yaml": "^4.1.0",
     "json-schema-traverse": "^0.4.1",
     "json-stable-stringify-without-jsonify": "^1.0.1",
+    "jsonwebtoken": "^9.0.0",
     "levn": "^0.4.1",
     "locate-path": "^6.0.0",
     "lodash.merge": "^4.6.2",

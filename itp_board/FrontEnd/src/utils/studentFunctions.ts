@@ -43,7 +43,7 @@ export const getStoreData = () => {
 
     const admin = useAppSelector(
         (state) => {
-            return state.persistedReducer.useData.admin;
+            return state.persistedReducer.userData.admin;
         }
     );
 

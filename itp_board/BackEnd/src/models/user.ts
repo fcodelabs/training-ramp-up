@@ -14,6 +14,9 @@ class User {
 
     @Column('varchar')
     password: string | undefined
+
+    @Column('boolean')
+    admin: boolean | undefined
 }
 
 export {User}

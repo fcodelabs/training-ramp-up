@@ -1,7 +1,5 @@
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
-import {UserInitialState} from "../../utils/types";
-import {studentSlice} from "../students/studentSlice";
-import {stat} from "fs";
+import {User, UserCredetial, UserInitialState} from "../../utils/types";
 
 
 const initialState:UserInitialState={
@@ -28,9 +26,15 @@ export const userSlice = createSlice(
             changeAdmin:(state,action:PayloadAction<boolean>)=>{
                 state.admin = action.payload;
             },
-            signInUser_:(state, action:PayloadAction<UserInitialState>)=>{
+            changeSignInUser:(state,action:PayloadAction<boolean>)=>{
+                state.signIn = false;
+            },
+            signInUser:(state, action:PayloadAction<UserCredetial>)=>{
                 console.log('called me')
-                state.signIn=action.payload.signIn;
+                state.signIn=true;
+            },
+            signUpUser:(state,action:PayloadAction<User>)=>{
+                state.signIn = true;
             }
 
         }
@@ -42,7 +46,9 @@ export const {
     changeLastName,
     changeEmail,
     changeAdmin,
-    signInUser_
+    changeSignInUser,
+    signInUser,
+    signUpUser
 } = userSlice.actions;
 export default userSlice.reducer;
 

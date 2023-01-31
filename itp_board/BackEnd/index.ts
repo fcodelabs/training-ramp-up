@@ -4,6 +4,7 @@ import userRouter from "./src/routes/userRouter";
 import morgan from 'morgan';
 import express, { Express } from 'express';
 import dotenv from 'dotenv';
+import auth from "./src/middlewares/auth";
 
 dotenv.config();
 const port = process.env.PORT;

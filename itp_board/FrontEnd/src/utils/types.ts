@@ -1,6 +1,14 @@
 import {SortDescriptor} from "@progress/kendo-data-query";
 
 
+
+export type UserCredetial = {
+  email:string;
+  password:string;
+  navigate:(to:string)=>void;
+
+}
+
 export type UserInitialState = {
   firstName:string;
   lastName: string;
@@ -19,6 +27,21 @@ export type StudentInitialState = {
   dataRemoveRequested:boolean;
   sort: Array<SortDescriptor>;
   newAdded: boolean
+}
+
+export type ResponseObj = {
+  data:User;
+  authorized:boolean;
+  token:string;
+
+}
+export type User = {
+  email: string;
+  firstName:string;
+  lastName:string;
+  password:string;
+  admin:boolean;
+  navigate:(to:string)=>void;
 }
 
 export type Student = {

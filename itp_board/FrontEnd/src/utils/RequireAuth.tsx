@@ -8,7 +8,7 @@ interface RequireAuthProps {
 
 const RequireAuth: React.FC<RequireAuthProps> = ({ children }) => {
     const location = useLocation();
-    const signIn = useAppSelector((state) => state.persistedReducer.useData.signIn);
+    const signIn = useAppSelector((state) => state.persistedReducer.userData.signIn);
 
     if (!signIn) {
         return <Navigate to={'/'} />;

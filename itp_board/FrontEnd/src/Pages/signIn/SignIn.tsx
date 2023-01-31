@@ -4,7 +4,8 @@ import {
 } from "./components/SignInComponents";
 import {
     isValidAddress,
-    isValidDateOfBirth, isValidEmail,
+    isValidDateOfBirth,
+    isValidEmail,
     isValidName,
     isValidPassword,
     isValidTPNO
@@ -12,8 +13,8 @@ import {
 import {displayErrors} from "../../utils/toasts";
 import {ToastContainer} from "react-toastify";
 import {useNavigate} from "react-router-dom";
-import {useDispatch} from "react-redux";
-import {signInUser_} from "./signInSlice";
+import {signInUser} from "./signInSlice";
+import {useAppDispatch, useAppSelector} from "../../hooks";
 
 
 const SignIn = () => {
@@ -23,10 +24,17 @@ const SignIn = () => {
     const [password, setPassword] = useState<string>('');
     const [confirmPassword, setConfirmPassword] = useState<string>('');
     const navigate = useNavigate();
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
+
+    const signIn = useAppSelector(
+        (state) => {
+            return state.persistedReducer.userData.signIn;
+        }
+    );
 
     const validate = (firstName: string, lastName: string, email: string, password: string, confirmPassword: string) => {
         const errors: string[] = []
+
 
         if (!isValidEmail(email).state) {
             errors.push(isValidEmail(email).error)
@@ -43,25 +51,16 @@ const SignIn = () => {
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const errors: string[] = validate(firstName, lastName, email, password, confirmPassword);
-        console.log(errors)
         if (errors.length !== 0) {
             displayErrors(errors);
         }else{
-            // fetchdata for the email processs
 
-
-            //check the email process
-
-            //navigate to students page for the email
-            const {firstName,lastName,email} = {firstName:'Yasith',lastName:'Heshan',email:'yheshan1@gmail.com'}
-
-            dispatch(signInUser_({
-                firstName,
-                lastName,
+             dispatch(signInUser({
                 email,
-                admin:true,
-                signIn:true}))
-            navigate('/students');
+                password,
+                 navigate
+                }))
+
         }
     }
 

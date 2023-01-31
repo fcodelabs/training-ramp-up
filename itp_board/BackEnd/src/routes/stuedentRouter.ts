@@ -5,8 +5,11 @@ import { createStudent, getAllStudents, updateStudentById, deleteStudentById } f
 const studentRouter:express.Router = express.Router()
 
 studentRouter.get('/', async(req: Request, res: Response) => {
+
   const students = await getAllStudents();
   res.send(students);
+
+
 })
 
 

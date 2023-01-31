@@ -10,12 +10,13 @@ const sagaMiddleware = createSagaMiddleware();
 const persistConfig = {
     key: 'root',
     storage,
+    blacklist: ['studentData']
 }
 
 
 const rootReducer = combineReducers({
     studentData:studentDataReducer,
-    useData:useDataReducer
+    userData:useDataReducer
 })
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 

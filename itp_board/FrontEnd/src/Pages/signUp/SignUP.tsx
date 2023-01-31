@@ -11,7 +11,9 @@ import {
 } from "../../utils/studentValidations";
 import {displayErrors} from "../../utils/toasts";
 import {ToastContainer} from "react-toastify";
-
+import {useAppDispatch} from "../../hooks";
+import {useNavigate} from "react-router-dom";
+import {signUpUser} from "../signIn/signInSlice";
 
 const SignUp = () => {
     const [firstName, setFirstName] = useState<string>('');
@@ -19,7 +21,8 @@ const SignUp = () => {
     const [email, setEmail] = useState<string>('');
     const [password, setPassword] = useState<string>('');
     const [confirmPassword, setConfirmPassword] = useState<string>('');
-
+    const navigate = useNavigate();
+    const dispatch = useAppDispatch();
     const validate=(firstName:string,lastName:string,email:string,password:string,confirmPassword:string)=> {
         const errors: string[] = []
         if (!isValidName(firstName).state) {
@@ -50,6 +53,21 @@ const SignUp = () => {
         console.log(errors)
         if(errors.length!==0){
             displayErrors(errors);
+        }else{
+             dispatch(
+                signUpUser(
+                    {
+                        firstName,
+                        lastName,
+                        email,
+                        password,
+                        admin:false,
+                        navigate
+                    }
+                )
+            );
+
+
         }
     }
 
