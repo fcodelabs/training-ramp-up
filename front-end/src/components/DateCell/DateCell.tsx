@@ -11,7 +11,7 @@ export const DateCell = (props: GridCellProps) => {
 
   const { dataItem } = props
   const field = props.field || ''
-  const dataValue = dataItem[field] === undefined ? new Date(max) : new Date(dataItem[field])
+  const dataValue = dataItem[field] === undefined ? null : new Date(dataItem[field])
 
   const handleChange = (e: DatePickerChangeEvent) => {
     if (props.onChange) {

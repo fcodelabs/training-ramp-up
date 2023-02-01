@@ -1,4 +1,4 @@
-import { put, takeEvery, all, call, take, cancelled } from 'redux-saga/effects'
+import { put, takeEvery, all } from 'redux-saga/effects'
 import {
   addStudent,
   addStudentSuccess,
@@ -20,7 +20,7 @@ import { checkValid, age } from '../../utils/validators'
 
 function* getStudentsSaga(): Generator<any, any, any> {
   try {
-    const response = yield call(() => api.student.getStudents())
+    const response = yield api.student.getStudents()
     const students: Student[] = response.data.data
     students.map((item: Student) => {
       item.dob = new Date(item.dob)
@@ -39,10 +39,10 @@ function* addStudentSaga(action: any): Generator<any, any, any> {
     }
     item.inEdit = false
     try {
-      const response = yield call(() => api.student.postStudent(item))
-      toast.success('Successfully Added', {
-        position: toast.POSITION.TOP_RIGHT,
-      })
+      const response = yield api.student.postStudent(item)
+      // toast.success('Successfully Added', {
+      //   position: toast.POSITION.TOP_RIGHT,
+      // })
       const addedStudent = response.data.data
       addedStudent.dob = new Date(addedStudent.dob)
       yield put(addStudentSuccess(addedStudent))
@@ -58,7 +58,7 @@ function* updateStudentSaga(action: any): Generator<any, any, any> {
   item.age = age(item.dob)
   const itemToUpdate = item.id
   try {
-    const response = yield call(() => api.student.putStudent(itemToUpdate, item))
+    const response = yield api.student.putStudent(itemToUpdate, item)
     toast.success('Successfully Updated', {
       position: toast.POSITION.TOP_RIGHT,
     })
@@ -75,10 +75,10 @@ function* deleteStudentSaga(action: any): Generator<any, any, any> {
   const item: Student = action.payload
   const itemToDelete = item.id
   try {
-    yield call(() => api.student.deleteStudent(itemToDelete))
-    toast.success('Successfully Deleted', {
-      position: toast.POSITION.TOP_RIGHT,
-    })
+    yield api.student.deleteStudent(itemToDelete)
+    // toast.success('Successfully Deleted', {
+    //   position: toast.POSITION.TOP_RIGHT,
+    // })
     yield put(deleteStudentSuccess(itemToDelete))
   } catch (error) {
     yield put(deleteStudentFailure())

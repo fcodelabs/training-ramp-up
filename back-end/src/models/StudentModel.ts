@@ -3,13 +3,11 @@ import {
   PrimaryGeneratedColumn,
   Column,
   CreateDateColumn,
-  PrimaryColumn,
 } from "typeorm";
 
 @Entity()
 export class Student {
   @PrimaryGeneratedColumn()
-  // @PrimaryColumn()
   id: number;
 
   @Column()
