@@ -67,7 +67,6 @@ export const homeSlice = createSlice({
         }
         return user
       })
-      console.log('line 68 home slice ',state.users)
     },
     updateUserRecordFailure: (state, action) => {
       state.isLoading = false

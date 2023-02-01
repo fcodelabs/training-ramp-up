@@ -14,7 +14,6 @@ interface Action {
 function* getUserRecordsSaga(): Generator<any, any, any> {
   try {
     const response = yield call(() => getUsers())
-    console.log('line 21 saga', response.data)
     const responceData = response.data.map((item: any) => {
       item.dob = new Date(item.dob)
       return item
@@ -33,17 +32,14 @@ function* addUserSaga(action: Action): Generator<any, any, any> {
   try {
     if (validationFunc(action.payload)) {
         const modifiedData = modifyAdd(action.payload)
-        console.log('line 37 saga', modifiedData)
         const response = yield call(() => addUserr(modifiedData))
         const addedUser = response.data
-        console.log('line 39 saga', addedUser.name)
         yield put(addUserRecordSuccess({...addedUser, inEdit: false}))
         socket.emit('user_added', { name: addedUser.name })
         toast.success('User added successfully!')
     }
   } catch (error) {
     yield put(addUserRecordFailure(error))
-    console.log('line 45 saga', error)
     toast.error('Something went wrong!')
   }
 }

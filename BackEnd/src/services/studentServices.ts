@@ -25,8 +25,6 @@ export async function addNewStudent(req: Request, res: Response) {
         await PostgresDataSource.manager.save(newStudent);
         const student = PostgresDataSource.getRepository(Student).create(newStudent);
         const newSavedStudent = await PostgresDataSource.getRepository(Student).save(student);
-
-        console.log("Student has been saved: ", newStudent);
         res.status(201).send(newSavedStudent)
 
     } catch (err) {
@@ -48,7 +46,6 @@ export async function updateSelectedStudent(req: Request, res: Response) {
         studentToUpdate!.dob = new Date(req.body.dob);
         studentToUpdate!.age = req.body.age;
         const updatedStudent = await studentRepository.save(studentToUpdate!);
-        console.log("Student has been Updated: ", studentToUpdate);
         res.status(201).json(updatedStudent)
     }catch (err) {
         return res.status(500).send(err);

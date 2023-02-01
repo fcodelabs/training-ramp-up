@@ -10,7 +10,6 @@ import { MyCommandCell } from './Commandcell'
 import React, { useEffect } from 'react'
 import { HomeState, User } from '../../interfaces/interfaces'
 import {
-
   validationFunc,
 } from '../../services/services'
 import { GenderCell } from './GenderCell'

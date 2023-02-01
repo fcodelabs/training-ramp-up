@@ -2,6 +2,7 @@ import express from 'express'
 import bodyparser from 'body-parser'
 import { PostgresDataSource } from './configs/db'
 import studentRouter from './routes/studentRoutes'
+import userRouter from './routes/userRoutes'
 import http from 'http'
 import { Server } from 'socket.io'
 import cors from 'cors'
@@ -54,10 +55,7 @@ PostgresDataSource.initialize()
     })
 
 
-
-app.get('/', (req, res) => {
-  res.send('Well done4!')
-})
+app.use('/', userRouter)
 
 
 app.use('/home', studentRouter)
