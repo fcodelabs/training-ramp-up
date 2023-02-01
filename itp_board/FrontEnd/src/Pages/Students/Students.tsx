@@ -49,7 +49,7 @@ const Student = () => {
     })
 
     socket.off('student_edited').on('student_edited', (response: SockeResponse) => {
-        displayNotifications(`Student data edited with the id:${response.id}`)
+        displayNotifications(`Student data edited with the id:${response}`)
         dispatch(startGetData());
     })
 

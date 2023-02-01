@@ -61,13 +61,11 @@ export const studentSlice = createSlice(
             },
             startRemove: (state, action: PayloadAction<number>) => {
                 state.dataRemoveRequested = true;
-                const newData: Student[] = []
-                state.data.forEach((item) => {
-                    if (action.payload !== item.id) {
-                        newData.push(item);
-                    }
-                })
-                state.data = newData;
+            },
+            RemoveData:(state, action: PayloadAction<number>) => {
+               state.data=state.data.filter((item)=>{
+                   if(item.id!==action.payload)return item
+               })
             },
             successRemove: (state) => {
                 state.dataRemoveRequested = false;
@@ -89,6 +87,7 @@ export const {
     successAddNew,
     startAddNew,
     startRemove,
+    RemoveData,
     successRemove
 } = studentSlice.actions;
 export default studentSlice.reducer;

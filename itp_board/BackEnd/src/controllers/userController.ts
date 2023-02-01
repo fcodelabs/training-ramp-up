@@ -1,62 +1,79 @@
-import {AppDataSource} from '../configs/db.config'
 import {User} from '../models/user'
-import bcrypt from "bcrypt";
-import {isValidEmail, isValidName, isValidPassword} from "../utils/validations";
 import jwt from 'jsonwebtoken'
 import {refreshTokens} from "../utils/refreshTokens";
+import {NextFunction, Request, Response} from "express";
+import {checkCredentials, create, deleteRefreshToken} from "../services/userServices";
 import dotenv from 'dotenv';
 dotenv.config();
 
-const userRepository = AppDataSource.getRepository(User);
 
-
-type ResponseObj = {
-    data:User;
-    Authorized:boolean;
-
+export async function createUser(req:Request,res:Response,next:NextFunction){
+    try{
+        const {email, firstName, lastName, password, admin} = req.body;
+        let user = new User();
+        user = {...user, email, firstName, lastName, password, admin};
+        await create(user);
+        res.status(200).json(user);
+    }catch (error) {
+        next(error);
+    }
 }
-export async function checkCredentials(email: string, password: string) {
-    const user = await userRepository.findOne({where: {email}});
-    if (!user) {
-        return {
-            data: null,
-            authorized: false
-        };
-    } else {
-        if (user.password) {
-            const hashedPassword = user.password;
-            // @ts-ignore
-            const token = jwt.sign({email}, process.env.Token_KEY,{ expiresIn: '300s' });
-            // @ts-ignore
-            const refreshToken = jwt.sign({email},process.env.REFRESH_TOKEN_KEY,{ expiresIn: '24h' })
-           refreshTokens.push(refreshToken);
 
-            if (bcrypt.compareSync(password, hashedPassword)) {
-                return {
-                    data: user,
-                    authorized: true,
-                    token,
-                    refreshToken
-                }
+export const authonticate=async (req:Request,res:Response,next:NextFunction)=>{
+    try {
+        const {email,password} = req.body;
+        const response = await(checkCredentials(email,password));
+        const {token,refreshToken} = response;
+        res.cookie(
+            'tokens',
+            {token,refreshToken},
+            {
+                httpOnly:true,
+                sameSite:'strict',
+                secure:true,
+                maxAge:24*60*60*1000
             }
-        }
-        return {
-            data: null,
-            authorized: false
-        }
+        ).status(200).json(response);
+    }catch (error){
+        next(error)
     }
 }
 
-export async function createUser(user: User){
-    const {firstName,lastName,email,password} = user;
-    if(firstName && lastName && email && password &&
-        isValidName(firstName) && isValidName(lastName) && isValidEmail(email) && isValidPassword(password)){
-        const saltRounds = 10;
-        const hashedPassword = bcrypt.hashSync(password, saltRounds);
-        user.password = hashedPassword;
-        const response = await userRepository.save(user);
-        return response;
+export const signOut = (req:Request,res:Response,next:NextFunction)=>{
+    try{
+        const {refreshToken} = req.body;
+        deleteRefreshToken(refreshToken);
+        res.clearCookie('tokens').sendStatus(204);
+    }catch (error){
+        next(error);
     }
-    console.log('error');
-    return null;
+}
+type Decoded = {
+    email:string;
+    iat:number;
+    exp:number;
+
+}
+export const updateToken=(req:Request,res:Response,next:NextFunction)=>{
+    try{
+        const refreshToken = req.body.refreshToken;
+        if (refreshToken === null) res.sendStatus(401);
+        if (!refreshTokens.includes(refreshToken)) {
+            res.sendStatus(403);
+        } else {
+
+            // @ts-ignore
+            jwt.verify(refreshToken, process.env.REFRESH_TOKEN_KEY, (err, decoded: Decoded) => {
+                if (err) {
+                    res.sendStatus(403);
+                } else {
+                    // @ts-ignore
+                    const accessToken = jwt.sign({email: decoded.email}, process.env.Token_KEY, {expiresIn: '300s'});
+                    res.send({accessToken, refreshToken});
+                }
+            });
+        }
+    }catch (error){
+        next(error);
+    }
 }

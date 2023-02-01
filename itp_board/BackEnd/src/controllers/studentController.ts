@@ -1,43 +1,43 @@
-import { AppDataSource } from '../configs/db.config'
-import { Student } from '../models/student'
-import {io} from  '../utils/app'
+import {NextFunction, Request, Response} from "express";
+import {create, fetchAll, remove, update} from "../services/studentServices";
 
-const studentRepository = AppDataSource.getRepository(Student)
-
-
-
-async function getAllStudents(): Promise<Student[]> {
-  return await studentRepository.find();
-
+async function getAllStudents(req:Request,res:Response,next:NextFunction):Promise<void>{
+  try{
+    const students = await fetchAll();
+    res.status(200).json(students);
+  }catch (error) {
+    next(error);
+  }
 }
 
-async function createStudent(student: Student): Promise<Student> {
-  const response = await studentRepository.save(student);
-  if(response){
-    io.emit('new_student_added',student);
+async function createStudent(req:Request,res:Response,next:NextFunction) {
+  try{
+    const { id, name, gender, address, dateOfBirth, mobileNo } = req.body
+    const response = await create(id, name, gender, address, dateOfBirth, mobileNo);
+    res.status(200).json(response);
+  }catch (error) {
+    next(error);
   }
-  return response;
 }
 
-async function updateStudentById(student: Student) {
-  const { id, name, gender, address, dateOfBirth, mobileNo } = student
-  const response =  await studentRepository.update(
-    { id },
-    { name, gender, address, dateOfBirth, mobileNo }
-  )
-  if (response) {
-    io.emit('student_edited',student);
-
+async function updateStudentById(req:Request,res:Response,next:NextFunction) {
+  try{
+    const { id, name, gender, address, dateOfBirth, mobileNo } = req.body;
+    const response = await update(id, name, gender, address, dateOfBirth, mobileNo);
+    res.status(200).json(response);
+  }catch (error) {
+    next(error);
   }
-  return response;
 }
 
-async function deleteStudentById(id:number){
-  const response = await studentRepository.delete({id})
-  if (response) {
-    io.emit('student_deleted',id);
-  }
-  return response
+async function deleteStudentById(req:Request,res:Response,next:NextFunction){
+ try{
+   const id = parseInt(req.params.id);
+   const response = await remove(id);
+   res.status(200).json(response);
+ }catch (error) {
+   next(error);
+ }
 }
 
 export {createStudent, getAllStudents, updateStudentById, deleteStudentById }
