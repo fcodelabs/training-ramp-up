@@ -1,17 +1,8 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import '@progress/kendo-theme-default/dist/all.css'
-import Grids from './pages/Grid/Grid'
-import { ToastContainer } from 'react-toastify'
+import AppRouter from './routes/router'
 
 function App() {
-  return (
-    <BrowserRouter>
-      <Routes>
-        <Route path='/' element={<Grids />} />
-      </Routes>
-      <ToastContainer />
-    </BrowserRouter>
-  )
+  return <AppRouter />
 }
 
 export default App
