@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { Student } from "../models/StudentModel";
+import { Student, validateStudent } from "../models/StudentModel";
 import { AppDataSource } from "../configs/dbConfig";
 import {
   getAllStudents,
@@ -19,11 +19,19 @@ async function getStudents(req: Request, res: Response) {
 }
 
 async function addStudent(req: Request, res: Response) {
-  try {
-    const savedStudent = await addStudentDetails(req);
-    res.status(201).send(generateOutput(201, "success", savedStudent));
-  } catch (error) {
-    res.status(500).send(generateOutput(500, "error", "Something went wrong"));
+  const error = validateStudent(req.body);
+  if (error) {
+    console.log(error);
+    res.status(400).send(generateOutput(400, "error", error.message));
+  } else {
+    try {
+      const savedStudent = await addStudentDetails(req);
+      res.status(201).send(generateOutput(201, "success", savedStudent));
+    } catch (error) {
+      res
+        .status(500)
+        .send(generateOutput(500, "error", "Something went wrong"));
+    }
   }
 }
 

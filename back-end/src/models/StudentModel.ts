@@ -1,3 +1,4 @@
+const Joi = require("joi");
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -31,4 +32,22 @@ export class Student {
   @Column()
   @CreateDateColumn()
   createdAt: Date;
+}
+
+export function validateStudent(student: any) {
+  const schema = Joi.object({
+    name: Joi.string()
+      .regex(/^[\w'\-,.][^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{0,}$/, "name")
+      .required(),
+    gender: Joi.string().required(),
+    address: Joi.string().required(),
+    mobile: Joi.string()
+      .length(10)
+      .regex(/^[0-9]+$/, "given")
+      .required(),
+    dob: Joi.date().required(),
+    age: Joi.number().required(),
+  });
+
+  return schema.validate(student).error;
 }
