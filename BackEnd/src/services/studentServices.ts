@@ -1,18 +1,16 @@
-import { Request, Response } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import { PostgresDataSource } from '../configs/db';
 import { Student } from '../models/StudentModel';
 
-export function getStudents(req: Request, res: Response) {
+export async function getStudents(req: Request, res: Response, next: NextFunction) {
     try {
-        Student.find().then((data) =>{
-            res.json(data);
-          })
+        return await Student.find()
     } catch (err) {
-        return res.status(500).send(err);
+        next(err)
     }
 }
 
-export async function addNewStudent(req: Request, res: Response) {
+export async function addNewStudent(req: Request, res: Response, next: NextFunction) {
     try {
         const newStudent = new Student();
         newStudent.name = req.body.name;
@@ -24,46 +22,49 @@ export async function addNewStudent(req: Request, res: Response) {
 
         await PostgresDataSource.manager.save(newStudent);
         const student = PostgresDataSource.getRepository(Student).create(newStudent);
-        const newSavedStudent = await PostgresDataSource.getRepository(Student).save(student);
-        res.status(201).send(newSavedStudent)
+        return await PostgresDataSource.getRepository(Student).save(student);
 
     } catch (err) {
-        return res.status(500).send(err);
+        next(err)
     }
 }
 
-export async function updateSelectedStudent(req: Request, res: Response) {
+export async function updateSelectedStudent(req: Request, res: Response, next: NextFunction) {
     try {
         const id = +req.params.id;
         const studentRepository = PostgresDataSource.getRepository(Student);
         const studentToUpdate = await studentRepository.findOneBy({
             id: id
         });
-        studentToUpdate!.name = req.body.name;
-        studentToUpdate!.gender = req.body.gender;
-        studentToUpdate!.address = req.body.address;
-        studentToUpdate!.mobile = req.body.mobile;
-        studentToUpdate!.dob = new Date(req.body.dob);
-        studentToUpdate!.age = req.body.age;
-        const updatedStudent = await studentRepository.save(studentToUpdate!);
-        res.status(201).json(updatedStudent)
+        if(studentToUpdate){
+            studentToUpdate!.name = req.body.name;
+            studentToUpdate!.gender = req.body.gender;
+            studentToUpdate!.address = req.body.address;
+            studentToUpdate!.mobile = req.body.mobile;
+            studentToUpdate!.dob = new Date(req.body.dob);
+            studentToUpdate!.age = req.body.age;
+            return await studentRepository.save(studentToUpdate!);
+        }else{
+            return null
+        }
     }catch (err) {
-        return res.status(500).send(err);
+        next(err)
     }
 }
 
-export async function deleteSelectedStudent(req: Request, res: Response) {
+export async function deleteSelectedStudent(req: Request, res: Response, next: NextFunction) {
     try {
         const id = +req.params.id;
         const studentRepository = PostgresDataSource.getRepository(Student);
         const studentToRemove = await studentRepository.findOneBy({
             id: id
         });
-
-        await studentRepository.remove(studentToRemove!);
-        console.log("Student has been Removed: ", studentToRemove);
-        res.status(201).json({message: 'Student removed successfully!'})
+        if(studentToRemove){
+            return await studentRepository.remove(studentToRemove!);
+        }else{
+            return null
+        }
     }catch (err) {
-        return res.status(500).send(err);
+        next(err)
     }
 }

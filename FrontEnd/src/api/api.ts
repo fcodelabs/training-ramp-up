@@ -14,7 +14,7 @@ export async function addUserr(user: User) {
   const response = await client.post('/', user)
   return response
   } catch (error) {
-    console.log('error', error)
+    console.error('error', error)
   }
 }
 
@@ -23,7 +23,7 @@ export async function updateUser(user: any){
   const response = await client.put(`/${user.id}`, user)
   return response
   } catch (error) {
-    console.log('error', error)
+    console.error('error', error)
   }
 }
 
@@ -32,6 +32,6 @@ export const deleteUser = (id: any) => {
     console.log('response', response.data)
     
   }).catch((error) => {
-    console.log('error', error)
+    console.error('error', error)
   })
 }

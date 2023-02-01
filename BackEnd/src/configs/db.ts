@@ -1,5 +1,6 @@
 import { DataSource } from "typeorm"
 import { Student } from "../models/StudentModel"
+import { User } from "../models/UserModel"
 require ('dotenv').config()
 
 export const PostgresDataSource = new DataSource({
@@ -10,5 +11,5 @@ export const PostgresDataSource = new DataSource({
   password: process.env.PASSWORD,
   database: process.env.DATABASE_NAME,
   synchronize: true,
-  entities: [Student]
+  entities: [Student, User]
 })

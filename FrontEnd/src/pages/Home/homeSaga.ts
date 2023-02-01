@@ -60,7 +60,6 @@ function* updateUserSaga(action: Action): Generator<any, any, any> {
         const modifiedData = modifyUpdate(action.payload)
         const response = yield call(() => updateUser(modifiedData))
         const updatedUser = response.data
-        console.log('line 64 update saga', updatedUser)
         yield put(updateUserRecordSuccess(updatedUser))
         socket.emit('user_updated', { name: updatedUser.name })
     }

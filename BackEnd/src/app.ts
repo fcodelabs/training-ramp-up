@@ -1,4 +1,4 @@
-import express from 'express'
+import express, {  Request, Response } from 'express'
 import bodyparser from 'body-parser'
 import { PostgresDataSource } from './configs/db'
 import studentRouter from './routes/studentRoutes'
@@ -59,6 +59,13 @@ app.use('/', userRouter)
 
 
 app.use('/home', studentRouter)
+
+app.use((err: any, req: Request, res: Response) => {
+  const statusCode = err.statusCode || 500
+  console.error(err.message, err.stack)
+  res.status(statusCode).json({ message: err.message })
+  return 
+})
 
 //app.listen
 server.listen(3001, () => {
