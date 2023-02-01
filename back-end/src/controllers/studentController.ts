@@ -40,7 +40,7 @@ async function addStudent(req: Request, res: Response) {
 }
 
 async function updateStudent(req: Request, res: Response) {
-  const error = validateStudentUpdate(req.body);
+  const error = validateStudent(req.body);
   if (error) {
     console.log(error);
     res.status(400).send(generateOutput(400, "error", error.message));
