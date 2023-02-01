@@ -1,5 +1,9 @@
 import { Request, Response } from "express";
-import { Student, validateStudent } from "../models/StudentModel";
+import {
+  Student,
+  validateStudent,
+  validateStudentUpdate,
+} from "../models/StudentModel";
 import { AppDataSource } from "../configs/dbConfig";
 import {
   getAllStudents,
@@ -36,11 +40,19 @@ async function addStudent(req: Request, res: Response) {
 }
 
 async function updateStudent(req: Request, res: Response) {
-  try {
-    const updatedStudent = await updateStudentDetails(req);
-    res.status(201).send(generateOutput(201, "success", updatedStudent));
-  } catch (error) {
-    res.status(500).send(generateOutput(500, "error", "Something went wrong"));
+  const error = validateStudentUpdate(req.body);
+  if (error) {
+    console.log(error);
+    res.status(400).send(generateOutput(400, "error", error.message));
+  } else {
+    try {
+      const updatedStudent = await updateStudentDetails(req);
+      res.status(201).send(generateOutput(201, "success", updatedStudent));
+    } catch (error) {
+      res
+        .status(500)
+        .send(generateOutput(500, "error", "Something went wrong"));
+    }
   }
 }
 
