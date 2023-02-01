@@ -4,8 +4,7 @@ const router = expresss.Router();
 
 router.get("/", studentController.getStudents);
 router.post("/", studentController.addStudent);
-router.put("/:id", studentController.updateStudent);
+router.patch("/:id", studentController.updateStudent);
 router.delete("/:id", studentController.deleteStudent);
-router.get("/:id", studentController.getOneStudent);
 
 module.exports = router;
