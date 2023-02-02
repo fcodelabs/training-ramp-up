@@ -1,6 +1,14 @@
 import {put, takeEvery, all, call, take, cancelled} from "redux-saga/effects";
 import {PayloadAction} from "@reduxjs/toolkit";
-import {changeAdmin, changeEmail, changeFirstName, changeLastName, changeSignInUser, signInUser} from "./signInSlice";
+import {
+    changeAdmin,
+    changeEmail,
+    changeFirstName,
+    changeLastName,
+    changeSignInUser,
+    signInUser,
+    signOutUser
+} from "./signInSlice";
 import {ResponseObj, User, UserCredetial, UserInitialState} from "../../utils/types";
 import {checkCredentials} from "../../apis/userAPIs";
 import {displayErrors} from "../../utils/toasts";
@@ -47,4 +55,5 @@ function* signIn(action:PayloadAction<UserCredetial>){
 
 export default function* signInSaga(){
     yield takeEvery(signInUser,signIn)
+    yield takeEvery(signOutUser,signOut)
 }

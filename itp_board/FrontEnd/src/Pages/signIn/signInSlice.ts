@@ -35,6 +35,9 @@ export const userSlice = createSlice(
             },
             signUpUser:(state,action:PayloadAction<User>)=>{
                 state.signIn = true;
+            },
+            signOutUser:(state)=>{
+                state.signIn=false;
             }
 
         }
@@ -48,7 +51,8 @@ export const {
     changeAdmin,
     changeSignInUser,
     signInUser,
-    signUpUser
+    signUpUser,
+    signOutUser
 } = userSlice.actions;
 export default userSlice.reducer;
 

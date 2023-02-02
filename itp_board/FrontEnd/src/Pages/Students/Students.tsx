@@ -22,6 +22,7 @@ import { displayNotifications } from '../../utils/toasts'
 
 import { io } from 'socket.io-client'
 import {command, gender,calcAge} from "./components/cellComponent/CellComponent";
+import {Navigation} from "./components/navigation/Navigation";
 const socket = io('http://localhost:4000')
 
 
@@ -74,6 +75,7 @@ const Student = () => {
 
     return (
         <>
+            <Navigation/>
             <ToastContainer
                 position="top-center"
                 autoClose={5000}
