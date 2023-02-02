@@ -2,7 +2,7 @@ import {User} from '../models/user'
 import jwt from 'jsonwebtoken'
 import {refreshTokens} from "../utils/refreshTokens";
 import {NextFunction, Request, Response} from "express";
-import {checkCredentials, create, deleteRefreshToken} from "../services/userServices";
+import {checkCredentials, checkRefreshTokenAvailability, create, deleteRefreshToken} from "../services/userServices";
 import dotenv from 'dotenv';
 dotenv.config();
 
@@ -19,30 +19,31 @@ export async function createUser(req:Request,res:Response,next:NextFunction){
     }
 }
 
-export const authonticate=async (req:Request,res:Response,next:NextFunction)=>{
+export const authenticate=async (req:Request, res:Response, next:NextFunction)=>{
     try {
         const {email,password} = req.body;
         const response = await(checkCredentials(email,password));
-        const {token,refreshToken} = response;
+        const {refreshToken} = response;
         res.cookie(
-            'tokens',
-            {token,refreshToken},
+            'refreshToken',
+            {refreshToken},
             {
                 httpOnly:true,
-                sameSite:'strict',
                 secure:true,
+                sameSite:'strict',
                 maxAge:24*60*60*1000
             }
         ).status(200).json(response);
+        // console.log(req.headers.cookie);
     }catch (error){
         next(error)
     }
 }
 
-export const signOut = (req:Request,res:Response,next:NextFunction)=>{
+export const signOut = async (req:Request,res:Response,next:NextFunction)=>{
     try{
-        const {refreshToken} = req.body;
-        deleteRefreshToken(refreshToken);
+        const {email,refreshToken} = req.body;
+        await deleteRefreshToken(email,refreshToken);
         res.clearCookie('tokens').sendStatus(204);
     }catch (error){
         next(error);
@@ -56,9 +57,10 @@ type Decoded = {
 }
 export const updateToken=(req:Request,res:Response,next:NextFunction)=>{
     try{
+
         const refreshToken = req.body.refreshToken;
         if (refreshToken === null) res.sendStatus(401);
-        if (!refreshTokens.includes(refreshToken)) {
+        if (!checkRefreshTokenAvailability(refreshToken)) {
             res.sendStatus(403);
         } else {
 

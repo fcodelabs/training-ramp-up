@@ -13,7 +13,7 @@ export const updateData = async (record: Student) => {
     await axios({
         method: 'PUT',
         url: `${process.env.REACT_APP_BACKEND_BASE_URL}/student`,
-        data:record
+        data:record,
     })
 
 }

@@ -17,6 +17,10 @@ class User {
 
     @Column('boolean')
     admin: boolean | undefined
+
+    @Column('varchar')
+    refreshToken: string | undefined
+
 }
 
 export {User}

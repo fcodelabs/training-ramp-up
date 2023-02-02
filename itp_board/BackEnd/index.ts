@@ -5,11 +5,13 @@ import morgan from 'morgan';
 import express, { Express } from 'express';
 import dotenv from 'dotenv';
 import auth from "./src/middlewares/auth";
+import cookieParser from "cookie-parser"
 
 dotenv.config();
 const port = process.env.PORT;
 app.use(morgan('tiny'));
 app.use(express.json());
+app.use(cookieParser());
 
 app.use('/student', studentRouter);
 app.use('/user', userRouter);

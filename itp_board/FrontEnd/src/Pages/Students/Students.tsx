@@ -34,6 +34,7 @@ const Student = () => {
 
 
     useEffect(() => {
+        // localStorage.setItem("userProfile", JSON.stringify("Yasith"));
         dispatch(startGetData());
     }, []);
 

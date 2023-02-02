@@ -19,6 +19,21 @@ export const create = async (user: User)=>{
     return null;
 }
 
+export const updateRefreshToken = async (email:string,refreshToken:string)=>{
+    const response = await userRepository.update(
+        {email},
+        {refreshToken}
+    );
+    return response;
+}
+
+export const checkRefreshTokenAvailability=async (refreshToken:string)=>{
+    const response = await userRepository.findOne({where:{refreshToken}});
+    return response;
+}
+
+
+
 export const checkCredentials=async (email:string,password:string)=>{
     const user = await userRepository.findOne({where: {email}});
     if (!user) {
@@ -35,13 +50,18 @@ export const checkCredentials=async (email:string,password:string)=>{
             const refreshToken = jwt.sign({email},process.env.REFRESH_TOKEN_KEY,{ expiresIn: '24h' })
             refreshTokens.push(refreshToken);
 
+
             if (bcrypt.compareSync(password, hashedPassword)) {
-                return {
-                    data: user,
-                    authorized: true,
-                    token,
-                    refreshToken
+                const response = updateRefreshToken(email,refreshToken);
+                if(response!==null){
+                    return {
+                        data: user,
+                        authorized: true,
+                        token,
+                        refreshToken
+                    }
                 }
+
             }
         }
         return {
@@ -51,7 +71,6 @@ export const checkCredentials=async (email:string,password:string)=>{
     }
 }
 
-export const deleteRefreshToken = (refreshToken:string)=>{
-    const temp = refreshTokens.filter(t=>t!==refreshToken);
-    upDateTokens(temp);
+export const deleteRefreshToken = async (email:string,refreshToken:string)=>{
+    await updateRefreshToken(email,'');
 }
