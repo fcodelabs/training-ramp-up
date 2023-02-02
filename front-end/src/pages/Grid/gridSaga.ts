@@ -38,8 +38,16 @@ function* addStudentSaga(action: any): Generator<any, any, any> {
       item.gender = 'Male'
     }
     item.inEdit = false
+    const itemToAdd = {
+      name: item.name,
+      gender: item.gender,
+      dob: item.dob,
+      address: item.address,
+      mobile: item.mobile,
+      age: age(item.dob),
+    }
     try {
-      const response = yield api.student.postStudent(item)
+      const response = yield api.student.postStudent(itemToAdd)
       // toast.success('Successfully Added', {
       //   position: toast.POSITION.TOP_RIGHT,
       // })
@@ -55,8 +63,8 @@ function* addStudentSaga(action: any): Generator<any, any, any> {
 
 function* updateStudentSaga(action: any): Generator<any, any, any> {
   const item: Student = action.payload
+  const id: number = item.id
   const itemToUpdate = {
-    id: item.id,
     name: item.name,
     gender: item.gender,
     dob: item.dob,
@@ -65,7 +73,7 @@ function* updateStudentSaga(action: any): Generator<any, any, any> {
     age: age(item.dob),
   }
   try {
-    const response = yield api.student.putStudent(itemToUpdate.id, itemToUpdate)
+    const response = yield api.student.putStudent(id, itemToUpdate)
     toast.success('Successfully Updated', {
       position: toast.POSITION.TOP_RIGHT,
     })
