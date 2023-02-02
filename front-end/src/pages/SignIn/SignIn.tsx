@@ -12,18 +12,24 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
 import Typography from '@mui/material/Typography'
 import Container from '@mui/material/Container'
 import { createTheme, ThemeProvider } from '@mui/material/styles'
-
+import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 const theme = createTheme()
 
 export default function SignIn() {
+  const navigate = useNavigate()
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const handleEmail = (e: { target: { value: React.SetStateAction<string> } }) => {
+    setEmail(e.target.value)
+  }
+  const handlePassword = (e: { target: { value: React.SetStateAction<string> } }) => {
+    setPassword(e.target.value)
+  }
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
-    const data = new FormData(event.currentTarget)
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    })
+    navigate('/grid')
   }
 
   return (
@@ -53,6 +59,7 @@ export default function SignIn() {
               label='Email Address'
               name='email'
               autoComplete='email'
+              onChange={handleEmail}
               autoFocus
             />
             <TextField
@@ -63,6 +70,7 @@ export default function SignIn() {
               label='Password'
               type='password'
               id='password'
+              onChange={handlePassword}
               autoComplete='current-password'
             />
 
