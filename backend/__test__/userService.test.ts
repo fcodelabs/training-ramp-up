@@ -9,22 +9,24 @@ describe("User Service test", () => {
     Role: "admin",
   } as User;
   const user2 = {
-    Email: "test@gmail.com",
-  } as unknown as User;
+    Password: "1234",
+  } as User;
   const createUser = {
     Email: "test@gmail.com",
-    Role: "test",
-  } as unknown as User;
-  describe("Create user service test", () => {
-    // it("test create user", async () => {
-    //   const spyAppDataSource = jest.spyOn(AppDataSource.manager, "save");
-    //   spyAppDataSource.mockResolvedValue(createUser);
-    //   const result = await userService.registerUserService(user);
+    Role: "admin",
+  } as User;
 
-    //   expect(result).toEqual(createUser);
-   
-    //   spyAppDataSource.mockRestore();
-    // });
+  describe("Create user service test", () => {
+    it("test create user", async () => {
+      const spyAppDataSource = jest.spyOn(
+        AppDataSource.getRepository(User),
+        "save"
+      );
+      spyAppDataSource.mockResolvedValue(createUser);
+      const result = await userService.registerUserService(user);
+      expect(result).toEqual(createUser);
+      spyAppDataSource.mockRestore();
+    });
     it("test create user fail", async () => {
       const spyAppDataSource = jest.spyOn(AppDataSource.manager, "save");
       spyAppDataSource.mockResolvedValue(createUser);
@@ -36,5 +38,44 @@ describe("User Service test", () => {
       spyAppDataSource.mockRestore();
     });
   });
+  const logindata = {
+    Email: "test@gmail.com",
+    Role: "admin",
+    Password: '$2b$10$N/Bt000zfBw745V2/czYLuPRacADdO8X.oQd/8Xg5tSnodcJf4Zya',
+    createdAt: new Date(),
+    UserID: 1,
+    updatedAt: new Date(),
+    RefreshToken: "test",
+  } as User;
+  const loginUser = {
+    Email: "test@gmail.com",
+    Password: "1234",
+  } as User;
 
+  describe("login user service test", () => {
+    it("test login user", async () => {
+      const spyAppDataSource = jest.spyOn(
+        AppDataSource.getRepository(User),
+        "findOne"
+      );
+      spyAppDataSource.mockResolvedValue(logindata);
+      const result = await userService.loginUserService(loginUser);
+     // expect(result).toEqual(logindata);
+      expect(result).toHaveProperty("RefreshToken");
+      spyAppDataSource.mockRestore();
+    });
+    it("test login user fail", async () => {
+      const spyAppDataSource = jest.spyOn(
+        AppDataSource.getRepository(User),
+        "findOne"
+      );
+      spyAppDataSource.mockResolvedValue(createUser);
+      try {
+        const result = await userService.loginUserService(user2);
+      } catch (e) {
+        expect(e).toEqual(new Error("Error in login user"));
+      }
+      spyAppDataSource.mockRestore();
+    });
+  });
 });

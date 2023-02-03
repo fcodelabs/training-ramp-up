@@ -10,9 +10,7 @@ import { Request, Response } from "express";
 
 export const getAllStudents = async (req: Request, res: Response) => {
   try {
-    console.log("getAllUsers");
     const allrecords = await getAllStudentsService();
-
     res.send(allrecords);
   } catch (err) {
     // console.log(err);

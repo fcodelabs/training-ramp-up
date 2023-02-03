@@ -5,12 +5,13 @@ import { Any, In } from "typeorm";
 
 export const registerUserService = async (user: User) => {
   try {
+
     const hashedPassword = await bcrypt.hash(user.Password, 10);
     user.Password = hashedPassword;
     const userRepo = AppDataSource.getRepository(User);
     const userInsert = await userRepo.save(user);
-    const { Role,Email, ...others } = userInsert;
-    return {Role,Email};
+    const { Role, Email, ...others } = userInsert;
+    return { Role, Email };
   } catch (err) {
     throw new Error("Error in creating user");
   }
@@ -19,13 +20,16 @@ export const registerUserService = async (user: User) => {
 export const loginUserService = async (user: User) => {
   try {
     const userRepo = AppDataSource.getRepository(User);
+    console.log(user.Email);
     const userLogin = await userRepo.findOneBy({ Email: user.Email });
+
     if (userLogin !== null) {
       const passwordMatch = await bcrypt.compare(
         user.Password,
         userLogin.Password
       );
       if (passwordMatch) {
+       // const { Password, ...others } = userLogin;
         return userLogin;
       } else {
         throw new Error("Incorrect password");
@@ -34,7 +38,7 @@ export const loginUserService = async (user: User) => {
       throw new Error("User not found");
     }
   } catch (err) {
-    throw new Error("Error in login user");
+    throw err;
   }
 };
 
