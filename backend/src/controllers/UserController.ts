@@ -31,7 +31,7 @@ export const loginController = async (req: Request, res: Response) => {
       const refreshToken = jwt.sign(
         { user: userLogin.Email },
         process.env.REFRESH_TOKEN_SECRET as string,
-        { expiresIn: "1d" }
+        { expiresIn: "10d" }
       );
       await updateRefreshTokenService(userLogin, refreshToken);
 

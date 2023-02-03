@@ -248,7 +248,7 @@ export const HomePage = (): any => {
             <td>
               {props?.dataItem?.inEdit === true ? (
                 <DropDownList
-                  style={{ width: '300px' }}
+                  style={{ width: '300px', backgroundColor: 'white' }}
                   data={gender}
                   defaultValue='Male'
                   value={personGen.value}
@@ -269,8 +269,9 @@ export const HomePage = (): any => {
             <td>
               {props?.dataItem?.inEdit === true ? (
                 <DatePicker
+                  fillMode={'solid'}
                   min={new Date(1970, 1, 1)}
-                  max={new Date()}
+                  max={new Date(2004, 12, 31)}
                   onChange={handleChangeDatePicker}
                   value={birthday}
                 />
