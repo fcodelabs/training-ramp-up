@@ -84,6 +84,5 @@ export const logoutController = async (req: Request, res: Response) => {
   const cookie = req.cookies;
   if (cookie.jwt === null) return res.sendStatus(204); //No content
   res.clearCookie("jwt", { httpOnly: true });
-
   res.status(204).send("logout");
 };
