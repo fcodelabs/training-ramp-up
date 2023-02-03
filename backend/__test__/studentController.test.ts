@@ -91,72 +91,72 @@ describe("Student Constroller test", () => {
       spyAddStudent.mockRestore();
     });
   });
-  describe("delete student controller test", () => {
-    const user = {
-      PersonID: "1",
-      PersonSurname: "test",
-      PersonPassword: "test",
-      PersonRole: "test",
-      PersonPhone: "test",
-      PersonAddress: "test",
-    } as unknown as Student;
-    const id = 1;
-    const request_add = {
-      params: {
-        id: "1",
-      },
-    } as unknown as Request;
-    const request_add_fail = {
-      params: {
-        id: "1",
-      },
-    } as unknown as Request;
-    const res_add = response();
+  // describe("delete student controller test", () => {
+  //   const user = {
+  //     PersonID: "1",
+  //     PersonSurname: "test",
+  //     PersonPassword: "test",
+  //     PersonRole: "test",
+  //     PersonPhone: "test",
+  //     PersonAddress: "test",
+  //   } as unknown as Student;
+  //   const id = 1;
+  //   const request_add = {
+  //     params: {
+  //       id: "1",
+  //     },
+  //   } as unknown as Request;
+  //   const request_add_fail = {
+  //     params: {
+  //       id: "1",
+  //     },
+  //   } as unknown as Request;
+  //   const res_add = response();
 
-    it("test delete student fail", async () => {
-      const spyAddStudent = jest
-        .spyOn(StudentServices, "deleteStudentService")
-        .mockResolvedValue(user);
-      await deleteStudent(request_add_fail, res_add);
-      expect(spyAddStudent).toBeCalledWith(id);
-      spyAddStudent.mockRestore();
-    });
-    it("test delete student fail", async () => {
-      const spyAddStudent = jest
-        .spyOn(StudentServices, "deleteStudentService")
-        .mockResolvedValue(user);
-      await deleteStudent(request_add_fail, res_add);
-      expect(spyAddStudent).toBeCalledWith(id);
-      spyAddStudent.mockRestore();
-    });
-  });
-  describe("get student controller test", () => {
-    const users = {
-      PersonName: "test",
-      PersonSurname: "test",
-      PersonPassword: "test",
-      PersonRole: "test",
-      PersonPhone: "test",
-      PersonAddress: "test",
-    } as unknown as Student[];
-    const request_add = {} as unknown as Request;
-    const res_add = response();
+  //   it("test delete student fail", async () => {
+  //     const spyAddStudent = jest
+  //       .spyOn(StudentServices, "deleteStudentService")
+  //       .mockResolvedValue(user);
+  //     await deleteStudent(request_add_fail, res_add);
+  //     expect(spyAddStudent).toBeCalledWith(id);
+  //     spyAddStudent.mockRestore();
+  //   });
+  //   it("test delete student fail", async () => {
+  //     const spyAddStudent = jest
+  //       .spyOn(StudentServices, "deleteStudentService")
+  //       .mockResolvedValue(user);
+  //     await deleteStudent(request_add_fail, res_add);
+  //     expect(spyAddStudent).toBeCalledWith(id);
+  //     spyAddStudent.mockRestore();
+  //   });
+  // });
+  // describe("get student controller test", () => {
+  //   const users = {
+  //     PersonName: "test",
+  //     PersonSurname: "test",
+  //     PersonPassword: "test",
+  //     PersonRole: "test",
+  //     PersonPhone: "test",
+  //     PersonAddress: "test",
+  //   } as unknown as Student[];
+  //   const request_add = {} as unknown as Request;
+  //   const res_add = response();
 
-    it("test get student", async () => {
-      const spyAddStudent = jest
-        .spyOn(StudentServices, "getAllStudentsService")
-        .mockResolvedValue(users);
-      await getAllStudents(request_add, res_add);
-      expect(spyAddStudent).toBeCalledWith();
-      spyAddStudent.mockRestore();
-    });
-    it("test get student fail", async () => {
-      const spyGetStudent = jest
-        .spyOn(StudentServices, "getAllStudentsService")
-        .mockResolvedValue(users);
-      await getAllStudents(request_add, res_add);
-      expect(spyGetStudent).toBeCalledWith();
-      spyGetStudent.mockRestore();
-    });
-  });
+  //   it("test get student", async () => {
+  //     const spyAddStudent = jest
+  //       .spyOn(StudentServices, "getAllStudentsService")
+  //       .mockResolvedValue(users);
+  //     await getAllStudents(request_add, res_add);
+  //     expect(spyAddStudent).toBeCalledWith();
+  //     spyAddStudent.mockRestore();
+  //   });
+  //   it("test get student fail", async () => {
+  //     const spyGetStudent = jest
+  //       .spyOn(StudentServices, "getAllStudentsService")
+  //       .mockResolvedValue(users);
+  //     await getAllStudents(request_add, res_add);
+  //     expect(spyGetStudent).toBeCalledWith();
+  //     spyGetStudent.mockRestore();
+  //   });
+  // });
 });

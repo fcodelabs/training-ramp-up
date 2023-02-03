@@ -12,7 +12,6 @@ export const registerUserService = async (user: User) => {
     const { Role,Email, ...others } = userInsert;
     return {Role,Email};
   } catch (err) {
-    
     throw new Error("Error in creating user");
   }
 };

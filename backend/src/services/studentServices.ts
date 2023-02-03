@@ -33,7 +33,7 @@ export const createStudentService = async (user: Student): Promise<Student> => {
     const userInsert = await userRepo.save(user);
     return userInsert;
   } catch (err) {
-    throw new Error("Error in creating user");
+    throw new Error("Error in creating student");
   }
 };
 
