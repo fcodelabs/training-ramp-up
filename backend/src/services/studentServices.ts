@@ -41,9 +41,8 @@ export const updateStudentService = async (user: Student): Promise<Student> => {
   try {
     const userRepo = AppDataSource.getRepository(Student);
     const userUpdate = await userRepo.save(user);
-    const updateUser = await userRepo.findOneBy({ PersonID: user.PersonID });
-    if (updateUser) {
-      return updateUser;
+    if (userUpdate) {
+      return userUpdate;
     } else {
       throw new Error("Error in updating user");
     }

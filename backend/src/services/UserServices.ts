@@ -20,7 +20,7 @@ export const registerUserService = async (user: User) => {
 export const loginUserService = async (user: User) => {
   try {
     const userRepo = AppDataSource.getRepository(User);
-    console.log(user.Email);
+   
     const userLogin = await userRepo.findOneBy({ Email: user.Email });
 
     if (userLogin !== null) {
@@ -38,7 +38,7 @@ export const loginUserService = async (user: User) => {
       throw new Error("User not found");
     }
   } catch (err) {
-    throw err;
+    throw new Error("Error in login user");
   }
 };
 
