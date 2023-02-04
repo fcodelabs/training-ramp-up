@@ -1,7 +1,6 @@
 import { User } from "../src/models/User";
 import { AppDataSource } from "../src/configs/DataSourceConfig";
 import * as userService from "../src/services/userServices";
-import { ObjectLiteral } from "typeorm";
 
 describe("User Service test", () => {
   const user = {
@@ -77,5 +76,6 @@ describe("User Service test", () => {
       spyAppDataSource.mockRestore();
     });
   });
+
 
 });

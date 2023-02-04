@@ -28,7 +28,6 @@ export const loginUserService = async (user: User) => {
         userLogin.Password
       );
       if (passwordMatch) {
-        // const { Password, ...others } = userLogin;
         return userLogin;
       } else {
         throw new Error("Incorrect password");

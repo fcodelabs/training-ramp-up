@@ -19,4 +19,5 @@ export class Student {
 
   @Column()
   DateOfBirth!: Date;
+ 
 }

@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import {
   deleteRefeshTokenService,
@@ -7,23 +7,32 @@ import {
   registerUserService,
   updateRefreshTokenService,
 } from "../services/userServices";
+import { BackendError } from "../utils/backendErr";
 
-export const signUpController = async (req: Request, res: Response) => {
+export const signUpController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const user = req.body.data;
     const userInsert = await registerUserService(user);
 
     res.status(201).json(userInsert);
   } catch (err) {
-    res.status(400).send(err);
+    next(err);
   }
 };
 
-export const loginController = async (req: Request, res: Response) => {
+export const loginController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   const user = req.body.data;
   try {
     const userLogin = await loginUserService(user);
-    if (userLogin !== null) {
+    if (userLogin) {
       const accessToken = jwt.sign(
         { userInfo: { userRole: userLogin.Role, userEmail: userLogin.Email } },
         process.env.ACCESS_TOKEN_SECRET as string,
@@ -47,11 +56,15 @@ export const loginController = async (req: Request, res: Response) => {
       res.send(user);
     }
   } catch (err) {
-    res.status(400).send(err);
+    next(err);
   }
 };
 
-export const refreshTokenController = async (req: Request, res: Response) => {
+export const refreshTokenController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   const cookie = req.cookies;
 
   if (cookie.jwt === null) return res.sendStatus(401);
@@ -59,13 +72,18 @@ export const refreshTokenController = async (req: Request, res: Response) => {
   try {
     const foundUser = await findUserByRefreshTokenService(refreshToken);
 
-    if (foundUser === null) return res.sendStatus(403);
+    if (!foundUser) {
+      const newErr = new BackendError("User not found", 404);
+      next(newErr);
+    }
     const accessToken = jwt.verify(
       refreshToken,
       process.env.REFRESH_TOKEN_SECRET as string,
       (err: any, decoded: any) => {
-        if (err || decoded.user !== foundUser.Email) return res.sendStatus(403);
-
+        if (err || decoded.user !== foundUser.Email) {
+          const newErr = new BackendError("Invalid token", 403);
+          next(newErr);
+        }
         const accessToken = jwt.sign(
           {
             userInfo: { userRole: foundUser.Role, userEmail: foundUser.Email },
@@ -77,11 +95,15 @@ export const refreshTokenController = async (req: Request, res: Response) => {
       }
     );
   } catch (err) {
-    res.status(403).send(err);
+    next(err);
   }
 };
 
-export const logoutController = async (req: Request, res: Response) => {
+export const logoutController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const cookie = req.cookies;
     if (cookie.jwt === null) return res.sendStatus(204); //No content
@@ -89,6 +111,6 @@ export const logoutController = async (req: Request, res: Response) => {
     res.clearCookie("jwt", { httpOnly: true });
     res.status(204).send("logout");
   } catch (err) {
-    res.status(400).send("error");
+    next(err);
   }
 };

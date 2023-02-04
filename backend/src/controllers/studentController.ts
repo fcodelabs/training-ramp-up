@@ -4,39 +4,50 @@ import {
   getAllStudentsService,
   updateStudentService,
 } from "../services/studentServices";
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
+import { Student } from "../models/Student";
 
-export const getAllStudents = async (req: Request, res: Response) => {
+export const getAllStudents = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const allrecords = await getAllStudentsService();
     res.send(allrecords);
   } catch (err) {
     // console.log(err);
-    res.status(400).send(err);
+    next(err);
   }
 };
 
-
-export const createStudent = async (req: Request, res: Response) => {
+export const createStudent = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const user = req.body.data;
-    
     const userInsert = await createStudentService(user);
     const socket = req.app.get("socket");
+
     socket.emit(
       "notification",
       `New user created successfully Name: ${userInsert?.PersonName}  !`
     );
     res.status(201).send(userInsert);
   } catch (err) {
-    res.status(400).send(err);
+    next(err);
   }
 };
 
-export const updateStudent = async (req: Request, res: Response) => {
+export const updateStudent = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const user = req.body.data;
-
     const userUpdate = await createStudentService(user);
     const socket = req.app.get("socket");
     socket.emit(
@@ -45,11 +56,15 @@ export const updateStudent = async (req: Request, res: Response) => {
     );
     res.status(201).send(userUpdate);
   } catch (err) {
-     res.status(400).send(err);
+    next(err);
   }
 };
 
-export const deleteStudent = async (req: Request, res: Response) => {
+export const deleteStudent = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const id = parseInt(req.params.id);
     const userDelete = await deleteStudentService(id);
@@ -60,7 +75,6 @@ export const deleteStudent = async (req: Request, res: Response) => {
     );
     res.send(userDelete);
   } catch (err) {
-    res.send(err);
+    next(err);
   }
 };
-

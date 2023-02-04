@@ -42,7 +42,14 @@ io.on("connection", (socket: any) => {
 //routes
 app.use("/api/students", studentRoutes);
 app.use("/api/users", userRoutes);
-//typeorm connection
+
+/* Error handler middleware */
+app.use((err:any, req:any, res:any, next:any) => {
+  const statusCode = err.statusCode || 500;
+  console.error(err.message, err.stack);
+  res.status(statusCode).json({'message': err.message});
+  return;
+});
 
 AppDataSource.initialize()
   .then(() => {
