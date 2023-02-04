@@ -11,7 +11,7 @@ import {
 } from "../../utils/studentValidations";
 import {displayErrors} from "../../utils/toasts";
 import {ToastContainer} from "react-toastify";
-import {useAppDispatch} from "../../hooks";
+import {useAppDispatch} from "../../hooks/hooks";
 import {useNavigate} from "react-router-dom";
 import {signUpUser} from "../signIn/signInSlice";
 

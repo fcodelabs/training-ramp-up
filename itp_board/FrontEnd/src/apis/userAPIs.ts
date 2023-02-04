@@ -1,65 +1,64 @@
-import {ResponseObj, Student, User, UserCredetial} from "../utils/types";
-import {displayErrors} from "../utils/toasts";
-import axios from "axios";
+import { User, UserCredetial} from "../utils/types";
+import axios from "../config/axiosConf";
 
+export const updateTokens = async () => {
 
-
-export const checkCredentials = async (credentials:UserCredetial) =>{
-    const {email,password} = credentials;
-    try {
-        // const options = {
-        //     method: 'POST',
-        //     headers: { 'Content-Type': 'application/json' },
-        //     body: JSON.stringify({email,password}),
-        // }
-        const config = {
-            method: 'post',
-            url: 'http://localhost:4000/user/login',
-            data:{
-                email,
-                password
-            }
+    const response = await axios({
+        method: 'post',
+        url: `/user/refreshtoken`,
+        data: {
+            refreshToken: localStorage.getItem('refreshToken')
         }
-        // const res = await fetch(`http://localhost:4000/user/login`,options);
-        const response = await axios(config);
-        console.log(response);
-        // const json:ResponseObj = await res.json();
-        // if(typeof res === 'undefined'){
-        //     throw new Error('Server Response Failed!');
-        // }
+    });
+    const {accessToken, refreshToken} = response.data;
+    localStorage.setItem("token", accessToken);
+    localStorage.setItem("refreshToken", refreshToken);
 
-        return response.data;
-    }catch (error){
-        console.error(error);
-        return null;
+
+}
+export const checkCredentials = async (credentials: UserCredetial) => {
+    const {email, password} = credentials;
+    const config = {
+        method: 'post',
+        url: '/user/login',
+        data: {
+            email,
+            password
+        }
     }
+    const response = await axios(config);
+    return response.data;
 }
 export const createUserData = async (record: User) => {
 
-    try {
-        const {email,
+        const {
+            email,
             firstName,
             lastName,
             password,
-            admin} = record
-        const options = {
+            admin
+        } = record
+        const config = {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({email,
+            headers: {'Content-Type': 'application/json'},
+            data: {
+                email,
                 firstName,
                 lastName,
                 password,
-                admin}),
+                admin
+            },
         }
-        const res = await fetch('http://localhost:4000/user', options)
-        const json = await res.json()
-        if(res===null){
-            throw new Error('Server Response Failed!')
+        const res = await axios(config)
+        return res.data
+}
+
+export const signOut = async ()=>{
+    await axios(
+        {
+            method:'delete',
+            url:'/user/signout',
+            withCredentials:true
         }
-        return json
-    }catch (error) {
-        console.error(error);
-        displayErrors(['Unexpected Error']);
-        return null;
-    }
+    )
 }

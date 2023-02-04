@@ -4,8 +4,9 @@ import {NextFunction, Request, Response} from "express";
 dotenv.config();
 
 export default function auth(req:Request,res:Response,next:NextFunction){
-    if(req.headers.authorization && req.headers.authorization.startsWith("bearer")){
-        const token = req.headers.authorization.split(" ")[1];
+
+    if(req.cookies['accessToken'] && req.cookies['accessToken'].startsWith("bearer")){
+        const token = req.cookies['accessToken'].split(" ")[1];
         if(token===null){
             res.sendStatus(401);
         }

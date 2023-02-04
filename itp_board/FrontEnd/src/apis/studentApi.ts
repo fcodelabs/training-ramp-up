@@ -1,33 +1,37 @@
-import {Person, Student} from "../utils/types";
-import {displayErrors} from "../utils/toasts";
-import {axiosInstance} from "../utils/Axios";
-import axios from "axios";
+import {Student} from "../utils/types";
+import axios, {axiosPrivate} from "../config/axiosConf";
+
+
 
 export async function fetchData(): Promise<Student[] | unknown> {
-    const response = await axios.get(`${process.env.REACT_APP_BACKEND_BASE_URL}/student`);
+    const config = {
+        method: 'get',
+        url: `/student`,
+    }
+    const response = await axiosPrivate(config);
     const data: Student[] = response.data;
     return data;
 }
 
 export const updateData = async (record: Student) => {
-    await axios({
+    await axiosPrivate({
         method: 'PUT',
-        url: `${process.env.REACT_APP_BACKEND_BASE_URL}/student`,
+        url: `/student`,
         data:record,
     })
 
 }
 
 export const createData = async (record: Student) => {
-       await axios({
+       await axiosPrivate({
             method: 'POST',
-            url: `${process.env.REACT_APP_BACKEND_BASE_URL}/student`,
+            url: `/student`,
             data:record
         })
 }
 export const deleteData = async (id: number) => {
-    await axios({
+    await axiosPrivate({
         method: 'DELETE',
-        url: `${process.env.REACT_APP_BACKEND_BASE_URL}/student/${id}`,
+        url: `/student/${id}`,
     })
 }

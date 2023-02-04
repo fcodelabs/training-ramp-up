@@ -11,32 +11,35 @@ import {
     GridPageChangeEvent,
 } from '@progress/kendo-react-grid'
 import '../../App.css'
-import { useEffect, useState } from 'react'
-import { ToastContainer } from 'react-toastify'
+import {useEffect, useState} from 'react'
+import {ToastContainer} from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
-import { orderBy } from '@progress/kendo-data-query'
-import { PageState, SockeResponse } from '../../utils/types'
-import { addRecord, getStoreData } from '../../utils/studentFunctions'
-import { changeSort, editData, startGetData } from './studentSlice'
-import { displayNotifications } from '../../utils/toasts'
+import {orderBy} from '@progress/kendo-data-query'
+import {PageState, SockeResponse} from '../../utils/types'
+import {addRecord, getStoreData} from '../../utils/studentFunctions'
+import {changeSort, editData, startGetData} from './studentSlice'
+import {displayNotifications} from '../../utils/toasts'
 
-import { io } from 'socket.io-client'
-import {command, gender,calcAge} from "./components/cellComponent/CellComponent";
+import {io} from 'socket.io-client'
+import {command, gender, calcAge} from "./components/cellComponent/CellComponent";
 import {Navigation} from "./components/navigation/Navigation";
-const socket = io('http://localhost:4000')
+import {signOutUser} from "../signIn/signInSlice";
 
+const socket = io('http://localhost:4000')
 
 
 const Student = () => {
 
     const initialPageState: PageState = {skip: 0, take: 10}
     const [page, setPage] = useState(initialPageState)
-    const {data, editId, newAdded, sort,admin, dispatch} = getStoreData();
+    const {data, editId, newAdded, sort, admin, dispatch} = getStoreData();
 
 
     useEffect(() => {
-        // localStorage.setItem("userProfile", JSON.stringify("Yasith"));
+
         dispatch(startGetData());
+
+
     }, []);
 
 
@@ -54,7 +57,6 @@ const Student = () => {
         displayNotifications(`Student data edited with the id:${response}`)
         dispatch(startGetData());
     })
-
 
 
     const pageChange = (event: GridPageChangeEvent) => {
@@ -160,7 +162,7 @@ const Student = () => {
                     field='command'
                     title='Command'
                     cell={(props: GridCellProps) => {
-                        return command(props.dataItem.id, editId, newAdded, data, dispatch,setPage,admin)
+                        return command(props.dataItem.id, editId, newAdded, data, dispatch, setPage, admin)
                     }}
                     className='k-text-center'
                 />

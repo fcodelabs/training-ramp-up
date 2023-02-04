@@ -1,5 +1,5 @@
 import {signOutUser} from "../../../signIn/signInSlice";
-import {useAppDispatch, useAppSelector} from "../../../../hooks";
+import {useAppDispatch, useAppSelector} from "../../../../hooks/hooks";
 import {LogoutButton, UserName, Wrapper} from "./styledComponents";
 
 export const Navigation = ()=>{

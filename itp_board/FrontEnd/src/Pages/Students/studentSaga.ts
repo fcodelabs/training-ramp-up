@@ -1,6 +1,8 @@
 import {put, takeEvery, call } from "redux-saga/effects";
 import {PayloadAction} from "@reduxjs/toolkit";
 import {Student } from "../../utils/types";
+import {AxiosError} from "axios";
+
 import {
     changeEditId,
     changeNewAdded,
@@ -15,6 +17,8 @@ import {
 } from "./studentSlice";
 import {createData, deleteData, fetchData, updateData} from '../../apis/studentApi'
 import {displayErrors} from "../../utils/toasts";
+import {signOut, updateTokens} from "../../apis/userAPIs";
+import {signOutUser} from "../signIn/signInSlice";
 
 function* get() {
     try {
@@ -22,8 +26,9 @@ function* get() {
         yield put(editData(data));
         yield put(successGetData());
 
-    } catch (error: any) {
-        console.error(error)
+    } catch (error) {
+        const err = error as AxiosError
+       console.error(err);
         displayErrors(['Unexpected error'])
         yield put(editData([]));
     }
@@ -63,6 +68,8 @@ function* remove(action: PayloadAction<number>) {
         displayErrors(['Unexpected Error!!!'])
     }
 }
+
+
 
 export default function* studentSaga() {
     yield takeEvery(startGetData, get);

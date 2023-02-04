@@ -14,7 +14,7 @@ import {displayErrors} from "../../utils/toasts";
 import {ToastContainer} from "react-toastify";
 import {useNavigate} from "react-router-dom";
 import {signInUser} from "./signInSlice";
-import {useAppDispatch, useAppSelector} from "../../hooks";
+import {useAppDispatch, useAppSelector} from "../../hooks/hooks";
 
 
 const SignIn = () => {

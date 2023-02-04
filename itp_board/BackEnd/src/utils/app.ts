@@ -6,7 +6,13 @@ import cors from 'cors'
 
 const app: Express = express()
 const server = http.createServer(app)
-app.use(cors())
+app.use(cors(
+    {
+      origin: 'http://localhost:3000',
+      credentials: true,
+    }
+
+))
 
 const io = new Server(server, {
   cors: {

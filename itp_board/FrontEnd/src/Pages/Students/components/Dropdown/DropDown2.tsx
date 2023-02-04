@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { DropDownList, DropDownListChangeEvent } from '@progress/kendo-react-dropdowns'
 import {Student} from '../../../../utils/types'
-import { useAppSelector, useAppDispatch } from "../../../../hooks";
+import { useAppSelector, useAppDispatch } from "../../../../hooks/hooks";
 import {addNew, editData} from "../../studentSlice";
 import {getStoreData} from '../../../../utils/studentFunctions'
 

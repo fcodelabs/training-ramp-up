@@ -3,13 +3,20 @@ import {isValidEmail, isValidName, isValidPassword} from "../utils/validations";
 import bcrypt from "bcrypt";
 import {AppDataSource} from "../configs/db.config";
 import jwt from "jsonwebtoken";
-import {refreshTokens, upDateTokens} from "../utils/refreshTokens";
 
 const userRepository = AppDataSource.getRepository(User);
-export const create = async (user: User)=>{
-    const {firstName,lastName,email,password} = user;
-    if(firstName && lastName && email && password &&
-        isValidName(firstName) && isValidName(lastName) && isValidEmail(email) && isValidPassword(password)){
+
+export const generateTokens = (email:string)=>{
+    // @ts-ignore
+    const token = jwt.sign({email}, process.env.Token_KEY, {expiresIn: '300s'});
+    // @ts-ignore
+    const refreshToken = jwt.sign({email}, process.env.REFRESH_TOKEN_KEY, {expiresIn: '24h'})
+    return {token,refreshToken}
+}
+export const create = async (user: User) => {
+    const {firstName, lastName, email, password} = user;
+    if (firstName && lastName && email && password &&
+        isValidName(firstName) && isValidName(lastName) && isValidEmail(email) && isValidPassword(password)) {
         const saltRounds = 10;
         const hashedPassword = bcrypt.hashSync(password, saltRounds);
         user.password = hashedPassword;
@@ -18,23 +25,7 @@ export const create = async (user: User)=>{
     }
     return null;
 }
-
-export const updateRefreshToken = async (email:string,refreshToken:string)=>{
-    const response = await userRepository.update(
-        {email},
-        {refreshToken}
-    );
-    return response;
-}
-
-export const checkRefreshTokenAvailability=async (refreshToken:string)=>{
-    const response = await userRepository.findOne({where:{refreshToken}});
-    return response;
-}
-
-
-
-export const checkCredentials=async (email:string,password:string)=>{
+    export const checkCredentials = async (email: string, password: string) => {
     const user = await userRepository.findOne({where: {email}});
     if (!user) {
         return {
@@ -45,23 +36,15 @@ export const checkCredentials=async (email:string,password:string)=>{
         if (user.password) {
             const hashedPassword = user.password;
             // @ts-ignore
-            const token = jwt.sign({email}, process.env.Token_KEY,{ expiresIn: '300s' });
-            // @ts-ignore
-            const refreshToken = jwt.sign({email},process.env.REFRESH_TOKEN_KEY,{ expiresIn: '24h' })
-            refreshTokens.push(refreshToken);
-
+            const {token,refreshToken} = generateTokens(email);
 
             if (bcrypt.compareSync(password, hashedPassword)) {
-                const response = updateRefreshToken(email,refreshToken);
-                if(response!==null){
-                    return {
-                        data: user,
-                        authorized: true,
-                        token,
-                        refreshToken
-                    }
+                return {
+                    data: user,
+                    authorized: true,
+                    token,
+                    refreshToken
                 }
-
             }
         }
         return {
@@ -69,8 +52,4 @@ export const checkCredentials=async (email:string,password:string)=>{
             authorized: false
         }
     }
-}
-
-export const deleteRefreshToken = async (email:string,refreshToken:string)=>{
-    await updateRefreshToken(email,'');
 }

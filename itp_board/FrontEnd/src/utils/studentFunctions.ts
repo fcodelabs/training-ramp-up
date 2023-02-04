@@ -1,6 +1,4 @@
-import {GridCellProps} from "@progress/kendo-react-grid";
-import {DropDown2} from "../pages/students/components/dropdown/DropDown2";
-import {useAppDispatch, useAppSelector} from "../hooks";
+import {useAppDispatch, useAppSelector} from "../hooks/hooks";
 import {
     addNew,
     changeEditId,
@@ -14,7 +12,6 @@ import {Student,pageCallBack} from "./types";
 import type {AppDispatch} from "../store";
 import {isValidAddress, isValidDateOfBirth, isValidName, isValidTPNO} from "./studentValidations";
 import {displayErrors} from "./toasts";
-import {Page} from "@progress/kendo-react-dropdowns";
 
 
 export const getStoreData = () => {
@@ -90,7 +87,6 @@ export const addRecord = (data: Student[], newAdded: boolean, dispatch: AppDispa
             dateOfBirth: null,
             age: 0,
         }
-        // console.log(data);
         dispatch(changeNewAdded(true));
         dispatch(addNew(newRecord));
         dispatch(changeEditId(maxId + 1));

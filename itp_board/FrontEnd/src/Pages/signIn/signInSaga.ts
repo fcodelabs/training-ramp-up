@@ -1,4 +1,4 @@
-import {put, takeEvery, all, call, take, cancelled} from "redux-saga/effects";
+import {put, takeEvery, call} from "redux-saga/effects";
 import {PayloadAction} from "@reduxjs/toolkit";
 import {
     changeAdmin,
@@ -9,16 +9,23 @@ import {
     signInUser,
     signOutUser
 } from "./signInSlice";
-import {ResponseObj, User, UserCredetial, UserInitialState} from "../../utils/types";
-import {checkCredentials} from "../../apis/userAPIs";
+import {ResponseObj, UserCredetial} from "../../utils/types";
+import {checkCredentials, signOut} from "../../apis/userAPIs";
 import {displayErrors} from "../../utils/toasts";
 
-function* signOut(){
-    yield put(changeFirstName(''));
-    yield put(changeLastName(''));
-    yield put(changeEmail(''));
-    yield put(changeAdmin(false));
-    yield put(changeSignInUser(false));
+function* signOut_(){
+    try{
+        yield call(signOut);
+        yield put(changeFirstName(''));
+        yield put(changeLastName(''));
+        yield put(changeEmail(''));
+        yield put(changeAdmin(false));
+        yield put(changeSignInUser(false));
+    }catch (error){
+        console.error(error);
+        displayErrors(['Unexpected Error']);
+    }
+
 }
 function* signIn(action:PayloadAction<UserCredetial>){
     let response:ResponseObj|null = null;
@@ -37,23 +44,18 @@ function* signIn(action:PayloadAction<UserCredetial>){
                 yield call(signOut);
                 displayErrors(['Invalid Email or Password'])
             }
-        }else{
-            yield call(signOut);
-            displayErrors(['Invalid Email or Password'])
-            displayErrors(['Unknown Error']);
         }
+
 
     }catch (error){
         console.error(error);
-        yield put(changeFirstName(''));
-        yield put(changeLastName(''));
-        yield put(changeEmail(''));
-        yield put(changeSignInUser(false));
+        displayErrors(['Unexpected Error'])
+        yield call(signOut_);
     }
 
 }
 
 export default function* signInSaga(){
     yield takeEvery(signInUser,signIn)
-    yield takeEvery(signOutUser,signOut)
+    yield takeEvery(signOutUser,signOut_)
 }

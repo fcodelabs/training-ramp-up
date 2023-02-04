@@ -30,7 +30,6 @@ export const userSlice = createSlice(
                 state.signIn = false;
             },
             signInUser:(state, action:PayloadAction<UserCredetial>)=>{
-                console.log('called me')
                 state.signIn=true;
             },
             signUpUser:(state,action:PayloadAction<User>)=>{

@@ -1,6 +1,5 @@
 import {NextFunction, Request, Response} from "express";
 import {create, fetchAll, remove, update} from "../services/studentServices";
-import {refreshTokens} from "../utils/refreshTokens";
 
 async function getAllStudents(req:Request,res:Response,next:NextFunction):Promise<void>{
   try{
