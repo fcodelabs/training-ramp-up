@@ -5,6 +5,7 @@ import * as Yup from 'yup'
 import { userLoginStart, userRegisterStart } from './userSlice'
 import { useDispatch, useSelector } from 'react-redux'
 import {  useNavigate, useLocation } from 'react-router-dom'
+
 export const SignInPage = (): JSX.Element => {
   const [isRightPanelActive, setIsRightPanelActive] = useState('')
 
@@ -12,11 +13,11 @@ export const SignInPage = (): JSX.Element => {
 
   const navigate = useNavigate()
   const location = useLocation()
-  const from = location.state.from.pathname || { from: { pathname: '/' } }
-
+  const from = location.state.from?.pathname || '/'
   const distpatch = useDispatch()
-
+console.log(from)
   useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
     if (auth?.user) {
      navigate(from, { replace: true })  
     }
@@ -24,7 +25,7 @@ export const SignInPage = (): JSX.Element => {
 
   const SignUpSchema = Yup.object().shape({
     email: Yup.string().email('Invalid email').required('Required'),
-    password: Yup.string().min(2, 'Too Short!').max(50, 'Too Long!').required('Required'),
+    password: Yup.string().min(3, 'Too Short!').max(50, 'Too Long!').required('Required'),
     confirmPassword: Yup.string().oneOf([Yup.ref('password')], 'Passwords must match'),
   })
   const SignInSchema = Yup.object().shape({

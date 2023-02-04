@@ -36,10 +36,16 @@ const userSlice = createSlice({
       state.isFetching = false
       state.error = true
     },
-    userLogOutStart: (state) => {
+    userLogOutStart: (state, action) => {
       state.isFetching = false
       state.error = false
       state.user = null
+      localStorage.clear()
+      document.cookie.split(';').forEach(function (c) {
+        document.cookie = c
+          .replace(/^ +/, '')
+          .replace(/=.*/, '=;expires=' + new Date().toUTCString() + ';path=/')
+      })
     },
     userLogOutSuccess: (state) => {
       state.isFetching = false
@@ -64,7 +70,9 @@ export const {
   userLoginStart,
   userLoginSuccess,
   userLoginFailure,
+  userLogOutStart,
   userLogOutSuccess,
-refreshTokenSuccess,
+  userLogOutFailure,
+  refreshTokenSuccess,
 } = userSlice.actions
 export default userSlice.reducer

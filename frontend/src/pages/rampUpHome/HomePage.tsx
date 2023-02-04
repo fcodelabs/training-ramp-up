@@ -28,7 +28,7 @@ import { delteNotification, getNotificationStart } from './notificationSlice'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { Button } from '@progress/kendo-react-buttons'
-import { userLogOutSuccess } from '../signInPage/userSlice'
+import { userLogOutStart } from '../signInPage/userSlice'
 
 const editField: string = 'inEdit'
 const gender = ['Female', 'Male']
@@ -58,6 +58,8 @@ export const HomePage = (): any => {
   }
   const persondata = useSelector((state: any) => state.personData.person)
   const notifications = useSelector((state: any) => state.notification.notifications)
+  const userData = useSelector((state: any) => state?.userData?.user?.user)
+console.log(userData)  
 
   const notify = (msg: string): any => toast(msg)
   React.useEffect(() => {
@@ -187,7 +189,7 @@ export const HomePage = (): any => {
   }
 
   const logOut = (): void => {
-    distpatch(userLogOutSuccess())
+    distpatch(userLogOutStart(userData))
   }
   const CommandCellFunc = (props: GridCellProps): JSX.Element => (
     <CommandCell

@@ -1,9 +1,7 @@
 import {
   createStudentService,
-  deleteAllStudentService,
   deleteStudentService,
   getAllStudentsService,
-  getStudentByIdService,
   updateStudentService,
 } from "../services/studentServices";
 import { Request, Response } from "express";
@@ -18,16 +16,6 @@ export const getAllStudents = async (req: Request, res: Response) => {
   }
 };
 
-export const getStudentById = async (req: Request, res: Response) => {
-  try {
-    const id = parseInt(req.params.id);
-    const user = await getStudentByIdService(id);
-
-    res.send(user);
-  } catch (err) {
-    res.status(400).send(err);
-  }
-};
 
 export const createStudent = async (req: Request, res: Response) => {
   try {
@@ -75,11 +63,4 @@ export const deleteStudent = async (req: Request, res: Response) => {
     res.send(err);
   }
 };
-export const deleteAllStudent = async (req: Request, res: Response) => {
-  try {
-    const userDelete = await deleteAllStudentService();
-    res.send(userDelete);
-  } catch (err) {
-    res.send(err);
-  }
-};
+

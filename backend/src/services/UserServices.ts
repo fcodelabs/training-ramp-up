@@ -5,7 +5,6 @@ import { Any, In } from "typeorm";
 
 export const registerUserService = async (user: User) => {
   try {
-
     const hashedPassword = await bcrypt.hash(user.Password, 10);
     user.Password = hashedPassword;
     const userRepo = AppDataSource.getRepository(User);
@@ -20,7 +19,7 @@ export const registerUserService = async (user: User) => {
 export const loginUserService = async (user: User) => {
   try {
     const userRepo = AppDataSource.getRepository(User);
-   
+
     const userLogin = await userRepo.findOneBy({ Email: user.Email });
 
     if (userLogin !== null) {
@@ -29,7 +28,7 @@ export const loginUserService = async (user: User) => {
         userLogin.Password
       );
       if (passwordMatch) {
-       // const { Password, ...others } = userLogin;
+        // const { Password, ...others } = userLogin;
         return userLogin;
       } else {
         throw new Error("Incorrect password");
@@ -79,5 +78,24 @@ export const findUserByRefreshTokenService = async (
     }
   } catch (err) {
     throw new Error("Error in finding user");
+  }
+};
+
+export const deleteRefeshTokenService = async (
+  user: User
+): Promise<User | undefined> => {
+  try {
+    const userRepo = AppDataSource.getRepository(User);
+    const currentUser = await userRepo.findOneBy({ UserID: user.UserID });
+    if (currentUser !== null) {
+      const newUser = {
+        ...currentUser,
+        RefreshToken: "",
+      };
+      const userUpdate = await userRepo.save(newUser);
+      return userUpdate;
+    }
+  } catch (err) {
+    throw new Error("Error in updating user");
   }
 };

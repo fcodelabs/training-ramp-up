@@ -1,9 +1,12 @@
-import {  ForkEffect, takeEvery, put } from 'redux-saga/effects'
-import { loginService, resisterService } from '../../services/authServices'
+import { ForkEffect, takeEvery, put } from 'redux-saga/effects'
+import { loginService, logoutService, resisterService } from '../../services/authServices'
 import {
   userLoginFailure,
   userLoginStart,
   userLoginSuccess,
+  userLogOutFailure,
+  userLogOutStart,
+  userLogOutSuccess,
   userRegisterFailure,
   userRegisterStart,
   userRegisterSuccess,
@@ -26,10 +29,20 @@ function* userLoginSaga(action: any): IterableIterator<any> {
   }
 }
 
+function* userLogOutSaga(action: any): IterableIterator<any> {
+  try {
+    yield logoutService(action.payload)
+    yield put(userLogOutSuccess())
+  } catch (e) {
+    yield put(userLogOutFailure())
+  }
+}
 export function* userLogin(): Generator<ForkEffect<never>, void, unknown> {
   yield takeEvery(userLoginStart, userLoginSaga)
 }
 export function* userRegister(): Generator<ForkEffect<never>, void, unknown> {
   yield takeEvery(userRegisterStart, userRegisterSaga)
 }
-
+export function* userLogOut(): Generator<ForkEffect<never>, void, unknown> {
+  yield takeEvery(userLogOutStart, userLogOutSaga)
+}

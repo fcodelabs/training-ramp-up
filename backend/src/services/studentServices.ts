@@ -64,9 +64,4 @@ export const deleteStudentService = async (id: number): Promise<Student> => {
   }
 };
 
-export const deleteAllStudentService = async (): Promise<Student[]> => {
-  const userRepo = AppDataSource.getRepository(Student);
-  const allrecords = await userRepo.find();
-  const userDelete = await userRepo.remove(allrecords);
-  return userDelete;
-};
+

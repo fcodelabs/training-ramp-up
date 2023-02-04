@@ -72,11 +72,6 @@ export const checkSimilarity = (prevState: Person, currentState: Person): boolea
   return false
 }
 
-
-
-
-
-
 export const insertItem = (item: Person): any => {
   item.PersonID = generateId(personData)
   item.inEdit = false

@@ -31,3 +31,14 @@ export const refreshAccessTokenService = async (): Promise<string> => {
     throw err
   }
 }
+
+export const logoutService = async (user: any): Promise<string> => {
+  // eslint-disable-next-line no-useless-catch
+  try {
+    const data = { data: user }
+    const res = await publicRequest.post('/users/logout', data)
+    return res.data
+  } catch (err) {
+    throw err
+  }
+}

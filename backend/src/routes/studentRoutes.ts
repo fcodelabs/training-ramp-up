@@ -2,7 +2,6 @@ import {
   createStudent,
   deleteStudent,
   getAllStudents,
-  getStudentById,
   updateStudent,
 } from "../controllers/studentController";
 import { Router } from "express";
@@ -18,7 +17,6 @@ studentRouter.get(
   verifyRoles(["admin", "geust"]),
   getAllStudents
 );
-studentRouter.get("/:id", getStudentById);
 studentRouter.post(
   "/",
   verifyJWT,

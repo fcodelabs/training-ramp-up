@@ -11,6 +11,6 @@ const userRouter = Router();
 userRouter.post("/signup", signUpController);
 userRouter.post("/login", loginController);
 userRouter.get("/refresh", refreshTokenController);
-userRouter.get("/logout", logoutController);
+userRouter.post("/logout", logoutController);
 
 export default userRouter;

@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import {
+  deleteRefeshTokenService,
   findUserByRefreshTokenService,
   loginUserService,
   registerUserService,
@@ -26,7 +27,7 @@ export const loginController = async (req: Request, res: Response) => {
       const accessToken = jwt.sign(
         { userInfo: { userRole: userLogin.Role, userEmail: userLogin.Email } },
         process.env.ACCESS_TOKEN_SECRET as string,
-        { expiresIn: "30s" }
+        { expiresIn: "3s" }
       );
       const refreshToken = jwt.sign(
         { user: userLogin.Email },
@@ -70,7 +71,7 @@ export const refreshTokenController = async (req: Request, res: Response) => {
             userInfo: { userRole: foundUser.Role, userEmail: foundUser.Email },
           },
           process.env.ACCESS_TOKEN_SECRET as string,
-          { expiresIn: "30s" }
+          { expiresIn: "3s" }
         );
         res.send(accessToken);
       }
@@ -81,8 +82,13 @@ export const refreshTokenController = async (req: Request, res: Response) => {
 };
 
 export const logoutController = async (req: Request, res: Response) => {
-  const cookie = req.cookies;
-  if (cookie.jwt === null) return res.sendStatus(204); //No content
-  res.clearCookie("jwt", { httpOnly: true });
-  res.status(204).send("logout");
+  try {
+    const cookie = req.cookies;
+    if (cookie.jwt === null) return res.sendStatus(204); //No content
+    const updateUser = deleteRefeshTokenService(req.body.data);
+    res.clearCookie("jwt", { httpOnly: true });
+    res.status(204).send("logout");
+  } catch (err) {
+    res.status(400).send("error");
+  }
 };
