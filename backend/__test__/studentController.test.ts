@@ -18,21 +18,21 @@ describe("Student Constroller test", () => {
   };
   describe("Create student controller test", () => {
     const user = {
+      PersonID: 3,
       PersonName: "test",
-      PersonSurname: "test",
-      PersonPassword: "test",
-      PersonRole: "test",
-      PersonPhone: "test",
+      PersonGender: "test",
       PersonAddress: "test",
-    } as unknown as Student;
+      PersonMobileNo: "test",
+      DateOfBirth: new Date(),
+    } as Student;
     const request_add = {
       body: {
         data: user,
       },
-    } as unknown as Request;
+    } as Request;
     const request_add_fail = {
       body: {},
-    } as unknown as Request;
+    } as  Request;
     const res_add = response();
 
     it("test create student", async () => {
@@ -57,23 +57,23 @@ describe("Student Constroller test", () => {
   });
   describe("Update student controller test", () => {
     const user = {
+      PersonID: 3,
       PersonName: "test",
-      PersonSurname: "test",
-      PersonPassword: "test",
-      PersonRole: "test",
-      PersonPhone: "test",
+      PersonGender: "test",
       PersonAddress: "test",
-    } as unknown as Student;
+      PersonMobileNo: "test",
+      DateOfBirth: new Date(),
+    } as Student;
     const request_add = {
       body: {
         data: user,
       },
-    } as unknown as Request;
+    } as Request;
     const request_add_fail = {
       body: {
         data: null,
       },
-    } as unknown as Request;
+    } as Request;
     const res_add = response();
 
     it("test update student", async () => {
@@ -99,14 +99,14 @@ describe("Student Constroller test", () => {
     });
   });
   describe("delete student controller test", () => {
-    const user = {
-      PersonID: "1",
-      PersonSurname: "test",
-      PersonPassword: "test",
-      PersonRole: "test",
-      PersonPhone: "test",
+  const user = {
+      PersonID: 3,
+      PersonName: "test",
+      PersonGender: "test",
       PersonAddress: "test",
-    } as unknown as Student;
+      PersonMobileNo: "test",
+      DateOfBirth: new Date(),
+    } as Student;
     const id = 1;
     const request_add = {
       params: {
@@ -143,23 +143,23 @@ describe("Student Constroller test", () => {
     });
   });
   describe("get student controller test", () => {
-    const users = {
+    const users = [{
+      PersonID: 3,
       PersonName: "test",
-      PersonSurname: "test",
-      PersonPassword: "test",
-      PersonRole: "test",
-      PersonPhone: "test",
+      PersonGender: "test",
       PersonAddress: "test",
-    } as unknown as Student[];
+      PersonMobileNo: "test",
+      DateOfBirth: new Date(),
+    }] as Student[];
     const mockNextFuction = jest.fn();
-    const request_add = {} as unknown as Request;
+    const request_add = {} as Request;
     const res_add = response();
 
     it("test get student", async () => {
       const spyAddStudent = jest
         .spyOn(StudentServices, "getAllStudentsService")
         .mockResolvedValue(users);
-      await getAllStudents(request_add, res_add, mockNextFuction);
+    await getAllStudents(request_add, res_add, mockNextFuction);
       expect(spyAddStudent).toBeCalledWith();
       expect(spyAddStudent).toHaveBeenCalled();
       expect(spyAddStudent).toHaveBeenCalledTimes(1);
@@ -168,11 +168,11 @@ describe("Student Constroller test", () => {
     it("test get student fail", async () => {
       const spyGetStudent = jest
         .spyOn(StudentServices, "getAllStudentsService")
-        .mockResolvedValue(users);
+    
       try {
         await getAllStudents(request_add, res_add, mockNextFuction);
       } catch (e) {
-        expect(e).toEqual(new Error("Error in creating student"));
+        expect(e).toEqual('fsdfds');
       }
       spyGetStudent.mockRestore();
     });
