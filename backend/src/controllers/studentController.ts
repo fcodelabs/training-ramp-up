@@ -27,7 +27,7 @@ export const createStudent = async (
 ) => {
   try {
     const user = req.body.data;
-    console.log(user);
+    if (user) res.status(400).send("User not found");
     const userInsert = await createStudentService(user);
     const socket = req.app.get("socket");
 

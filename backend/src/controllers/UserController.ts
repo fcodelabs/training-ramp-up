@@ -19,7 +19,6 @@ export const signUpController = async (
     const userInsert = await registerUserService(user);
     res.status(201).json('User created successfully');
   } catch (err) {
-    console.log(err);
     next(new BackendError("User already exists", 400));
   }
 };
@@ -67,7 +66,7 @@ export const refreshTokenController = async (
 ) => {
   const cookie = req.cookies;
 
-  if (cookie.jwt === null) return res.sendStatus(401);
+  if (!cookie.jwt) return res.sendStatus(401);
   const refreshToken = cookie.jwt;
   try {
     const foundUser = await findUserByRefreshTokenService(refreshToken);
@@ -106,11 +105,12 @@ export const logoutController = async (
 ) => {
   try {
     const cookie = req.cookies;
-    if (cookie.jwt === null) return res.sendStatus(204); //No content
+    if (!cookie.jwt) return res.sendStatus(204); //No content
     const updateUser = deleteRefeshTokenService(req.body.data);
     res.clearCookie("jwt", { httpOnly: true });
     res.status(204).send("logout");
   } catch (err) {
+  //  console.log(err);
     next(err);
   }
 };

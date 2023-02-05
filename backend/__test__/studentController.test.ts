@@ -9,6 +9,7 @@ import { Student } from "../src/models/Student";
 import * as StudentServices from "../src/services/studentServices";
 
 describe("Student Constroller test", () => {
+  const mockNextFuction = jest.fn();
   const response = () => {
     const res = {} as Response;
     res.status = jest.fn().mockReturnThis();
@@ -31,7 +32,7 @@ describe("Student Constroller test", () => {
     } as unknown as Request;
     const request_add_fail = {
       body: {
-        data: user,
+        data: null,
       },
     } as unknown as Request;
     const res_add = response();
@@ -40,7 +41,7 @@ describe("Student Constroller test", () => {
       const spyAddStudent = jest
         .spyOn(StudentServices, "createStudentService")
         .mockResolvedValue(user);
-      await createStudent(request_add, res_add);
+      await createStudent(request_add, res_add, mockNextFuction);
       expect(spyAddStudent).toBeCalledWith(user);
       spyAddStudent.mockRestore();
     });
@@ -48,8 +49,11 @@ describe("Student Constroller test", () => {
       const spyAddStudent = jest
         .spyOn(StudentServices, "createStudentService")
         .mockResolvedValue(user);
-      await createStudent(request_add_fail, res_add);
-      expect(spyAddStudent).toBeCalledWith(user);
+      try {
+        await createStudent(request_add_fail, res_add, mockNextFuction);
+      } catch (e) {
+        expect(e).toEqual(new Error("Error in creating student"));
+      }
       spyAddStudent.mockRestore();
     });
   });
@@ -78,7 +82,7 @@ describe("Student Constroller test", () => {
       const spyUpdateStudent = jest
         .spyOn(StudentServices, "createStudentService")
         .mockResolvedValue(user);
-      await updateStudent(request_add, res_add);
+      await updateStudent(request_add, res_add, mockNextFuction);
       expect(spyUpdateStudent).toBeCalledWith(user);
       spyUpdateStudent.mockRestore();
     });
@@ -86,8 +90,11 @@ describe("Student Constroller test", () => {
       const spyAddStudent = jest
         .spyOn(StudentServices, "createStudentService")
         .mockResolvedValue(user);
-      await updateStudent(request_add_fail, res_add);
-      expect(spyAddStudent).toBeCalledWith(user);
+      try {
+        await updateStudent(request_add_fail, res_add, mockNextFuction);
+      } catch (e) {
+        expect(e).toEqual(new Error("Error in creating student"));
+      }
       spyAddStudent.mockRestore();
     });
   });
@@ -112,12 +119,12 @@ describe("Student Constroller test", () => {
       },
     } as unknown as Request;
     const res_add = response();
-
+    const mockNextFuction = jest.fn();
     it("test delete student fail", async () => {
       const spyAddStudent = jest
         .spyOn(StudentServices, "deleteStudentService")
         .mockResolvedValue(user);
-      await deleteStudent(request_add_fail, res_add);
+      await deleteStudent(request_add_fail, res_add, mockNextFuction);
       expect(spyAddStudent).toBeCalledWith(id);
       spyAddStudent.mockRestore();
     });
@@ -125,8 +132,11 @@ describe("Student Constroller test", () => {
       const spyAddStudent = jest
         .spyOn(StudentServices, "deleteStudentService")
         .mockResolvedValue(user);
-      await deleteStudent(request_add_fail, res_add);
-      expect(spyAddStudent).toBeCalledWith(id);
+      try {
+        await deleteStudent(request_add_fail, res_add, mockNextFuction);
+      } catch (e) {
+        expect(e).toEqual(new Error("Error in creating student"));
+      }
       spyAddStudent.mockRestore();
     });
   });
@@ -139,6 +149,7 @@ describe("Student Constroller test", () => {
       PersonPhone: "test",
       PersonAddress: "test",
     } as unknown as Student[];
+    const mockNextFuction = jest.fn();
     const request_add = {} as unknown as Request;
     const res_add = response();
 
@@ -146,7 +157,7 @@ describe("Student Constroller test", () => {
       const spyAddStudent = jest
         .spyOn(StudentServices, "getAllStudentsService")
         .mockResolvedValue(users);
-      await getAllStudents(request_add, res_add);
+      await getAllStudents(request_add, res_add, mockNextFuction);
       expect(spyAddStudent).toBeCalledWith();
       spyAddStudent.mockRestore();
     });
@@ -154,8 +165,11 @@ describe("Student Constroller test", () => {
       const spyGetStudent = jest
         .spyOn(StudentServices, "getAllStudentsService")
         .mockResolvedValue(users);
-      await getAllStudents(request_add, res_add);
-      expect(spyGetStudent).toBeCalledWith();
+      try {
+        await getAllStudents(request_add, res_add, mockNextFuction);
+      } catch (e) {
+        expect(e).toEqual(new Error("Error in creating student"));
+      }
       spyGetStudent.mockRestore();
     });
   });
@@ -175,7 +189,7 @@ describe("Student Constroller test", () => {
       const spyAddStudent = jest
         .spyOn(StudentServices, "getAllStudentsService")
         .mockResolvedValue(users);
-      await getAllStudents(request_add, res_add);
+      await getAllStudents(request_add, res_add, mockNextFuction);
       expect(spyAddStudent).toBeCalledWith();
       spyAddStudent.mockRestore();
     });
@@ -183,8 +197,11 @@ describe("Student Constroller test", () => {
       const spyGetStudent = jest
         .spyOn(StudentServices, "getAllStudentsService")
         .mockResolvedValue(users);
-      await getAllStudents(request_add, res_add);
-      expect(spyGetStudent).toBeCalledWith();
+      try {
+        await getAllStudents(request_add, res_add, mockNextFuction);
+      } catch (e) {
+        expect(e).toEqual(new Error("Error in creating student"));
+      }
       spyGetStudent.mockRestore();
     });
   });

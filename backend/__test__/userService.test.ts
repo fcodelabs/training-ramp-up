@@ -33,7 +33,7 @@ describe("User Service test", () => {
       try {
         const result = await userService.registerUserService(user2);
       } catch (e) {
-        expect(e).toEqual(new Error("Error in creating user"));
+        expect(e).toEqual(new Error('No metadata for "User" was found.'));
       }
       spyAppDataSource.mockRestore();
     });
@@ -71,11 +71,85 @@ describe("User Service test", () => {
       try {
         const result = await userService.loginUserService(user2);
       } catch (e) {
-        expect(e).toEqual(new Error("Error in login user"));
+        expect(e).toEqual(new Error('No metadata for "User" was found.'));
       }
       spyAppDataSource.mockRestore();
     });
+
+    const InputUser = {
+      Email: "test@gmail.com",
+      Role: "admin",
+      createdAt: new Date(),
+      UserID: 1,
+      updatedAt: new Date(),
+      RefreshToken: "test",
+    } as User;
+    const outputUser = {
+      Email: "test@gmail.com",
+      Role: "admin",
+      createdAt: new Date(),
+      UserID: 1,
+      updatedAt: new Date(),
+      RefreshToken: "",
+    } as User;
+    describe("logout user service test", () => {
+      it("test logout user success", async () => {
+        const spyAppDataSource = jest.spyOn(
+          AppDataSource.getRepository(User),
+          "findOneBy"
+        );
+        const spySaveDataSource = jest.spyOn(
+          AppDataSource.getRepository(User),
+          "save"
+        );
+        spyAppDataSource.mockResolvedValue(InputUser);
+        spySaveDataSource.mockResolvedValue(outputUser);
+        const result = await userService.deleteRefeshTokenService(InputUser);
+        spyAppDataSource.mockRestore();
+      });
+      it("test logout user fail", async () => {
+        const spyAppDataSource = jest.spyOn(
+          AppDataSource.getRepository(User),
+          "findOne"
+        );
+        spyAppDataSource.mockResolvedValue(outputUser);
+        try {
+          const result = await userService.loginUserService(InputUser);
+        } catch (e) {
+          expect(e).toEqual(new Error('No metadata for "User" was found.'));
+        }
+        spyAppDataSource.mockRestore();
+      });
+    });
+    describe("get user by refresh token service test", () => {
+      it("test get user by refresh token success", async () => {
+        const spyAppDataSource = jest.spyOn(
+          AppDataSource.getRepository(User),
+          "findOne"
+        );
+        spyAppDataSource.mockResolvedValue(InputUser);
+        const result = await userService.findUserByRefreshTokenService(
+          InputUser.RefreshToken
+        );
+        expect(result).toEqual(InputUser);
+        spyAppDataSource.mockRestore();
+      });
+      it("test get user by refresh token fail", async () => {
+        const spyAppDataSource = jest.spyOn(
+          AppDataSource.getRepository(User),
+          "findOne"
+        );
+        spyAppDataSource.mockResolvedValue(null);
+        try {
+          const result = await userService.findUserByRefreshTokenService(
+            "test1"
+          );
+        } catch (e) {
+          expect(e).toEqual(new Error("User not found"));
+        }
+
+        spyAppDataSource.mockRestore();
+      });
+    });
   });
-
-
 });

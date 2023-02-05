@@ -4,12 +4,12 @@ import bcrypt from "bcrypt";
 import { Any, In } from "typeorm";
 
 export const registerUserService = async (user: User) => {
-    const hashedPassword = await bcrypt.hash(user.Password, 10);
-    user.Password = hashedPassword;
-    const userRepo = AppDataSource.getRepository(User);
-    const userInsert = await userRepo.save(user);
-    const { Role, Email, ...others } = userInsert;
-    return { Role, Email };
+  const hashedPassword = await bcrypt.hash(user.Password, 10);
+  user.Password = hashedPassword;
+  const userRepo = AppDataSource.getRepository(User);
+  const userInsert = await userRepo.save(user);
+  const { Role, Email, ...others } = userInsert;
+  return { Role, Email };
 };
 
 export const loginUserService = async (user: User) => {
@@ -55,7 +55,7 @@ export const findUserByRefreshTokenService = async (
     where: { RefreshToken: refreshToken },
   });
 
-  if (user !== null) {
+  if (user) {
     return user;
   } else {
     throw new Error("User not found");
@@ -68,7 +68,7 @@ export const deleteRefeshTokenService = async (
   try {
     const userRepo = AppDataSource.getRepository(User);
     const currentUser = await userRepo.findOneBy({ UserID: user.UserID });
-    if (currentUser !== null) {
+    if (currentUser) {
       const newUser = {
         ...currentUser,
         RefreshToken: "",
@@ -77,6 +77,7 @@ export const deleteRefeshTokenService = async (
       return userUpdate;
     }
   } catch (err) {
+    console.log(err);
     throw new Error("Error in updating user");
   }
 };
