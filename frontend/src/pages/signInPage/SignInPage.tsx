@@ -4,24 +4,33 @@ import { Formik, Form, Field } from 'formik'
 import * as Yup from 'yup'
 import { userLoginStart, userRegisterStart } from './userSlice'
 import { useDispatch, useSelector } from 'react-redux'
-import {  useNavigate, useLocation } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
+import { ToastContainer, toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 
 export const SignInPage = (): JSX.Element => {
   const [isRightPanelActive, setIsRightPanelActive] = useState('')
-
   const auth = useSelector((state: any) => state.userData?.user)
-
   const navigate = useNavigate()
   const location = useLocation()
+  const notify = (msg: string): any => toast(msg)
+  const err = useSelector((state: any) => state?.userData?.error)
   const from = location.state.from?.pathname || '/'
+
   const distpatch = useDispatch()
-console.log(from)
+
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
     if (auth?.user) {
-     navigate(from, { replace: true })  
+      navigate(from, { replace: true })
     }
   }, [auth, navigate, from])
+
+  useEffect(() => {
+    if (err) {
+      notify(err)
+    }
+  }, [err])
 
   const SignUpSchema = Yup.object().shape({
     email: Yup.string().email('Invalid email').required('Required'),
@@ -50,6 +59,7 @@ console.log(from)
 
   return (
     <>
+      <ToastContainer />
       <h2>Ramp Up</h2>
       <div className={`container ${isRightPanelActive}`} id='container'>
         <div className='form-container sign-up-container'>

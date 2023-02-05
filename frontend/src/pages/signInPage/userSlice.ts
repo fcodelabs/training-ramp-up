@@ -7,38 +7,38 @@ const userSlice = createSlice({
     user: null,
     accessToken: null,
     isFetching: false,
-    error: false,
+    error: '',
   },
   reducers: {
     userRegisterStart: (state, action) => {
-      state.error = false
+      state.error = ''
       state.isFetching = true
     },
     userRegisterSuccess: (state, action) => {
       state.isFetching = false
-      state.error = false
+      state.error = ''
     },
     userRegisterFailure: (state) => {
       state.isFetching = false
-      state.error = true
+      state.error = ''
     },
     userLoginStart: (state, action) => {
       state.isFetching = true
     },
     userLoginSuccess: (state, action) => {
       state.isFetching = false
-      state.error = false
+      state.error = ''
       state.user = action.payload
       state.accessToken = action.payload.accessToken
       localStorage.setItem('accessToken', action.payload.accessToken)
     },
-    userLoginFailure: (state) => {
+    userLoginFailure: (state,action) => {
       state.isFetching = false
-      state.error = true
+      state.error = action.payload
     },
     userLogOutStart: (state, action) => {
       state.isFetching = false
-      state.error = false
+      state.error = ''
       state.user = null
       localStorage.clear()
       document.cookie.split(';').forEach(function (c) {
@@ -49,12 +49,12 @@ const userSlice = createSlice({
     },
     userLogOutSuccess: (state) => {
       state.isFetching = false
-      state.error = false
+      state.error = ''
       state.user = null
     },
     userLogOutFailure: (state) => {
       state.isFetching = false
-      state.error = false
+      state.error = ''
       state.user = null
     },
     refreshTokenSuccess: (state, action) => {

@@ -29,7 +29,6 @@ import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { Button } from '@progress/kendo-react-buttons'
 import { userLogOutStart } from '../signInPage/userSlice'
-
 const editField: string = 'inEdit'
 const gender = ['Female', 'Male']
 const initialSort: SortDescriptor[] = [{ field: 'PersonID', dir: 'asc' }]
@@ -59,7 +58,7 @@ export const HomePage = (): any => {
   const persondata = useSelector((state: any) => state.personData.person)
   const notifications = useSelector((state: any) => state.notification.notifications)
   const userData = useSelector((state: any) => state?.userData?.user?.user)
-console.log(userData)  
+
 
   const notify = (msg: string): any => toast(msg)
   React.useEffect(() => {

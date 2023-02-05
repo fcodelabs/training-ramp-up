@@ -1,4 +1,4 @@
-import express, { Express } from "express";
+import express from "express";
 import "reflect-metadata";
 import { AppDataSource } from "./src/configs/DataSourceConfig";
 import cors from "cors";
@@ -8,6 +8,8 @@ import passport from "passport";
 import cookieparser from "cookie-parser";
 import dotenv from "dotenv";
 import { app, httpServer, io } from "./app";
+import { NextFunction, Request, Response } from "express";
+import { BackendError } from "./src/utils/backendErr";
 const PORT = process.env.PORT || 5000;
 
 dotenv.config();
@@ -26,11 +28,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieparser());
 app.use(passport.initialize());
 
-//socket io
-// const io: Server = new Server(httpServer, {
-//   cors: { origin: "http://localhost:3000" },
-// });
-
+//socket
 io.on("connection", (socket: any) => {
   console.log("a user connected");
   app.set("socket", socket);
@@ -44,12 +42,14 @@ app.use("/api/students", studentRoutes);
 app.use("/api/users", userRoutes);
 
 /* Error handler middleware */
-app.use((err:any, req:any, res:any, next:any) => {
-  const statusCode = err.statusCode || 500;
-  console.error(err.message, err.stack);
-  res.status(statusCode).json({'message': err.message});
-  return;
-});
+app.use(
+  (err: BackendError, req: Request, res: Response, next: NextFunction) => {
+    const statusCode = err.statusCode || 500;
+   console.log(err);
+    res.status(statusCode).json({ message: err.message });
+    return;
+  }
+);
 
 AppDataSource.initialize()
   .then(() => {
