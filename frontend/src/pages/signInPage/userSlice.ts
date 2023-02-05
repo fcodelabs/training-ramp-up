@@ -1,4 +1,3 @@
-import { User } from '../../models/interface'
 import { createSlice } from '@reduxjs/toolkit'
 
 const userSlice = createSlice({
@@ -7,6 +6,7 @@ const userSlice = createSlice({
     user: null,
     accessToken: null,
     isFetching: false,
+    message: '',
     error: '',
   },
   reducers: {
@@ -16,11 +16,12 @@ const userSlice = createSlice({
     },
     userRegisterSuccess: (state, action) => {
       state.isFetching = false
+      state.message = action.payload
       state.error = ''
     },
-    userRegisterFailure: (state) => {
+    userRegisterFailure: (state, action) => {
       state.isFetching = false
-      state.error = ''
+      state.error = action.payload
     },
     userLoginStart: (state, action) => {
       state.isFetching = true
@@ -32,7 +33,7 @@ const userSlice = createSlice({
       state.accessToken = action.payload.accessToken
       localStorage.setItem('accessToken', action.payload.accessToken)
     },
-    userLoginFailure: (state,action) => {
+    userLoginFailure: (state, action) => {
       state.isFetching = false
       state.error = action.payload
     },
@@ -60,6 +61,12 @@ const userSlice = createSlice({
     refreshTokenSuccess: (state, action) => {
       state.accessToken = action.payload
     },
+    deleteMsg: (state) => {
+      state.message = ''
+    },
+    deleteError: (state) => {
+      state.error = ''
+    },
   },
 })
 
@@ -74,5 +81,7 @@ export const {
   userLogOutSuccess,
   userLogOutFailure,
   refreshTokenSuccess,
+  deleteError,
+  deleteMsg,
 } = userSlice.actions
 export default userSlice.reducer

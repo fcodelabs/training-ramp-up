@@ -45,7 +45,6 @@ app.use("/api/users", userRoutes);
 app.use(
   (err: BackendError, req: Request, res: Response, next: NextFunction) => {
     const statusCode = err.statusCode || 500;
-   console.log(err);
     res.status(statusCode).json({ message: err.message });
     return;
   }

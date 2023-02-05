@@ -4,7 +4,7 @@ import privateRequest, { publicRequest } from '../utils/requestMethods'
 export const addNewPersonService = async (dataArr: [Person, number]): Promise<Person | unknown> => {
   try {
     const personData = dataArr[0]
-    personData.PersonID = dataArr[1]
+    
     const config = {
       data: personData,
     }
@@ -21,7 +21,7 @@ export const updatePersonService = async (updateValue: Person): Promise<Person |
     const config = {
       data: updateValue,
     }
-    const res = await publicRequest.put(`/students`, config)
+    const res = await publicRequest.patch(`/students`, config)
     console.log(res.data)
     return res.data
   } catch (err) {

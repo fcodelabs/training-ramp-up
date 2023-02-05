@@ -29,6 +29,7 @@ import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { Button } from '@progress/kendo-react-buttons'
 import { userLogOutStart } from '../signInPage/userSlice'
+
 const editField: string = 'inEdit'
 const gender = ['Female', 'Male']
 const initialSort: SortDescriptor[] = [{ field: 'PersonID', dir: 'asc' }]
@@ -46,8 +47,7 @@ export const HomePage = (): any => {
 
   const distpatch = useDispatch()
 
-  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-  const onToggle = () => {
+  const onToggle = (): void => {
     setSuccess(!success)
     if (!success) {
       setTimeout(() => {
@@ -58,7 +58,6 @@ export const HomePage = (): any => {
   const persondata = useSelector((state: any) => state.personData.person)
   const notifications = useSelector((state: any) => state.notification.notifications)
   const userData = useSelector((state: any) => state?.userData?.user?.user)
-
 
   const notify = (msg: string): any => toast(msg)
   React.useEffect(() => {
@@ -167,7 +166,7 @@ export const HomePage = (): any => {
     const newDataItem: Person = {
       inEdit: true,
       Discontinued: false,
-      PersonID: 0,
+      PersonID: 0
     }
 
     setData([newDataItem, ...data])
@@ -224,14 +223,15 @@ export const HomePage = (): any => {
       >
         <GridToolbar>
           <div className='buttons-container'>
-            <button
-              title='Add new'
-              onClick={addNew}
-              className='k-button k-button-md k-rounded-md k-button-solid k-button-solid-error'
-            >
-              Add new
-            </button>
-
+            {userData?.Role === 'admin' && (
+              <button
+                title='Add new'
+                onClick={addNew}
+                className='k-button k-button-md k-rounded-md k-button-solid k-button-solid-error'
+              >
+                Add new
+              </button>
+            )}
             <Button
               onClick={logOut}
               className='buttons-container-button logout-button'
@@ -300,8 +300,9 @@ export const HomePage = (): any => {
           width='120px'
           editable={false}
         />
-
-        <Column title='Command' cell={CommandCellFunc} width='300px' />
+        {(userData?.Role === 'admin' || userData?.Role === 'editor') && (
+          <Column title='Command' cell={CommandCellFunc} width='300px' />
+        )}
       </Grid>
       <NotificationGroup
         style={{

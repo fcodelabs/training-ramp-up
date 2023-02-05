@@ -1,4 +1,3 @@
-import { Response } from 'express';
 import { ForkEffect, takeEvery, put } from 'redux-saga/effects'
 import { loginService, logoutService, resisterService } from '../../services/authServices'
 import {
@@ -17,8 +16,8 @@ function* userRegisterSaga(action: any): IterableIterator<any> {
   try {
     const message: any = yield resisterService(action.payload)
     yield put(userRegisterSuccess(message))
-  } catch (e) {
-    yield put(userRegisterFailure())
+  } catch (e:any) {
+    yield put(userRegisterFailure(e.response.data.message))
   }
 }
 function* userLoginSaga(action: any): IterableIterator<any> {

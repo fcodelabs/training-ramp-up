@@ -4,7 +4,7 @@ export const validateData = [
   check("data.PersonID")
     .not()
     .isEmpty()
-    .isInt({ gt: 0 })
+    .isInt({ gt: -1 })
     .withMessage("Invalid value"),
   check("data.PersonName")
     .not()

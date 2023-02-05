@@ -25,7 +25,7 @@ studentRouter.post(
   verifyRoles(["admin"]),
   createStudent
 );
-studentRouter.put(
+studentRouter.patch(
   "/",
   validateData,
   validata,

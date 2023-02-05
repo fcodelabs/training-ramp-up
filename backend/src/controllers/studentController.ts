@@ -5,7 +5,6 @@ import {
   updateStudentService,
 } from "../services/studentServices";
 import { NextFunction, Request, Response } from "express";
-import { Student } from "../models/Student";
 
 export const getAllStudents = async (
   req: Request,
@@ -28,6 +27,7 @@ export const createStudent = async (
 ) => {
   try {
     const user = req.body.data;
+    console.log(user);
     const userInsert = await createStudentService(user);
     const socket = req.app.get("socket");
 

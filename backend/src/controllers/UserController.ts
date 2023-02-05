@@ -17,10 +17,10 @@ export const signUpController = async (
   try {
     const user = req.body.data;
     const userInsert = await registerUserService(user);
-
-    res.status(201).json(userInsert);
+    res.status(201).json('User created successfully');
   } catch (err) {
-    next(err);
+    console.log(err);
+    next(new BackendError("User already exists", 400));
   }
 };
 

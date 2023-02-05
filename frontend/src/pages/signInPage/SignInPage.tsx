@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import './signInPage.css'
 import { Formik, Form, Field } from 'formik'
 import * as Yup from 'yup'
-import { userLoginStart, userRegisterStart } from './userSlice'
+import { deleteError, deleteMsg, userLoginStart, userRegisterStart } from './userSlice'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { ToastContainer, toast } from 'react-toastify'
@@ -15,6 +15,7 @@ export const SignInPage = (): JSX.Element => {
   const location = useLocation()
   const notify = (msg: string): any => toast(msg)
   const err = useSelector((state: any) => state?.userData?.error)
+  const msg = useSelector((state: any) => state?.userData?.message)
   const from = location.state.from?.pathname || '/'
 
   const distpatch = useDispatch()
@@ -29,8 +30,17 @@ export const SignInPage = (): JSX.Element => {
   useEffect(() => {
     if (err) {
       notify(err)
+      setTimeout(() => {
+        distpatch(deleteError())
+      }, 2000)
     }
-  }, [err])
+    if (msg) {
+      notify(msg)
+    }
+    setTimeout(() => {
+      distpatch(deleteMsg())
+    }, 2000)
+  }, [err, msg])
 
   const SignUpSchema = Yup.object().shape({
     email: Yup.string().email('Invalid email').required('Required'),
@@ -80,9 +90,10 @@ export const SignInPage = (): JSX.Element => {
             <Formik
               initialValues={{ email: '', password: '', confirmPassword: '' }}
               validationSchema={SignUpSchema}
-              onSubmit={(values) => {
+              onSubmit={(values, { resetForm }) => {
                 const { email, password } = values
                 distpatch(userRegisterStart({ Email: email, Password: password, Role: 'guest' }))
+                resetForm()
               }}
             >
               {({ errors, touched }) => (
