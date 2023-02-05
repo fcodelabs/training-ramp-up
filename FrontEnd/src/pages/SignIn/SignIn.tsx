@@ -13,6 +13,11 @@ import { cyan } from '@mui/material/colors';
 import { useFormik } from 'formik';
 import * as yup from 'yup'; 
 import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { signInUser } from './authSlice';
+import { UserSignIn, SignInState } from '../../interfaces/interfaces';
+
+
 
 function Copyright(props: any) {
   return (
@@ -37,7 +42,9 @@ const theme = createTheme(
 export default function SignIn() {
 
   const navigate = useNavigate()
-
+  const dispatch = useDispatch()
+  // const token = useSelector((state: SignInState) => state.auth.accessToken)
+  // console.log('token in sign in page ', token)
   const validationSchema = yup.object({
     email: yup
       .string()
@@ -58,7 +65,12 @@ export default function SignIn() {
     validationSchema: validationSchema,
     onSubmit: (values) => {
       // alert(JSON.stringify(values, null, 2));
-      navigate('/home')
+      // navigate('/home')
+      const user: UserSignIn = {
+        email: values.email,
+        password: values.password,
+      };
+      dispatch(signInUser(user))
     },
   });
 

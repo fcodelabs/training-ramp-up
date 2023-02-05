@@ -6,6 +6,8 @@ import userRouter from './routes/userRoutes'
 import http from 'http'
 import { Server } from 'socket.io'
 import cors from 'cors'
+const verifyJWT = require('./middlewares/verifyJwt')
+const cookieParser = require('cookie-parser')
 
 const app = express()
 
@@ -17,6 +19,9 @@ app.use(
     extended: true,
   })
 )
+
+// middleware for cookies
+app.use(cookieParser())
 
 //socket io
 const server = http.createServer(app)
@@ -57,7 +62,7 @@ PostgresDataSource.initialize()
 
 app.use('/', userRouter)
 
-
+app.use(verifyJWT) // running the verifyJWT middleware for the home route
 app.use('/home', studentRouter)
 
 app.use((err: any, req: Request, res: Response) => {

@@ -17,13 +17,25 @@ export interface HomeState {
   }
 }
 
-export interface UserLogin{
-  email: string,
+export interface UserSignIn {
+  email: string
   password: string
 }
 
-export interface UserSignUp{
-  email: string,
+export interface UserSignUp {
+  email: string
   password: string
   confirmPassword: string
+}
+
+export interface SignInState{
+  auth:{
+    isSignInLoading: boolean;
+    isSignUpLoading: boolean;
+    isSignOutLoading: boolean;
+    accessToken: string | null;
+    signedIn: boolean;
+    error: string;
+    role: string | null;
+  }
 }
