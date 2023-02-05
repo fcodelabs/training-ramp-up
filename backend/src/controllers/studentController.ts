@@ -27,10 +27,8 @@ export const createStudent = async (
 ) => {
   try {
     const user = req.body.data;
-    if (user) res.status(400).send("User not found");
     const userInsert = await createStudentService(user);
     const socket = req.app.get("socket");
-
     socket.emit(
       "notification",
       `New user created successfully Name: ${userInsert?.PersonName}  !`

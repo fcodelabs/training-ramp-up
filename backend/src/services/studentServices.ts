@@ -1,18 +1,14 @@
 import { AppDataSource } from "../configs/DataSourceConfig";
 import { Student } from "../models/Student";
 
-export const getAllStudentsService = async (): Promise<Student[] | string> => {
+export const getAllStudentsService = async (): Promise<Student[]> => {
   const userRepo = AppDataSource.getRepository(Student);
   const allrecords = await userRepo.find({
     order: {
       PersonID: "ASC",
     },
   });
-  if (allrecords) {
-    return allrecords;
-  } else {
-    return "No records found";
-  }
+  return allrecords;
 };
 
 export const getStudentByIdService = async (id: number): Promise<Student> => {
