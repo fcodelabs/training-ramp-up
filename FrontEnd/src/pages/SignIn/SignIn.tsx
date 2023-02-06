@@ -43,8 +43,6 @@ export default function SignIn() {
 
   const navigate = useNavigate()
   const dispatch = useDispatch()
-  // const token = useSelector((state: SignInState) => state.auth.accessToken)
-  // console.log('token in sign in page ', token)
   const validationSchema = yup.object({
     email: yup
       .string()
@@ -140,7 +138,7 @@ export default function SignIn() {
                 </Link>
               </Grid>
               <Grid item>
-                <Link href="#" variant="body2">
+                <Link href="/signup" variant="body2">
                   {'Don\'t have an account? Sign Up'}
                 </Link>
               </Grid>

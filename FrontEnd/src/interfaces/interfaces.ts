@@ -29,7 +29,7 @@ export interface UserSignUp {
 }
 
 export interface SignInState{
-  auth:{
+  user:{
     isSignInLoading: boolean;
     isSignUpLoading: boolean;
     isSignOutLoading: boolean;

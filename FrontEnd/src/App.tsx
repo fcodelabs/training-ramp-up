@@ -8,20 +8,32 @@ import SignIn from './pages/SignIn/SignIn'
 import SignUp from './pages/SignUp/SignUp'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import ErrorPage from './pages/Error'
+import RequireAuth from './utils/RequireAuth'
 
 function App() {
-
   return (
     <>
-    <Router>
-      <Routes>
-        <Route path='/' element = {<SignIn/>}/>
+      <Router>
+        <Routes>
+          {/* <Route path="/" element={<RequireAuth element={<Home />} />} />
+        <Route path="/signup" element={<SignUp />} /> */}
+          {/* <Route path='/' element = {<SignIn/>}/> 
         <Route path='/SignUp' element = {<SignUp/>}/>
-        <Route path='/Home' element = {<Home/>}/>
-        <Route path='*' element = {<ErrorPage/>}/>
-      </Routes>
-    </Router>
-    <ToastContainer/>
+        <Route element={<RequireAuth element={<Home/>}/>}>  */}
+          {/* <Route path='/Home' element = {<Home/>}/> */}
+          {/* </Route> */}
+
+          <Route path='/' element={<SignIn />} />
+          <Route path='/signup' element={<SignUp />} />
+          {/* <Route path='/home' element = {<Home/>}/> */}
+          <Route path='*' element={<ErrorPage />} />
+
+          <Route element={<RequireAuth />}>
+            <Route path='/home' element={<Home />} />
+          </Route>
+        </Routes>
+      </Router>
+      <ToastContainer />
     </>
   )
 }

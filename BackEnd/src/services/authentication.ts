@@ -45,7 +45,7 @@ export async function signInUserService(req: Request, res: Response, next: NextF
                 const accessToken = jwt.sign({email: loggedUser.email}, process.env.ACCESS_TOKEN_SECRET, {expiresIn: '60s'})
                 const refreshToken = jwt.sign({email: loggedUser.email}, process.env.REFRESH_TOKEN_SECRET, {expiresIn: '1d'})
 
-                res.cookie('jwt', refreshToken, {httpOnly: true, sameSite: 'none', secure: false, maxAge: 24*60*60*1000})
+                res.cookie('jwt', refreshToken, {httpOnly: true, sameSite: 'none', secure: true, maxAge: 24*60*60*1000})
                 const resObj = {
                     accessToken: accessToken,
                     role: loggedUser.role,
@@ -66,12 +66,13 @@ export async function signInUserService(req: Request, res: Response, next: NextF
 export const handleRefreshToken = (req: Request, res: Response, next: NextFunction) => {
     const cookies = req.cookies
     if(!cookies.jwt) return res.status(401).send('No token provided')
-    console.log('cookies ', cookies)
+    console.log('cookies in backend : ', cookies)
     const refreshToken = cookies.jwt
     jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err: any, decoded: any) => {
         if(err) return res.status(403).send('Invalid token')
         const accessToken = jwt.sign({email: decoded.email}, process.env.ACCESS_TOKEN_SECRET, {expiresIn: '30s'})
         res.json(accessToken)
+        return
     }) 
 }
 

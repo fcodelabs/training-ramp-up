@@ -8,10 +8,18 @@ import { Server } from 'socket.io'
 import cors from 'cors'
 const verifyJWT = require('./middlewares/verifyJwt')
 const cookieParser = require('cookie-parser')
+const credentials = require('./middlewares/credentials')
+const corsOptions = require('./configs/corsOptions')
 
 const app = express()
 
-app.use(cors())
+// app.use(credentials)
+
+// app.use(cors(corsOptions))
+app.use(cors({
+  origin: 'http://localhost:3000',
+  credentials: true}
+))
 
 app.use(bodyparser.json())
 app.use(

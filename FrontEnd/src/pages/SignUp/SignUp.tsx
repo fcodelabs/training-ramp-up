@@ -12,9 +12,9 @@ import { createTheme, ThemeProvider } from '@mui/material/styles'
 import { cyan } from '@mui/material/colors'
 import * as yup from 'yup'
 import { useFormik } from 'formik'
-import { UserSignUp } from '../../interfaces/interfaces'
+import { SignInState, UserSignUp } from '../../interfaces/interfaces'
 import { signUpUserAPI } from '../../api/api'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { signUpUser } from '../SignIn/authSlice'
 
 function Copyright(props: any) {
@@ -26,6 +26,8 @@ function Copyright(props: any) {
     </Typography>
   )
 }
+
+
 
 const theme = createTheme({
   palette: {
@@ -67,7 +69,9 @@ export default function SignUp() {
       dispatch(signUpUser(user))
     },
   })
-
+  // const token = useSelector((state: SignInState) => state.user.accessToken)
+  // console.log('token in sign up page ', token)
+  
 
   return (
     <ThemeProvider theme={theme}>
@@ -134,7 +138,7 @@ export default function SignUp() {
             </Button>
             <Grid container justifyContent='flex-end'>
               <Grid item>
-                <Link href='#' variant='body2'>
+                <Link href='/' variant='body2'>
                   Already have an account? Sign in
                 </Link>
               </Grid>
