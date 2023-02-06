@@ -14,9 +14,7 @@ async function regStudent(req: Request, res: Response) {
       const savedStudent = await registerStudent(req);
       res.status(201).send(generateOutput(201, "success", savedStudent));
     } catch (error) {
-      res
-        .status(500)
-        .send(generateOutput(500, "error", "Something went wrong"));
+      res.status(500).send(generateOutput(500, "error", error.message));
     }
   }
 }
