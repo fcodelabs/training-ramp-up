@@ -50,7 +50,7 @@ button {
   letter-spacing: 1px;
   text-transform: uppercase;
   transition: transform 80ms ease-in;
-margin-top: 5px;
+  margin-top: 5px;
 }
 
 button:active {
@@ -214,7 +214,7 @@ button.ghost {
 }
 
 .social-container {
-  margin: 10px 0;
+  margin: 5px 0;
 }
 
 .social-container a {
@@ -227,7 +227,11 @@ button.ghost {
   height: 40px;
   width: 40px;
 }
-
+.socialIcon {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+}
 @media only screen and (max-width: 800px) {
   .overlay-container {
     display: none;

@@ -14,8 +14,13 @@ const PORT = process.env.PORT || 5000;
 
 dotenv.config();
 
-//const app: Express = express();
-//const httpServer = createServer(app);
+// app.use(
+//   cookieSession({
+//     name: "session",
+//     keys: ["key1", "key2"],
+//     maxAge: 24 * 60 * 60 * 1000, // 24 hours
+//   })
+// );
 
 app.use(express.json());
 app.use(
@@ -26,7 +31,8 @@ app.use(
 );
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieparser());
-app.use(passport.initialize());
+// app.use(passport.initialize());
+// app.use(passport.session());
 
 //socket
 io.on("connection", (socket: any) => {
@@ -60,3 +66,5 @@ AppDataSource.initialize()
   .catch((err) => {
     console.log(err);
   });
+
+
