@@ -1,4 +1,4 @@
-import { User } from "../src/models/User";
+import { User } from "../src/models/user";
 import { AppDataSource } from "../src/configs/DataSourceConfig";
 import * as userService from "../src/services/userServices";
 

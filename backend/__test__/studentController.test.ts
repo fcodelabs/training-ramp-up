@@ -5,7 +5,7 @@ import {
 } from "./../src/controllers/studentController";
 import { Request, Response } from "express";
 import { createStudent } from "../src/controllers/studentController";
-import { Student } from "../src/models/Student";
+import { Student } from "../src/models/student";
 import * as StudentServices from "../src/services/studentServices";
 
 describe("Student Constroller test", () => {

@@ -1,7 +1,7 @@
 import { AppDataSource } from "../src/configs/DataSourceConfig";
 import * as studentService from "../src/services/studentServices";
-import { Student } from "../src/models/Student";
-import { User } from "../src/models/User";
+import { Student } from "../src/models/student";
+import { User } from "../src/models/user";
 
 describe("Student Service test", () => {
   const student = {

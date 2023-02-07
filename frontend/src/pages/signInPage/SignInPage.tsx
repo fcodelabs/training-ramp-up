@@ -16,6 +16,7 @@ export const SignInPage = (): JSX.Element => {
   const notify = (msg: string): any => toast(msg)
   const err = useSelector((state: any) => state?.userData?.error)
   const msg = useSelector((state: any) => state?.userData?.message)
+  // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
   const from = location.state.from?.pathname || '/'
 
   const distpatch = useDispatch()
@@ -28,12 +29,14 @@ export const SignInPage = (): JSX.Element => {
   }, [auth, navigate, from])
 
   useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
     if (err) {
       notify(err)
       setTimeout(() => {
         distpatch(deleteError())
       }, 2000)
     }
+    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
     if (msg) {
       notify(msg)
     }
@@ -67,7 +70,7 @@ export const SignInPage = (): JSX.Element => {
     }
   }, [])
 
-const handleGoogleLogin = () => {
+const handleGoogleLogin = ():void => {
   window.open("http://localhost:5000/api/users/google", "_self")
 }
 

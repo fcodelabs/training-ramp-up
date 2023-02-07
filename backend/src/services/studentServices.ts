@@ -1,5 +1,5 @@
 import { AppDataSource } from "../configs/DataSourceConfig";
-import { Student } from "../models/Student";
+import { Student } from "../models/student";
 
 export const getAllStudentsService = async (): Promise<Student[]> => {
   const userRepo = AppDataSource.getRepository(Student);

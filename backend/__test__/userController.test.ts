@@ -1,6 +1,6 @@
 import * as userServices from "../src/services/userServices";
 import { Request, Response } from "express";
-import { User } from "../src/models/User";
+import { User } from "../src/models/user";
 import {
   loginController,
   logoutController,
