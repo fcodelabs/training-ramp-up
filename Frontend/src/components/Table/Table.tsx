@@ -23,7 +23,7 @@ import {
   deleteStudent,
   updateStudent,
   addStudent,
-} from "../../pages/Home/homeSlice";
+} from "../../Pages/Home/homeSlice";
 import { CircularProgress, Box } from "@mui/material";
 import { DatePickerCell } from "../DatePickerCell/DatePickerCell";
 import { DropDownCell } from "../DropDownCell/DropDownCell";

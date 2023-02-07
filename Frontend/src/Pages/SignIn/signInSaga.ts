@@ -27,7 +27,7 @@ function* signInUser(action: Action): Generator<any, any, any> {
     window.location.href = "/home";
   } catch (error: any) {
     const err = error.response.data.err;
-    yield put(signInFailure(err));
+    yield put(signInFailure({ type: "signIn", message: err }));
   }
 }
 
@@ -38,7 +38,7 @@ function* logoutUser(): Generator<any, any, any> {
   } catch (error: any) {
     const err = error.response.data.err;
     toast.error("Logout failed. Please try again later.");
-    yield put(logoutFailure(err));
+    yield put(logoutFailure({ type: "logout", message: err }));
   }
 }
 

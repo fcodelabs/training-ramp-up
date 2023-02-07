@@ -151,14 +151,14 @@ function SignIn() {
               >
                 <span>Sign In</span>
               </LoadingButton>
-              {error && (
+              {error.message && error.type === "signIn" && (
                 <Typography
                   variant="body2"
                   align="center"
                   sx={{ color: "red" }}
                   mt={2}
                 >
-                  {error}
+                  {error.message}
                 </Typography>
               )}
               <HeightBox />

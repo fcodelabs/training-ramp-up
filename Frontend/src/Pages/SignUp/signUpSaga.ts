@@ -19,7 +19,7 @@ function* signUpUser(action: Action): Generator<any, any, any> {
     window.location.href = "/home";
   } catch (error: any) {
     const err = error.response.data.err;
-    yield put(signUpFailure(err));
+    yield put(signUpFailure({ type: "signUp", message: err }));
   }
 }
 

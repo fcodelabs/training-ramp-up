@@ -9,7 +9,7 @@ import AccountCircle from "@mui/icons-material/AccountCircle";
 import PowerSettingsNewIcon from "@mui/icons-material/PowerSettingsNew";
 import MoreIcon from "@mui/icons-material/MoreVert";
 import { useDispatch } from "react-redux";
-import { logout } from "./../../pages/SignIn/signInSlice";
+import { logout } from "./../../Pages/SignIn/signInSlice";
 import { useNavigate } from "react-router-dom";
 
 function Header() {

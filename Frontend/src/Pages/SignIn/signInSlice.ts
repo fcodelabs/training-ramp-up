@@ -2,7 +2,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 interface SignInPageState {
-  error: string;
+  error: { type: string; message: string };
   loading: boolean;
   isLogged: boolean;
   email: string;
@@ -10,7 +10,7 @@ interface SignInPageState {
 }
 
 const initialState: SignInPageState = {
-  error: "",
+  error: { type: "", message: "" },
   loading: false,
   isLogged: false,
   email: "",
@@ -30,7 +30,7 @@ export const signInSlice = createSlice({
       state.isLogged = true;
       state.email = action.payload.email;
       state.role = action.payload.role;
-      state.error = "";
+      state.error = { type: "", message: "" };
     },
     signInFailure: (state, action) => {
       state.loading = false;
@@ -45,7 +45,7 @@ export const signInSlice = createSlice({
       state.isLogged = true;
       state.email = action.payload.email;
       state.role = action.payload.role;
-      state.error = "";
+      state.error = { type: "", message: "" };
     },
     signUpFailure: (state, action) => {
       state.loading = false;
@@ -59,7 +59,7 @@ export const signInSlice = createSlice({
       state.isLogged = false;
       state.email = "";
       state.role = "";
-      state.error = "";
+      state.error = { type: "", message: "" };
     },
     logoutFailure: (state, action) => {
       state.loading = false;

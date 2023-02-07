@@ -21,7 +21,7 @@ import {
   updateStudent,
   updateStudentSuccess,
   updateStudentFailure,
-} from "./homeSlice";
+} from "../Home/homeSlice";
 
 interface Action {
   type: string;

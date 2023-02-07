@@ -193,14 +193,14 @@ function SignUp() {
               >
                 Sign up
               </LoadingButton>
-              {error && (
+              {error.message && error.type === "signUp" && (
                 <Typography
                   variant="body2"
                   align="center"
                   sx={{ color: "red" }}
                   mt={2}
                 >
-                  {error}
+                  {error.message}
                 </Typography>
               )}
               <HeightBox />
