@@ -33,7 +33,9 @@ function* userLoginSaga(action: any): IterableIterator<any> {
 
 function* userLogOutSaga(action: any): IterableIterator<any> {
   try {
+
     yield logoutService(action.payload)
+ 
     yield put(userLogOutSuccess())
   } catch (e) {
     yield put(userLogOutFailure())

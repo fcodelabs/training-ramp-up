@@ -41,17 +41,18 @@ const userSlice = createSlice({
       state.isFetching = false
       state.error = ''
       state.user = null
-      localStorage.clear()
-      document.cookie.split(';').forEach(function (c) {
-        document.cookie = c
-          .replace(/^ +/, '')
-          .replace(/=.*/, '=;expires=' + new Date().toUTCString() + ';path=/')
-      })
     },
     userLogOutSuccess: (state) => {
       state.isFetching = false
       state.error = ''
       state.user = null
+      state.accessToken = null
+      window.localStorage.clear()
+      document.cookie.split(';').forEach(function (c) {
+        document.cookie = c
+          .replace(/^ +/, '')
+          .replace(/=.*/, '=;expires=' + new Date().toUTCString() + ';path=/')
+      })
     },
     userLogOutFailure: (state) => {
       state.isFetching = false

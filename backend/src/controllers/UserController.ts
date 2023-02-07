@@ -17,7 +17,7 @@ export const signUpController = async (
   try {
     const user = req.body.data;
     const userInsert = await registerUserService(user);
-    res.status(201).json('User created successfully');
+    res.status(201).json("User created successfully");
   } catch (err) {
     next(new BackendError("User already exists", 400));
   }
@@ -104,13 +104,14 @@ export const logoutController = async (
   next: NextFunction
 ) => {
   try {
+    console.log('logout');
     const cookie = req.cookies;
     if (!cookie.jwt) return res.sendStatus(204); //No content
     const updateUser = deleteRefeshTokenService(req.body.data);
     res.clearCookie("jwt", { httpOnly: true });
     res.status(204).send("logout");
   } catch (err) {
-  //  console.log(err);
+    //  console.log(err);
     next(err);
   }
 };

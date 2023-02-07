@@ -25,6 +25,7 @@ export const refreshAccessTokenService = async (): Promise<string> => {
 export const logoutService = async (user: any): Promise<string> => {
   // eslint-disable-next-line no-useless-catch
   try {
+    console.log(user)
     const data = { data: user }
     const res = await publicRequest.post('/users/logout', data)
     return res.data
