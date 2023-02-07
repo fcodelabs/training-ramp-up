@@ -4,6 +4,7 @@ import { AppDataSource } from "./src/configs/DataSourceConfig";
 import cors from "cors";
 import userRoutes from "./src/routes/userRoutes";
 import studentRoutes from "./src/routes/studentRoutes";
+import authRoutes from "./src/routes/authRoutes";
 import passport from "passport";
 import cookieparser from "cookie-parser";
 import dotenv from "dotenv";
@@ -11,7 +12,7 @@ import { app, httpServer, io } from "./app";
 import { NextFunction, Request, Response } from "express";
 import { BackendError } from "./src/utils/backendErr";
 import cookieSession from "cookie-session";
-import './src/middleware/passport'
+import "./src/middleware/passport";
 
 const PORT = process.env.PORT || 5000;
 
@@ -48,6 +49,7 @@ io.on("connection", (socket: any) => {
 //routes
 app.use("/api/students", studentRoutes);
 app.use("/api/users", userRoutes);
+app.use("/api/auth", authRoutes);
 
 /* Error handler middleware */
 app.use(
@@ -68,5 +70,3 @@ AppDataSource.initialize()
   .catch((err) => {
     console.log(err);
   });
-
-

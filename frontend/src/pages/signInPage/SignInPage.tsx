@@ -71,10 +71,10 @@ export const SignInPage = (): JSX.Element => {
   }, [])
 
   const handleGoogleLogin = (): void => {
-    window.open('http://localhost:5000/api/users/google', '_self')
+    window.open('http://localhost:5000/api/auth/google', '_self')
   }
   const getUser = () => {
-    void fetch('http://localhost:5000/api/users/logout', {
+    void fetch('http://localhost:5000/api/auth/logout', {
       method: 'GET',
       credentials: 'include',
       headers: {
@@ -93,7 +93,7 @@ export const SignInPage = (): JSX.Element => {
   }
 
   useEffect(() => {
-    void fetch('http://localhost:5000/api/users/login/success', {
+    void fetch('http://localhost:5000/api/auth/login/success', {
       method: 'GET',
       credentials: 'include',
       headers: {

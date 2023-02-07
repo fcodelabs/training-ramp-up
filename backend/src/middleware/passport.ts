@@ -6,7 +6,7 @@ passport.use(
     {
       clientID: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      callbackURL: "/api/users/google/callback",
+      callbackURL: "/api/auth/google/callback",
       state: true,
       accessType: "offline",
       prompt: "consent",
@@ -17,7 +17,7 @@ passport.use(
       profile: any,
       done: any
     ) {
-      console.log("email", refreshToken, accessToken);
+      profile.accessToken = accessToken;
       done(null, profile);
     }
   )
