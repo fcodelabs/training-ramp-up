@@ -1,6 +1,6 @@
 import { takeEvery, put, call } from 'redux-saga/effects'
 import { UserSignUp, UserSignIn } from '../../interfaces/interfaces'
-import { signInUserAPI, signUpUserAPI } from '../../api/api'
+import { logout, signInUserAPI, signUpUserAPI } from '../../api/api'
 import {
   signUpUser,
   signUpUserSuccess,
@@ -14,6 +14,7 @@ import {
 } from './authSlice'
 import { toast } from 'react-toastify'
 
+
 interface signUpUserAction {
   type: string
   payload: UserSignUp
@@ -23,6 +24,7 @@ interface signInUserAction {
   type: string
   payload: UserSignIn
 }
+
 
 function* signUpUserSaga(action: signUpUserAction): Generator<any, any, any> {
   try {
@@ -48,6 +50,7 @@ function* signInUserSaga(action: signInUserAction): Generator<any, any, any> {
     const response = yield call(() => signInUserAPI(action.payload))
     if(response.status === 200){
       yield put(signInUserSuccess(response))
+      sessionStorage.setItem('accessToken', response.data.accessToken)
       toast.success('User Signed In successfully!')
     // } else if(response.status === 401){
     //   yield put(signInUserFailure(response))
@@ -61,7 +64,18 @@ function* signInUserSaga(action: signInUserAction): Generator<any, any, any> {
   }
 }
 
+function* signOutUserSaga(): Generator<any, any, any>{
+  try{
+    const response = yield call(() => logout())
+    sessionStorage.removeItem('accessToken')
+    yield put(signOutUserSuccess())
+  } catch (error) {
+    yield put(signOutUserFailure(error))
+  }
+}
+
 export default function* authSaga() {
   yield takeEvery(signUpUser, signUpUserSaga)
   yield takeEvery(signInUser, signInUserSaga)
+  yield takeEvery(signOutUser, signOutUserSaga)
 }

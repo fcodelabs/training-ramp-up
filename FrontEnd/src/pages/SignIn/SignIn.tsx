@@ -16,6 +16,7 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { signInUser } from './authSlice';
 import { UserSignIn, SignInState } from '../../interfaces/interfaces';
+import { useEffect } from 'react';
 
 
 
@@ -42,6 +43,14 @@ const theme = createTheme(
 export default function SignIn() {
 
   const navigate = useNavigate()
+  const isSignedIn = useSelector((state: SignInState) => state.user.signedIn);
+  useEffect(() => {
+    if(isSignedIn) {
+      navigate('/home')
+    }
+  }, [isSignedIn])
+
+
   const dispatch = useDispatch()
   const validationSchema = yup.object({
     email: yup
@@ -133,9 +142,9 @@ export default function SignIn() {
             </Button>
             <Grid container>
               <Grid item xs>
-                <Link href="#" variant="body2">
+                {/* <Link href="#" variant="body2">
                   Forgot password?
-                </Link>
+                </Link> */}
               </Grid>
               <Grid item>
                 <Link href="/signup" variant="body2">

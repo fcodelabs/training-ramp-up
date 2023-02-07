@@ -35,6 +35,7 @@ export interface SignInState{
     isSignOutLoading: boolean;
     accessToken: string | null;
     signedIn: boolean;
+    signedUp: boolean;
     error: string;
     role: string | null;
   }

@@ -16,8 +16,8 @@ import  SignIn  from '../pages/SignIn/SignIn';
 // }
 
 const RequireAuth = ()  => {
-    // const isSignedIn = useSelector((state: SignInState) => state.user.signedIn);
-    const isSignedIn = true;
+    const isSignedIn = useSelector((state: SignInState) => state.user.signedIn);
+    // const isSignedIn = true;
     return (
       isSignedIn ? <Outlet/> : <Navigate to="/" />
     )

@@ -1,12 +1,14 @@
-import DataGrid from '../../components/DataGrid/DataGrid';
+import DataGrid from '../../components/DataGrid/DataGrid'
+import Navbar from '../../components/NavBar'
 
 const Home = () => {
+
   return (
-    <>
-    <DataGrid/>
-    </>
+        <>
+          <Navbar />
+          <DataGrid />
+        </>
   )
 }
 
-export default Home;
-
+export default Home

@@ -15,7 +15,9 @@ import { useFormik } from 'formik'
 import { SignInState, UserSignUp } from '../../interfaces/interfaces'
 import { signUpUserAPI } from '../../api/api'
 import { useDispatch, useSelector } from 'react-redux'
-import { signUpUser } from '../SignIn/authSlice'
+import { signUpUser, signUpToSignIn } from '../SignIn/authSlice'
+import { useNavigate } from 'react-router-dom'
+import { useEffect } from 'react'
 
 function Copyright(props: any) {
   return (
@@ -40,6 +42,16 @@ const theme = createTheme({
 export default function SignUp() {
 
   const dispatch = useDispatch()
+
+  const navigate = useNavigate()
+  const signedUp = useSelector((state: SignInState) => state.user.signedUp);
+  useEffect(() => {
+    console.log('signedUp boolean :', signedUp)
+    if(signedUp) {
+      dispatch(signUpToSignIn())
+      navigate('/')
+    }
+  }, [signedUp])
 
   const validationSchema = yup.object({
     email: yup.string().email('Enter a valid email').required('Email is required'),

@@ -1,22 +1,24 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 
-interface SignInState{
+interface authState{
     isSignInLoading: boolean;
     isSignUpLoading: boolean;
     isSignOutLoading: boolean;
     accessToken: string | null;
     signedIn: boolean;
+    signedUp: boolean;
     error: string;
     role: string | null;
 }
 
-const initialState: SignInState = {
+const initialState: authState = {
     isSignInLoading: false,
     isSignUpLoading: false,
     isSignOutLoading: false,
     accessToken: null,
     signedIn: false,
+    signedUp: false,
     error: '',
     role: '',
 };
@@ -26,10 +28,15 @@ export const authSlice = createSlice({
     initialState,
     reducers: {
         signUpUser: (state, action) => {
+            state.signedUp = false;
             state.isSignUpLoading = true;
         },
         signUpUserSuccess: (state) => {
             state.isSignUpLoading = false;
+            state.signedUp = true;
+        },
+        signUpToSignIn: (state) => {  // after first sign up user can sign up again 
+            state.signedUp = false;
         },
         signUpUserFailure: (state, action) => {
             state.isSignUpLoading = false;
@@ -57,6 +64,7 @@ export const authSlice = createSlice({
             state.isSignOutLoading = false;
             state.accessToken = null;
             state.signedIn = false;
+            state.signedUp = false;
             state.role = null;
         },
         signOutUserFailure: (state, action) => {
@@ -70,6 +78,7 @@ export const {
     signUpUser, 
     signUpUserSuccess, 
     signUpUserFailure, 
+    signUpToSignIn,
     signInUser, 
     signInUserSuccess, 
     signInUserFailure, 

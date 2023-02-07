@@ -30,6 +30,7 @@ function App() {
 
           <Route element={<RequireAuth />}>
             <Route path='/home' element={<Home />} />
+            <Route path='/' element={<SignIn />} />
           </Route>
         </Routes>
       </Router>
