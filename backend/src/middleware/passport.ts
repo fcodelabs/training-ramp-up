@@ -7,8 +7,17 @@ passport.use(
       clientID: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
       callbackURL: "/api/users/google/callback",
+      state: true,
+      accessType: "offline",
+      prompt: "consent",
     },
-    function (profile: any, done: any) {
+    function verify(
+      accessToken: any,
+      refreshToken: any,
+      profile: any,
+      done: any
+    ) {
+      console.log("email", refreshToken, accessToken);
       done(null, profile);
     }
   )
