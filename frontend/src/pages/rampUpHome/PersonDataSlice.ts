@@ -65,6 +65,7 @@ const personSlice = createSlice({
       state.isFetching = false
       state.error = true
     },
+   
   },
 })
 

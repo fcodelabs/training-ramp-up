@@ -65,7 +65,7 @@ export const refreshTokenController = async (
   next: NextFunction
 ) => {
   const cookie = req.cookies;
-
+  console.log(cookie);
   if (!cookie.jwt) return res.sendStatus(401);
   const refreshToken = cookie.jwt;
   try {

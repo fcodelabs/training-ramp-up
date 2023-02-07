@@ -166,7 +166,7 @@ export const HomePage = (): any => {
     const newDataItem: Person = {
       inEdit: true,
       Discontinued: false,
-      PersonID: 0
+      PersonID: 0,
     }
 
     setData([newDataItem, ...data])
@@ -235,7 +235,7 @@ export const HomePage = (): any => {
             <Button
               onClick={logOut}
               className='buttons-container-button logout-button'
-              imageUrl='https://firebasestorage.googleapis.com/v0/b/dailydiary-96e2f.appspot.com/o/th.jpeg?alt=media&token=3970264f-c4e1-42e4-9d48-0f37af5d4206'
+              imageUrl='https://firebasestorage.googleapis.com/v0/b/dailydiary-96e2f.appspot.com/o/sdsfdf.jpeg?alt=media&token=61db1230-75c7-4dd6-9731-6523145491af'
             ></Button>
           </div>
         </GridToolbar>
