@@ -40,7 +40,7 @@ export const loginController = async (
       const refreshToken = jwt.sign(
         { user: userLogin.Email },
         process.env.REFRESH_TOKEN_SECRET as string,
-        { expiresIn: "10d" }
+        { expiresIn: "3s" }
       );
       await updateRefreshTokenService(userLogin, refreshToken);
 
@@ -51,7 +51,8 @@ export const loginController = async (
         sameSite: "strict",
         secure: process.env.NODE_ENV !== "development",
       });
-      const user = { user: userLogin, accessToken: accessToken };
+      const {Email,Role}=userLogin
+      const user = { user: {Email,Role}, accessToken: accessToken };
       res.send(user);
     }
   } catch (err) {
@@ -65,7 +66,6 @@ export const refreshTokenController = async (
   next: NextFunction
 ) => {
   const cookie = req.cookies;
-  console.log(cookie);
   if (!cookie.jwt) return res.sendStatus(401);
   const refreshToken = cookie.jwt;
   try {

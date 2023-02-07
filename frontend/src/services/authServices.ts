@@ -18,6 +18,7 @@ export const refreshAccessTokenService = async (): Promise<string> => {
     const res = await publicRequest.get('/users/refresh')
     return res.data
   } catch (err) {
+    localStorage.clear()
     throw err
   }
 }
