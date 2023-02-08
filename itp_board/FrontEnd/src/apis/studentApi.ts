@@ -1,5 +1,9 @@
 import {Student} from "../utils/types";
 import axios, {axiosPrivate} from "../config/axiosConf";
+import { store} from '../store';
+import {studentData} from "../dummy";
+import {editableInputTypes} from "@testing-library/user-event/dist/utils";
+
 
 
 
@@ -14,11 +18,17 @@ export async function fetchData(): Promise<Student[] | unknown> {
 }
 
 export const updateData = async (record: Student) => {
-    await axiosPrivate({
-        method: 'PUT',
-        url: `/student`,
-        data:record,
-    })
+    const state = store.getState();
+    const editedFields = {...state.persistedReducer.studentData.editingFields,id:record.id};
+
+    if(Object.keys(editedFields).length>1){
+        await axiosPrivate({
+            method: 'PATCH',
+            url: `/student`,
+            data:editedFields,
+        })
+    }
+
 
 }
 

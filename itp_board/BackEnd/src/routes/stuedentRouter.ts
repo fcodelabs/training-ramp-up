@@ -8,7 +8,7 @@ const studentRouter:express.Router = express.Router()
 
 studentRouter.get('/',auth, getAllStudents);
 studentRouter.post('/',auth,studentValidations,validator, createStudent);
-studentRouter.put('/',auth, updateStudentById)
+studentRouter.patch('/',auth, updateStudentById)
 studentRouter.delete('/:id',auth,deleteStudentById)
 
 export default studentRouter

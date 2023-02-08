@@ -17,7 +17,7 @@ import 'react-toastify/dist/ReactToastify.css'
 import {orderBy} from '@progress/kendo-data-query'
 import {PageState, SockeResponse} from '../../utils/types'
 import {addRecord, getStoreData} from '../../utils/studentFunctions'
-import {changeSort, editData, startGetData} from './studentSlice'
+import {changeEditingField, changeSort, editData, startGetData} from './studentSlice'
 import {displayNotifications} from '../../utils/toasts'
 
 import {io} from 'socket.io-client'
@@ -32,7 +32,7 @@ const Student = () => {
 
     const initialPageState: PageState = {skip: 0, take: 10}
     const [page, setPage] = useState(initialPageState)
-    const {data, editId, newAdded, sort, admin, dispatch} = getStoreData();
+    const {data, editId, newAdded, sort, admin,editingField, dispatch} = getStoreData();
 
 
     useEffect(() => {
@@ -68,10 +68,11 @@ const Student = () => {
         const newData = data.map((item) => {
             return item.id === editId ? {...item, [field]: event.value} : item
         })
-        // setData(newData)
         dispatch(
             editData(newData)
         );
+        dispatch(changeEditingField({...editingField, [field]:event.value}));
+
     }
 
 

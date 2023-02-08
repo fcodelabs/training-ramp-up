@@ -11,8 +11,8 @@ async function getAllStudents(req:Request,res:Response,next:NextFunction):Promis
 }
 async function createStudent(req:Request,res:Response,next:NextFunction) {
   try{
-    const { id, name, gender, address, dateOfBirth, mobileNo } = req.body
-    const response = await create(id, name, gender, address, dateOfBirth, mobileNo);
+    const { name, gender, address, dateOfBirth, mobileNo } = req.body
+    const response = await create( name, gender, address, dateOfBirth, mobileNo);
     res.status(200).json(response);
   }catch (error) {
     next(error);
@@ -21,9 +21,8 @@ async function createStudent(req:Request,res:Response,next:NextFunction) {
 
 async function updateStudentById(req:Request,res:Response,next:NextFunction) {
   try{
-
-    const { id, name, gender, address, dateOfBirth, mobileNo } = req.body;
-    const response = await update(id, name, gender, address, dateOfBirth, mobileNo);
+    const { id, ...rest } = req.body;
+    const response = await update(id,rest);
     res.status(200).json(response);
   }catch (error) {
     next(error);

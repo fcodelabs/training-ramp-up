@@ -41,7 +41,11 @@ function* signIn(action:PayloadAction<UserCredetial>){
                 yield put(changeLastName(data.lastName));
                 navigate('/students')
             }else{
-                yield call(signOut);
+                yield put(changeFirstName(''));
+                yield put(changeLastName(''));
+                yield put(changeEmail(''));
+                yield put(changeAdmin(false));
+                yield put(changeSignInUser(false));
                 displayErrors(['Invalid Email or Password'])
             }
         }

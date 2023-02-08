@@ -15,13 +15,13 @@ export const generateTokens = (email:string)=>{
 }
 export const create = async (user: User) => {
     const {firstName, lastName, email, password} = user;
-    if (firstName && lastName && email && password &&
-        isValidName(firstName) && isValidName(lastName) && isValidEmail(email) && isValidPassword(password)) {
+    if (firstName && lastName && email && password) {
         const saltRounds = 10;
         const hashedPassword = bcrypt.hashSync(password, saltRounds);
         user.password = hashedPassword;
         const response = await userRepository.save(user);
-        return response;
+        const {email,firstName,lastName,admin} = response
+        return {email,firstName,lastName,admin};
     }
     return null;
 }
@@ -36,14 +36,12 @@ export const create = async (user: User) => {
         if (user.password) {
             const hashedPassword = user.password;
             // @ts-ignore
-            const {token,refreshToken} = generateTokens(email);
 
             if (bcrypt.compareSync(password, hashedPassword)) {
+                const {email,firstName,lastName,admin} = user
                 return {
-                    data: user,
+                    data: {email,firstName,lastName,admin},
                     authorized: true,
-                    token,
-                    refreshToken
                 }
             }
         }

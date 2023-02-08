@@ -27,6 +27,7 @@ export type StudentInitialState = {
   dataRemoveRequested:boolean;
   sort: Array<SortDescriptor>;
   newAdded: boolean
+  editingFields:{ [key: string]: any }
 }
 
 export type ResponseObj = {
@@ -52,6 +53,7 @@ export type Student = {
   mobileNo: string
   dateOfBirth: string | null
 }
+
 
 export type SockeResponse = {
 address:string

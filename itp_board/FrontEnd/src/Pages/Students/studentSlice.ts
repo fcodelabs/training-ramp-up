@@ -13,8 +13,8 @@ const initialState: StudentInitialState = {
     dataRemoveRequested:false,
     data: [],
     sort: [{field: 'id', dir: 'asc'}],
-    newAdded: false
-
+    newAdded: false,
+    editingFields: {}
 }
 
 export const studentSlice = createSlice(
@@ -70,6 +70,9 @@ export const studentSlice = createSlice(
             successRemove: (state) => {
                 state.dataRemoveRequested = false;
             },
+            changeEditingField:(state,action:PayloadAction<{ [key: string]: any }>)=>{
+                state.editingFields = action.payload;
+            }
 
         }
     }
@@ -88,6 +91,7 @@ export const {
     startAddNew,
     startRemove,
     RemoveData,
-    successRemove
+    successRemove,
+    changeEditingField
 } = studentSlice.actions;
 export default studentSlice.reducer;

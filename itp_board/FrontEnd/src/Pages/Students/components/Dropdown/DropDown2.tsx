@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { DropDownList, DropDownListChangeEvent } from '@progress/kendo-react-dropdowns'
 import {Student} from '../../../../utils/types'
 import { useAppSelector, useAppDispatch } from "../../../../hooks/hooks";
-import {addNew, editData} from "../../studentSlice";
+import {addNew, changeEditingField, editData} from "../../studentSlice";
 import {getStoreData} from '../../../../utils/studentFunctions'
 
 
@@ -11,7 +11,7 @@ export const DropDown2 = (props: {
     gender: string
 }) => {
 
-    const {data,editId}=getStoreData();
+    const {data,editId,editingField}=getStoreData();
     const [genderState, setGenderState] = useState(props.gender)
     const dispatch = useAppDispatch();
 
@@ -33,6 +33,7 @@ export const DropDown2 = (props: {
         dispatch(
             editData(newData)
         );
+        dispatch(changeEditingField({...editingField, ['gender']:event.value}));
 
     }
 

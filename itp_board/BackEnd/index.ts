@@ -4,7 +4,6 @@ import userRouter from "./src/routes/userRouter";
 import morgan from 'morgan';
 import express, { Express } from 'express';
 import dotenv from 'dotenv';
-import auth from "./src/middlewares/auth";
 import cookieParser from "cookie-parser"
 
 dotenv.config();

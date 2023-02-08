@@ -44,8 +44,14 @@ export const getStoreData = () => {
         }
     );
 
+    const editingField = useAppSelector(
+        (state) => {
+            return state.persistedReducer.studentData.editingFields;
+        }
+    );
+
     const dispatch = useAppDispatch();
-    return {data, editId, sort, newAdded,admin, dispatch}
+    return {data, editId, sort, newAdded,admin,editingField, dispatch}
 }
 
 export const calculateAge = (dob: Date) => {
