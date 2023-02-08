@@ -11,7 +11,7 @@ const personSlice = createSlice({
     error: false,
   },
   reducers: {
-    getPersonDataStart: (state) => {
+    getPersonDataStart: (state,action) => {
       state.isFetching = true
     },
     getPersonDataSuccess: (state, action) => {

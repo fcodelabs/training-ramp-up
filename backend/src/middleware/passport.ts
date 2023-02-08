@@ -1,5 +1,7 @@
 import passport from "passport";
+import { createorfindUserService } from "../services/userServices";
 var GoogleStrategy = require("passport-google-oauth20").Strategy;
+var GitHubStrategy = require("passport-github2").Strategy;
 
 passport.use(
   new GoogleStrategy(
@@ -18,6 +20,32 @@ passport.use(
       done: any
     ) {
       profile.accessToken = accessToken;
+      try {
+        const user = {
+          Email: profile.emails[0].value,
+          Role: "guest",
+          Provider: "google",
+          Password: profile.id,
+        };
+        createorfindUserService(user);
+        done(null, profile);
+      } catch (err) {
+        done(err);
+      }
+    }
+  )
+);
+
+passport.use(
+  new GitHubStrategy(
+    {
+      clientID: process.env.GITHUB_CLIENT_ID,
+      clientSecret: process.env.GITHUB_CLIENT_SECRET,
+      callbackURL: "api/auth/github/callback",
+    },
+    function (accessToken: any, refreshToken: any, profile: any, done: any) {
+      profile.accessToken = accessToken;
+
       done(null, profile);
     }
   )

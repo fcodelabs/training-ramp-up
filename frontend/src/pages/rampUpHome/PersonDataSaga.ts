@@ -55,10 +55,10 @@ function* fetchNotications() {
 }
 
 // getDataSucces
-function* fetchPersonData() {
+function* fetchPersonData(payload: any) {
   try {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const personDataArray: Person[] = yield getAllPersonServise()
+    const personDataArray: Person[] = yield getAllPersonServise(payload)
     yield put(getPersonDataSuccess(personDataArray))
   } catch (e) {
     yield put(getPersonDataFailure())
@@ -105,7 +105,7 @@ export function* handlePersonActions() {
     function* ({ type, payload }) {
       switch (type) {
         case getPersonDataStart.type:
-          yield fetchPersonData()
+          yield fetchPersonData(payload)
           break
         case deletePersonDataStart.type:
           yield deletePersonSaga(payload)

@@ -44,4 +44,7 @@ export class User {
   //   RefreshToken: string[];
   @Column("text", { default: "" })
   RefreshToken: string;
+
+  @Column("text", { default: "local" })
+  Provider: string;
 }

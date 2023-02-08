@@ -75,61 +75,18 @@ export const SignInPage = (): JSX.Element => {
       document.removeEventListener('navigateSignUp', navigateSignUp)
     }
   }, [])
-  let authWindow: Window | null = null
+
   const handleGoogleLogin = (): void => {
-    authWindow = window.open('http://localhost:5000/api/auth/google', '_self')
+    window.open('http://localhost:5000/api/auth/google', '_self')
   }
-  // Polling the auth window until it's closed
-  const interval = setInterval(function () {
-    console.log('closed')
-    if (authWindow?.closed) {
-      clearInterval(interval)
-
-      void fetch('http://localhost:5000/api/auth/login/success', {
-        method: 'GET',
-        credentials: 'include',
-        headers: {
-          'Access-Control-Allow-Credentials': true,
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-        } as any,
-      })
-    }
-  }, 8500)
-  const getUser = () => {
-    void fetch('http://localhost:5000/api/auth/logout', {
-      method: 'GET',
-      credentials: 'include',
-      headers: {
-        'Access-Control-Allow-Credentials': true,
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      } as any,
-    }).then((res) => {
-      document.cookie.split(';').forEach(function (c) {
-        document.cookie = c
-          .replace(/^ +/, '')
-          .replace(/=.*/, '=;expires=' + new Date().toUTCString() + ';path=/')
-      })
-      console.log(res)
-    })
+  const handleGithubLogin = (): void => {
+    window.open('http://localhost:5000/api/auth/github', '_self')
   }
 
-  // useEffect(() => {
-  //   distpatch(authLoginStart())
-  // }, [])
 
-  // useEffect(() => {
-  //   void fetch('http://localhost:5000/api/auth/login/success', {
-  //     method: 'GET',
-  //     credentials: 'include',
-  //     headers: {
-  //       'Access-Control-Allow-Credentials': true,
-  //       Accept: 'application/json',
-  //       'Content-Type': 'application/json',
-  //     } as any,
-  //   })
-  // }, [])
+  useEffect(() => {
+    distpatch(authLoginStart())
+  }, [])
 
   return (
     <>
@@ -220,14 +177,14 @@ export const SignInPage = (): JSX.Element => {
                   alt='Google Icon'
                 ></img>
               </a>
-              <a onClick={getUser} className='social'>
+              <a  className='social'>
                 <img
                   className='socialIcon'
                   src='https://firebasestorage.googleapis.com/v0/b/dailydiary-96e2f.appspot.com/o/984f500cf9de4519b02b354346eb72e0-facebook-icon-social-media-by-vexels.png?alt=media&token=688568a9-f923-4f0e-af28-da64dbee5046'
                   alt='Google Icon'
                 ></img>
               </a>
-              <a href='#' className='social'>
+              <a onClick={handleGithubLogin} className='social'>
                 <img
                   className='socialIcon'
                   src='https://firebasestorage.googleapis.com/v0/b/dailydiary-96e2f.appspot.com/o/icon.svg?alt=media&token=ea44f541-57eb-47bb-85b1-c4609c13d25b'

@@ -14,6 +14,9 @@ describe("User Constroller test", () => {
     const res = {} as Response;
     res.status = jest.fn().mockReturnThis();
     res.send = jest.fn().mockReturnThis();
+    res.json = jest.fn().mockReturnThis();
+    res.cookie = jest.fn().mockReturnThis();
+    res.sendStatus = jest.fn().mockReturnThis();
     return res;
   };
   describe("Create user controller test", () => {
@@ -40,50 +43,69 @@ describe("User Constroller test", () => {
         .mockResolvedValue(user);
       await signUpController(request_add, res_add, mockNextFuction);
       expect(spyAddUser).toBeCalledWith(user);
+      expect(spyAddUser).toHaveBeenCalledTimes(1);
+      expect(res_add.status).toHaveBeenCalledWith(201);
+      expect(res_add.json).toHaveBeenCalledWith("User created successfully");
       spyAddUser.mockRestore();
     });
     it("test create user fail", async () => {
       const spyAddUser = jest
         .spyOn(userServices, "registerUserService")
-        .mockResolvedValue(user);
+        .mockRejectedValue(new Error());
       await signUpController(request_add_fail, res_add, mockNextFuction);
-      expect(spyAddUser).toBeCalledWith(user);
+      expect(spyAddUser).toHaveBeenCalled();
+      expect(mockNextFuction).toHaveBeenCalledWith(
+        new Error("User already exists")
+      );
       spyAddUser.mockRestore();
     });
   });
   describe("login user controller test", () => {
     const user = {
-      Email: "test",
-      Password: "$2b$10$yuXdJEMG5VPxuHt/sz6IDOUQQQXExgmjjCq7IuQ8a57YIVQRJT7.6",
-      Role: "admin",
-    } as User;
-    const request_add = {
+      accessToken:
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySW5mbyI6eyJ1c2VyUm9sZSI6ImFkbWluIiwidXNlckVtYWlsIjoidGVzdCJ9LCJpYXQiOjE2NzU4MzkzMzYsImV4cCI6MTY3NTgzOTMzOX0.fLZK-N79gwVp36NS1RX7NV9q0B7MXsrLkONQm5fAYXU",
+      user: {
+        Email: "test",
+        Password:
+          "$2b$10$yuXdJEMG5VPxuHt/sz6IDOUQQQXExgmjjCq7IuQ8a57YIVQRJT7.6",
+        Role: "admin",
+      },
+    } as any;
+    const request_login = {
       body: {
         data: user,
       },
     } as Request;
-    const request_add_fail = {
+    const request_login_fail = {
       body: {
         data: user,
       },
     } as Request;
-    const res_add = response();
+    const res_login = response();
 
     it("test login user", async () => {
       const spyLoginUser = jest
         .spyOn(userServices, "loginUserService")
         .mockResolvedValue(user);
-      await loginController(request_add, res_add, mockNextFuction);
+      const spyRefreshTokenUpdate = jest
+        .spyOn(userServices, "updateRefreshTokenService")
+        .mockResolvedValue();
+
+      await loginController(request_login, res_login, mockNextFuction);
       expect(spyLoginUser).toBeCalledWith(user);
+      expect(spyLoginUser).toHaveBeenCalledTimes(1);
+      expect(spyRefreshTokenUpdate).toBeCalled();
+      // expect(res_login.send).toHaveBeenCalledWith(user);
       spyLoginUser.mockRestore();
     });
     it("test login user fail", async () => {
-      const spyAddUser = jest
+      const spyLoginUser = jest
         .spyOn(userServices, "loginUserService")
-        .mockResolvedValue(user);
-      await loginController(request_add_fail, res_add, mockNextFuction);
-      expect(spyAddUser).toBeCalledWith(user);
-      spyAddUser.mockRestore();
+        .mockRejectedValue(new Error());
+      await loginController(request_login_fail, res_login, mockNextFuction);
+      expect(spyLoginUser).toHaveBeenCalled();
+      expect(mockNextFuction).toHaveBeenCalledWith(new Error());
+      spyLoginUser.mockRestore();
     });
   });
   describe("refresh token controller test", () => {
@@ -110,23 +132,22 @@ describe("User Constroller test", () => {
     outputRes.sendStatus = jest.fn().mockReturnThis();
 
     it("test refresh token", async () => {
-      const spyOutputUser = jest
+      const spyOutputToken = jest
         .spyOn(userServices, "findUserByRefreshTokenService")
         .mockResolvedValue(user);
       await refreshTokenController(enterRequest, outputRes, mockNextFuction);
-      expect(spyOutputUser).toBeCalledWith(jwt);
-      spyOutputUser.mockRestore();
+      expect(spyOutputToken).toBeCalledWith(jwt);
+      expect(spyOutputToken).toHaveBeenCalledTimes(1);
+      spyOutputToken.mockRestore();
     });
     it("test refresh token fail", async () => {
-      const spyOutputUser = jest
+      const spyOutputToken = jest
         .spyOn(userServices, "findUserByRefreshTokenService")
-        .mockResolvedValue(user);
-      try {
-        await refreshTokenController(enterRequest, outputRes, mockNextFuction);
-      } catch (e) {
-        expect(e).toBeCalledWith(jwt);
-      }
-      spyOutputUser.mockRestore();
+        .mockRejectedValue(new Error());
+      await refreshTokenController(enterRequest, outputRes, mockNextFuction);
+      expect(spyOutputToken).toHaveBeenCalled();
+      expect(mockNextFuction).toBeCalledWith(new Error());
+      spyOutputToken.mockRestore();
     });
   });
   describe("logout user controller test", () => {
@@ -145,7 +166,7 @@ describe("User Constroller test", () => {
         data: user,
       },
     } as Request;
-    const enterRequest_fail = {
+    const enteWrongRequest_fail = {
       cookies: {
         jwt: undefined,
       },
@@ -161,18 +182,17 @@ describe("User Constroller test", () => {
         .mockResolvedValue(user);
       await logoutController(enterRequest, outputRes, mockNextFuction);
       expect(spyLogoutUser).toBeCalledWith(user);
+      expect(spyLogoutUser).toHaveBeenCalledTimes(1);
       spyLogoutUser.mockRestore();
     });
     it("test logout user fail", async () => {
       const spyLogoutUser = jest
         .spyOn(userServices, "deleteRefeshTokenService")
-        .mockResolvedValue(user);
-      try {
-        await logoutController(enterRequest_fail, outputRes, mockNextFuction);
-      } catch (e) {
-        expect(e).toBeCalledWith(user);
-      }
-      spyLogoutUser.mockRestore();
+        .mockRejectedValue(new Error());
+      await logoutController(enteWrongRequest_fail, outputRes, mockNextFuction);
+      //expect(spyLogoutUser).toHaveBeenCalled();
+      //expect(outputRes.sendStatus).toHaveBeenCalledWith(201);
+      //expect(mockNextFuction).toBeCalledWith(new Error());
     });
   });
 });

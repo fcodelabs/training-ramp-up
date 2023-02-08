@@ -61,7 +61,7 @@ export const HomePage = (): any => {
 
   const notify = (msg: string): any => toast(msg)
   React.useEffect(() => {
-    distpatch(getPersonDataStart())
+    distpatch(getPersonDataStart(userData))
     distpatch(getNotificationStart())
   }, [])
 

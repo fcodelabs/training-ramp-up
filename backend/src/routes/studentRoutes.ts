@@ -1,3 +1,4 @@
+import { verifyJWT } from "./../middleware/verifyJWT";
 import {
   createStudent,
   deleteStudent,
@@ -5,10 +6,9 @@ import {
   updateStudent,
 } from "../controllers/studentController";
 import { Router } from "express";
-import { verifyJWT } from "../middleware/verifyJWT";
-import { validateData, validata } from "../middleware/validator";
+import { validateData, validate } from "../middleware/validator";
 import verifyRoles from "../middleware/verifyRoles";
-
+import { ensureAuth } from "../middleware/authentication";
 const studentRouter = Router();
 
 studentRouter.get(
@@ -17,21 +17,23 @@ studentRouter.get(
   verifyRoles(["admin", "geust"]),
   getAllStudents
 );
+studentRouter.get("/auth", ensureAuth, getAllStudents);
 studentRouter.post(
   "/",
   verifyJWT,
   validateData,
-  validata,
+  validate,
   verifyRoles(["admin"]),
   createStudent
 );
 studentRouter.patch(
   "/",
+  verifyJWT,
   validateData,
-  validata,
-  verifyRoles(["admin"]),
+  validate,
+  verifyRoles(["admin", "editor"]),
   updateStudent
 );
-studentRouter.delete("/:id", deleteStudent);
+studentRouter.delete("/:id", verifyJWT, deleteStudent);
 
 export default studentRouter;

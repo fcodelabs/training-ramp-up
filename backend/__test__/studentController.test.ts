@@ -32,7 +32,7 @@ describe("Student Constroller test", () => {
     } as Request;
     const request_add_fail = {
       body: {},
-    } as  Request;
+    } as Request;
     const res_add = response();
 
     it("test create student", async () => {
@@ -41,17 +41,19 @@ describe("Student Constroller test", () => {
         .mockResolvedValue(user);
       await createStudent(request_add, res_add, mockNextFuction);
       expect(spyAddStudent).toBeCalledWith(user);
+      expect(res_add.status).toHaveBeenCalledWith(201);
+      expect(spyAddStudent).toHaveBeenCalled();
+      expect(spyAddStudent).toHaveBeenCalledTimes(1);
+      expect(res_add.send).toHaveBeenCalledWith(user);
       spyAddStudent.mockRestore();
     });
     it("test create student fail", async () => {
       const spyAddStudent = jest
         .spyOn(StudentServices, "createStudentService")
-        .mockResolvedValue(user);
-      try {
-        await createStudent(request_add_fail, res_add, mockNextFuction);
-      } catch (e) {
-        expect(e).toEqual(new Error("Error in creating student"));
-      }
+        .mockRejectedValue(new Error());
+      await createStudent(request_add_fail, res_add, mockNextFuction);
+      expect(spyAddStudent).toHaveBeenCalled();
+      expect(mockNextFuction).toHaveBeenCalledWith(new Error());
       spyAddStudent.mockRestore();
     });
   });
@@ -64,42 +66,42 @@ describe("Student Constroller test", () => {
       PersonMobileNo: "test",
       DateOfBirth: new Date(),
     } as Student;
-    const request_add = {
+    const request_update = {
       body: {
         data: user,
       },
     } as Request;
-    const request_add_fail = {
+    const request_update_fail = {
       body: {
         data: null,
       },
     } as Request;
-    const res_add = response();
+    const res_update = response();
 
     it("test update student", async () => {
       const spyUpdateStudent = jest
         .spyOn(StudentServices, "createStudentService")
         .mockResolvedValue(user);
-      await updateStudent(request_add, res_add, mockNextFuction);
+      await updateStudent(request_update, res_update, mockNextFuction);
       expect(spyUpdateStudent).toBeCalledWith(user);
       expect(spyUpdateStudent).toHaveBeenCalled();
       expect(spyUpdateStudent).toHaveBeenCalledTimes(1);
+      expect(res_update.status).toHaveBeenCalledWith(201);
+      expect(res_update.send).toHaveBeenCalledWith(user);
       spyUpdateStudent.mockRestore();
     });
     it("test update student fail", async () => {
-      const spyAddStudent = jest
+      const spyUpdateStudent = jest
         .spyOn(StudentServices, "createStudentService")
-        .mockResolvedValue(user);
-      try {
-        await updateStudent(request_add_fail, res_add, mockNextFuction);
-      } catch (e) {
-        expect(e).toEqual(new Error("Error in creating student"));
-      }
-      spyAddStudent.mockRestore();
+        .mockRejectedValue(new Error());
+      await updateStudent(request_update_fail, res_update, mockNextFuction);
+      expect(spyUpdateStudent).toHaveBeenCalled();
+      expect(mockNextFuction).toHaveBeenCalledWith(new Error());
+      spyUpdateStudent.mockRestore();
     });
   });
   describe("delete student controller test", () => {
-  const user = {
+    const user = {
       PersonID: 3,
       PersonName: "test",
       PersonGender: "test",
@@ -108,72 +110,73 @@ describe("Student Constroller test", () => {
       DateOfBirth: new Date(),
     } as Student;
     const id = 1;
-    const request_add = {
+    const request_delete = {
       params: {
         id: "1",
       },
     } as unknown as Request;
-    const request_add_fail = {
+    const request_delete_fail = {
       params: {
         id: null,
       },
     } as unknown as Request;
-    const res_add = response();
+    const res_delete = response();
     const mockNextFuction = jest.fn();
     it("test delete student success", async () => {
       const spyAddStudent = jest
         .spyOn(StudentServices, "deleteStudentService")
         .mockResolvedValue(user);
-      await deleteStudent(request_add, res_add, mockNextFuction);
+      await deleteStudent(request_delete, res_delete, mockNextFuction);
       expect(spyAddStudent).toBeCalledWith(id);
       expect(spyAddStudent).toHaveBeenCalled();
       expect(spyAddStudent).toHaveBeenCalledTimes(1);
       spyAddStudent.mockRestore();
     });
     it("test delete student fail", async () => {
-      const spyAddStudent = jest
+      const spyDeleteStudent = jest
         .spyOn(StudentServices, "deleteStudentService")
-        .mockResolvedValue(user);
-      try {
-        await deleteStudent(request_add_fail, res_add, mockNextFuction);
-      } catch (e) {
-        expect(e).toEqual(new Error("Error in creating student"));
-      }
-      spyAddStudent.mockRestore();
+        .mockRejectedValue(new Error());
+      await deleteStudent(request_delete_fail, res_delete, mockNextFuction);
+      expect(spyDeleteStudent).toHaveBeenCalled();
+      expect(mockNextFuction).toHaveBeenCalledWith(new Error());
+
+      spyDeleteStudent.mockRestore();
     });
   });
   describe("get student controller test", () => {
-    const users = [{
-      PersonID: 3,
-      PersonName: "test",
-      PersonGender: "test",
-      PersonAddress: "test",
-      PersonMobileNo: "test",
-      DateOfBirth: new Date(),
-    }] as Student[];
+    const users = [
+      {
+        PersonID: 3,
+        PersonName: "test",
+        PersonGender: "test",
+        PersonAddress: "test",
+        PersonMobileNo: "test",
+        DateOfBirth: new Date(),
+      },
+    ] as Student[];
     const mockNextFuction = jest.fn();
     const request_add = {} as Request;
-    const res_add = response();
+    const response_add = response();
 
     it("test get student", async () => {
       const spyAddStudent = jest
         .spyOn(StudentServices, "getAllStudentsService")
         .mockResolvedValue(users);
-    await getAllStudents(request_add, res_add, mockNextFuction);
+      await getAllStudents(request_add, response_add, mockNextFuction);
       expect(spyAddStudent).toBeCalledWith();
       expect(spyAddStudent).toHaveBeenCalled();
       expect(spyAddStudent).toHaveBeenCalledTimes(1);
       spyAddStudent.mockRestore();
     });
     it("test get student fail", async () => {
-      const spyGetStudent = jest
-        .spyOn(StudentServices, "getAllStudentsService")
-    
-      try {
-        await getAllStudents(request_add, res_add, mockNextFuction);
-      } catch (e) {
-        expect(e).toEqual('fsdfds');
-      }
+      const spyGetStudent = jest.spyOn(
+        StudentServices,
+        "getAllStudentsService"
+      ).mockRejectedValue(new Error());
+        await getAllStudents(request_add, response_add, mockNextFuction);
+        expect(spyGetStudent).toHaveBeenCalled();
+        expect(mockNextFuction).toHaveBeenCalledWith(new Error());
+      
       spyGetStudent.mockRestore();
     });
   });

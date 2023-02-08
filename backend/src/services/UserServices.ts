@@ -12,6 +12,19 @@ export const registerUserService = async (user: User) => {
   return { Role, Email };
 };
 
+export const createorfindUserService = async (user: any) => {
+  const userRepo = AppDataSource.getRepository(User);
+  const userLogin = await userRepo.findOneBy({ Email: user.Email });
+  if (userLogin) {
+    return userLogin;
+  } else {  
+    const hashedPassword = await bcrypt.hash(user.Password, 10);
+    user.Password = hashedPassword;
+    const userInsert = await userRepo.save(user);
+    const { Role, Email, ...others } = userInsert;
+    return { Role, Email };
+  }
+};
 export const loginUserService = async (user: User) => {
   const userRepo = AppDataSource.getRepository(User);
   const userLogin = await userRepo.findOneBy({ Email: user.Email });
@@ -81,3 +94,4 @@ export const deleteRefeshTokenService = async (
     throw new Error("Error in updating user");
   }
 };
+

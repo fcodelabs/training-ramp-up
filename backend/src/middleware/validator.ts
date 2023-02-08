@@ -37,7 +37,7 @@ export const validateData = [
     }),
 ];
 
-export const validata = (req: any, res: any, next: () => void) => {
+export const validate = (req: any, res: any, next: () => void) => {
   const errors = validationResult(req);
   console.log(errors);
   if (!errors.isEmpty()) {
