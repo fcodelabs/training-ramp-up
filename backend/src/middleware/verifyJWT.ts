@@ -1,3 +1,4 @@
+import { NextFunction, Response } from 'express';
 import dotenv from "dotenv";
 import jwt from "jsonwebtoken";
 
@@ -5,7 +6,7 @@ const PORT = "5000";
 
 dotenv.config();
 
-export const verifyJWT = (req: any, res: any, next: any) => {
+export const verifyJWT = (req: any, res: Response, next: NextFunction) => {
   const authHeader = req.headers.authorization || req.headers.Authorization;
 
   if (!authHeader?.startsWith("Bearer")) return res.sendStatus(401);

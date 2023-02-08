@@ -1,9 +1,12 @@
 import { NextFunction, Request, Response } from "express";
 
-export const authLogoutController=(req:Request, res:Response, next:NextFunction) => {
+export const authLogoutController = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   req.logout(function (err) {
     if (err) {
-      console.log(err);
       return next(err);
     }
   });
@@ -12,12 +15,20 @@ export const authLogoutController=(req:Request, res:Response, next:NextFunction)
   res.clearCookie("session.sig");
   res.status(204).send("logout");
   //res.redirect("http://localhost:3000/");
-}
-export const authLoginFailedController=(req:Request, res:Response, next:NextFunction) => {
+};
+export const authLoginFailedController = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   res.status(401).send("login failed");
-}
-export const authLoginSuccessController=(req:any, res:Response, next:NextFunction) => {
-if (req.user) {
+};
+export const authLoginSuccessController = (
+  req: any,
+  res: Response,
+  next: NextFunction
+) => {
+  if (req.user) {
     const user = {
       user: { Email: req.user.emails[0].value, Role: "guest" },
       accessToken: req.user.accessToken,
@@ -26,4 +37,4 @@ if (req.user) {
       user: user,
     });
   }
-}
+};
