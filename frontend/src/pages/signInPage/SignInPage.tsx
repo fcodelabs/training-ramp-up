@@ -2,7 +2,13 @@ import { useEffect, useState } from 'react'
 import './signInPage.css'
 import { Formik, Form, Field } from 'formik'
 import * as Yup from 'yup'
-import { deleteError, deleteMsg, userLoginStart, userRegisterStart } from './userSlice'
+import {
+  authLoginStart,
+  deleteError,
+  deleteMsg,
+  userLoginStart,
+  userRegisterStart,
+} from './userSlice'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { ToastContainer, toast } from 'react-toastify'
@@ -69,10 +75,27 @@ export const SignInPage = (): JSX.Element => {
       document.removeEventListener('navigateSignUp', navigateSignUp)
     }
   }, [])
-
+  let authWindow: Window | null = null
   const handleGoogleLogin = (): void => {
-    window.open('http://localhost:5000/api/auth/google', '_self')
+    authWindow = window.open('http://localhost:5000/api/auth/google', '_self')
   }
+  // Polling the auth window until it's closed
+  const interval = setInterval(function () {
+    console.log('closed')
+    if (authWindow?.closed) {
+      clearInterval(interval)
+
+      void fetch('http://localhost:5000/api/auth/login/success', {
+        method: 'GET',
+        credentials: 'include',
+        headers: {
+          'Access-Control-Allow-Credentials': true,
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        } as any,
+      })
+    }
+  }, 8500)
   const getUser = () => {
     void fetch('http://localhost:5000/api/auth/logout', {
       method: 'GET',
@@ -92,17 +115,21 @@ export const SignInPage = (): JSX.Element => {
     })
   }
 
-  useEffect(() => {
-    void fetch('http://localhost:5000/api/auth/login/success', {
-      method: 'GET',
-      credentials: 'include',
-      headers: {
-        'Access-Control-Allow-Credentials': true,
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      } as any,
-    })
-  }, [])
+  // useEffect(() => {
+  //   distpatch(authLoginStart())
+  // }, [])
+
+  // useEffect(() => {
+  //   void fetch('http://localhost:5000/api/auth/login/success', {
+  //     method: 'GET',
+  //     credentials: 'include',
+  //     headers: {
+  //       'Access-Control-Allow-Credentials': true,
+  //       Accept: 'application/json',
+  //       'Content-Type': 'application/json',
+  //     } as any,
+  //   })
+  // }, [])
 
   return (
     <>

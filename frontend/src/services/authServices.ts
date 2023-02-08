@@ -11,7 +11,10 @@ export const loginService = async (userCredintials: any): Promise<string> => {
   const res = await publicRequest.post('/users/login', data)
   return res.data
 }
-
+export const authloginService = async (): Promise<string> => {
+  const res = await publicRequest.get('/auth/login/success')
+  return res.data
+}
 export const refreshAccessTokenService = async (): Promise<string> => {
   // eslint-disable-next-line no-useless-catch
   try {

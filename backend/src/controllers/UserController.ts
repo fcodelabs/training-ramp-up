@@ -51,8 +51,8 @@ export const loginController = async (
         sameSite: "strict",
         secure: process.env.NODE_ENV !== "development",
       });
-      const {Email,Role}=userLogin
-      const user = { user: {Email,Role}, accessToken: accessToken };
+      const { Email, Role } = userLogin;
+      const user = { user: { Email, Role }, accessToken: accessToken };
       res.send(user);
     }
   } catch (err) {
@@ -104,11 +104,13 @@ export const logoutController = async (
   next: NextFunction
 ) => {
   try {
-    console.log('logout');
+    console.log("logout");
     const cookie = req.cookies;
     if (!cookie.jwt) return res.sendStatus(204); //No content
     const updateUser = deleteRefeshTokenService(req.body.data);
     res.clearCookie("jwt", { httpOnly: true });
+    res.clearCookie("session");
+    res.clearCookie("session.sig");
     res.status(204).send("logout");
   } catch (err) {
     //  console.log(err);

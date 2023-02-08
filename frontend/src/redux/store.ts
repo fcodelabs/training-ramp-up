@@ -6,7 +6,7 @@ import userReducer from '../pages/signInPage/userSlice'
 import createSagaMiddleware from 'redux-saga'
 import { persistStore, persistReducer } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
-import { userLogin, userRegister, userLogOut } from '../pages/signInPage/userSaga'
+import { userLogin, userRegister, userLogOut, authLogin } from '../pages/signInPage/userSaga'
 import { getNotifications, handlePersonActions } from '../pages/rampUpHome/personDataSaga'
 
 const persistConfig = {
@@ -22,7 +22,14 @@ export default function* rootSaga(): Generator<
   void,
   unknown
 > {
-  yield all([userRegister(), userLogin(), handlePersonActions(), getNotifications(), userLogOut()])
+  yield all([
+    userRegister(),
+    userLogin(),
+    handlePersonActions(),
+    getNotifications(),
+    userLogOut(),
+    authLogin(),
+  ])
 }
 
 const rootReducer = combineReducers({

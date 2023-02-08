@@ -3,13 +3,14 @@ import passport from "passport";
 
 const authRouter = Router();
 
-authRouter.get("/login/success", (req, res) => {
+authRouter.get("/login/success", (req: any, res) => {
   if (req.user) {
+    const user = {
+      user: { Email: req.user.emails[0].value, Role: "guest" },
+      accessToken: req.user.accessToken,
+    };
     res.status(200).json({
-      success: true,
-      message: "successfull",
-      user: req.user,
-      //   cookies: req.cookies
+      user: user,
     });
   }
 });
@@ -21,8 +22,8 @@ authRouter.get("/logout", function (req, res, next) {
       console.log(err);
       return next(err);
     }
-    res.redirect("/");
   });
+  res.redirect("http://localhost:3000/");
 });
 authRouter.get(
   "/google",

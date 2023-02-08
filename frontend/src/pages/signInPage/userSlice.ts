@@ -37,6 +37,20 @@ const userSlice = createSlice({
       state.isFetching = false
       state.error = action.payload
     },
+    authLoginStart: (state) => {
+      state.isFetching = true
+    },
+    authLoginSuccess: (state, action) => {
+      state.isFetching = false
+      state.error = ''
+      state.user = action.payload
+      state.accessToken = action.payload.accessToken
+      localStorage.setItem('accessToken', action.payload.accessToken)
+    },
+    authLoginFailure: (state, action) => {
+      state.isFetching = false
+      state.error = action.payload
+    },
     userLogOutStart: (state, action) => {
       state.isFetching = false
       state.error = ''
@@ -78,6 +92,9 @@ export const {
   userLoginStart,
   userLoginSuccess,
   userLoginFailure,
+  authLoginStart,
+  authLoginSuccess,
+  authLoginFailure,
   userLogOutStart,
   userLogOutSuccess,
   userLogOutFailure,
