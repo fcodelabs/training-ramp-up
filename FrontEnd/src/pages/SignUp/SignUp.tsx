@@ -1,4 +1,3 @@
-import * as React from 'react'
 import Avatar from '@mui/material/Avatar'
 import Button from '@mui/material/Button'
 import CssBaseline from '@mui/material/CssBaseline'
@@ -13,7 +12,6 @@ import { cyan } from '@mui/material/colors'
 import * as yup from 'yup'
 import { useFormik } from 'formik'
 import { SignInState, UserSignUp } from '../../interfaces/interfaces'
-import { signUpUserAPI } from '../../api/api'
 import { useDispatch, useSelector } from 'react-redux'
 import { signUpUser, signUpToSignIn } from '../SignIn/authSlice'
 import { useNavigate } from 'react-router-dom'
@@ -28,8 +26,6 @@ function Copyright(props: any) {
     </Typography>
   )
 }
-
-
 
 const theme = createTheme({
   palette: {
@@ -57,7 +53,11 @@ export default function SignUp() {
     email: yup.string().email('Enter a valid email').required('Email is required'),
     password: yup
       .string()
-      .min(8, 'Password should be of minimum 8 characters length')
+      .matches(
+        // eslint-disable-next-line no-useless-escape
+        /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/,
+        'Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and One Special Case Character'
+      )
       .required('Password is required'),
     confirmPassword: yup
       .string()
@@ -81,10 +81,7 @@ export default function SignUp() {
       dispatch(signUpUser(user))
     },
   })
-  // const token = useSelector((state: SignInState) => state.user.accessToken)
-  // console.log('token in sign up page ', token)
   
-
   return (
     <ThemeProvider theme={theme}>
       <Container component='main' maxWidth='xs'>

@@ -52,9 +52,6 @@ function* signInUserSaga(action: signInUserAction): Generator<any, any, any> {
       yield put(signInUserSuccess(response))
       sessionStorage.setItem('accessToken', response.data.accessToken)
       toast.success('User Signed In successfully!')
-    // } else if(response.status === 401){
-    //   yield put(signInUserFailure(response))
-    //   toast.error('Invalid Credentials!')
     }else{
       yield put(signInUserFailure(response))
       toast.error(response.response.data)

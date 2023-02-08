@@ -36,7 +36,7 @@ function* addUserSaga(action: Action): Generator<any, any, any> {
         const addedUser = response.data
         yield put(addUserRecordSuccess({...addedUser, inEdit: false}))
         socket.emit('user_added', { name: addedUser.name })
-        toast.success('User added successfully!')
+        toast.success('Student added successfully!')
     }
   } catch (error) {
     yield put(addUserRecordFailure(error))

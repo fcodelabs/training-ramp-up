@@ -3,13 +3,6 @@ import { User, UserSignIn, UserSignUp } from '../interfaces/interfaces'
 import store from '../../src/store'
 import { signOutUser } from '../pages/SignIn/authSlice'
 import { toast } from 'react-toastify'
-// import useAxiosPrivate from '../hooks/useAxiosPrivate'
-// import { Navigate } from 'react-router-dom'
-
-// const logout = (navigate : any) => {
-//   localStorage.removeItem('accessToken');
-//   navigate('/');
-// };
 
 export const client = axios.create({
   baseURL: 'http://localhost:3001/',
@@ -24,13 +17,6 @@ export const axiosPrivate = axios.create({
   withCredentials: true,
 })
 
-// export const privateAxios = axios.create({
-//   baseURL: 'http://localhost:3001/',
-//   headers: {  'content-type': 'application/json'},
-//   withCredentials: true,
-// })
-
-// const axiosPrivatehook = useAxiosPrivate()
 
 axiosPrivate.interceptors.response.use(
   async (response) => {

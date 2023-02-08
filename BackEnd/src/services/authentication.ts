@@ -42,7 +42,7 @@ export async function signInUserService(req: Request, res: Response, next: NextF
         if(loggedUser){
             if(await bcrypt.compare(password, loggedUser.password)){
                 //JWT Token
-                const accessToken = jwt.sign({email: loggedUser.email}, process.env.ACCESS_TOKEN_SECRET, {expiresIn: '10s'})
+                const accessToken = jwt.sign({email: loggedUser.email}, process.env.ACCESS_TOKEN_SECRET, {expiresIn: '60s'})
                 const refreshToken = jwt.sign({email: loggedUser.email}, process.env.REFRESH_TOKEN_SECRET, {expiresIn: '1d'})
 
                 res.cookie('jwt', refreshToken, {httpOnly: true, sameSite: 'none', secure: true, maxAge: 24*60*60*1000})

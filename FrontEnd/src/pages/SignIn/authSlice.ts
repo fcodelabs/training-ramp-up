@@ -50,7 +50,6 @@ export const authSlice = createSlice({
             state.accessToken = action.payload.data.accessToken
             state.signedIn = true;
             state.role = action.payload.data.role;
-            console.log('line 46 auth ', state.accessToken);
         },
         signInUserFailure: (state, action) => {
             state.isSignInLoading = false;

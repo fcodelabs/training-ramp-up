@@ -45,7 +45,6 @@ const isOver18 = (item: User) => {
 }
 
 export const validationFunc = (arr: User) => {
-  console.log('is empty function :', isEmpty(arr))
   if (isEmpty(arr)) {
     toast.error('Please input all fields!')
     return false
@@ -91,6 +90,6 @@ export const modifyAdd = (item: User) => {
 export const modifyUpdate = (item: User) => {
   item.age = calculateAge(item)
   item.inEdit = false
-  toast.success('User Updated Successfully!')
+  toast.success('Student Updated Successfully!')
   return item
 }

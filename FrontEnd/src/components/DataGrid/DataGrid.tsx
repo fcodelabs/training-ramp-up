@@ -8,7 +8,7 @@ import {
 import '@progress/kendo-theme-default/dist/all.css'
 import { MyCommandCell } from './Commandcell'
 import React, { CSSProperties, useEffect } from 'react'
-import { HomeState, User } from '../../interfaces/interfaces'
+import { HomeState, SignInState, User } from '../../interfaces/interfaces'
 import { validationFunc } from '../../services/services'
 import { GenderCell } from './GenderCell'
 import { useDispatch, useSelector } from 'react-redux'
@@ -25,9 +25,12 @@ const editField = 'inEdit'
 
 const DataGrid = () => {
   const [data, setData] = React.useState<any[]>([])
+  const [isAdmin, setIsAdmin] = React.useState<boolean>(false)
+  const [width, setWidth] = React.useState<number>(180)
   const dispatch = useDispatch()
   const users = useSelector((state: HomeState) => state.home.users)
   const loading = useSelector((state: HomeState) => state.home.isLoading)
+  const role = useSelector((state: SignInState) => state.user.role)
   const override: CSSProperties = {
     display: 'block',
     margin: 'auto auto',
@@ -37,6 +40,10 @@ const DataGrid = () => {
 
   useEffect(() => {
     dispatch(getUserRecords())
+    if( role === 'admin') {
+      setIsAdmin(true)
+      setWidth(150)
+    }
   }, [dispatch])
 
   useEffect(() => {
@@ -99,6 +106,7 @@ const DataGrid = () => {
   )
   return (
     <>
+    <h2 style={{ textAlign: 'center' }}>Student Records</h2>
       {loading ? (
         <PuffLoader color='hsla(180, 98%, 32%, 1)' cssOverride={override} size={40} />
       ) : (
@@ -109,6 +117,7 @@ const DataGrid = () => {
           editField={editField}
         >
           <GridToolbar>
+            { isAdmin ? 
             <button
               style={{ padding: '3px 8px 6px 8px', margin: '10px' }}
               title='Add new'
@@ -117,15 +126,19 @@ const DataGrid = () => {
             >
               Add new
             </button>
+            : null}
           </GridToolbar>
-          <GridColumn editable={false} field='id' title='ID' width='150px' />
-          <GridColumn field='name' title='Name' width='150px' />
-          <GridColumn field='gender' title='Gender' width='150px' cell={GenderCell} />
-          <GridColumn field='address' title='address' width='150px' />
-          <GridColumn field='mobile' title='mobile' width='150px' />
+          <GridColumn editable={false} field='id' title='ID' width={width} />
+          <GridColumn field='name' title='Name' width={width} />
+          <GridColumn field='gender' title='Gender' width={width} cell={GenderCell} />
+          <GridColumn field='address' title='address' width={width} />
+          <GridColumn field='mobile' title='mobile' width={width} />
           <GridColumn field='dob' format='{0:D}' title='dob' width='200px' cell={DatePickerCell} />
-          <GridColumn field='age' title='age' width='150px' editable={false} />
+          <GridColumn field='age' title='age' width={width} editable={false} />
+          {isAdmin ? 
           <GridColumn title='command' cell={CommandCell} width='200px' />
+          : null
+          }
         </Grid>
       )}
     </>
