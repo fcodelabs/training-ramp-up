@@ -26,7 +26,7 @@ export async function signInUser(req: Request, res: Response, next: NextFunction
     const{error, value} = validateSignIn(req.body)
     if(!error){
       try{
-        const tokens = await signInUserService(req, res, next)
+        const details =await signInUserService(req, res, next)
         // if(tokens){
         //   res.cookie('jwt', tokens.refreshToken, {httpOnly: true, maxAge: 24*60*60*1000})
         //   res.json(tokens.accessToken)

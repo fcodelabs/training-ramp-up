@@ -52,6 +52,7 @@ export async function signInUserService(req: Request, res: Response, next: NextF
                     email: loggedUser.email
                 }
                 res.json(resObj)
+                
             }else{
                 return res.status(401).send('Password is incorrect!')
              } 

@@ -16,7 +16,6 @@ export async function addStudent(req: Request, res: Response, next: NextFunction
       const{error} = validateStudentRecords(req.body)
       if(!error){
         try{
-
           const newStudent = await addNewStudent(req,res, next)
           res.status(201).json(newStudent)
         } catch(err: any){
