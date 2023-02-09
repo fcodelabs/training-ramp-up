@@ -5,6 +5,8 @@ import {
 } from "./../controllers/authController";
 import { Router } from "express";
 import passport from "passport";
+import { getAllStudents } from "../controllers/studentController";
+import { ensureAuth } from "../middleware/authentication";
 
 const authRouter = Router();
 
@@ -36,7 +38,7 @@ authRouter.get(
     successRedirect: "http://localhost:3000/",
     failureRedirect: "/login/failed",
   })
-);
+)
 
 authRouter.get("/login/failed", authLoginFailedController);
 

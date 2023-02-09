@@ -27,7 +27,9 @@ passport.use(
           Provider: "google",
           Password: profile.id,
         };
+
         createorfindUserService(user);
+       // console.log("profile", profile);
         done(null, profile);
       } catch (err) {
         done(err);

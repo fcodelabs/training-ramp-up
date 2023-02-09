@@ -84,9 +84,9 @@ export const SignInPage = (): JSX.Element => {
   }
 
 
-  useEffect(() => {
-    distpatch(authLoginStart())
-  }, [])
+  // useEffect(() => {
+  //   distpatch(authLoginStart())
+  // }, [])
 
   return (
     <>

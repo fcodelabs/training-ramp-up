@@ -35,7 +35,7 @@ export const getAllPersonServise = async (personData: any): Promise<Person[] | u
     const res = await privateRequest.get('/students')
     return res.data
   } else {
-    const res = await publicRequest.get('/students')
+    const res = await publicRequest.get('students/auth')
     return res.data
   }
 }

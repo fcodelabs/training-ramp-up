@@ -11,13 +11,13 @@ import verifyRoles from "../middleware/verifyRoles";
 import { ensureAuth } from "../middleware/authentication";
 const studentRouter = Router();
 
+studentRouter.get("/auth", ensureAuth, getAllStudents);
 studentRouter.get(
   "/",
   verifyJWT,
-  verifyRoles(["admin", "geust"]),
+  verifyRoles(["admin", "geust","editor"]),
   getAllStudents
 );
-studentRouter.get("/auth", ensureAuth, getAllStudents);
 studentRouter.post(
   "/",
   verifyJWT,
@@ -34,6 +34,6 @@ studentRouter.patch(
   verifyRoles(["admin", "editor"]),
   updateStudent
 );
-studentRouter.delete("/:id", verifyJWT, deleteStudent);
+studentRouter.delete("/:id", verifyJWT, verifyRoles(["admin", "editor"]), deleteStudent);
 
 export default studentRouter;
