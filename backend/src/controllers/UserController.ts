@@ -118,7 +118,7 @@ export const logoutController = async (
     res.clearCookie("session.sig");
     res.status(204).send("logout");
   } catch (err) {
-    console.log(err);
+    //console.log(err);
     next(err);
   }
 };

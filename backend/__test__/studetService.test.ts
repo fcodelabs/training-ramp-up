@@ -31,12 +31,12 @@ describe("Student Service test", () => {
       expect(result).toEqual(createStudent);
       spyAppDataSource.mockRestore();
     });
-    it("test create student", async () => {
+    it("test create student fail", async () => {
       const spyAppDataSource = jest.spyOn(
         AppDataSource.getRepository(Student),
         "save"
       );
-      spyAppDataSource.mockResolvedValue(createStudent);
+      spyAppDataSource.mockResolvedValue({} as Student);
       try {
         const result = await studentService.createStudentService(student);
       } catch (e) {
@@ -128,6 +128,19 @@ describe("Student Service test", () => {
       }
       spyAppDataSource.mockRestore();
     });
+    it("test get student fail", async () => {
+      const spyAppDataSource = jest.spyOn(
+        AppDataSource.getRepository(Student),
+        "findOneBy"
+      );
+      spyAppDataSource.mockResolvedValue(null);
+      try {
+        const result = await studentService.getStudentByIdService(1);
+      } catch (e) {
+        expect(e).toEqual(new Error("No records found"));
+      }
+      spyAppDataSource.mockRestore();
+    });
   });
   describe("Delete student by id service test", () => {
     it("test delete student by id", async () => {
@@ -136,21 +149,25 @@ describe("Student Service test", () => {
         "findOneBy"
       );
       spyGetDataSource.mockResolvedValue(createStudent);
-      const spyAppDataSource = jest.spyOn(
+      const spyRemoveDataSource = jest.spyOn(
         AppDataSource.getRepository(Student),
         "remove"
       );
-      spyAppDataSource.mockResolvedValue(createStudent);
+      spyRemoveDataSource.mockResolvedValue(createStudent);
 
       const result = await studentService.deleteStudentService(
         createStudent.PersonID
       );
-
       expect(result).toEqual(createStudent);
-
-      spyAppDataSource.mockRestore();
+      spyRemoveDataSource.mockRestore();
+      spyGetDataSource.mockRestore();
     });
     it("test delete student by id fail", async () => {
+      const spyGetDataSource = jest.spyOn(
+        AppDataSource.getRepository(Student),
+        "findOneBy"
+      );
+      spyGetDataSource.mockResolvedValue(null);
       const spyAppDataSource = jest.spyOn(
         AppDataSource.getRepository(Student),
         "remove"
@@ -161,7 +178,7 @@ describe("Student Service test", () => {
           createStudent.PersonID
         );
       } catch (e) {
-        expect(e).toEqual(new Error("Error in deleting user by id"));
+        expect(e).toEqual(new Error("Error in deleting user"));
       }
       spyAppDataSource.mockRestore();
     });

@@ -28,11 +28,11 @@ export const createStudent = async (
   try {
     const user = req.body.data;
     const userInsert = await createStudentService(user);
-    const socket = req.app.get("socket");
-    socket.emit(
-      "notification",
-      `New user created successfully Name: ${userInsert?.PersonName}  !`
-    );
+    // const socket = req.app.get("socket");
+    // socket.emit(
+    //   "notification",
+    //   `New user created successfully Name: ${userInsert?.PersonName}  !`
+    // );
     res.status(201).send(userInsert);
   } catch (err) {
     next(err);
@@ -47,11 +47,11 @@ export const updateStudent = async (
   try {
     const user = req.body.data;
     const userUpdate = await createStudentService(user);
-    const socket = req.app.get("socket");
-    socket.emit(
-      "notification",
-      `User updated successfully Name: ${userUpdate?.PersonName}  !`
-    );
+    // const socket = req.app.get("socket");
+    // socket.emit(
+    //   "notification",
+    //   `User updated successfully Name: ${userUpdate?.PersonName}  !`
+    // );
     res.status(201).send(userUpdate);
   } catch (err) {
     next(err);
@@ -66,11 +66,11 @@ export const deleteStudent = async (
   try {
     const id = parseInt(req.params.id);
     const userDelete = await deleteStudentService(id);
-    const socket = req.app.get("socket");
-    socket.emit(
-      "notification",
-      `User deleted successfully Name: ${userDelete?.PersonName}  !`
-    );
+    // const socket = req.app.get("socket");
+    // socket.emit(
+    //   "notification",
+    //   `User deleted successfully Name: ${userDelete?.PersonName}  !`
+    // );
     res.send(userDelete);
   } catch (err) {
     next(err);

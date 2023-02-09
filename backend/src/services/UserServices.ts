@@ -17,7 +17,7 @@ export const createorfindUserService = async (user: any) => {
   const userLogin = await userRepo.findOneBy({ Email: user.Email });
   if (userLogin) {
     return userLogin;
-  } else {  
+  } else {
     const hashedPassword = await bcrypt.hash(user.Password, 10);
     user.Password = hashedPassword;
     const userInsert = await userRepo.save(user);
@@ -78,20 +78,14 @@ export const findUserByRefreshTokenService = async (
 export const deleteRefeshTokenService = async (
   user: User
 ): Promise<User | undefined> => {
-  try {
-    const userRepo = AppDataSource.getRepository(User);
-    const currentUser = await userRepo.findOneBy({ UserID: user.UserID });
-    if (currentUser) {
-      const newUser = {
-        ...currentUser,
-        RefreshToken: "",
-      };
-      const userUpdate = await userRepo.save(newUser);
-      return userUpdate;
-    }
-  } catch (err) {
-    console.log(err);
-    throw new Error("Error in updating user");
+  const userRepo = AppDataSource.getRepository(User);
+  const currentUser = await userRepo.findOneBy({ UserID: user.UserID });
+  if (currentUser) {
+    const newUser = {
+      ...currentUser,
+      RefreshToken: "",
+    };
+    const userUpdate = await userRepo.save(newUser);
+    return userUpdate;
   }
 };
-

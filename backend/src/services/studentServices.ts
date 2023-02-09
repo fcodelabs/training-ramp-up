@@ -24,23 +24,13 @@ export const getStudentByIdService = async (id: number): Promise<Student> => {
 export const createStudentService = async (user: Student): Promise<Student> => {
   const userRepo = AppDataSource.getRepository(Student);
   const userInsert = await userRepo.save(user);
-
-  if (userInsert) {
-    return userInsert;
-  } else {
-    throw new Error("Error in creating user");
-  }
+  return userInsert;
 };
 
 export const updateStudentService = async (user: Student): Promise<Student> => {
   const userRepo = AppDataSource.getRepository(Student);
   const userUpdate = await userRepo.save(user);
-
-  if (userUpdate) {
-    return userUpdate;
-  } else {
-    throw new Error("Error in updating user");
-  }
+  return userUpdate;
 };
 
 export const deleteStudentService = async (id: number): Promise<Student> => {
@@ -52,6 +42,6 @@ export const deleteStudentService = async (id: number): Promise<Student> => {
     userDelete.PersonID = id;
     return userDelete;
   } else {
-    throw new Error("Error in updating user");
+    throw new Error("Error in deleting user");
   }
 };
