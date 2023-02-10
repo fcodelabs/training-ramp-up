@@ -19,9 +19,11 @@ export async function signUpUser(value: User, next: NextFunction) {
             newUser.password = hashedPassword
             newUser.role = 'student'
             
-            await PostgresDataSource.manager.save(newUser)
-            const user = PostgresDataSource.getRepository(User).create(newUser)
-            return await PostgresDataSource.getRepository(User).save(user)
+            // await PostgresDataSource.manager.save(newUser)
+            // const user = PostgresDataSource.getRepository(User).create(newUser)
+            // return await PostgresDataSource.getRepository(User).save(user)
+            return await PostgresDataSource.manager.save(newUser)
+            // return newUser;
         }else{
             return null
         }
@@ -66,11 +68,3 @@ export const handleRefreshToken = (req: Request, res: Response, next: NextFuncti
     }) 
 }
 
-export const handleLogout = (req: Request, res: Response, next: NextFunction) => {
-    const cookies = req.cookies
-    if(!cookies.jwt) return res.status(401).send('No token provided')
-    console.log('cookies ', cookies)
-    res.clearCookie('jwt', {httpOnly: true, sameSite: 'none', secure: true, maxAge: 24*60*60*1000})
-    res.status(205).send('Logout successful')
-    // res.redirect('/')
-}

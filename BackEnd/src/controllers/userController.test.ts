@@ -116,4 +116,33 @@ describe('User Controller tests', () => {
     //         const result = jest.spyOn(userServices, 'handleRefreshToken').mockResolvedValue(true)
     //       });
     // })
+
+
+    // describe('Logout User Test', () => {
+    //     const next = jest.fn() as NextFunction
+    //     const res = {
+    //         status: jest.fn().mockReturnThis(),
+    //         cookie: jest.fn().mockReturnThis(),
+    //         json: jest.fn().mockReturnThis(),
+    //     } as unknown as Response
+    //     const req = {
+    //         body: {
+    //             email: 'jane@gmail.com',
+    //             password: '4rfv%TGB%',
+    //         },
+    //         cookies: {
+    //             jwt : '111111111111'
+    //         }
+    //     } as unknown as Request
+
+    //     test('should return success message', async () => {
+    //         // const spyLogoutUser = jest
+    //         //     .spyOn(userServices, 'logoutUserService')
+    //         //     .mockResolvedValue(true)
+    //         logoutUser(req, res, next)
+    //         expect(res.status).toHaveBeenCalledWith(205)
+    //         expect(res.json).toHaveBeenCalledWith('Logout success')
+    //     })
+
+    // })
 })

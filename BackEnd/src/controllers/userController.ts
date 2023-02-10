@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express'
-import { signInUserService, signUpUser, handleRefreshToken, handleLogout } from '../services/authentication'
+import { signInUserService, signUpUser, handleRefreshToken } from '../services/authentication'
 const { validateSignup, validateSignIn } = require('./validator')
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
@@ -57,5 +57,10 @@ export function refreshTokenHandler(req: Request, res: Response, next: NextFunct
 }
 
 export function logoutUser(req: Request, res: Response, next: NextFunction){
-    return handleLogout(req, res, next)
+    // return handleLogout(req, res, next)
+    const cookies = req.cookies
+    if(!cookies.jwt) return res.status(401).send('No token provided')
+    console.log('cookies ', cookies)
+    res.clearCookie('jwt', {httpOnly: true, sameSite: 'none', secure: true, maxAge: 24*60*60*1000})
+    res.status(205).send('Logout successful')
 }
