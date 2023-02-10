@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
-import { PostgresDataSource } from '../configs/db';
-import { User } from '../models/UserModel';
-import { handleRefreshTokenService, signInUserService, signUpUser } from './authentication';
+import { PostgresDataSource } from '../../../src/configs/db';
+import { User } from '../../../src/models/UserModel';
+import { handleRefreshTokenService, signInUserService, signUpUser } from '../../../src/services/authentication';
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 

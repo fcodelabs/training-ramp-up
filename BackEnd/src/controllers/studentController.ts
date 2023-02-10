@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express'
 import { addNewStudent, deleteSelectedStudent, getStudents, updateSelectedStudent,  } from '../services/studentServices'
-const { validateStudentRecords } = require('./validator')
+const { validateStudentRecords } = require('../../src/validations/validator')
 
 export async function getAllStudents(req: Request, res: Response, next: NextFunction) {
   try{

@@ -1,12 +1,12 @@
-import * as userServices from '../services/authentication'
+import * as userServices from '../../../src/services/authentication'
 import { Request, Response, NextFunction } from 'express'
-import { User } from '../models/UserModel'
+import { User } from '../../../src/models/UserModel'
 import {
   signUpNewUser,
   signInUser,
   refreshTokenHandler,
   logoutUser,
-} from '../controllers/userController'
+} from '../../../src/controllers/userController'
 
 describe('User Controller tests', () => {
   const user1 = {

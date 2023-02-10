@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express'
 import { signInUserService, signUpUser, handleRefreshTokenService } from '../services/authentication'
-const { validateSignup, validateSignIn } = require('./validator')
+const { validateSignup, validateSignIn } = require('../../src/validations/validator')
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 

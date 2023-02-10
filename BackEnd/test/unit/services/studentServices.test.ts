@@ -1,12 +1,12 @@
-import { Student } from '../models/StudentModel'
+import { Student } from '../../../src/models/StudentModel'
 import { Request, Response, NextFunction } from 'express'
 import {
   getStudents,
   addNewStudent,
   updateSelectedStudent,
   deleteSelectedStudent,
-} from './studentServices'
-import { PostgresDataSource } from '../configs/db'
+} from '../../../src/services/studentServices'
+import { PostgresDataSource } from '../../../src/configs/db'
 
 describe('Student Services Tests', () => {
   const student1 = {

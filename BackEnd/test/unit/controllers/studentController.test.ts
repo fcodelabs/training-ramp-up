@@ -1,7 +1,7 @@
-import { getAllStudents, addStudent, updateStudent, deleteStudent } from './studentController'
-import { Student } from '../models/StudentModel'
+import { getAllStudents, addStudent, updateStudent, deleteStudent } from '../../../src/controllers/studentController'
+import { Student } from '../../../src/models/StudentModel'
 import { Request, Response, NextFunction } from 'express'
-import * as studentServices from '../services/studentServices'
+import * as studentServices from '../../../src/services/studentServices'
 
 describe('Student Controller tests', () => {
   const student1 = {
