@@ -20,9 +20,7 @@ export async function addNewStudent(req: Request, res: Response, next: NextFunct
         newStudent.dob = new Date(req.body.dob);
         newStudent.age = req.body.age;
 
-        await PostgresDataSource.manager.save(newStudent);
-        const student = PostgresDataSource.getRepository(Student).create(newStudent);
-        return await PostgresDataSource.getRepository(Student).save(student);
+        return await PostgresDataSource.manager.save(newStudent);
 
     } catch (err) {
         next(err)

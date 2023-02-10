@@ -1,6 +1,8 @@
 import { Request, Response, NextFunction } from 'express'
 import { signInUserService, signUpUser, handleRefreshToken, handleLogout } from '../services/authentication'
 const { validateSignup, validateSignIn } = require('./validator')
+const jwt = require('jsonwebtoken');
+require('dotenv').config();
 
 export async function signUpNewUser(req: Request, res: Response, next: NextFunction) {
   const{error, value } = validateSignup(req.body)
@@ -26,14 +28,21 @@ export async function signInUser(req: Request, res: Response, next: NextFunction
     const{error, value} = validateSignIn(req.body)
     if(!error){
       try{
-        const details =await signInUserService(req, res, next)
-        // if(tokens){
-        //   res.cookie('jwt', tokens.refreshToken, {httpOnly: true, maxAge: 24*60*60*1000})
-        //   res.json(tokens.accessToken)
-        //   res.send('success')
-        // }else{
-        //   return res.send('User does not exists!')
-        // }
+        const role =await signInUserService(req, res, next)
+        console.log('role :',role)
+        if(role == 'student' || role == 'admin'){
+          //JWT Token
+          const accessToken = jwt.sign({email: req.body.email}, process.env.ACCESS_TOKEN_SECRET, {expiresIn: '60s'})
+          const refreshToken = jwt.sign({email: req.body.email}, process.env.REFRESH_TOKEN_SECRET, {expiresIn: '1d'})
+          console.log('line 37 : ')
+          res.cookie('jwt', refreshToken, {httpOnly: true, sameSite: 'none', secure: true, maxAge: 24*60*60*1000})
+          const resObj = {
+              accessToken: accessToken,
+              role: role,
+              email: req.body.email
+          }
+          return res.status(200).json(resObj)
+        }
       } catch(err: any){
         next(err)
       }
@@ -44,9 +53,9 @@ export async function signInUser(req: Request, res: Response, next: NextFunction
 }
 
 export function refreshTokenHandler(req: Request, res: Response, next: NextFunction){
-    handleRefreshToken(req, res, next)
+    return handleRefreshToken(req, res, next)
 }
 
 export function logoutUser(req: Request, res: Response, next: NextFunction){
-    handleLogout(req, res, next)
+    return handleLogout(req, res, next)
 }

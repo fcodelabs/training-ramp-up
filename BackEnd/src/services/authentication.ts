@@ -38,21 +38,10 @@ export async function signInUserService(req: Request, res: Response, next: NextF
         const loggedUser = await userRepository.findOneBy({
             email: email
         })
-        console.log(loggedUser)
+        console.log('user logged 41',loggedUser)
         if(loggedUser){
             if(await bcrypt.compare(password, loggedUser.password)){
-                //JWT Token
-                const accessToken = jwt.sign({email: loggedUser.email}, process.env.ACCESS_TOKEN_SECRET, {expiresIn: '60s'})
-                const refreshToken = jwt.sign({email: loggedUser.email}, process.env.REFRESH_TOKEN_SECRET, {expiresIn: '1d'})
-
-                res.cookie('jwt', refreshToken, {httpOnly: true, sameSite: 'none', secure: true, maxAge: 24*60*60*1000})
-                const resObj = {
-                    accessToken: accessToken,
-                    role: loggedUser.role,
-                    email: loggedUser.email
-                }
-                res.json(resObj)
-                
+                return loggedUser.role             
             }else{
                 return res.status(401).send('Password is incorrect!')
              } 
