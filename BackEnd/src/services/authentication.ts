@@ -19,11 +19,7 @@ export async function signUpUser(value: User, next: NextFunction) {
             newUser.password = hashedPassword
             newUser.role = 'student'
             
-            // await PostgresDataSource.manager.save(newUser)
-            // const user = PostgresDataSource.getRepository(User).create(newUser)
-            // return await PostgresDataSource.getRepository(User).save(user)
             return await PostgresDataSource.manager.save(newUser)
-            // return newUser;
         }else{
             return null
         }
@@ -40,7 +36,6 @@ export async function signInUserService(req: Request, res: Response, next: NextF
         const loggedUser = await userRepository.findOneBy({
             email: email
         })
-        console.log('user logged 41',loggedUser)
         if(loggedUser){
             if(await bcrypt.compare(password, loggedUser.password)){
                 return loggedUser.role             
@@ -55,16 +50,14 @@ export async function signInUserService(req: Request, res: Response, next: NextF
     }
 }
 
-export const handleRefreshToken = (req: Request, res: Response, next: NextFunction) => {
-    const cookies = req.cookies
-    if(!cookies.jwt) return res.status(401).send('No token provided')
-    console.log('cookies in backend : ', cookies)
-    const refreshToken = cookies.jwt
-    jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err: any, decoded: any) => {
-        if(err) return res.status(403).send('Invalid token')
-        const accessToken = jwt.sign({email: decoded.email}, process.env.ACCESS_TOKEN_SECRET, {expiresIn: '30s'})
-        res.json(accessToken)
-        return
-    }) 
-}
+
+export const handleRefreshTokenService = async (cookies: any) => {
+    if (!cookies.jwt) throw new Error('No token provided');
+  
+    const refreshToken = cookies.jwt;
+    const decoded = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET) as any;
+    const accessToken = jwt.sign({ email: decoded.email }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '30s' });
+    
+    return accessToken;
+  };
 

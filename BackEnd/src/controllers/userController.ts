@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express'
-import { signInUserService, signUpUser, handleRefreshToken } from '../services/authentication'
+import { signInUserService, signUpUser, handleRefreshTokenService } from '../services/authentication'
 const { validateSignup, validateSignIn } = require('./validator')
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
@@ -29,12 +29,10 @@ export async function signInUser(req: Request, res: Response, next: NextFunction
     if(!error){
       try{
         const role =await signInUserService(req, res, next)
-        console.log('role :',role)
         if(role == 'student' || role == 'admin'){
           //JWT Token
           const accessToken = jwt.sign({email: req.body.email}, process.env.ACCESS_TOKEN_SECRET, {expiresIn: '60s'})
           const refreshToken = jwt.sign({email: req.body.email}, process.env.REFRESH_TOKEN_SECRET, {expiresIn: '1d'})
-          console.log('line 37 : ')
           res.cookie('jwt', refreshToken, {httpOnly: true, sameSite: 'none', secure: true, maxAge: 24*60*60*1000})
           const resObj = {
               accessToken: accessToken,
@@ -52,15 +50,21 @@ export async function signInUser(req: Request, res: Response, next: NextFunction
     }
 }
 
-export function refreshTokenHandler(req: Request, res: Response, next: NextFunction){
-    return handleRefreshToken(req, res, next)
+export async function refreshTokenHandler(req: Request, res: Response, next: NextFunction){
+    try{
+      const cookies = req.cookies
+      const accessToken = await handleRefreshTokenService(cookies)
+      res.json(accessToken)
+    } catch(err : any){
+      err.statusCode = 401
+      // return res.status(401).send('No token provided')
+      next(err)
+    }
 }
 
 export function logoutUser(req: Request, res: Response, next: NextFunction){
-    // return handleLogout(req, res, next)
     const cookies = req.cookies
     if(!cookies.jwt) return res.status(401).send('No token provided')
-    console.log('cookies ', cookies)
     res.clearCookie('jwt', {httpOnly: true, sameSite: 'none', secure: true, maxAge: 24*60*60*1000})
     res.status(205).send('Logout successful')
 }

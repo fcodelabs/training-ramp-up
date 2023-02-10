@@ -1,8 +1,9 @@
 import { Request, Response, NextFunction } from 'express';
 import { PostgresDataSource } from '../configs/db';
 import { User } from '../models/UserModel';
-import { signInUserService, signUpUser } from './authentication';
+import { handleRefreshTokenService, signInUserService, signUpUser } from './authentication';
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 describe('Authentication Services Tests', () => {
 
@@ -88,8 +89,28 @@ describe('Authentication Services Tests', () => {
 
     })
 
-    
+    describe('Refresh token test services', () => {
+        const cookies ={
+            jwt : '1111111'
+        }
+        const decoded ={
+            email : 'john@gmail.com'
+        }
+        test('should return access token',  async () => {
+            const spy1 = jest.spyOn(jwt, 'verify').mockResolvedValue(decoded)
+            const spy2 = jest.spyOn(jwt, 'sign').mockResolvedValue('2222222')
+            const newAccessToken = await handleRefreshTokenService(cookies)
+            expect(newAccessToken).toBe('2222222')
+        })
 
-
+        test('should throw error if no token provided', async () => {
+            const cookies = {};
+            try {
+                await handleRefreshTokenService(cookies);
+            } catch (error: any) {
+                expect(error.message).toBe('No token provided');
+            }
+            });
+    })
 
 })
