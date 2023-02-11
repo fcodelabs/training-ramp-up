@@ -22,7 +22,7 @@ export class UserController {
     private jwtService: JwtService,
   ) {}
 
-  async cookieGenerator(email: string, role: string) {
+  async cookieGenerator(email: string, role: string): Promise<string[]> {
     const jwtToken = await this.jwtService.signAsync(
       { email, role },
       { expiresIn: '15m', secret: process.env.JWT_SECRET },
@@ -53,7 +53,7 @@ export class UserController {
   }
 
   @Post('signup')
-  async signUp(@Body() user: UserDto, @Res() res: Response) {
+  async signUp(@Body() user: UserDto, @Res() res: Response): Promise<Response> {
     try {
       const userCreate = await this.userService.signUp(user);
       const [jwtCookie, refreshCookie] = await this.cookieGenerator(
@@ -71,7 +71,7 @@ export class UserController {
   }
 
   @Post('signin')
-  async signIn(@Body() user: UserDto, @Res() res: Response) {
+  async signIn(@Body() user: UserDto, @Res() res: Response): Promise<Response> {
     try {
       const userCreate = await this.userService.signIn(user);
       const [jwtCookie, refreshCookie] = await this.cookieGenerator(
@@ -89,7 +89,7 @@ export class UserController {
   }
 
   @Delete('signout')
-  async logout(@Res() res: Response) {
+  async logout(@Res() res: Response): Promise<Response> {
     try {
       res.setHeader('Set-Cookie', [
         cookie.serialize('jwt', '', {
@@ -117,7 +117,7 @@ export class UserController {
 
   @UseGuards(AuthGuard('refresh'))
   @Post('refresh')
-  async refresh(@Res() res: Response, @Req() req: Request) {
+  async refresh(@Res() res: Response, @Req() req: Request): Promise<void> {
     try {
       const refresh = req.cookies.refresh;
       if (!refresh) {

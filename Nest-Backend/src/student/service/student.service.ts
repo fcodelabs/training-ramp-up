@@ -11,7 +11,7 @@ export class StudentService {
     private readonly studentRepository: Repository<StudentEntity>,
   ) {}
 
-  async getStudent() {
+  async getStudent(): Promise<StudentEntity[]> {
     try {
       return await this.studentRepository.find();
     } catch (error) {
@@ -19,7 +19,7 @@ export class StudentService {
     }
   }
 
-  async addStudent(student: StudentDto) {
+  async addStudent(student: StudentDto): Promise<StudentEntity> {
     try {
       return await this.studentRepository.save(student);
     } catch (error) {
@@ -27,7 +27,7 @@ export class StudentService {
     }
   }
 
-  async updateStudent(id: number, student: StudentDto) {
+  async updateStudent(id: number, student: StudentDto): Promise<StudentEntity> {
     try {
       const response = await this.studentRepository.update(id, student);
       return { ...student, ...response };
@@ -36,7 +36,7 @@ export class StudentService {
     }
   }
 
-  async deleteStudent(id: number) {
+  async deleteStudent(id: number): Promise<StudentEntity> {
     try {
       const student = this.studentRepository.findOne({
         where: { id },

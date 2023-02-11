@@ -12,7 +12,7 @@ export class UserService {
     private readonly userRepository: Repository<UserEntity>,
   ) {}
 
-  async signUp(user: UserDto) {
+  async signUp(user: UserDto): Promise<UserEntity> {
     try {
       const findUser = await this.userRepository.findOne({
         where: { email: user.email },
@@ -32,7 +32,7 @@ export class UserService {
     }
   }
 
-  async signIn(user: UserDto) {
+  async signIn(user: UserDto): Promise<UserEntity> {
     try {
       const findUser = await this.userRepository.findOne({
         where: { email: user.email },

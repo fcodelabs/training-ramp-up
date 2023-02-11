@@ -13,7 +13,10 @@ export class RefreshStrategy extends PassportStrategy(Strategy, 'refresh') {
     });
   }
 
-  async validate(payload: any) {
-    return { userId: payload.sub, username: payload.username };
+  async validate(payload: {
+    email: string;
+    role: string;
+  }): Promise<{ email: string; role: string }> {
+    return { email: payload.email, role: payload.role };
   }
 }

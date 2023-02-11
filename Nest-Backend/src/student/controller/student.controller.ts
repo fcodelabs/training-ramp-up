@@ -27,7 +27,7 @@ export class StudentController {
 
   @UseGuards(AuthGuard('jwt'))
   @Get()
-  async getStudent(@Res() res: Response) {
+  async getStudent(@Res() res: Response): Promise<Response> {
     try {
       const students = await this.studentService.getStudent();
       return res.status(200).json(students);
@@ -43,7 +43,7 @@ export class StudentController {
     @Param('id') id: number,
     @Body() student: StudentDto,
     @Res() res: Response,
-  ) {
+  ): Promise<Response> {
     try {
       const updatedStudent = await this.studentService.updateStudent(
         id,
@@ -59,14 +59,17 @@ export class StudentController {
           `Student's data updated successfully with name ${updatedStudent.name}`,
         );
     } catch (error) {
-      return new HttpException(error.message, error.status);
+      throw new HttpException(error.message, error.status);
     }
   }
 
   @UseGuards(AuthGuard('jwt'), RoleGuard)
   @Roles('admin')
   @Post()
-  async addStudent(@Body() student: StudentDto, @Res() res: Response) {
+  async addStudent(
+    @Body() student: StudentDto,
+    @Res() res: Response,
+  ): Promise<void> {
     try {
       const addedStudent = await this.studentService.addStudent(student);
       this.socketGateway.emitEvent(
@@ -75,14 +78,17 @@ export class StudentController {
       );
       res.status(201).send(addedStudent);
     } catch (error) {
-      return new HttpException(error.message, error.status);
+      throw new HttpException(error.message, error.status);
     }
   }
 
   @UseGuards(AuthGuard('jwt'), RoleGuard)
   @Roles('admin')
   @Delete('/:id')
-  async deleteStudent(@Param('id') id: number, @Res() res: Response) {
+  async deleteStudent(
+    @Param('id') id: number,
+    @Res() res: Response,
+  ): Promise<void> {
     try {
       const deletedStudent = await this.studentService.deleteStudent(id);
       this.socketGateway.emitEvent(
@@ -97,7 +103,7 @@ export class StudentController {
           }`,
         );
     } catch (error) {
-      return new HttpException(error.message, error.status);
+      throw new HttpException(error.message, error.status);
     }
   }
 }
