@@ -12,7 +12,7 @@ export const registerUserService = async (user: User) => {
   return { Role, Email };
 };
 
-export const createorfindUserService = async (user: any) => {
+export const createOrfindUserService = async (user: any) => {
   const userRepo = AppDataSource.getRepository(User);
   const userLogin = await userRepo.findOneBy({ Email: user.Email });
   if (userLogin) {
@@ -53,7 +53,6 @@ export const updateRefreshTokenService = async (
     const newUser = {
       ...currentUser,
       RefreshToken: refreshToken,
-      //   RefreshToken: [...currentUser?.RefreshToken, refreshToken],
     };
     const userUpdate = await userRepo.save(newUser);
   }

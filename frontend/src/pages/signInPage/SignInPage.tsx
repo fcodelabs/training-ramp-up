@@ -83,7 +83,6 @@ export const SignInPage = (): JSX.Element => {
     window.open('http://localhost:5000/api/auth/github', '_self')
   }
 
-
   // useEffect(() => {
   //   distpatch(authLoginStart())
   // }, [])
@@ -177,7 +176,7 @@ export const SignInPage = (): JSX.Element => {
                   alt='Google Icon'
                 ></img>
               </a>
-              <a  className='social'>
+              <a className='social'>
                 <img
                   className='socialIcon'
                   src='https://firebasestorage.googleapis.com/v0/b/dailydiary-96e2f.appspot.com/o/984f500cf9de4519b02b354346eb72e0-facebook-icon-social-media-by-vexels.png?alt=media&token=688568a9-f923-4f0e-af28-da64dbee5046'

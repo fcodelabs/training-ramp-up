@@ -1,5 +1,5 @@
 import passport from "passport";
-import { createorfindUserService } from "../services/userServices";
+import { createOrfindUserService } from "../services/userServices";
 var GoogleStrategy = require("passport-google-oauth20").Strategy;
 var GitHubStrategy = require("passport-github2").Strategy;
 
@@ -28,7 +28,7 @@ passport.use(
           Password: profile.id,
         };
 
-        createorfindUserService(user);
+        createOrfindUserService(user);
        // console.log("profile", profile);
         done(null, profile);
       } catch (err) {

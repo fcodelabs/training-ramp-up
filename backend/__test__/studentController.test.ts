@@ -29,13 +29,20 @@ describe("Student Constroller test", () => {
       body: {
         data: user,
       },
-    } as Request;
+      app: {
+        get: jest.fn().mockReturnValue({
+          emit: jest.fn(),
+        }),
+      },
+    } as unknown as Request;
     const request_add_fail = {
       body: {},
     } as Request;
     const res_add = response();
 
     it("test create student", async () => {
+      const socket = request_add.app.get("socket");
+      const emitSpy = jest.spyOn(socket, "emit");
       const spyAddStudent = jest
         .spyOn(StudentServices, "createStudentService")
         .mockResolvedValue(user);
@@ -70,15 +77,27 @@ describe("Student Constroller test", () => {
       body: {
         data: user,
       },
-    } as Request;
+      app: {
+        get: jest.fn().mockReturnValue({
+          emit: jest.fn(),
+        }),
+      },
+    } as unknown as Request;
     const request_update_fail = {
       body: {
         data: null,
       },
-    } as Request;
+      app: {
+        get: jest.fn().mockReturnValue({
+          emit: jest.fn(),
+        }),
+      },
+    } as unknown as Request;
     const res_update = response();
 
     it("test update student", async () => {
+      const socket = request_update.app.get("socket");
+      const emitSpy = jest.spyOn(socket, "emit");
       const spyUpdateStudent = jest
         .spyOn(StudentServices, "createStudentService")
         .mockResolvedValue(user);
@@ -114,15 +133,27 @@ describe("Student Constroller test", () => {
       params: {
         id: "1",
       },
+      app: {
+        get: jest.fn().mockReturnValue({
+          emit: jest.fn(),
+        }),
+      },
     } as unknown as Request;
     const request_delete_fail = {
       params: {
         id: null,
       },
+      app: {
+        get: jest.fn().mockReturnValue({
+          emit: jest.fn(),
+        }),
+      },
     } as unknown as Request;
     const res_delete = response();
     const mockNextFuction = jest.fn();
     it("test delete student success", async () => {
+      const socket = request_delete.app.get("socket");
+      const emitSpy = jest.spyOn(socket, "emit");
       const spyAddStudent = jest
         .spyOn(StudentServices, "deleteStudentService")
         .mockResolvedValue(user);
@@ -169,14 +200,12 @@ describe("Student Constroller test", () => {
       spyAddStudent.mockRestore();
     });
     it("test get student fail", async () => {
-      const spyGetStudent = jest.spyOn(
-        StudentServices,
-        "getAllStudentsService"
-      ).mockRejectedValue(new Error());
-        await getAllStudents(request_add, response_add, mockNextFuction);
-        expect(spyGetStudent).toHaveBeenCalled();
-        expect(mockNextFuction).toHaveBeenCalledWith(new Error());
-      
+      const spyGetStudent = jest
+        .spyOn(StudentServices, "getAllStudentsService")
+        .mockRejectedValue(new Error());
+      await getAllStudents(request_add, response_add, mockNextFuction);
+      expect(spyGetStudent).toHaveBeenCalled();
+      expect(mockNextFuction).toHaveBeenCalledWith(new Error());
       spyGetStudent.mockRestore();
     });
   });

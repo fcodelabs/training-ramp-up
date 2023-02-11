@@ -1,4 +1,3 @@
-
 import { User } from "../src/models/user";
 import { AppDataSource } from "../src/configs/DataSourceConfig";
 import * as userService from "../src/services/userServices";
@@ -228,43 +227,106 @@ describe("User Service test", () => {
     });
   });
 
-describe('finde or create user service test', () => {
+  describe("finde or create user service test", () => {
     const InputUser = {
-      Email: 'test',
-      Role: 'admin',
+      Email: "test",
+      Role: "admin",
       createdAt: new Date(),
       UserID: 1,
       updatedAt: new Date(),
-Password:'test',
+      Password: "test",
     } as User;
     const outputUser = {
-      Email: 'test',
-      Role: 'admin',
+      Email: "test",
+      Role: "admin",
       createdAt: new Date(),
       UserID: 1,
       updatedAt: new Date(),
-Password:'test',
+      Password: "test",
     } as User;
-    it('test find or create user success', async () => {
-      const spyFindDataSource = jest.spyOn(AppDataSource.getRepository(User), 'findOneBy');
-      const spySaveDataSource = jest.spyOn(AppDataSource.getRepository(User), 'save');
+    it("test find or create user success", async () => {
+      const spyFindDataSource = jest.spyOn(
+        AppDataSource.getRepository(User),
+        "findOneBy"
+      );
+      const spySaveDataSource = jest.spyOn(
+        AppDataSource.getRepository(User),
+        "save"
+      );
       spyFindDataSource.mockResolvedValue(InputUser);
       spySaveDataSource.mockResolvedValue(outputUser);
-      const result = await userService.createorfindUserService(InputUser);
+      const result = await userService.createOrfindUserService(InputUser);
       expect(spyFindDataSource).toHaveBeenCalled();
       expect(result).toEqual(outputUser);
       spyFindDataSource.mockRestore();
       spySaveDataSource.mockRestore();
     });
-    it('test find or create user fail', async () => {
-      const spyAppDataSource = jest.spyOn(AppDataSource.getRepository(User), 'findOneBy');
-      spyAppDataSource.mockRejectedValue(new Error('Error in updating user'));
+    it("test find or create user fail", async () => {
+      const spyAppDataSource = jest.spyOn(
+        AppDataSource.getRepository(User),
+        "findOneBy"
+      );
+      spyAppDataSource.mockRejectedValue(new Error("Error in updating user"));
       try {
-        const result = await userService.createorfindUserService(InputUser);
+        const result = await userService.createOrfindUserService(InputUser);
       } catch (e) {
-        expect(e).toEqual(new Error('Error in updating user'));
+        expect(e).toEqual(new Error("Error in updating user"));
       }
       spyAppDataSource.mockRestore();
     });
-})
+  });
+
+  describe("update refresh token service test", () => {
+    const InputUser = {
+      Email: "test",
+      Role: "admin",
+      createdAt: new Date(),
+      UserID: 1,
+      updatedAt: new Date(),
+    } as User;
+    const outputUser = {
+      Email: "test",
+      Role: "admin",
+      createdAt: new Date(),
+      UserID: 1,
+      updatedAt: new Date(),
+      Password: "test",
+    } as User;
+    const refreshToken = "test";
+    it("test update refresh success", async () => {
+      const spyFindDataSource = jest.spyOn(
+        AppDataSource.getRepository(User),
+        "findOneBy"
+      );
+      const spySaveDataSource = jest.spyOn(
+        AppDataSource.getRepository(User),
+        "save"
+      );
+      spyFindDataSource.mockResolvedValue(InputUser);
+      spySaveDataSource.mockResolvedValue(outputUser);
+      const result = await userService.updateRefreshTokenService(
+        InputUser,
+        refreshToken
+      );
+      expect(spyFindDataSource).toHaveBeenCalled();
+      spyFindDataSource.mockRestore();
+      spySaveDataSource.mockRestore();
+    });
+    it("test update refresh token fail", async () => {
+      const spyAppDataSource = jest.spyOn(
+        AppDataSource.getRepository(User),
+        "findOneBy"
+      );
+      spyAppDataSource.mockRejectedValue(new Error("Error in updating token"));
+      try {
+        const result = await userService.updateRefreshTokenService(
+          InputUser,
+          refreshToken
+        );
+      } catch (e) {
+        expect(e).toEqual(new Error("Error in updating token"));
+      }
+      spyAppDataSource.mockRestore();
+    });
+  });
 });
