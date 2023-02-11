@@ -11,12 +11,7 @@ import {
 
 import { CommandCell } from "../CommandCell/CommandCell";
 import { Validate } from "../../utils/services";
-import {
-  Student,
-  PageState,
-  HomeState,
-  SignInState,
-} from "../../utils/interface";
+import { Student, PageState, HomeState } from "../../utils/interface";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getStudents,
@@ -27,6 +22,7 @@ import {
 import { CircularProgress, Box } from "@mui/material";
 import { DatePickerCell } from "../DatePickerCell/DatePickerCell";
 import { DropDownCell } from "../DropDownCell/DropDownCell";
+import { getLoginDetailsFromLocalStorage } from "../../utils/services";
 
 const initialDataState: PageState = { skip: 0, take: 15 };
 
@@ -34,7 +30,7 @@ function Table() {
   const dispatch = useDispatch();
   const students = useSelector((state: HomeState) => state.home.students);
   const loading = useSelector((state: HomeState) => state.home.loading);
-  const role = useSelector((state: SignInState) => state.signIn.role);
+  const { role } = getLoginDetailsFromLocalStorage();
   const [page, setPage] = React.useState<PageState>(initialDataState);
   const pageChange = (event: GridPageChangeEvent) => {
     setPage({

@@ -50,7 +50,7 @@ function Header() {
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}
     >
-      <MenuItem>
+      <MenuItem onClick={handleLogout}>
         <IconButton
           size="large"
           aria-label="show 17 new notifications"

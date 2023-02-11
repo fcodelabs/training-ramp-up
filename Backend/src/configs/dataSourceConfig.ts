@@ -12,7 +12,7 @@ export const appDataSource = new DataSource({
   port: 5432,
   username: process.env.DB_USERNAME,
   password: process.env.DB_PASSWORD,
-  database: 'ramp-up',
+  database: 'postgres',
   entities: [Student, User],
   synchronize: true,
   logging: false,

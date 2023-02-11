@@ -3,6 +3,7 @@ import { takeEvery, put, call } from "redux-saga/effects";
 import { User } from "../../utils/interface";
 import axios from "../../axios";
 import { signUp, signUpSuccess, signUpFailure } from "../SignIn/signInSlice";
+import { setLoginDetailsToLocalStorage } from "../../utils/services";
 
 interface Action {
   type: string;
@@ -15,6 +16,7 @@ function* signUpUser(action: Action): Generator<any, any, any> {
       axios.post("user/signup", action.payload)
     );
     const user: User = response.data.user;
+    setLoginDetailsToLocalStorage(user.role, true, user.email);
     yield put(signUpSuccess(user));
     window.location.href = "/home";
   } catch (error: any) {

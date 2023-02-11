@@ -1,11 +1,10 @@
 import React from "react";
-import { useSelector } from "react-redux";
 import { Navigate, useLocation } from "react-router-dom";
-import { SignInState } from "./interface";
+import { getLoginDetailsFromLocalStorage } from "./services";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const ProtectedRoute = ({ children }: any) => {
-  const isLogged = useSelector((state: SignInState) => state.signIn.isLogged);
+  const { isLogged } = getLoginDetailsFromLocalStorage();
   const location = useLocation();
 
   if (!isLogged) {

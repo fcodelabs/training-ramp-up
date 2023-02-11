@@ -11,6 +11,7 @@ import {
   logoutSuccess,
   logoutFailure,
 } from "./signInSlice";
+import { setLoginDetailsToLocalStorage } from "../../utils/services";
 
 interface Action {
   type: string;
@@ -23,6 +24,7 @@ function* signInUser(action: Action): Generator<any, any, any> {
       axios.post("user/signin", action.payload)
     );
     const user: User = response.data.user;
+    setLoginDetailsToLocalStorage(user.role, true, user.email);
     yield put(signInSuccess(user));
     window.location.href = "/home";
   } catch (error: any) {
@@ -34,6 +36,7 @@ function* signInUser(action: Action): Generator<any, any, any> {
 function* logoutUser(): Generator<any, any, any> {
   try {
     yield call(() => axios.delete("user/signout"));
+    setLoginDetailsToLocalStorage("", false, "");
     yield put(logoutSuccess());
   } catch (error: any) {
     const err = error.response.data.err;

@@ -58,3 +58,16 @@ export const Validate = (data: Student) => {
     return false;
   }
 };
+
+export const setLoginDetailsToLocalStorage = (
+  role: string,
+  isLogged: boolean,
+  email: string
+) => {
+  localStorage.setItem("user", JSON.stringify({ role, isLogged, email }));
+};
+
+export const getLoginDetailsFromLocalStorage = () => {
+  const user = JSON.parse(localStorage.getItem("user") || "{}");
+  return user;
+};

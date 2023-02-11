@@ -1,7 +1,6 @@
 import * as React from "react";
 import { Student } from "../../utils/interface";
-import { useSelector } from "react-redux";
-import { SignInState } from "../../utils/interface";
+import { getLoginDetailsFromLocalStorage } from "../../utils/services";
 
 interface Props {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -16,7 +15,7 @@ interface Props {
 }
 
 export const CommandCell = (props: Props) => {
-  const role = useSelector((state: SignInState) => state.signIn.role);
+  const { role } = getLoginDetailsFromLocalStorage();
   const { dataItem } = props;
   const inEdit = dataItem[props.editField];
   const isNewItem = dataItem.id === undefined;
