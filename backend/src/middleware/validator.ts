@@ -39,7 +39,20 @@ export const validateData = [
 
 export const validate = (req: any, res: any, next: () => void) => {
   const errors = validationResult(req);
-  console.log(errors);
+  //console.log(errors);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+  next();
+};
+
+export const validateAuthData = [
+  check("data.Email").not().isEmpty().isEmail().withMessage("Invalid value"),
+  check("data.Password").not().isEmpty().withMessage("Invalid value"),
+];
+export const validateAuth = (req: any, res: any, next: () => void) => {
+  const errors = validationResult(req);
+  //console.log(errors);
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
   }

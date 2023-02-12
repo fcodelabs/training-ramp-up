@@ -27,9 +27,7 @@ passport.use(
           Provider: "google",
           Password: profile.id,
         };
-
         createOrfindUserService(user);
-       // console.log("profile", profile);
         done(null, profile);
       } catch (err) {
         done(err);
@@ -47,7 +45,6 @@ passport.use(
     },
     function (accessToken: any, refreshToken: any, profile: any, done: any) {
       profile.accessToken = accessToken;
-
       done(null, profile);
     }
   )

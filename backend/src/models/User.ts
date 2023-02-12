@@ -40,8 +40,8 @@ export class User {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  //   @Column("text", { array: true, default: "{}" })
-  //   RefreshToken: string[];
+  //@Column("text", { array: true, default: "{}" })
+  //RefreshToken: string[];
   @Column("text", { default: "" })
   RefreshToken: string;
 

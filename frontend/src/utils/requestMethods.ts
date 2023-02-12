@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import axios from 'axios'
 import { refreshAccessTokenService } from '../services/authServices'
 
@@ -17,7 +18,7 @@ const privateRequest = axios.create({
 privateRequest.interceptors.request.use(
   async (config: any) => {
     const accessToken = localStorage.getItem('accessToken')
-    if (accessToken != null) {
+    if (accessToken) {
       config.headers.Authorization = `Bearer ${accessToken}`
     }
     return config
@@ -38,13 +39,9 @@ privateRequest.interceptors.response.use(
         localStorage.setItem('accessToken', newAccessToken)
         prevRequest.headers.Authorization = `Bearer ${newAccessToken}`
       } catch (err) {
-        console.log('clear')
-        localStorage.clear()
+        if (error?.response?.status === 401) localStorage.clear()
       }
       return await privateRequest(prevRequest)
-    } else {
-      console.log('clear')
-      localStorage.clear()
     }
     return await Promise.reject(error)
   },

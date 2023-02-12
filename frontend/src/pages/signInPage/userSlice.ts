@@ -4,7 +4,6 @@ const userSlice = createSlice({
   name: 'userData',
   initialState: {
     user: null,
-    accessToken: null,
     isFetching: false,
     message: '',
     error: '',
@@ -30,7 +29,6 @@ const userSlice = createSlice({
       state.isFetching = false
       state.error = ''
       state.user = action.payload
-      state.accessToken = action.payload.accessToken
       localStorage.setItem('accessToken', action.payload.accessToken)
     },
     userLoginFailure: (state, action) => {
@@ -44,7 +42,6 @@ const userSlice = createSlice({
       state.isFetching = false
       state.error = ''
       state.user = action.payload
-      state.accessToken = action.payload.accessToken
       localStorage.setItem('accessToken', action.payload.accessToken)
     },
     authLoginFailure: (state, action) => {
@@ -55,13 +52,11 @@ const userSlice = createSlice({
       state.isFetching = false
       state.error = ''
       state.user = null
-   
     },
     userLogOutSuccess: (state) => {
       state.isFetching = false
       state.error = ''
       state.user = null
-      state.accessToken = null
       localStorage.clear()
      
     },
@@ -71,7 +66,7 @@ const userSlice = createSlice({
       state.user = null
     },
     refreshTokenSuccess: (state, action) => {
-      state.accessToken = action.payload
+      localStorage.setItem('accessToken', action.payload.accessToken)
     },
     deleteMsg: (state) => {
       state.message = ''

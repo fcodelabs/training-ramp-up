@@ -1,3 +1,4 @@
+import { validateAuth, validateAuthData } from "./../middleware/validator";
 import { Router } from "express";
 import {
   loginController,
@@ -5,14 +6,12 @@ import {
   refreshTokenController,
   signUpController,
 } from "../controllers/userController";
-import passport from "passport";
 
 const userRouter = Router();
 
-userRouter.post("/signup", signUpController);
-userRouter.post("/login", loginController);
+userRouter.post("/signup", validateAuthData, validateAuth, signUpController);
+userRouter.post("/login", validateAuthData, validateAuth, loginController);
 userRouter.get("/refresh", refreshTokenController);
 userRouter.post("/logout", logoutController);
-
 
 export default userRouter;

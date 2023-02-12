@@ -9,7 +9,7 @@ const ProtectedRoute: React.FC<Props> = (props): JSX.Element => {
   const accessToken = localStorage.getItem('accessToken')
   const location = useLocation()
   // eslint-disable-next-line react/prop-types, @typescript-eslint/strict-boolean-expressions
-  return props.allowedRoles.includes(auth?.user?.user?.Role) && accessToken ? (
+  return props.allowedRoles.includes(auth?.user?.user?.Role)  ? (
     <Outlet />
   ) : (
     <Navigate to='/login' state={{ from: location }} replace={true} />

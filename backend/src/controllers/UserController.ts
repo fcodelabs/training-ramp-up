@@ -75,7 +75,7 @@ export const refreshTokenController = async (
     const foundUser = await findUserByRefreshTokenService(refreshToken);
 
     if (!foundUser) {
-      const newErr = new BackendError("User not found", 404);
+      const newErr = new BackendError("User not found", 401);
       next(newErr);
     }
     const accessToken = jwt.verify(
@@ -83,7 +83,7 @@ export const refreshTokenController = async (
       process.env.REFRESH_TOKEN_SECRET as string,
       (err: any, decoded: any) => {
         if (err || decoded.user !== foundUser.Email) {
-          const newErr = new BackendError("Invalid token", 403);
+          const newErr = new BackendError("Invalid token", 401);
           next(newErr);
         }
         const accessToken = jwt.sign(

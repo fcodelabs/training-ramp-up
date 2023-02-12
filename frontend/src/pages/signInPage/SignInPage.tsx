@@ -50,14 +50,20 @@ export const SignInPage = (): JSX.Element => {
       distpatch(deleteMsg())
     }, 2000)
   }, [err, msg])
-
+  // eslint-disable-next-line no-useless-escape
+  const passwordRegex = /(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/
   const SignUpSchema = Yup.object().shape({
     email: Yup.string().email('Invalid email').required('Required'),
-    password: Yup.string().min(3, 'Too Short!').max(50, 'Too Long!').required('Required'),
+    password: Yup.string()
+      .min(3, 'Too Short!')
+      .max(50, 'Too Long!')
+      .required('Required')
+      .required('Password is required.'),
     confirmPassword: Yup.string().oneOf([Yup.ref('password')], 'Passwords must match'),
+    //   .matches(passwordRegex,'Password must contain at least 8 characters, including 1 upper case letter, 1 lower case letter, 1 number, and 1 special character.',)
   })
   const SignInSchema = Yup.object().shape({
-    email: Yup.string().required('Required'),
+    email: Yup.string().email('Invalid email').required('Required'),
     password: Yup.string().min(2, 'Too Short!').max(50, 'Too Long!').required('Required'),
   })
   const navigateSignIn = (): void => {
