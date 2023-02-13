@@ -8,8 +8,8 @@ import { Server } from 'socket.io'
 import cors from 'cors'
 const verifyJWT = require('./middlewares/verifyJwt')
 const cookieParser = require('cookie-parser')
-const credentials = require('./middlewares/credentials')
-const corsOptions = require('./configs/corsOptions')
+// const credentials = require('./middlewares/credentials')
+// const corsOptions = require('./configs/corsOptions')
 import {app, server, io} from './app'
 
 

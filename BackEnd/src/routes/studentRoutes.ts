@@ -5,7 +5,7 @@ const verifyJwt  = require ('../middlewares/verifyJwt')
 const router = express.Router();
 router.get('/', getAllStudents)
 router.post('/', addStudent)
-router.put('/:id', updateStudent)
+router.patch('/:id', updateStudent)
 router.delete('/:id', deleteStudent)
 
 export default router;

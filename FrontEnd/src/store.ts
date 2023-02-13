@@ -10,6 +10,7 @@ import rootSaga from '../src/rootsaga';
 const persistConfig = {
     key: 'root',
     version: 1,
+    blacklist: ['home'],
     storage,
 };
 

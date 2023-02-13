@@ -197,8 +197,6 @@ describe('Student Services Tests', () => {
         jest.spyOn(PostgresDataSource.getRepository(Student), 'remove').mockResolvedValue(student3)
         const result = await deleteSelectedStudent(req, res, next)
         expect(result).toBe(student3)
-        // expect(spyDeleteSelectedStudent).toHaveBeenCalled()
-        // expect(spyDeleteSelectedStudent).toHaveBeenCalledTimes(1)
       });
         
       test('should call next with an error if it fails to delete a student', async () => {

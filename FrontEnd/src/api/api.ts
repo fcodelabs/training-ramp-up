@@ -30,7 +30,6 @@ axiosPrivate.interceptors.response.use(
         const { data } = await axiosPrivate.get('/refresh', {
           withCredentials: true,
         })
-        console.log('data', data)
         sessionStorage.setItem('accessToken', data)
         axios.defaults.headers.common['Authorization'] = 'Bearer ' + data
         originalRequest.headers['Authorization'] = 'Bearer ' + data
@@ -63,7 +62,7 @@ export async function addUserr(user: User) {
 
 export async function updateUser(user: any) {
   try {
-    const response = await axiosPrivate.put(`home/${user.id}`, user)
+    const response = await axiosPrivate.patch(`home/${user.id}`, user)
     return response
   } catch (error) {
     console.error('error', error)

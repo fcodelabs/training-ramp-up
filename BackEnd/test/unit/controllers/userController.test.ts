@@ -1,4 +1,4 @@
-import * as userServices from '../../../src/services/authentication'
+import * as userServices from '../../../src/services/authServices'
 import { Request, Response, NextFunction } from 'express'
 import { User } from '../../../src/models/UserModel'
 import {
