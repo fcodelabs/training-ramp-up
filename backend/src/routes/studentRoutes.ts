@@ -16,7 +16,7 @@ studentRouter.get("/auth", ensureAuth, getAllStudents);
 studentRouter.get(
   "/",
   verifyJWT,
-  verifyRoles(["admin", "guest","editor"]),
+  verifyRoles([Role.ADMIN, Role.EDITOR, Role.GUEST]),
   getAllStudents
 );
 studentRouter.post(
@@ -24,7 +24,7 @@ studentRouter.post(
   verifyJWT,
   validateData,
   validate,
-  verifyRoles([Role.ADMIN, Role.EDITOR, Role.GUEST]),
+  verifyRoles([Role.ADMIN]),
   createStudent
 );
 studentRouter.patch(
