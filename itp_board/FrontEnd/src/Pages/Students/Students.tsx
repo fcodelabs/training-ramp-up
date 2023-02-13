@@ -153,7 +153,7 @@ const Student = () => {
                 />
                 <GridColumn field='address' title='Address'/>
                 <GridColumn field='mobileNo' title='Mobile No'/>
-                <GridColumn editor='date' format='{0:D}' field='dateOfBirth' title='Date of Birth'/>
+                <GridColumn editor='date' format='{0:D}' field='dateOfBirth' title='Date of Birth' />
                 <GridColumn
                     field='age'
                     title='Age'

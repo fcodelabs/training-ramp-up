@@ -9,8 +9,9 @@ dotenv.config();
 export async function createUser(req: Request, res: Response, next: NextFunction) {
 
     try {
-        const {email, firstName, lastName, password, admin} = req.body;
+        const {email, firstName, lastName, password} = req.body;
         let user = new User();
+        const admin = false;
         user = {...user, email, firstName, lastName, password, admin};
         const {token, refreshToken} = generateTokens(email);
         const response = await create(user);

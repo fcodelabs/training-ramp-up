@@ -41,6 +41,7 @@ export const createUserData = async (record: User) => {
         const config = {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
+            url:'/user/',
             data: {
                 email,
                 firstName,
