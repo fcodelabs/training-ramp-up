@@ -38,13 +38,10 @@ privateRequest.interceptors.response.use(
         localStorage.setItem('accessToken', newAccessToken)
         prevRequest.headers.Authorization = `Bearer ${newAccessToken}`
       } catch (err: any) {
-        //console.log(err)
         if (err?.response?.status === 401) localStorage.clear()
       }
       return await privateRequest(prevRequest)
     }
-    console.log(error?.response?.status)
-    //if (error?.response?.status === 401) localStorage.clear()
     return await Promise.reject(error)
   },
 )

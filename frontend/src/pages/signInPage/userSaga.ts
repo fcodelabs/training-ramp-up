@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import { ForkEffect, takeEvery, put } from 'redux-saga/effects'
 import {
   authloginService,

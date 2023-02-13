@@ -2,8 +2,6 @@ import express, { Express } from "express";
 import { createServer } from "http";
 import { Server } from "socket.io";
 
-
-
 export const app: Express = express();
 export const httpServer = createServer(app);
 

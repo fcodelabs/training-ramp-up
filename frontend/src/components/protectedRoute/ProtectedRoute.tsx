@@ -1,7 +1,6 @@
-import { useDispatch, useSelector } from 'react-redux'
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import { useSelector } from 'react-redux'
 import { useLocation, Outlet, Navigate } from 'react-router-dom'
-import { clearPersonData } from '../../pages/rampUpHome/personDataSlice'
-import { clearUser } from '../../pages/signInPage/userSlice'
 
 interface Props {
   allowedRoles: string[]
