@@ -58,7 +58,6 @@ const userSlice = createSlice({
       state.error = ''
       state.user = null
       localStorage.clear()
-     
     },
     userLogOutFailure: (state) => {
       state.isFetching = false
@@ -73,6 +72,9 @@ const userSlice = createSlice({
     },
     deleteError: (state) => {
       state.error = ''
+    },
+    clearUser: (state) => {
+      state.user = null
     },
   },
 })
@@ -93,5 +95,6 @@ export const {
   refreshTokenSuccess,
   deleteError,
   deleteMsg,
+  clearUser,
 } = userSlice.actions
 export default userSlice.reducer

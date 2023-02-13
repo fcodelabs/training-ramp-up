@@ -30,7 +30,6 @@ privateRequest.interceptors.response.use(
   (response) => response,
   async (error) => {
     const prevRequest = error?.config
-    console.log(error?.response?.status)
     // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
     if (error?.response?.status === 403 && !prevRequest?.sent) {
       prevRequest.sent = true
@@ -38,11 +37,14 @@ privateRequest.interceptors.response.use(
         const newAccessToken = await refreshAccessTokenService()
         localStorage.setItem('accessToken', newAccessToken)
         prevRequest.headers.Authorization = `Bearer ${newAccessToken}`
-      } catch (err) {
-        if (error?.response?.status === 401) localStorage.clear()
+      } catch (err: any) {
+        //console.log(err)
+        if (err?.response?.status === 401) localStorage.clear()
       }
       return await privateRequest(prevRequest)
     }
+    console.log(error?.response?.status)
+    //if (error?.response?.status === 401) localStorage.clear()
     return await Promise.reject(error)
   },
 )

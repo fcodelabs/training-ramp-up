@@ -5,6 +5,7 @@ import {
   logoutService,
   resisterService,
 } from '../../services/authServices'
+import { clearPersonData } from '../rampUpHome/personDataSlice'
 import {
   authLoginStart,
   userLoginFailure,
@@ -52,6 +53,7 @@ function* userLogOutSaga(action: any): IterableIterator<any> {
     yield logoutService(action.payload)
     console.log('logoutsaga')
     yield put(userLogOutSuccess())
+    yield put(clearPersonData())
   } catch (e) {
     yield put(userLogOutFailure())
   }

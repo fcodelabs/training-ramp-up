@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/restrict-template-expressions */
 import * as React from 'react'
 import {
   Grid,
@@ -206,7 +207,7 @@ export const HomePage = (): any => {
     <React.Fragment>
       <ToastContainer />
       <Grid
-        style={{ height: '720px' }}
+        style={{ height: '700px' }}
         data={orderBy(data.slice(page.skip, page.take + page.skip), sort)}
         onItemChange={itemChange}
         editField={editField}
@@ -232,6 +233,7 @@ export const HomePage = (): any => {
                 Add new
               </button>
             )}
+            <h3>{`You're loging with ${userData?.Email}`}</h3>
             <Button
               onClick={logOut}
               className='buttons-container-button logout-button'

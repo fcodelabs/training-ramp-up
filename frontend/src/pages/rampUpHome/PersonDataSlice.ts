@@ -11,7 +11,7 @@ const personSlice = createSlice({
     error: false,
   },
   reducers: {
-    getPersonDataStart: (state,action) => {
+    getPersonDataStart: (state, action) => {
       state.isFetching = true
     },
     getPersonDataSuccess: (state, action) => {
@@ -65,7 +65,9 @@ const personSlice = createSlice({
       state.isFetching = false
       state.error = true
     },
-   
+    clearPersonData: (state) => {
+      state.person = temp
+    },
   },
 })
 
@@ -82,5 +84,6 @@ export const {
   deletePersonDataStart,
   deletePersonDataFailure,
   deletePersonDataSuccess,
+  clearPersonData,
 } = personSlice.actions
 export default personSlice.reducer

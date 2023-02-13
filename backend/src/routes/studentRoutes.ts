@@ -9,13 +9,14 @@ import { Router } from "express";
 import { validateData, validate } from "../middleware/validator";
 import verifyRoles from "../middleware/verifyRoles";
 import { ensureAuth } from "../middleware/authentication";
+import { Role } from "../models/user";
 const studentRouter = Router();
 
 studentRouter.get("/auth", ensureAuth, getAllStudents);
 studentRouter.get(
   "/",
   verifyJWT,
-  verifyRoles(["admin", "geust","editor"]),
+  verifyRoles(["admin", "guest","editor"]),
   getAllStudents
 );
 studentRouter.post(
@@ -23,7 +24,7 @@ studentRouter.post(
   verifyJWT,
   validateData,
   validate,
-  verifyRoles(["admin"]),
+  verifyRoles([Role.ADMIN, Role.EDITOR, Role.GUEST]),
   createStudent
 );
 studentRouter.patch(
@@ -31,9 +32,9 @@ studentRouter.patch(
   verifyJWT,
   validateData,
   validate,
-  verifyRoles(["admin", "editor"]),
+  verifyRoles([Role.ADMIN, Role.EDITOR]),
   updateStudent
 );
-studentRouter.delete("/:id", verifyJWT, verifyRoles(["admin", "editor"]), deleteStudent);
+studentRouter.delete("/:id", verifyJWT, verifyRoles([Role.ADMIN, Role.EDITOR]), deleteStudent);
 
 export default studentRouter;

@@ -35,12 +35,12 @@ export const loginController = async (
       const accessToken = jwt.sign(
         { userInfo: { userRole: userLogin.Role, userEmail: userLogin.Email } },
         process.env.ACCESS_TOKEN_SECRET as string,
-        { expiresIn: "3s" }
+        { expiresIn: "30s" }
       );
       const refreshToken = jwt.sign(
         { user: userLogin.Email },
         process.env.REFRESH_TOKEN_SECRET as string,
-        { expiresIn: "3d" }
+        { expiresIn: "1d" }
       );
       await updateRefreshTokenService(userLogin, refreshToken);
 
@@ -91,7 +91,7 @@ export const refreshTokenController = async (
             userInfo: { userRole: foundUser.Role, userEmail: foundUser.Email },
           },
           process.env.ACCESS_TOKEN_SECRET as string,
-          { expiresIn: "3s" }
+          { expiresIn: "30s" }
         );
         res.send(accessToken);
       }

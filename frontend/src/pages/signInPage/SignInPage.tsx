@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useEffect, useState } from 'react'
 import './signInPage.css'
 import { Formik, Form, Field } from 'formik'
@@ -20,6 +21,7 @@ export const SignInPage = (): JSX.Element => {
   const navigate = useNavigate()
   const location = useLocation()
   const notify = (msg: string): any => toast(msg)
+  const notifyError = (msg: string): any => toast.error(msg)
   const err = useSelector((state: any) => state?.userData?.error)
   const msg = useSelector((state: any) => state?.userData?.message)
   // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
@@ -37,7 +39,7 @@ export const SignInPage = (): JSX.Element => {
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
     if (err) {
-      notify(err)
+      notifyError(err)
       setTimeout(() => {
         distpatch(deleteError())
       }, 2000)

@@ -17,13 +17,8 @@ export const authloginService = async (): Promise<string> => {
 }
 export const refreshAccessTokenService = async (): Promise<string> => {
   // eslint-disable-next-line no-useless-catch
-  try {
-    const res = await publicRequest.get('/users/refresh')
-    return res.data
-  } catch (err) {
-    localStorage.clear()
-    throw err
-  }
+  const res = await publicRequest.get('/users/refresh')
+  return res.data
 }
 
 export const logoutService = async (user: any): Promise<string> => {
