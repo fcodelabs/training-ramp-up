@@ -26,7 +26,7 @@ export const logoutService = async (user: any): Promise<string> => {
   try {
     console.log(user)
     const data = { data: user }
-    // const test = await publicRequest.get('/auth/logout')
+   const test = await publicRequest.get('/auth/logout')
     const res = await publicRequest.post('/users/logout', data)
     return res.data
   } catch (err) {

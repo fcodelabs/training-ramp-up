@@ -91,9 +91,9 @@ export const SignInPage = (): JSX.Element => {
     window.open('http://localhost:5000/api/auth/github', '_self')
   }
 
-  // useEffect(() => {
-  //   distpatch(authLoginStart())
-  // }, [])
+  useEffect(() => {
+    distpatch(authLoginStart())
+  }, [])
 
   return (
     <>
