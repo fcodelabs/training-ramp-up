@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { StudentService } from './student.service';
-import { StudentEntity } from '../models/student.entity';
+import { StudentEntity } from '../entities/student.entity';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { HttpException } from '@nestjs/common';
 

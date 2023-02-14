@@ -3,7 +3,7 @@ import { UserService } from './user.service';
 import { HttpException } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { UserDto } from '../dto/user.dto';
-import { UserEntity } from '../models/user.entity';
+import { UserEntity } from '../entities/user.entity';
 import { getRepositoryToken } from '@nestjs/typeorm';
 
 describe('UserService', () => {
