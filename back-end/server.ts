@@ -2,7 +2,9 @@ const express = require("express");
 const http = require("http");
 import * as BodyParser from "body-parser";
 import cors from "cors";
+const verifyJWT = require("./src/middlewares/verifyJWT");
 const app = express();
+const cookieParser = require("cookie-parser");
 const { Server } = require("socket.io");
 
 //routers list
@@ -11,8 +13,13 @@ const userRouter = require("./src/routes/userRouter");
 
 app.use(cors());
 app.use(BodyParser.json());
-app.use("/api/student", studentRouter);
+app.use(BodyParser.urlencoded({ extended: true }));
+app.use(cookieParser());
+
 app.use("/api/user", userRouter);
+
+app.use(verifyJWT);
+app.use("/api/student", studentRouter);
 
 const server = http.createServer(app);
 

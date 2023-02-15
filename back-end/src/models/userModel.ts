@@ -1,4 +1,5 @@
 const Joi = require("joi");
+const jwt = require("jsonwebtoken");
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -9,6 +10,9 @@ import {
 
 @Entity()
 export class User {
+  generateAuthToken(user: User) {
+    throw new Error("Method not implemented.");
+  }
   @PrimaryColumn()
   email: string;
 
@@ -17,6 +21,7 @@ export class User {
 
   @Column()
   userRole: string;
+  static methods: any;
 }
 
 export function validateUser(user: any) {
@@ -27,3 +32,14 @@ export function validateUser(user: any) {
 
   return schema.validate(user).error;
 }
+
+export const generateAuthToken = (data) => {
+  const token = jwt.sign(
+    { id: data?._id, userRole: data?.userRole },
+    "jwtPrivateKey",
+    {
+      expiresIn: "1d",
+    }
+  );
+  return token;
+};
