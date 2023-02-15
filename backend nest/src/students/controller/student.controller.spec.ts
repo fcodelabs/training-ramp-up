@@ -136,7 +136,7 @@ describe('StudentController', () => {
       PersonMobileNo: 'test',
       DateOfBirth: new Date(),
     };
-    const result: UpdateStudentDto = {
+    const result: Student = {
       PersonID: 1,
       PersonName: 'test',
       PersonGender: 'Male',

@@ -28,16 +28,11 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   @Post('/signup')
   async signUpUser(@Body() newStudent: LoginUserDto): Promise<message> {
-    try {
-      const salt = await bcrypt.genSalt(10);
-      const hashedPassword = await bcrypt.hash(newStudent.Password, salt);
-      newStudent.Password = hashedPassword;
-      await this.userService.signUpUser(newStudent);
-      return { message: 'sign up successfully' };
-    } catch (err) {
-      if (err.code === '23505')
-        throw new ForbiddenException('user already exits');
-    }
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(newStudent.Password, salt);
+    newStudent.Password = hashedPassword;
+    await this.userService.signUpUser(newStudent);
+    return { message: 'sign up successfully' };
   }
 
   @HttpCode(HttpStatus.OK)
@@ -92,14 +87,14 @@ export class AuthController {
       this.jwtService.signAsync(
         { Role, Email },
         {
-          secret: process.env.ACCESS_TOKEN_SECRET,
+          secret: process.env.ACCESS_TOKEN_SECRET || 'secret',
           expiresIn: '3s',
         },
       ),
       this.jwtService.signAsync(
         { Email },
         {
-          secret: process.env.REFRESH_TOKEN_SECRET,
+          secret: process.env.REFRESH_TOKEN_SECRET || 'secret',
           expiresIn: '1d',
         },
       ),

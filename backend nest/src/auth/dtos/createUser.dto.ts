@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 import { IsEnum, IsNotEmpty, IsString, Length } from 'class-validator';
-import { Role } from 'src/types/role';
+import { Role } from '../../types/role';
 
 export class CreateUserDto {
   @IsNotEmpty()

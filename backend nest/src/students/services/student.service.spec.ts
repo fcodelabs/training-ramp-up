@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import { UpdateStudentDto } from './../dtos/updateStudent.dto';
 import { NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
@@ -106,7 +108,7 @@ describe('StudentService', () => {
 
   describe('Update student', () => {
     const id = 5;
-    const student: Student = {
+    const student: UpdateStudentDto = {
       PersonID: 1,
       PersonName: 'test',
       PersonGender: 'Male',

@@ -3,9 +3,10 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { AuthService } from './auth.service';
-import { Role, User } from '../../entity/user';
+import { User } from '../../entity/user';
 import { CreateUserDto } from '../dtos/createUser.dto';
 import { BadRequestException } from '@nestjs/common';
+import { Role } from '../../types/role';
 
 describe('AuthService', () => {
   let service: AuthService;
@@ -43,7 +44,7 @@ describe('AuthService', () => {
     const user: CreateUserDto = {
       Email: 'test',
       Password: '$2y$10$xIBKK7P8iCFozE.ydnXlTOrJPZl7GzdfnGcuiV/R6CRjojyWU2Bn2',
-      Role: 'admin',
+      Role: Role.ADMIN,
     };
 
     const insertResult = {
@@ -72,7 +73,7 @@ describe('AuthService', () => {
     const user: CreateUserDto = {
       Email: 'test',
       Password: '$2y$10$xIBKK7P8iCFozE.ydnXlTOrJPZl7GzdfnGcuiV/R6CRjojyWU2Bn2',
-      Role: 'admin',
+      Role: Role.ADMIN,
     };
 
     const userAlreadyExistsExp = new BadRequestException('User already exists');
