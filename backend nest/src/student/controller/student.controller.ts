@@ -1,3 +1,4 @@
+import { Student } from 'src/entity/student';
 import { StudentService } from './../services/student.service';
 import {
   Body,
@@ -11,6 +12,7 @@ import {
   ValidationPipe,
   UsePipes,
   UseGuards,
+  HttpCode,
 } from '@nestjs/common';
 import { CreateStudentDto } from '../dtos/createStudent.dto';
 import { UpdateStudentDto } from '../dtos/updateStudent.dto';
@@ -29,11 +31,12 @@ export class StudentController {
   @Get()
   @UseGuards(AccessTokenGuard, RolesGuard)
   @Roles([Role.ADMIN, Role.GUEST])
-  async getAllStudents() {
+  async getAllStudents(): Promise<Student[]> {
     const students = await this.studentService.getStudents();
     return students;
   }
   @Post()
+  @HttpCode(201)
   @UseGuards(AccessTokenGuard, RolesGuard)
   @Roles([Role.ADMIN])
   @UsePipes(ValidationPipe)

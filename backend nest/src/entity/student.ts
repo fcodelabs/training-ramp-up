@@ -6,19 +6,19 @@ export class Student {
   @PrimaryGeneratedColumn()
   PersonID: number;
 
-  @Column()
-  PersonName!: string;
+  @Column({nullable: true})
+  PersonName: string;
 
-  @Column()
-  PersonGender!: string;
+  @Column({nullable: true})
+  PersonGender: string;
 
-  @Column()
-  PersonAddress!: string;
+  @Column({nullable: true})
+  PersonAddress: string;
 
-  @Column()
-  PersonMobileNo!: string;
+  @Column({nullable: true})
+  PersonMobileNo: string;
 
-  @Column()
-  DateOfBirth!: Date;
+  @Column({nullable: true})
+  DateOfBirth: Date;
  
 }

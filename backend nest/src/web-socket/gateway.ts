@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 import { OnModuleInit } from '@nestjs/common';
 import { WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
-import { Server, Socket } from 'socket.io';
+import { Server } from 'socket.io';
 
 const options = {
   cors: {

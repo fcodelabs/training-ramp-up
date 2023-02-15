@@ -1,5 +1,6 @@
 /* eslint-disable prettier/prettier */
 import { IsEnum, IsNotEmpty, IsString, Length } from 'class-validator';
+import { Role } from 'src/types/role';
 
 export class CreateUserDto {
   @IsNotEmpty()
@@ -11,7 +12,6 @@ export class CreateUserDto {
   Password: string;
   @IsNotEmpty()
   @IsString()
-  @IsEnum(['admin', 'guest', 'editor'])
-  Role: string;
-  
+  @IsEnum([Role.ADMIN, Role.GUEST, Role.EDITOR])
+  Role: Role;
 }

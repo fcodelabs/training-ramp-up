@@ -17,6 +17,7 @@ import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { LoginUserDto } from '../dtos/loginUser.dto';
 import { Response } from 'express';
+import { loginOutput, message } from '../types/types';
 
 @Controller('users')
 export class AuthController {
@@ -26,13 +27,13 @@ export class AuthController {
   ) {}
   @HttpCode(HttpStatus.OK)
   @Post('/signup')
-  async signUpUser(@Body() newStudent: LoginUserDto) {
+  async signUpUser(@Body() newStudent: LoginUserDto): Promise<message> {
     try {
       const salt = await bcrypt.genSalt(10);
       const hashedPassword = await bcrypt.hash(newStudent.Password, salt);
       newStudent.Password = hashedPassword;
-      const user = await this.userService.signUpUser(newStudent);
-      return user;
+      await this.userService.signUpUser(newStudent);
+      return { message: 'sign up successfully' };
     } catch (err) {
       if (err.code === '23505')
         throw new ForbiddenException('user already exits');
@@ -44,7 +45,7 @@ export class AuthController {
   async loginUser(
     @Body() newStudent: CreateUserDto,
     @Res({ passthrough: true }) res: Response,
-  ) {
+  ): Promise<loginOutput> {
     const user = await this.userService.getUserByEmail(newStudent.Email);
     if (!user) throw new ForbiddenException('Invalid credentials');
     const isPasswordValid = await bcrypt.compare(
@@ -68,19 +69,25 @@ export class AuthController {
   }
 
   @Post('/logout')
-  async logOutUser() {
-    // return this.userService.logOutUser();
+  async logOutUser(
+    @Res({ passthrough: true }) res: Response,
+  ): Promise<message> {
+    res.clearCookie('refresh_token');
+    return { message: 'Logged out successfully' };
   }
 
   @UseGuards(RefreshTokenGuard)
   @Get('/refresh')
-  async refreshToken(@Req() req: any) {
+  async refreshToken(@Req() req: any): Promise<string> {
     const user = await this.userService.getUserByEmail(req.user.Email);
     const { accessToken } = await this.getTokens(user.Role, user.Email);
     return accessToken;
   }
 
-  async getTokens(Role: string, Email: string) {
+  async getTokens(
+    Role: string,
+    Email: string,
+  ): Promise<{ accessToken: string; refreshToken: string }> {
     const [accessToken, refreshToken] = await Promise.all([
       this.jwtService.signAsync(
         { Role, Email },

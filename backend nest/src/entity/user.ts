@@ -10,12 +10,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import * as bcrypt from 'bcrypt';
-
-export enum Role {
-  ADMIN = 'admin',
-  GUEST = 'guest',
-  EDITOR = 'editor',
-}
+import { Role } from '../types/role';
 
 @Entity()
 export class User {
@@ -43,7 +38,7 @@ export class User {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  @Column('text', { default: '' })
+  @Column('text', { nullable: true })
   RefreshToken: string;
 
   @Column('text', { default: 'local' })
