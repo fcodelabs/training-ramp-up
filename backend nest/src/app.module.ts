@@ -3,7 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { dataSourceOptions } from './database.provider/config/database.config';
-import { StudentModule } from './student/student.module';
+import { StudentModule } from './students/student.module';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
 import { WebSocketModule } from './web-socket/web-socket.module';
