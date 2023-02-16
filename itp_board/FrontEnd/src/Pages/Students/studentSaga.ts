@@ -70,7 +70,6 @@ function* remove(action: PayloadAction<number>) {
 }
 
 
-
 export default function* studentSaga() {
     yield takeEvery(startGetData, get);
     yield takeEvery(startAddNew, create);

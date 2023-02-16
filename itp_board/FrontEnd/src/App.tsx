@@ -9,9 +9,7 @@ import RequireAuth from './utils/RequireAuth';
 function App() {
     return (
         <>
-
             <Routes>
-
                 <Route path={'/'} element={<SignIn/>}/>
                 <Route path='signup' element={<SignUp/>}/>
                 <Route path='students' element={

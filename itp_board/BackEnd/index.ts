@@ -12,7 +12,7 @@ app.use(morgan('tiny'));
 app.use(express.json());
 app.use(cookieParser());
 
-app.use('/student', studentRouter);
+app.use('/students', studentRouter);
 app.use('/user', userRouter);
 
 server.listen(port, () => {

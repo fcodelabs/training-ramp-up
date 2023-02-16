@@ -10,7 +10,7 @@ import {editableInputTypes} from "@testing-library/user-event/dist/utils";
 export async function fetchData(): Promise<Student[] | unknown> {
     const config = {
         method: 'get',
-        url: `/student`,
+        url: `/students`,
     }
     const response = await axiosPrivate(config);
     const data: Student[] = response.data;
@@ -24,7 +24,7 @@ export const updateData = async (record: Student) => {
     if(Object.keys(editedFields).length>1){
         await axiosPrivate({
             method: 'PATCH',
-            url: `/student`,
+            url: `/students`,
             data:editedFields,
         })
     }
@@ -35,13 +35,13 @@ export const updateData = async (record: Student) => {
 export const createData = async (record: Student) => {
        await axiosPrivate({
             method: 'POST',
-            url: `/student`,
+            url: `/students`,
             data:record
         })
 }
 export const deleteData = async (id: number) => {
     await axiosPrivate({
         method: 'DELETE',
-        url: `/student/${id}`,
+        url: `/students/${id}`,
     })
 }
