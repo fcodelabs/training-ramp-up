@@ -6,12 +6,10 @@ import {
   Param,
   Patch,
   Post,
-  Res,
   UseGuards,
 } from '@nestjs/common';
 import { StudentService } from '../service/student.service';
 import { StudentDto } from '../dto/student.dto';
-import { Response } from 'express';
 import { SocketGateway } from '../../utils/socket.gateway';
 import { AuthGuard } from '@nestjs/passport';
 import { Roles } from '../../users/guards/roles/roles.decorator';
@@ -26,9 +24,9 @@ export class StudentController {
 
   @UseGuards(AuthGuard('jwt'))
   @Get()
-  async getStudent(@Res() res: Response): Promise<Response> {
+  async getStudent(): Promise<StudentDto[]> {
     const students = await this.studentService.getStudent();
-    return res.status(200).json(students);
+    return students;
   }
 
   @UseGuards(AuthGuard('jwt'), RoleGuard)
@@ -37,53 +35,36 @@ export class StudentController {
   async updateStudent(
     @Param('id') id: number,
     @Body() student: StudentDto,
-    @Res() res: Response,
-  ): Promise<Response> {
+  ): Promise<StudentDto> {
     const updatedStudent = await this.studentService.updateStudent(id, student);
     this.socketGateway.emitEvent(
       'notification',
       `Student's data updated successfully with name ${updatedStudent.name}`,
     );
-    return res
-      .status(200)
-      .send(
-        `Student's data updated successfully with name ${updatedStudent.name}`,
-      );
+    return updatedStudent;
   }
 
   @UseGuards(AuthGuard('jwt'), RoleGuard)
   @Roles('admin')
   @Post()
-  async addStudent(
-    @Body() student: StudentDto,
-    @Res() res: Response,
-  ): Promise<void> {
+  async addStudent(@Body() student: StudentDto): Promise<StudentDto> {
     const addedStudent = await this.studentService.addStudent(student);
     this.socketGateway.emitEvent(
       'notification',
       `Student added Successfully with name ${addedStudent.name}`,
     );
-    res.status(201).send(addedStudent);
+    return addedStudent;
   }
 
   @UseGuards(AuthGuard('jwt'), RoleGuard)
   @Roles('admin')
   @Delete('/:id')
-  async deleteStudent(
-    @Param('id') id: number,
-    @Res() res: Response,
-  ): Promise<void> {
+  async deleteStudent(@Param('id') id: number): Promise<StudentDto> {
     const deletedStudent = await this.studentService.deleteStudent(id);
     this.socketGateway.emitEvent(
       'notification',
       `Student deleted Successfully with name ${deletedStudent.name}`,
     );
-    res
-      .status(200)
-      .send(
-        `Student deleted Successfully with name ${
-          deletedStudent && deletedStudent.name
-        }`,
-      );
+    return deletedStudent;
   }
 }

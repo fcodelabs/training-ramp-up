@@ -1,18 +1,11 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { StudentController } from './student.controller';
 import { StudentService } from '../service/student.service';
-import { Response } from 'express';
 import { SocketGateway } from '../../utils/socket.gateway';
 import { HttpException, HttpStatus } from '@nestjs/common';
 
 describe('StudentController', () => {
   let controller: StudentController;
-
-  const responseMock = {
-    status: jest.fn().mockReturnThis(),
-    json: jest.fn().mockReturnThis(),
-    send: jest.fn().mockReturnThis(),
-  } as unknown as Response;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -58,9 +51,8 @@ describe('StudentController', () => {
       ];
       const studentService = controller['studentService'];
       jest.spyOn(studentService, 'getStudent').mockResolvedValue(students);
-      await controller.getStudent(responseMock);
-      expect(responseMock.status).toHaveBeenCalledWith(200);
-      expect(responseMock.json).toHaveBeenCalledWith(students);
+      await controller.getStudent();
+      expect(studentService.getStudent).toBeCalled();
     });
 
     it('should throw error', async () => {
@@ -74,7 +66,7 @@ describe('StudentController', () => {
           ),
         );
       try {
-        await controller.getStudent(responseMock);
+        await controller.getStudent();
       } catch (error) {
         expect(error.message).toBe('Error retrieving students');
         expect(error.status).toBe(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -95,8 +87,11 @@ describe('StudentController', () => {
         .spyOn(studentService, 'updateStudent')
         .mockResolvedValue(mockStudent as any);
 
-      await controller.updateStudent(1, mockStudentDto as any, responseMock);
-      expect(responseMock.status).toHaveBeenCalledWith(200);
+      await controller.updateStudent(1, mockStudentDto as any);
+      expect(studentService.updateStudent).toBeCalledWith(
+        1,
+        mockStudentDto as any,
+      );
       expect(controller['socketGateway'].emitEvent).toBeCalledWith(
         'notification',
         `Student's data updated successfully with name ${mockStudent.name}`,
@@ -114,7 +109,7 @@ describe('StudentController', () => {
         );
 
       try {
-        await controller.updateStudent(1, {} as any, responseMock);
+        await controller.updateStudent(1, {} as any);
       } catch (error) {
         expect(error.message).toBe('Error updating student');
         expect(error.status).toBe(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -133,8 +128,8 @@ describe('StudentController', () => {
         .spyOn(studentService, 'deleteStudent')
         .mockResolvedValue(mockStudent as any);
 
-      await controller.deleteStudent(1, responseMock);
-      expect(responseMock.status).toHaveBeenCalledWith(200);
+      await controller.deleteStudent(1);
+      expect(studentService.deleteStudent).toBeCalledWith(1);
       expect(controller['socketGateway'].emitEvent).toBeCalledWith(
         'notification',
         `Student deleted Successfully with name ${mockStudent.name}`,
@@ -153,7 +148,7 @@ describe('StudentController', () => {
         );
 
       try {
-        await controller.deleteStudent(1, responseMock);
+        await controller.deleteStudent(1);
       } catch (error) {
         expect(error.message).toBe('Error deleting student');
         expect(error.status).toBe(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -173,8 +168,8 @@ describe('StudentController', () => {
         .spyOn(studentService, 'addStudent')
         .mockResolvedValue(mockStudent as any);
 
-      await controller.addStudent(mockStudentDto as any, responseMock);
-      expect(responseMock.status).toHaveBeenCalledWith(201);
+      await controller.addStudent(mockStudentDto as any);
+      expect(studentService.addStudent).toBeCalledWith(mockStudentDto as any);
       expect(controller['socketGateway'].emitEvent).toBeCalledWith(
         'notification',
         `Student added Successfully with name ${mockStudent.name}`,
@@ -193,7 +188,7 @@ describe('StudentController', () => {
         );
 
       try {
-        await controller.addStudent({} as any, responseMock);
+        await controller.addStudent({} as any);
       } catch (error) {
         expect(error.message).toBe('Error adding student');
         expect(error.status).toBe(HttpStatus.INTERNAL_SERVER_ERROR);
