@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 export const axiosClient = axios.create({
-  baseURL: 'http://localhost:8080/api/student',
+  baseURL: 'http://localhost:8080/api',
 })
 export async function resolver(axiosResponse: any) {
   const response = await axiosResponse

@@ -1,5 +1,7 @@
-import student from './modules/student';
+import student from './modules/student'
+import user from './modules/user'
 
 export default {
-    student,
-};
+  student,
+  user,
+}
