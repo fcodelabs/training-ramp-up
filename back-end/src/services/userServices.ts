@@ -10,7 +10,7 @@ export async function registerStudent(req: Request) {
   const checkEmail = await userRepository.findOneBy({ email: req.body.email });
 
   if (checkEmail) {
-    throw new Error("Email already exists");
+    return false;
   } else {
     const salt = await bcrypt.genSalt(10);
     const password = await bcrypt.hash(req.body.password, salt);

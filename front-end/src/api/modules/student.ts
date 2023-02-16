@@ -12,18 +12,18 @@ interface StudentResponse {
 
 export default {
   getStudents() {
-    return resolver(axiosClient.get('/'))
+    return resolver(axiosClient.get('student/'))
   },
 
   postStudent(student: StudentResponse) {
-    return resolver(axiosClient.post('/', student))
+    return resolver(axiosClient.post('student/', student))
   },
 
   putStudent(id: number, student: StudentResponse) {
-    return resolver(axiosClient.patch(`/${id}`, student))
+    return resolver(axiosClient.patch(`student/${id}`, student))
   },
 
   deleteStudent(id: number) {
-    return resolver(axiosClient.delete(`/${id}`))
+    return resolver(axiosClient.delete(`student/${id}`))
   },
 }

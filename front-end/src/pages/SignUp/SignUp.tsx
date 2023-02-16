@@ -11,12 +11,17 @@ import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import Container from '@mui/material/Container'
 import Alert from '@mui/material/Alert'
+import { useNavigate } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
+import { signUpUser } from '../SignIn/userSlice'
 
 import { createTheme, ThemeProvider } from '@mui/material/styles'
 import { useState } from 'react'
 
 const theme = createTheme()
 export default function SignUp() {
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
   interface IBuyer {
     email: string
     password: string
@@ -94,7 +99,9 @@ export default function SignUp() {
     const result = schema.validate(user)
     const { error } = result
     if (!error) {
-      console.log('Submitted')
+      const usertoSign = { email: user.email, password: user.password }
+      console.log(usertoSign)
+      dispatch(signUpUser(usertoSign))
     } else {
       const errorData: any = {}
       for (const item of error.details) {
