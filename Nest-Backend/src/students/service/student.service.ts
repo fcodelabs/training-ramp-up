@@ -13,7 +13,11 @@ export class StudentService {
 
   async getStudent(): Promise<StudentEntity[]> {
     try {
-      return await this.studentRepository.find();
+      return await this.studentRepository.find({
+        order: {
+          id: 'ASC',
+        },
+      });
     } catch (error) {
       throw new HttpException(error.message, error.status);
     }
