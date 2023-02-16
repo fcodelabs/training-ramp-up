@@ -23,6 +23,7 @@ function* signUpUserSaga(action: signUpUserAction): Generator<any, any, any> {
       toast.success('Registration Succesfull!')
       window.location.href = '/'
     } else if (response.status == 200) {
+      toast.error('Email already registered!')
       yield put(signUpUserFailure(response.data.data))
     } else {
       yield put(signUpUserFailure(response.data.data))
