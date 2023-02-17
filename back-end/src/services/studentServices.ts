@@ -8,7 +8,7 @@ export async function getAllStudents() {
   return students;
 }
 
-export async function addStudentDetails(req: Request) {
+export async function addStudentDetails(req) {
   const newStudent = {
     name: req.body.name,
     gender: req.body.gender,
@@ -23,7 +23,8 @@ export async function addStudentDetails(req: Request) {
   return savedStudent;
 }
 
-export async function updateStudentDetails(req: Request) {
+export async function updateStudentDetails(req) {
+  const id = parseInt(req.params.id, 10);
   const student = await AppDataSource.getRepository(Student).findOne({
     where: { id: parseInt(req.params.id, 10) },
   });
@@ -39,7 +40,7 @@ export async function updateStudentDetails(req: Request) {
   }
 }
 
-export async function deleteAStudent(id: number) {
+export async function deleteAStudent(id) {
   const student = await AppDataSource.getRepository(Student).delete(id);
   global.io.emit("notify", { message: `A student deleted` });
   return student;

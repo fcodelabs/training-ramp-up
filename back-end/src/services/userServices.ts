@@ -4,10 +4,12 @@ import { AppDataSource } from "../configs/dbConfig";
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
-const userRepository = AppDataSource.getRepository(User);
+// const userRepository = AppDataSource.getRepository(User);
 
-export async function registerStudent(req: Request) {
-  const checkEmail = await userRepository.findOneBy({ email: req.body.email });
+export async function registerStudent(req) {
+  const checkEmail = await AppDataSource.getRepository(User).findOneBy({
+    email: req.body.email,
+  });
 
   if (checkEmail) {
     return false;
@@ -25,9 +27,11 @@ export async function registerStudent(req: Request) {
   }
 }
 
-export async function loginService(req: Request) {
+export async function loginService(req) {
   //check whether user is existed
-  const user = await userRepository.findOneBy({ email: req.body.email });
+  const user = await AppDataSource.getRepository(User).findOneBy({
+    email: req.body.email,
+  });
   if (!user) {
     throw new Error("Invalid Username");
   }
@@ -41,7 +45,7 @@ export async function loginService(req: Request) {
   return user;
 }
 
-export async function handleRefreshTokenService(req: Request) {
+export async function handleRefreshTokenService(req) {
   const cookies = req.cookies;
   console.log("abc", cookies);
   if (!cookies) throw new Error("Invalid Token");
