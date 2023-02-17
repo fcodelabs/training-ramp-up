@@ -47,22 +47,3 @@ export function validateStudent(student: any) {
 
   return schema.validate(student).error;
 }
-
-export function validateStudentUpdate(student: any) {
-  const schema = Joi.object({
-    id: Joi.number().required(),
-    name: Joi.string()
-      .regex(/^[\w'\-,.][^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{0,}$/, "name")
-      .required(),
-    gender: Joi.string().required(),
-    address: Joi.string().required(),
-    mobile: Joi.string()
-      .length(10)
-      .regex(/^[0-9]+$/, "given")
-      .required(),
-    dob: Joi.date().required(),
-    age: Joi.number().required(),
-  });
-
-  return schema.validate(student).error;
-}

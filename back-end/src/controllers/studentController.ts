@@ -1,9 +1,5 @@
 import { Request, Response } from "express";
-import {
-  Student,
-  validateStudent,
-  validateStudentUpdate,
-} from "../models/StudentModel";
+import { Student, validateStudent } from "../models/StudentModel";
 import { AppDataSource } from "../configs/dbConfig";
 import {
   getAllStudents,

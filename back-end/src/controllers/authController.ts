@@ -1,18 +1,16 @@
 import { Request, Response } from "express";
-import { User, validateUser, generateAuthToken } from "../models/userModel";
-import { AppDataSource } from "../configs/dbConfig";
+import { validateUser } from "../models/userModel";
+
 import {
-  registerStudent,
   loginService,
   handleRefreshTokenService,
 } from "../services/userServices";
 const generateOutput = require("../utils/outputFactory");
-const userRepository = AppDataSource.getRepository(User);
-const bcrypt = require("bcrypt");
+
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
-async function login(req: Request, res: Response) {
+export async function login(req: Request, res: Response) {
   //validating the user
   const error1 = validateUser(req.body);
   if (error1)
@@ -38,7 +36,7 @@ async function login(req: Request, res: Response) {
       .status(200)
       .json({ accessToken: accessToken });
   } catch (err) {
-    return res.status(500).send(generateOutput(500, "error", err.message));
+    return res.status(500).json(generateOutput(500, "error", err.message));
   }
 }
 
@@ -51,7 +49,7 @@ async function handleRefreshToken(req: Request, res: Response) {
   }
 }
 
-async function logout(req: Request, res: Response) {
+export async function logout(req: Request, res: Response) {
   const cookies = req.cookies;
   if (!cookies.jwt)
     return res.status(401).send(generateOutput(401, "error", "Unauthorized"));
