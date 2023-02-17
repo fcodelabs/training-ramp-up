@@ -22,7 +22,7 @@ export class StudentService {
     //this.logger.log('Getting all students');
     //this.logger.error('Getting all students');
     try {
-      return await this.studentRepository.find({ order: { PersonID: 'ASC' } });
+      return await this.studentRepository.find({ order: { personID: 'ASC' } });
     } catch (err) {
       throw new NotFoundException('failed to get students');
     }
