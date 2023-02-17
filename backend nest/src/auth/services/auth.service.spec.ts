@@ -3,10 +3,11 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { AuthService } from './auth.service';
-import { User } from '../../entity/user';
+import { User } from '../entity/user';
 import { CreateUserDto } from '../dtos/createUser.dto';
 import { BadRequestException } from '@nestjs/common';
 import { Role } from '../../types/role';
+import { ForbiddenException } from '@nestjs/common/exceptions';
 
 describe('AuthService', () => {
   let service: AuthService;
@@ -64,7 +65,7 @@ describe('AuthService', () => {
         userRepository.save = jest.fn().mockRejectedValue(null);
         const res = await service.signUpUser(user);
       } catch (err) {
-        expect(err).toEqual(null);
+        expect(err).toEqual(new ForbiddenException('user already exits'));
       }
     });
   });

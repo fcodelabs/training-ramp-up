@@ -31,7 +31,8 @@ export class AuthController {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(newStudent.Password, salt);
     newStudent.Password = hashedPassword;
-    await this.userService.signUpUser(newStudent);
+    const user = await this.userService.signUpUser(newStudent);
+    if (!user) throw new ForbiddenException('user already exits');
     return { message: 'sign up successfully' };
   }
 

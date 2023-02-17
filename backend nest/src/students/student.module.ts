@@ -2,7 +2,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Module } from '@nestjs/common';
 import { StudentController } from './controller/student.controller';
 import { StudentService } from './services/student.service';
-import { Student } from 'src/entity/student';
+import { Student } from 'src/students/entity/student';
 import { AccessTokenGuard } from 'src/guards/authGuard/accessToken.guard';
 import { RolesGuard } from 'src/guards/roleGuard/roles.guard';
 import { JwtModule } from '@nestjs/jwt';

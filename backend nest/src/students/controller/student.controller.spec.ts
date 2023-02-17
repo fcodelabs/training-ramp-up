@@ -4,7 +4,7 @@ import { JwtService } from '@nestjs/jwt';
 import { Test, TestingModule } from '@nestjs/testing';
 import { StudentService } from '../services/student.service';
 import { StudentController } from './student.controller';
-import { Student } from '../../entity/student';
+import { Student } from '../entity/student';
 import { gateWay } from '../../web-socket/gateway';
 
 describe('StudentController', () => {

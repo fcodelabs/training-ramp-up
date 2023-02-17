@@ -5,7 +5,7 @@ import { AuthController } from './auth.controller';
 import { JwtService } from '@nestjs/jwt';
 import { Response } from 'express';
 import { CreateUserDto } from '../dtos/createUser.dto';
-import { User } from '../../entity/user';
+import { User } from '../entity/user';
 import bcrypt = require('bcrypt');
 import { Role } from '../../types/role';
 import { ForbiddenException } from '@nestjs/common/exceptions';
@@ -93,7 +93,7 @@ describe('AuthController', () => {
       try {
         const response = await controller.signUpUser(user);
       } catch (err) {
-        expect(err).toEqual(null);
+        expect(err).toEqual(new ForbiddenException('user already exits'));
       }
       spySignupUser.mockRestore();
     });
