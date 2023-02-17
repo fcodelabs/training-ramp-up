@@ -1,7 +1,10 @@
+import { ForbiddenException } from '@nestjs/common';
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import { UpdateStudentDto } from './../dtos/updateStudent.dto';
 import { NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { Student } from '../../entity/student';
+import { Student } from '../entity/student';
 import { Repository } from 'typeorm';
 import { StudentService } from './student.service';
 
@@ -39,7 +42,7 @@ describe('StudentService', () => {
   });
 
   describe('getStudents', () => {
-    const noStudentFoundEx = new NotFoundException('No students found');
+    const noStudentFoundEx = new ForbiddenException('failed to get students');
     const result = [
       {
         PersonID: 1,
@@ -68,7 +71,7 @@ describe('StudentService', () => {
         studentRepository.find = jest.fn().mockRejectedValue(null);
         const res = await service.getStudents();
       } catch (err) {
-        expect(err).toEqual(null);
+        expect(err).toEqual(new ForbiddenException('failed to get students'));
       }
     });
   });
@@ -99,14 +102,14 @@ describe('StudentService', () => {
         studentRepository.save = jest.fn().mockRejectedValue(null);
         const res = await service.createStudent(student);
       } catch (err) {
-        expect(err).toEqual(null);
+        expect(err).toEqual(new ForbiddenException('failed to create student'));
       }
     });
   });
 
   describe('Update student', () => {
     const id = 5;
-    const student: Student = {
+    const student: UpdateStudentDto = {
       PersonID: 1,
       PersonName: 'test',
       PersonGender: 'Male',
@@ -132,7 +135,7 @@ describe('StudentService', () => {
         studentRepository.save = jest.fn().mockRejectedValue(null);
         const res = await service.updateStudent(student);
       } catch (err) {
-        expect(err).toEqual(null);
+        expect(err).toEqual(new ForbiddenException('failed to update student'));
       }
     });
   });
@@ -155,7 +158,7 @@ describe('StudentService', () => {
         studentRepository.delete = jest.fn().mockRejectedValue(null);
         const res = await service.deleteStudent(id);
       } catch (err) {
-        expect(err).toEqual(null);
+        expect(err).toEqual(new ForbiddenException('failed to delete student'));
       }
     });
   });
