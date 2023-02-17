@@ -6,12 +6,12 @@ export class CreateUserDto {
   @IsNotEmpty()
   @IsString()
   @Length(3, 15)
-  Email: string;
+  email: string;
   @IsNotEmpty()
   @IsString()
-  Password: string;
+  password: string;
   @IsNotEmpty()
   @IsString()
   @IsEnum([Role.ADMIN, Role.GUEST, Role.EDITOR])
-  Role: Role;
+  role: Role;
 }

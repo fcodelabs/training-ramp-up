@@ -6,16 +6,16 @@ export class CreateStudentDto {
   @IsNotEmpty()
   @Length(3, 15)
   @IsString()
-  PersonName: string;
+  personName: string;
   @IsNotEmpty()
   @IsString()
-  PersonGender: string;
+  personGender: string;
   @IsNotEmpty()
   @IsString()
-  PersonAddress: string;
+  personAddress: string;
   @IsNotEmpty()
   @IsString()
-  PersonMobileNo: string;
+  personMobileNo: string;
   @IsNotEmpty()
-  DateOfBirth: Date;
+  dateOfBirth: Date;
 }

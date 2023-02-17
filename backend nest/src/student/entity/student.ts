@@ -4,21 +4,21 @@ import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 @Entity()
 export class Student {
   @PrimaryGeneratedColumn()
-  PersonID: number;
+  personID: number;
 
   @Column({nullable: true})
-  PersonName: string;
+  personName: string;
 
   @Column({nullable: true})
-  PersonGender: string;
+  personGender: string;
 
   @Column({nullable: true})
-  PersonAddress: string;
+  personAddress: string;
 
   @Column({nullable: true})
-  PersonMobileNo: string;
+  personMobileNo: string;
 
   @Column({nullable: true})
-  DateOfBirth: Date;
+  dateOfBirth: Date;
  
 }

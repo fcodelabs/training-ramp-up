@@ -15,22 +15,22 @@ import { Role } from '../../types/role';
 @Entity()
 export class User {
   @PrimaryGeneratedColumn()
-  UserID: number;
+  userID: number;
 
   @Column()
   @Index({
     unique: true,
   })
-  Email: string;
+  email: string;
 
   @Column()
-  Password: string;
+  password: string;
 
   @Column({
     type: 'enum',
     enum: Role,
   })
-  Role: Role;
+  role: Role;
 
   @CreateDateColumn()
   createdAt: Date;
@@ -39,10 +39,10 @@ export class User {
   updatedAt: Date;
 
   @Column('text', { nullable: true })
-  RefreshToken: string;
+  refreshToken: string;
 
-  @Column('text', { nullable: true })
-  Provider: string;
+  @Column('text', { default: 'local' })
+  provider: string;
 
   @BeforeInsert()
   async hashPassword() {
