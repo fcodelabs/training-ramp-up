@@ -40,13 +40,14 @@ export class StudentService {
     }
   }
 
-  async deleteStudent(id: number): Promise<StudentEntity> {
+  async deleteStudent(id: number): Promise<string> {
     try {
-      const student = this.studentRepository.findOne({
+      const student = await this.studentRepository.findOne({
         where: { id },
       });
+      const studentName = student.name;
       await this.studentRepository.delete(id);
-      return student;
+      return studentName;
     } catch (error) {
       throw new HttpException(error.message, error.status);
     }

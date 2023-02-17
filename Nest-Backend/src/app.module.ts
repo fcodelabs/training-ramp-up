@@ -6,6 +6,7 @@ import { AppService } from './app.service';
 import { StudentModule } from './students/student.module';
 import { UserModule } from './users/user.module';
 import { SocketGateway } from './utils/socket.gateway';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { SocketGateway } from './utils/socket.gateway';
     }),
     StudentModule,
     UserModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService, SocketGateway],

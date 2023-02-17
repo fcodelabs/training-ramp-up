@@ -1,3 +1,4 @@
+import { AuthService } from './auth.service';
 import {
   Body,
   Controller,
@@ -9,17 +10,18 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { Request, Response } from 'express';
-import { UserDto } from '../dto/user.dto';
-import { UserService } from '../service/user.service';
+import { AuthDto } from './dto/auth.dto';
 import * as cookie from 'cookie';
 import { AuthGuard } from '@nestjs/passport';
 import { JwtService } from '@nestjs/jwt';
+import { UserService } from '../users/service/user.service';
 
-@Controller('user')
-export class UserController {
+@Controller('auth')
+export class AuthController {
   constructor(
-    private userService: UserService,
+    private readonly authService: AuthService,
     private jwtService: JwtService,
+    private userService: UserService,
   ) {}
 
   async cookieGenerator(email: string, role: string): Promise<string[]> {
@@ -53,8 +55,8 @@ export class UserController {
   }
 
   @Post('signup')
-  async signUp(@Body() user: UserDto, @Res() res: Response): Promise<Response> {
-    const userCreate = await this.userService.signUp(user);
+  async signUp(@Body() user: AuthDto, @Res() res: Response): Promise<Response> {
+    const userCreate = await this.userService.create(user);
     const [jwtCookie, refreshCookie] = await this.cookieGenerator(
       userCreate.email,
       userCreate.role,
@@ -67,8 +69,8 @@ export class UserController {
   }
 
   @Post('signin')
-  async signIn(@Body() user: UserDto, @Res() res: Response): Promise<Response> {
-    const userCreate = await this.userService.signIn(user);
+  async signIn(@Body() user: AuthDto, @Res() res: Response): Promise<Response> {
+    const userCreate = await this.authService.signIn(user);
     const [jwtCookie, refreshCookie] = await this.cookieGenerator(
       userCreate.email,
       userCreate.role,

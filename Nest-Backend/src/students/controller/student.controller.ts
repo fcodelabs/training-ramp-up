@@ -12,8 +12,8 @@ import { StudentService } from '../service/student.service';
 import { StudentDto } from '../dto/student.dto';
 import { SocketGateway } from '../../utils/socket.gateway';
 import { AuthGuard } from '@nestjs/passport';
-import { Roles } from '../../users/guards/roles/roles.decorator';
-import { RoleGuard } from '../../users/guards/role/role.guard';
+import { Roles } from '../../utils/guards/roles/roles.decorator';
+import { RoleGuard } from '../../utils/guards/role/role.guard';
 
 @Controller('student')
 export class StudentController {
@@ -59,12 +59,11 @@ export class StudentController {
   @UseGuards(AuthGuard('jwt'), RoleGuard)
   @Roles('admin')
   @Delete('/:id')
-  async deleteStudent(@Param('id') id: number): Promise<StudentDto> {
-    const deletedStudent = await this.studentService.deleteStudent(id);
+  async deleteStudent(@Param('id') id: number): Promise<void> {
+    const deletedStudentName = await this.studentService.deleteStudent(id);
     this.socketGateway.emitEvent(
       'notification',
-      `Student deleted Successfully with name ${deletedStudent.name}`,
+      `Student deleted Successfully with name ${deletedStudentName}`,
     );
-    return deletedStudent;
   }
 }
