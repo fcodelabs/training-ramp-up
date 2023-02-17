@@ -5,47 +5,47 @@ import { signOutUser } from '../pages/SignIn/authSlice'
 import { toast } from 'react-toastify'
 
 export const client = axios.create({
-  baseURL: 'http://localhost:3001/',
+  baseURL: 'http://localhost:3002/',
 })
 
 export const axiosPrivate = axios.create({
-  baseURL: 'http://localhost:3001/',
-  headers: {
-    'content-type': 'application/json',
-    Authorization: `Bearer ${sessionStorage.getItem('accessToken')}`,
-  },
-  withCredentials: true,
+  baseURL: 'http://localhost:3002/',
+  // headers: {
+  //   'content-type': 'application/json',
+  //   Authorization: `Bearer ${sessionStorage.getItem('accessToken')}`,
+  // },
+  // withCredentials: true,
 })
 
 
-axiosPrivate.interceptors.response.use(
-  async (response) => {
-    return response
-  },
-  async (error) => {
-    const originalRequest = error.config
-    if (error.response.status === 403 && !originalRequest._retry) {
-      originalRequest._retry = true
-      try {
-        const { data } = await axiosPrivate.get('/refresh', {
-          withCredentials: true,
-        })
-        sessionStorage.setItem('accessToken', data)
-        axios.defaults.headers.common['Authorization'] = 'Bearer ' + data
-        originalRequest.headers['Authorization'] = 'Bearer ' + data
-        return await axiosPrivate(originalRequest)
-      } catch (err: any) {
-        if (err.response.status === 401) {
-          console.log('navigate')
-          store.dispatch(signOutUser())
-          toast.info('Session expired, please login again')
-        }
-        return Promise.reject(err)
-      }
-    }
-    return Promise.reject(error)
-  },
-)
+// axiosPrivate.interceptors.response.use(
+//   async (response) => {
+//     return response
+//   },
+//   async (error) => {
+//     const originalRequest = error.config
+//     if (error.response.status === 403 && !originalRequest._retry) {
+//       originalRequest._retry = true
+//       try {
+//         const { data } = await axiosPrivate.get('/refresh', {
+//           withCredentials: true,
+//         })
+//         sessionStorage.setItem('accessToken', data)
+//         axios.defaults.headers.common['Authorization'] = 'Bearer ' + data
+//         originalRequest.headers['Authorization'] = 'Bearer ' + data
+//         return await axiosPrivate(originalRequest)
+//       } catch (err: any) {
+//         if (err.response.status === 401) {
+//           console.log('navigate')
+//           store.dispatch(signOutUser())
+//           toast.info('Session expired, please login again')
+//         }
+//         return Promise.reject(err)
+//       }
+//     }
+//     return Promise.reject(error)
+//   },
+// )
 
 export const getUsers = () => {
   return axiosPrivate.get('home/')
