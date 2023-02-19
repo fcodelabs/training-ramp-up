@@ -22,13 +22,13 @@ const theme = createTheme()
 export default function SignUp() {
   const navigate = useNavigate()
   const dispatch = useDispatch()
-  interface IBuyer {
+  interface IUser {
     email: string
     password: string
     confPassword: string
   }
 
-  const [user, setUser] = useState<IBuyer>({
+  const [user, setUser] = useState<IUser>({
     email: '',
     password: '',
     confPassword: '',

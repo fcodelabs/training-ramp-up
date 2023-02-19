@@ -1,6 +1,5 @@
 import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
-import student from '../api/modules/student'
 import { Student } from './interfaces'
 
 export const checkValid = (student: Student) => {

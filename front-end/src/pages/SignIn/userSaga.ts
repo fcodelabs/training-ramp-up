@@ -1,6 +1,16 @@
 import { takeEvery, put, call } from 'redux-saga/effects'
-import api from '../../api'
-import { signUpUser, signUpUserSuccess, signUpUserFailure } from './userSlice'
+import { signUp, signIn, signOut } from '../../api/userAPI'
+import {
+  signUpUser,
+  signUpUserSuccess,
+  signUpUserFailure,
+  signInUser,
+  signInUserFailure,
+  signInUserSuccess,
+  signOutUser,
+  signOutUserFailure,
+  signOutUserSuccess,
+} from './userSlice'
 import { toast } from 'react-toastify'
 interface UserSignUp {
   email: string
@@ -16,7 +26,7 @@ function* signUpUserSaga(action: signUpUserAction): Generator<any, any, any> {
   console.log('action :', action)
   console.log('hi')
   try {
-    const response = yield call(() => api.user.signUp(action.payload))
+    const response = yield call(signUp, action.payload)
     console.log('responce :', response)
     if (response.status == 201) {
       yield put(signUpUserSuccess(response.data.data))
@@ -33,6 +43,44 @@ function* signUpUserSaga(action: signUpUserAction): Generator<any, any, any> {
   }
 }
 
+function* signInUserSaga(action: signUpUserAction): Generator<any, any, any> {
+  try {
+    const response = yield call(signIn, action.payload)
+    console.log(response.status)
+
+    if (response.status == 200) {
+      const userRole = response.data.userRole
+      const email = response.data.email
+      const user = { email, userRole }
+      yield put(signInUserSuccess(user))
+      sessionStorage.setItem('accessToken', response.data.accessToken)
+      toast.success('Login Succesfull!')
+      window.location.href = '/grid'
+    } else {
+      toast.error('Invalid Credentials!')
+      yield put(signInUserFailure(response))
+    }
+  } catch (error: any) {
+    console.log(error)
+    yield put(signInUserFailure(error))
+  }
+}
+
+function* logoutUserSaga(): Generator<any, any, any> {
+  try {
+    yield call(signOut)
+
+    sessionStorage.removeItem('accessToken')
+    yield put(signOutUserSuccess())
+  } catch (error: any) {
+    console.log(error)
+    // toast.error('Logout failed. Please try again later.')
+    yield put(signOutUserFailure(error))
+  }
+}
+
 export default function* userSaga() {
   yield takeEvery(signUpUser, signUpUserSaga)
+  yield takeEvery(signInUser, signInUserSaga)
+  yield takeEvery(signOutUser, logoutUserSaga)
 }

@@ -33,13 +33,13 @@ export async function loginService(req) {
     email: req.body.email,
   });
   if (!user) {
-    throw new Error("Invalid Username");
+    return false;
   }
 
   //check the password
   const validPassword = await bcrypt.compare(req.body.password, user.password);
   if (!validPassword) {
-    throw new Error("Invalid Password");
+    return false;
   }
 
   return user;
@@ -47,16 +47,16 @@ export async function loginService(req) {
 
 export async function handleRefreshTokenService(req) {
   const cookies = req.cookies;
-  console.log("abc", cookies);
+
   if (!cookies) throw new Error("Invalid Token");
   const refreshToken = cookies.jwt;
-  console.log("pqr", refreshToken);
+
   if (!refreshToken) throw new Error("Invalid Token");
   const decoded = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
   const accessToken = await jwt.sign(
     { payload: decoded.payload },
     process.env.ACCESS_TOKEN_SECRET,
-    { expiresIn: "30s" }
+    { expiresIn: "10s" }
   );
   return accessToken;
 }

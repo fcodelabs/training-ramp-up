@@ -11,7 +11,12 @@ const { Server } = require("socket.io");
 const studentRouter = require("./src/routes/studentRouter");
 const userRouter = require("./src/routes/userRouter");
 
-app.use(cors());
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+    credentials: true,
+  })
+);
 app.use(BodyParser.json());
 app.use(BodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
