@@ -1,9 +1,5 @@
 import { Request, Response } from "express";
-import {
-  Student,
-  validateStudent,
-  validateStudentUpdate,
-} from "../models/StudentModel";
+import { Student, validateStudent } from "../models/StudentModel";
 import { AppDataSource } from "../configs/dbConfig";
 import {
   getAllStudents,
@@ -13,7 +9,7 @@ import {
 } from "../services/studentServices";
 const generateOutput = require("../utils/outputFactory");
 
-async function getStudents(req: Request, res: Response) {
+export async function getStudents(req: Request, res: Response) {
   try {
     const students = await getAllStudents();
     res.status(201).send(generateOutput(201, "success", students));
@@ -22,7 +18,7 @@ async function getStudents(req: Request, res: Response) {
   }
 }
 
-async function addStudent(req: Request, res: Response) {
+export async function addStudent(req: Request, res: Response) {
   const error = validateStudent(req.body);
   if (error) {
     console.log(error);
@@ -39,7 +35,7 @@ async function addStudent(req: Request, res: Response) {
   }
 }
 
-async function updateStudent(req: Request, res: Response) {
+export async function updateStudent(req: Request, res: Response) {
   const error = validateStudent(req.body);
   if (error) {
     console.log(error);
@@ -49,6 +45,7 @@ async function updateStudent(req: Request, res: Response) {
       const updatedStudent = await updateStudentDetails(req);
       res.status(201).send(generateOutput(201, "success", updatedStudent));
     } catch (error) {
+      console.log(error);
       res
         .status(500)
         .send(generateOutput(500, "error", "Something went wrong"));
@@ -56,7 +53,7 @@ async function updateStudent(req: Request, res: Response) {
   }
 }
 
-async function deleteStudent(req: Request, res: Response) {
+export async function deleteStudent(req: Request, res: Response) {
   try {
     const student = await deleteAStudent(parseInt(req.params.id, 10));
     res.status(201).send(generateOutput(201, "success", student));

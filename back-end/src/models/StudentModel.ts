@@ -9,25 +9,25 @@ import {
 @Entity()
 export class Student {
   @PrimaryGeneratedColumn()
-  id: number;
+  id!: number;
 
   @Column()
-  name: string;
+  name!: string;
 
   @Column()
-  gender: string;
+  gender!: string;
 
   @Column()
-  address: string;
+  address!: string;
 
   @Column()
-  mobile: string;
+  mobile!: string;
 
   @Column()
   dob!: Date;
 
   @Column()
-  age: number;
+  age!: number;
 }
 
 export function validateStudent(student: any) {
@@ -36,25 +36,6 @@ export function validateStudent(student: any) {
       .regex(/^[\w'\-,.][^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{0,}$/, "name")
       .required(),
     gender: Joi.string().valid("Male", "Female").required(),
-    address: Joi.string().required(),
-    mobile: Joi.string()
-      .length(10)
-      .regex(/^[0-9]+$/, "given")
-      .required(),
-    dob: Joi.date().required(),
-    age: Joi.number().required(),
-  });
-
-  return schema.validate(student).error;
-}
-
-export function validateStudentUpdate(student: any) {
-  const schema = Joi.object({
-    id: Joi.number().required(),
-    name: Joi.string()
-      .regex(/^[\w'\-,.][^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{0,}$/, "name")
-      .required(),
-    gender: Joi.string().required(),
     address: Joi.string().required(),
     mobile: Joi.string()
       .length(10)
