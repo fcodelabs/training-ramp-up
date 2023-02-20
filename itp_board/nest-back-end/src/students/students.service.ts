@@ -3,7 +3,7 @@ import { CreateStudentDto } from './dto/create-student.dto';
 import { UpdateStudentDto } from './dto/update-student.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Student } from './entities/student.entity';
-import { Repository } from 'typeorm';
+import { DeleteResult, Repository, UpdateResult } from 'typeorm';
 
 @Injectable()
 export class StudentsService {
@@ -11,26 +11,31 @@ export class StudentsService {
     @InjectRepository(Student)
     private studentRepository: Repository<Student>,
   ) {}
-  create(createStudentDto: CreateStudentDto) {
-    console.log('from service:', createStudentDto);
 
+  create(createStudentDto: CreateStudentDto): Promise<CreateStudentDto> {
     const newStudent = this.studentRepository.create(createStudentDto);
     const response = this.studentRepository.save(newStudent);
 
     return response;
   }
 
-  findAll() {
-    return this.studentRepository.find();
+  async findAll(): Promise<CreateStudentDto[]> {
+    return await this.studentRepository.find();
   }
 
-  update(id: number, updateStudentDto: UpdateStudentDto) {
-    const response = this.studentRepository.update({ id }, updateStudentDto);
+  async update(
+    id: number,
+    updateStudentDto: UpdateStudentDto,
+  ): Promise<UpdateResult> {
+    const response = await this.studentRepository.update(
+      { id },
+      updateStudentDto,
+    );
     return response;
   }
 
-  remove(id: number) {
-    const response = this.studentRepository.delete({ id });
+  async remove(id: number): Promise<DeleteResult> {
+    const response = await this.studentRepository.delete({ id });
     return response;
   }
 }
