@@ -93,3 +93,58 @@ describe("handleRefreshTokenService", () => {
     );
   });
 });
+
+describe("loginService", () => {
+  let findOneBySpy;
+  let compareSpy;
+
+  beforeEach(() => {
+    findOneBySpy = jest.spyOn(AppDataSource.getRepository(User), "findOneBy");
+    compareSpy = jest.spyOn(bcrypt, "compare");
+  });
+
+  afterEach(() => {
+    findOneBySpy.mockRestore();
+    compareSpy.mockRestore();
+  });
+
+  it("returns false when user does not exist", async () => {
+    findOneBySpy.mockResolvedValueOnce(null);
+
+    const result = await loginService({
+      body: { email: "test@example.com", password: "password" },
+    });
+
+    expect(result).toBe(false);
+  });
+
+  it("returns false when password is invalid", async () => {
+    const user = {
+      email: "test@example.com",
+      password: await bcrypt.hash("password", 10),
+    };
+    findOneBySpy.mockResolvedValueOnce(user);
+    compareSpy.mockResolvedValueOnce(false);
+
+    const result = await loginService({
+      body: { email: "test@example.com", password: "wrongpassword" },
+    });
+
+    expect(result).toBe(false);
+  });
+
+  it("returns the user when login is successful", async () => {
+    const user = {
+      email: "test@example.com",
+      password: await bcrypt.hash("password", 10),
+    };
+    findOneBySpy.mockResolvedValueOnce(user);
+    compareSpy.mockResolvedValueOnce(true);
+
+    const result = await loginService({
+      body: { email: "test@example.com", password: "password" },
+    });
+
+    expect(result).toEqual(user);
+  });
+});
