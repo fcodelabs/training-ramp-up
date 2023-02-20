@@ -11,11 +11,14 @@ import { StudentsService } from './students.service';
 import { StudentDto } from './dto/student.dto';
 // import { UpdateStudentDto } from './dto/update-student.dto';
 import { Student } from './entities/student.entity';
+import { UseGuards } from '@nestjs/common/decorators';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 
 @Controller('home')
 export class StudentsController {
   constructor(private readonly studentsService: StudentsService) {}
 
+  @UseGuards(JwtAuthGuard)
   @Get()
   findAll() {
     return this.studentsService.findAll();
