@@ -8,7 +8,6 @@ const REFRESH_URL = 'http://localhost:8080/api/auth/refresh'
 
 const instance = axios.create({
   baseURL: BASE_URL,
-  // withCredentials: true,
 })
 
 interface StudentResponse {
@@ -38,7 +37,6 @@ export const axiosPrivate = axios.create({
   withCredentials: true,
 })
 
-console.log(sessionStorage.getItem('accessToken'))
 axiosPrivate.interceptors.response.use(
   async (response) => {
     return response
@@ -46,22 +44,19 @@ axiosPrivate.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config
     if (error.response.status === 403 && !originalRequest._retry) {
-      console.log('refresh')
       originalRequest._retry = true
       try {
         const { data } = await axiosPrivate.get('user/refresh', {
           withCredentials: true,
         })
-        console.log('data', data)
+
         sessionStorage.setItem('accessToken', data.accessToken)
         axios.defaults.headers.common['Authorization'] = 'Bearer ' + data.accessToken
         originalRequest.headers['Authorization'] = 'Bearer ' + data.accessToken
         return await axiosPrivate(originalRequest)
       } catch (err: any) {
         if (err.response.status === 401) {
-          console.log('navigate')
           store.dispatch(signOutUser())
-          // toast.info('Session expired, please login again')
         }
         return Promise.reject(err)
       }

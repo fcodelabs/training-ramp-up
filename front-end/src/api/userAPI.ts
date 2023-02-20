@@ -13,7 +13,6 @@ export const signIn = async (user: userResponse) => {
   const response = await client.post('user/login', user, {
     withCredentials: true,
   })
-  console.log('response', response)
 
   return response
 }

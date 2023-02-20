@@ -23,11 +23,9 @@ interface signUpUserAction {
 }
 
 function* signUpUserSaga(action: signUpUserAction): Generator<any, any, any> {
-  console.log('action :', action)
-  console.log('hi')
   try {
     const response = yield call(signUp, action.payload)
-    console.log('responce :', response)
+
     if (response.status == 201) {
       yield put(signUpUserSuccess(response.data.data))
       toast.success('Registration Succesfull!')
@@ -46,7 +44,6 @@ function* signUpUserSaga(action: signUpUserAction): Generator<any, any, any> {
 function* signInUserSaga(action: signUpUserAction): Generator<any, any, any> {
   try {
     const response = yield call(signIn, action.payload)
-    console.log(response.status)
 
     if (response.status == 200) {
       const userRole = response.data.userRole
@@ -61,7 +58,6 @@ function* signInUserSaga(action: signUpUserAction): Generator<any, any, any> {
       yield put(signInUserFailure(response))
     }
   } catch (error: any) {
-    console.log(error)
     yield put(signInUserFailure(error))
   }
 }
@@ -73,8 +69,6 @@ function* logoutUserSaga(): Generator<any, any, any> {
     sessionStorage.removeItem('accessToken')
     yield put(signOutUserSuccess())
   } catch (error: any) {
-    console.log(error)
-    // toast.error('Logout failed. Please try again later.')
     yield put(signOutUserFailure(error))
   }
 }

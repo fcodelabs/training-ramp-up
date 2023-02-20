@@ -19,7 +19,7 @@ export async function login(req: Request, res: Response) {
       .send(generateOutput(400, "validation error1", error1.message));
   try {
     let user = await loginService(req);
-    console.log("user", user);
+
     if (!user) {
       return res
         .status(201)
@@ -32,7 +32,7 @@ export async function login(req: Request, res: Response) {
     const refreshToken = jwt.sign(payload, process.env.REFRESH_TOKEN_SECRET, {
       expiresIn: "1d",
     });
-    console.log("accessToken: " + accessToken);
+
     res
       .cookie("jwt", refreshToken, {
         httpOnly: true,
@@ -48,7 +48,6 @@ export async function login(req: Request, res: Response) {
         userRole: user.userRole,
       });
   } catch (err) {
-    console.log(err);
     return res.status(500).json({ err });
   }
 }
@@ -64,7 +63,6 @@ export async function handleRefreshToken(req: Request, res: Response) {
 
 export async function logout(req: Request, res: Response) {
   const cookies = req.cookies;
-  console.log(cookies);
   if (!cookies.jwt)
     return res.status(401).send(generateOutput(401, "error", "Unauthorized"));
   res.clearCookie("jwt", {

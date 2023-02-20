@@ -57,7 +57,6 @@ function* addStudentSaga(action: any): Generator<any, any, any> {
       yield put(addStudentSuccess(addedStudent))
     } catch (error) {
       yield put(addStudentFailure())
-      console.log(error)
     }
   }
 }
@@ -83,7 +82,6 @@ function* updateStudentSaga(action: any): Generator<any, any, any> {
     yield put(updateStudentSuccess({ inEdit: false, ...updatedStudent }))
   } catch (error) {
     yield put(updateStudentFailure())
-    console.log(error)
   }
 }
 
@@ -98,7 +96,6 @@ function* deleteStudentSaga(action: any): Generator<any, any, any> {
     yield put(deleteStudentSuccess(itemToDelete))
   } catch (error) {
     yield put(deleteStudentFailure())
-    console.log(error)
   }
 }
 

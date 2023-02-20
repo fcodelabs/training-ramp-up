@@ -21,7 +21,6 @@ export async function getStudents(req: Request, res: Response) {
 export async function addStudent(req: Request, res: Response) {
   const error = validateStudent(req.body);
   if (error) {
-    console.log(error);
     res.status(400).send(generateOutput(400, "error", error.message));
   } else {
     try {
@@ -38,14 +37,12 @@ export async function addStudent(req: Request, res: Response) {
 export async function updateStudent(req: Request, res: Response) {
   const error = validateStudent(req.body);
   if (error) {
-    console.log(error);
     res.status(400).send(generateOutput(400, "error", error.message));
   } else {
     try {
       const updatedStudent = await updateStudentDetails(req);
       res.status(201).send(generateOutput(201, "success", updatedStudent));
     } catch (error) {
-      console.log(error);
       res
         .status(500)
         .send(generateOutput(500, "error", "Something went wrong"));

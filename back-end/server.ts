@@ -23,7 +23,7 @@ app.use(cookieParser());
 
 app.use("/api/user", userRouter);
 
-// app.use(verifyJWT);
+app.use(verifyJWT);
 app.use("/api/student", studentRouter);
 
 const server = http.createServer(app);

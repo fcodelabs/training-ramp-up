@@ -12,7 +12,6 @@ export default function ButtonAppBar() {
   const dispatch = useDispatch()
 
   const handleLogout = () => {
-    console.log('handle log out')
     dispatch(signOutUser())
   }
   return (

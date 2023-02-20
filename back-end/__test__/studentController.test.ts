@@ -189,10 +189,6 @@ describe("updateStudent", () => {
 
     // Call the 'updateStudent' function with the mock request and response objects
     await updateStudent(mockReq, mockRes);
-
-    console.log(mockRes.status.mock.calls);
-    console.log(mockRes.send.mock.calls);
-
     // Check that the response status and body are as expected
     expect(mockRes.status).toHaveBeenCalledWith(201);
     expect(mockRes.send).toHaveBeenCalledWith(

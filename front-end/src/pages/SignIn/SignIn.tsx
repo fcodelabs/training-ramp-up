@@ -74,7 +74,6 @@ export default function SignIn() {
     const { error } = result
     if (!error) {
       const usertoSign = { email: user.email, password: user.password }
-      console.log(usertoSign)
       dispatch(signInUser(usertoSign))
     } else {
       const errorData: any = {}
@@ -84,7 +83,6 @@ export default function SignIn() {
         errorData[name] = message
       }
       setErrors(errorData)
-      console.log(errorData)
       return errorData
     }
   }

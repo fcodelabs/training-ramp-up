@@ -23,7 +23,6 @@ export default function Grids() {
   const students = useSelector((state: any) => state.grid.students)
   const role = useSelector((state: any) => state.user.role)
 
-  console.log(role)
   const [data, setData] = React.useState<Student[]>([])
   const [admin, setAdmin] = React.useState<boolean>(false)
 
@@ -35,7 +34,7 @@ export default function Grids() {
     if (role === 'admin') {
       setAdmin(true)
     }
-    console.log(admin)
+
     setData(students)
   }, [students])
 
