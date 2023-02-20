@@ -4,7 +4,7 @@ import axios from '../config/axiosConf'
 export const updateTokens = async () => {
   const response = await axios({
     method: 'post',
-    url: `/user/refreshtoken`,
+    url: '/user/refreshtoken',
     data: {
       refreshToken: localStorage.getItem('refreshToken'),
     },
