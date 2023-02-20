@@ -4,8 +4,6 @@ import { AppDataSource } from "../configs/dbConfig";
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
-// const userRepository = AppDataSource.getRepository(User);
-
 export async function registerStudent(req) {
   const checkEmail = await AppDataSource.getRepository(User).findOneBy({
     email: req.body.email,

@@ -8,10 +8,7 @@ interface StudentResponse {
   mobile: string
   age: number
 }
-// const headers = {
-//   'content-type': 'application/json',
-//   Authorization: `Bearer ${sessionStorage.getItem('accessToken')}`,
-// } as any
+
 export async function getStudentsAPI() {
   const response = await axiosPrivate.get('student/')
   return response
