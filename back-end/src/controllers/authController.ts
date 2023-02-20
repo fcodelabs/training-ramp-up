@@ -53,7 +53,7 @@ export async function login(req: Request, res: Response) {
   }
 }
 
-async function handleRefreshToken(req: Request, res: Response) {
+export async function handleRefreshToken(req: Request, res: Response) {
   try {
     const accessToken = await handleRefreshTokenService(req);
     res.status(200).json({ accessToken });

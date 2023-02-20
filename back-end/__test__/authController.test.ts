@@ -1,7 +1,11 @@
 import * as userServices from "../src/services/userServices";
 import { Request, Response, NextFunction } from "express";
 import { User } from "../src/models/UserModel";
-import { login, logout } from "../src/controllers/authController";
+import {
+  login,
+  logout,
+  handleRefreshToken,
+} from "../src/controllers/authController";
 
 describe("Sign In User Test", () => {
   const user1 = {
@@ -81,4 +85,60 @@ describe("Logout User Test", () => {
   });
 });
 
-describe("Refresh token handle", () => {});
+describe("Handle refresh token", () => {
+  test("When token in cookie should handle", async () => {
+    const res = {
+      status: jest.fn().mockReturnThis(),
+      cookie: jest.fn().mockReturnThis(),
+      json: jest.fn().mockReturnThis(),
+    } as unknown as Response;
+    const req = {
+      body: {
+        email: "piyumi@gmail.com",
+        password: "Admin@123",
+      },
+      cookies: {
+        jwt: "hjhvdvvfuhhucdihhudg",
+      },
+    } as unknown as Request;
+    const spy = jest
+      .spyOn(userServices, "handleRefreshTokenService")
+      .mockResolvedValue("hjhvdvvfuhhucdihhudg");
+    await handleRefreshToken(req, res);
+    expect(res.json).toHaveBeenCalledWith({
+      accessToken: "hjhvdvvfuhhucdihhudg",
+    });
+    expect(res.json).toHaveBeenCalledTimes(1);
+    spy.mockRestore();
+  });
+
+  test("should throw error when token is not in cookie", async () => {
+    const res = {
+      status: jest.fn().mockReturnThis(),
+      send: jest.fn().mockReturnThis(),
+    } as unknown as Response;
+    const req = {
+      body: {
+        email: "piyumi@gmail.com",
+        password: "Admin@123",
+      },
+      cookies: {
+        jwt: "",
+      },
+    } as unknown as Request;
+    const spy = jest
+      .spyOn(userServices, "handleRefreshTokenService")
+      .mockImplementation(() => {
+        throw new Error("No token provided");
+      });
+    await handleRefreshToken(req, res);
+    expect(res.status).toHaveBeenCalledWith(401);
+    expect(res.send).toHaveBeenCalledWith({
+      statusCode: 401,
+      message: "error",
+      data: "No token provided",
+    });
+    expect(spy).toHaveBeenCalledTimes(1);
+    spy.mockRestore();
+  });
+});
