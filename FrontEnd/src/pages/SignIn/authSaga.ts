@@ -48,13 +48,13 @@ function* signUpUserSaga(action: signUpUserAction): Generator<any, any, any> {
 function* signInUserSaga(action: signInUserAction): Generator<any, any, any> {
   try {
     const response = yield call(() => signInUserAPI(action.payload))
-    if(response.status === 200){
+    if(response.status === 201){
       yield put(signInUserSuccess(response))
-      sessionStorage.setItem('accessToken', response.data.accessToken)
+      sessionStorage.setItem('accessToken', response.data.access_token)
       toast.success('User Signed In successfully!')
     }else{
       yield put(signInUserFailure(response))
-      toast.error(response.response.data)
+      toast.error('Login Failed! Please check your credentials.')
     }
   } catch (error) {
     yield put(signInUserFailure(error))

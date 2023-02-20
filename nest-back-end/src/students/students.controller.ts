@@ -24,6 +24,7 @@ export class StudentsController {
     return this.studentsService.findAll();
   }
 
+  @UseGuards(JwtAuthGuard)
   @Post()
   create(@Body() createStudentDto: StudentDto) {
     const newStudent = new Student();
@@ -36,11 +37,13 @@ export class StudentsController {
     return this.studentsService.create(newStudent);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateStudentDto: StudentDto) {
     return this.studentsService.update(+id, updateStudentDto);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.studentsService.remove(+id);

@@ -10,11 +10,11 @@ export const client = axios.create({
 
 export const axiosPrivate = axios.create({
   baseURL: 'http://localhost:3002/',
-  // headers: {
-  //   'content-type': 'application/json',
-  //   Authorization: `Bearer ${sessionStorage.getItem('accessToken')}`,
-  // },
-  // withCredentials: true,
+  headers: {
+    'content-type': 'application/json',
+    Authorization: `Bearer ${sessionStorage.getItem('accessToken')}`,
+  },
+  withCredentials: true,
 })
 
 
@@ -48,7 +48,7 @@ export const axiosPrivate = axios.create({
 // )
 
 export const getUsers = () => {
-  return axiosPrivate.get('home/')
+  return axiosPrivate.get('/home/')
 }
 
 export async function addUserr(user: User) {
@@ -83,7 +83,6 @@ export const deleteUser = (id: any) => {
 export async function signUpUserAPI(user: UserSignUp) {
   try {
     const response = await client.post('signup/', user)
-    console.log('response', response)
     return response
   } catch (error) {
     console.error('error', error)
@@ -92,11 +91,9 @@ export async function signUpUserAPI(user: UserSignUp) {
 
 export async function signInUserAPI(user: UserSignIn) {
   try {
-    const response = await client.post('/', user, {
+    const response = await client.post('/login', user, {
       withCredentials: true,
     })
-    console.log('response', response)
-
     return response
   } catch (error) {
     console.error('error', error)
