@@ -6,6 +6,7 @@ import { UpdateAuthDto } from './dto/update-auth.dto';
 import { User } from './entities/user.entity';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class AuthService {
@@ -13,6 +14,7 @@ export class AuthService {
     @InjectRepository(User)
     private userRepository: Repository<User>,
     private jwtService: JwtService,
+    private configService: ConfigService,
   ) {}
   private readonly logger = new Logger(AuthService.name);
 
@@ -47,10 +49,59 @@ export class AuthService {
   }
 
   async login(user: any) {
-    const payload = { username: user.username, sub: user.userId };
+    const payload = { email: user.email, sub: user.id };
+    const tokens = await this.getTokens(user.id, user.email);
     return {
-      access_token: this.jwtService.sign(payload),
+      // access_token: this.jwtService.sign(payload),
+      access_token: tokens.accessToken,
+      refresh_token: tokens.refreshToken,
       role: user.role,
     };
+  }
+
+  async getTokens(id: string, email: string) {
+    const [accessToken, refreshToken] = await Promise.all([
+      this.jwtService.signAsync(
+        {
+          id: id,
+          email: email,
+        },
+        {
+          secret: this.configService.get<string>('ACCESS_TOKEN_SECRET'),
+          expiresIn: '15s',
+        },
+      ),
+      this.jwtService.signAsync(
+        {
+          id: id,
+          email: email,
+        },
+        {
+          secret: this.configService.get<string>('REFRESH_TOKEN_SECRET'),
+          expiresIn: '30s',
+        },
+      ),
+    ]);
+    return {
+      accessToken,
+      refreshToken,
+    };
+  }
+
+  async refreshTokens(refreshToken: string) {
+    const decodedJwtAccessToken = this.jwtService.decode(refreshToken);
+    const id = decodedJwtAccessToken['id'];
+    const email = decodedJwtAccessToken['email'];
+    const accessToken = await this.jwtService.signAsync(
+      {
+        id: id,
+        email: email,
+      },
+      {
+        secret: this.configService.get<string>('ACCESS_TOKEN_SECRET'),
+        expiresIn: '15s',
+      },
+    );
+    return accessToken;
   }
 }

@@ -47,7 +47,7 @@ export const authSlice = createSlice({
         },
         signInUserSuccess: (state, action) => {
             state.isSignInLoading = false;
-            state.accessToken = action.payload.data.accessToken
+            // state.accessToken = action.payload.data.accessToken
             state.signedIn = true;
             state.role = action.payload.data.role;
         },

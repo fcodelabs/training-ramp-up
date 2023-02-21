@@ -30,7 +30,6 @@ export class AuthController {
     newUser.password = signUpDto.password;
     newUser.role = 'student';
     const newCreatedUser = await this.authService.signUp(newUser);
-    this.logger.log('newly created user');
     this.logger.log(newCreatedUser);
     if (newCreatedUser) {
       return res.status(201).json('sign up success');
@@ -40,8 +39,29 @@ export class AuthController {
   }
 
   @UseGuards(AuthGuard('local'))
-  @Post('login')
-  async login(@Request() req) {
-    return this.authService.login(req.user);
+  @Post()
+  async login(@Request() req, @Res() res: Response) {
+    const obj = await this.authService.login(req.user);
+    res.cookie('jwt', obj.refresh_token, {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'none',
+    });
+    const { refresh_token, ...result } = obj;
+    return res.status(201).json(result);
+  }
+
+  @UseGuards(AuthGuard('jwt-refresh'))
+  @Get('refresh')
+  async refresh(@Request() req) {
+    // const refreshToken = req.user.refreshToken;
+    const refreshToken = req.cookies.jwt;
+    return this.authService.refreshTokens(refreshToken);
+  }
+
+  @Get('logout')
+  async logout(@Res() res: Response) {
+    res.clearCookie('jwt');
+    return res.status(200).json('logout success');
   }
 }

@@ -1,8 +1,8 @@
 import DataGrid from '../../components/DataGrid/DataGrid'
 import Navbar from '../../components/NavBar'
 
-const Home = () => {
 
+const Home = () => {
   return (
         <>
           <Navbar />

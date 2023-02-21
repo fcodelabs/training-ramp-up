@@ -9,10 +9,10 @@ import {
 } from '@nestjs/common';
 import { StudentsService } from './students.service';
 import { StudentDto } from './dto/student.dto';
-// import { UpdateStudentDto } from './dto/update-student.dto';
 import { Student } from './entities/student.entity';
-import { UseGuards } from '@nestjs/common/decorators';
+import { Req, UseGuards } from '@nestjs/common/decorators';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { Request } from 'express';
 
 @Controller('home')
 export class StudentsController {
@@ -20,7 +20,7 @@ export class StudentsController {
 
   @UseGuards(JwtAuthGuard)
   @Get()
-  findAll() {
+  findAll(@Req() req: Request) {
     return this.studentsService.findAll();
   }
 

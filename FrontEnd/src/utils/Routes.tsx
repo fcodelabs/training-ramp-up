@@ -14,7 +14,7 @@ const AppRoutes = () => {
           <Route path='*' element={<ErrorPage />} />
           <Route element={<RequireAuth />}>
             <Route path='/home' element={<Home />} />
-            <Route path='/' element={<SignIn />} />
+            {/* <Route path='/' element={<SignIn />} /> */}
           </Route>
         </Routes>
       </Router>
