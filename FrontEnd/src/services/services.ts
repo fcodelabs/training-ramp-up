@@ -6,7 +6,7 @@ import * as io from 'socket.io-client'
 // eslint-disable-next-line prefer-const
 let validations: string[] = []
 
-export const socket = io.connect('http://localhost:3001')
+export const socket = io.connect('http://localhost:3002')
 
 const isEmpty = (item: User) => {
   if (!item.name || !item.address || !item.mobile || !item.dob) {
