@@ -4,6 +4,7 @@ import { StudentsController } from './students.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Student } from './entities/student.entity';
 import { GatewayModule } from '../gateway/gateway.module';
+import { GatewayService } from '../gateway/gateway.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Student]), GatewayModule],

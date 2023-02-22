@@ -28,17 +28,18 @@ export class AuthController {
   @Post('login')
   async login(@Request() req, @Res({ passthrough: true }) response: Response) {
     if (req.user.data) {
-      const tokens = this.authService.login(req.user);
+      const { email, admin } = req.user;
+      const tokens = this.authService.generateTokens({ email, admin });
       response
         .cookie('accessToken', tokens.accessToken, {
-          httpOnly: false,
-          secure: false,
+          httpOnly: true,
+          secure: true,
           sameSite: 'strict',
           maxAge: 5 * 60 * 1000,
         })
         .cookie('refreshToken', tokens.refreshToken, {
-          httpOnly: false,
-          secure: false,
+          httpOnly: true,
+          secure: true,
           sameSite: 'strict',
           maxAge: 24 * 60 * 60 * 1000,
         })
@@ -58,14 +59,14 @@ export class AuthController {
     const tokens = this.authService.generateTokens({ email, admin });
     response
       .cookie('accessToken', tokens.accessToken, {
-        httpOnly: false,
-        secure: false,
+        httpOnly: true,
+        secure: true,
         sameSite: 'strict',
         maxAge: 5 * 60 * 1000,
       })
       .cookie('refreshToken', tokens.refreshToken, {
-        httpOnly: false,
-        secure: false,
+        httpOnly: true,
+        secure: true,
         sameSite: 'strict',
         maxAge: 24 * 60 * 60 * 1000,
       })
@@ -73,7 +74,7 @@ export class AuthController {
   }
 
   @Delete('signout')
-  signOut(@Request() req, @Res({ passthrough: true }) response: Response) {
+  signOut(@Res({ passthrough: true }) response: Response) {
     response.clearCookie('accessToken').clearCookie('refreshToken');
   }
 
@@ -86,8 +87,8 @@ export class AuthController {
   ) {
     const tokens = this.authService.generateTokens(req.user);
     response.cookie('accessToken', tokens.accessToken, {
-      httpOnly: false,
-      secure: false,
+      httpOnly: true,
+      secure: true,
       sameSite: 'strict',
       maxAge: 5 * 60 * 1000,
     });

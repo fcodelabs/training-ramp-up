@@ -15,7 +15,6 @@ export class StudentsService {
   create(createStudentDto: CreateStudentDto): Promise<CreateStudentDto> {
     const newStudent = this.studentRepository.create(createStudentDto);
     const response = this.studentRepository.save(newStudent);
-
     return response;
   }
 

@@ -44,10 +44,4 @@ export class AuthService {
       }),
     };
   }
-
-  login(user: ValidatedUserDto): TokensDto {
-    const { email, admin } = user.data;
-    const payload = { email, admin };
-    return this.generateTokens(payload);
-  }
 }
