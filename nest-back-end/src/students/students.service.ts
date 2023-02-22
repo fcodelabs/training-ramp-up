@@ -13,11 +13,19 @@ export class StudentsService {
   ) {}
 
   findAll(): Promise<Student[]> {
-    return this.studentRepository.find();
+    try {
+      return this.studentRepository.find();
+    } catch (error) {
+      throw new HttpException(error.message, error.status);
+    }
   }
 
   create(newStudent: Student) {
-    return this.studentRepository.manager.save(newStudent);
+    try {
+      return this.studentRepository.save(newStudent);
+    } catch (error) {
+      throw new HttpException(error.message, error.status);
+    }
   }
 
   async update(id: number, updateStudentDto: StudentDto) {
@@ -34,8 +42,8 @@ export class StudentsService {
         studentToUpdate.age = updateStudentDto.age;
         return await this.studentRepository.save(studentToUpdate);
       }
-    } catch (err) {
-      throw new HttpException(err, 500);
+    } catch (error) {
+      throw new HttpException(error.message, error.status);
     }
   }
 

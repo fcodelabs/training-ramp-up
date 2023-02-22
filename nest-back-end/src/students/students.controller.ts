@@ -11,7 +11,7 @@ import { StudentsService } from './students.service';
 import { StudentDto } from './dto/student.dto';
 import { Student } from './entities/student.entity';
 import { Req, UseGuards } from '@nestjs/common/decorators';
-import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { Request } from 'express';
 
 @Controller('home')

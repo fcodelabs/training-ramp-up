@@ -28,12 +28,12 @@ export class AuthService {
       if (!existingUser) {
         const hashedPassword = await bcrypt.hash(signUpUser.password, 10);
         signUpUser.password = hashedPassword;
-        return await this.userRepository.manager.save(signUpUser);
+        return await this.userRepository.save(signUpUser);
       } else {
         return null;
       }
-    } catch (err) {
-      throw new Error(err);
+    } catch (error) {
+      throw new HttpException(error.message, error.status);
     }
   }
 
