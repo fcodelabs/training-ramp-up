@@ -15,37 +15,49 @@ export async function login(req: Request, res: Response) {
   const error1 = validateUser(req.body);
   if (error1)
     return res
-      .status(200)
+      .status(400)
       .send(generateOutput(400, "validation error1", error1.message));
   try {
     let user = await loginService(req);
+
+    if (!user) {
+      return res
+        .status(201)
+        .send(generateOutput(201, "Invalid email or password", null));
+    }
     const payload = { email: user.email, userRole: user.userRole };
     const accessToken = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET, {
-      expiresIn: "30s",
+      expiresIn: "1hr",
     });
     const refreshToken = jwt.sign(payload, process.env.REFRESH_TOKEN_SECRET, {
       expiresIn: "1d",
     });
+
     res
       .cookie("jwt", refreshToken, {
         httpOnly: true,
         sameSite: "none",
         secure: true,
+
         maxAge: 24 * 60 * 60 * 1000,
       })
       .status(200)
-      .json({ accessToken: accessToken });
+      .json({
+        accessToken: accessToken,
+        email: user.email,
+        userRole: user.userRole,
+      });
   } catch (err) {
-    return res.status(500).json(generateOutput(500, "error", err.message));
+    return res.status(500).json({ err });
   }
 }
 
-async function handleRefreshToken(req: Request, res: Response) {
+export async function handleRefreshToken(req: Request, res: Response) {
   try {
     const accessToken = await handleRefreshTokenService(req);
-    res.status(200).json({ accessToken: accessToken });
+    res.status(200).json({ accessToken });
   } catch (err) {
-    return res.status(500).send(generateOutput(500, "error", err.message));
+    return res.status(401).send(generateOutput(401, "error", err.message));
   }
 }
 

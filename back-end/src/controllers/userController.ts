@@ -7,7 +7,6 @@ const generateOutput = require("../utils/outputFactory");
 async function regStudent(req: Request, res: Response, next: NextFunction) {
   const error = validateUser(req.body);
   if (error) {
-    console.log(error);
     res.status(400).send(generateOutput(400, "error", error.message));
   } else {
     try {

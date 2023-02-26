@@ -1,4 +1,4 @@
-import { put, takeEvery, all } from 'redux-saga/effects'
+import { put, takeEvery, all, call } from 'redux-saga/effects'
 import {
   addStudent,
   addStudentSuccess,
@@ -13,14 +13,15 @@ import {
   deleteStudentSuccess,
   deleteStudentFailure,
 } from './gridSlice'
-import api from '../../api'
+
+import { getStudentsAPI, addStudentAPI, updateStudentAPI, deleteStudentAPI } from '../../api/client'
 import { toast } from 'react-toastify'
 import { Student } from '../../utils/interfaces'
 import { checkValid, age } from '../../utils/validators'
 
 function* getStudentsSaga(): Generator<any, any, any> {
   try {
-    const response = yield api.student.getStudents()
+    const response = yield call(getStudentsAPI)
     const students: Student[] = response.data.data
     students.map((item: Student) => {
       item.dob = new Date(item.dob)
@@ -47,7 +48,7 @@ function* addStudentSaga(action: any): Generator<any, any, any> {
       age: age(item.dob),
     }
     try {
-      const response = yield api.student.postStudent(itemToAdd)
+      const response = yield call(addStudentAPI, itemToAdd)
       // toast.success('Successfully Added', {
       //   position: toast.POSITION.TOP_RIGHT,
       // })
@@ -56,7 +57,6 @@ function* addStudentSaga(action: any): Generator<any, any, any> {
       yield put(addStudentSuccess(addedStudent))
     } catch (error) {
       yield put(addStudentFailure())
-      console.log(error)
     }
   }
 }
@@ -73,16 +73,15 @@ function* updateStudentSaga(action: any): Generator<any, any, any> {
     age: age(item.dob),
   }
   try {
-    const response = yield api.student.putStudent(id, itemToUpdate)
-    toast.success('Successfully Updated', {
-      position: toast.POSITION.TOP_RIGHT,
-    })
+    const response = yield call(updateStudentAPI, id, itemToUpdate)
+    // toast.success('Successfully Updated', {
+    //   position: toast.POSITION.TOP_RIGHT,
+    // })
     const updatedStudent = response.data.data
     updatedStudent.dob = new Date(updatedStudent.dob)
     yield put(updateStudentSuccess({ inEdit: false, ...updatedStudent }))
   } catch (error) {
     yield put(updateStudentFailure())
-    console.log(error)
   }
 }
 
@@ -90,14 +89,13 @@ function* deleteStudentSaga(action: any): Generator<any, any, any> {
   const item: Student = action.payload
   const itemToDelete = item.id
   try {
-    yield api.student.deleteStudent(itemToDelete)
+    yield call(deleteStudentAPI, itemToDelete)
     // toast.success('Successfully Deleted', {
     //   position: toast.POSITION.TOP_RIGHT,
     // })
     yield put(deleteStudentSuccess(itemToDelete))
   } catch (error) {
     yield put(deleteStudentFailure())
-    console.log(error)
   }
 }
 

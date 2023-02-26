@@ -165,9 +165,7 @@ describe("updateStudent", () => {
         id: 1,
       },
     } as any;
-    // Mock the validateStudent function to return null (no error)
 
-    // Mock the updateStudentDetails function to return the updated student object
     const updatedStudent = {
       id: 1,
       name: "Piyumi",
@@ -187,13 +185,8 @@ describe("updateStudent", () => {
       send: jest.fn().mockReturnThis(),
     } as any;
 
-    // Call the 'updateStudent' function with the mock request and response objects
     await updateStudent(mockReq, mockRes);
 
-    console.log(mockRes.status.mock.calls);
-    console.log(mockRes.send.mock.calls);
-
-    // Check that the response status and body are as expected
     expect(mockRes.status).toHaveBeenCalledWith(201);
     expect(mockRes.send).toHaveBeenCalledWith(
       generateOutput(201, "success", updatedStudent)
@@ -201,7 +194,6 @@ describe("updateStudent", () => {
   });
 
   it("should return a validation error if invalid data is provided", async () => {
-    // Mock the validateStudent function to return an error message
     const mockReq = {
       body: {
         name: "Piyumi",

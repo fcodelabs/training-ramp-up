@@ -126,7 +126,6 @@ describe("updateStudentDetails", () => {
 
     expect(result).toEqual(mockRequest.body);
     expect(mockfindOne).toHaveBeenCalledTimes(1);
-    // expect(mockfindOne).toHaveBeenCalledWith(mockRequest.params.id);
     expect(mockMerge).toHaveBeenCalledTimes(1);
     expect(mockMerge).toHaveBeenCalledWith(
       mockRequest.params.id,
@@ -139,24 +138,23 @@ describe("updateStudentDetails", () => {
 
 describe("deleteAStudent", () => {
   it("deletes a student and emits a notification", async () => {
-    // Create a mock for the repository delete method
     const deleteMock = jest.fn().mockResolvedValue({ id: 1 });
-    // Create a mock for the AppDataSource module and its getRepository method
+
     AppDataSource.getRepository = jest
       .fn()
       .mockReturnValue({ delete: deleteMock });
-    // Create a mock for the global io object and its emit method
+
     const emitMock = jest.fn();
     global.io = { emit: emitMock };
-    // Call the function with a mock student ID
+
     const result = await deleteAStudent(1);
-    // Expect the repository delete method to have been called with the correct ID
+
     expect(deleteMock).toHaveBeenCalledWith(1);
-    // Expect the emit method to have been called with the correct message
+
     expect(emitMock).toHaveBeenCalledWith("notify", {
       message: "A student deleted",
     });
-    // Expect the function to return the deleted student
+
     expect(result).toEqual({ id: 1 });
   });
 });

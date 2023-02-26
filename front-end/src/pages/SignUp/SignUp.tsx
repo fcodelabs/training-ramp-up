@@ -22,13 +22,13 @@ const theme = createTheme()
 export default function SignUp() {
   const navigate = useNavigate()
   const dispatch = useDispatch()
-  interface IBuyer {
+  interface IUser {
     email: string
     password: string
     confPassword: string
   }
 
-  const [user, setUser] = useState<IBuyer>({
+  const [user, setUser] = useState<IUser>({
     email: '',
     password: '',
     confPassword: '',
@@ -100,7 +100,7 @@ export default function SignUp() {
     const { error } = result
     if (!error) {
       const usertoSign = { email: user.email, password: user.password }
-      console.log(usertoSign)
+
       dispatch(signUpUser(usertoSign))
     } else {
       const errorData: any = {}
@@ -110,7 +110,7 @@ export default function SignUp() {
         errorData[name] = message
       }
       setErrors(errorData)
-      console.log(errorData)
+
       return errorData
     }
   }
