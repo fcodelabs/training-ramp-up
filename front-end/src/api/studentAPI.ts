@@ -10,12 +10,12 @@ interface StudentResponse {
 }
 
 export async function getStudentsAPI() {
-  const response = await axiosPrivate.get('student/')
+  const response = await axiosPrivate.get('student')
   return response
 }
 
 export const addStudentAPI = async (student: StudentResponse) => {
-  const response = await axiosPrivate.post('student/', student)
+  const response = await axiosPrivate.post('student', student)
   return response
 }
 export const updateStudentAPI = async (id: number, student: StudentResponse) => {

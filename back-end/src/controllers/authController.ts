@@ -27,7 +27,7 @@ export async function login(req: Request, res: Response) {
     }
     const payload = { email: user.email, userRole: user.userRole };
     const accessToken = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET, {
-      expiresIn: "10s",
+      expiresIn: "1hr",
     });
     const refreshToken = jwt.sign(payload, process.env.REFRESH_TOKEN_SECRET, {
       expiresIn: "1d",
