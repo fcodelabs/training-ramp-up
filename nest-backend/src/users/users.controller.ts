@@ -18,7 +18,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @Post()
+  @Post('signup')
   @UsePipes(ValidationPipe)
   async signUp(@Body() createUserDto: CreateUserDto, @Res() res: Response) {
     const user = await this.usersService.signUp(createUserDto);
