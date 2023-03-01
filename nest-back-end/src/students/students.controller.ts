@@ -13,18 +13,19 @@ import { Student } from './entities/student.entity';
 import { Req, UseGuards } from '@nestjs/common/decorators';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { Request } from 'express';
+import { AuthGuard } from '@nestjs/passport';
+import { AdminGuard } from '../auth/admin.guard';
 
 @Controller('home')
 export class StudentsController {
   constructor(private readonly studentsService: StudentsService) {}
-
   @UseGuards(JwtAuthGuard)
   @Get()
   findAll(@Req() req: Request) {
     return this.studentsService.findAll();
   }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(AdminGuard)
   @Post()
   create(@Body() createStudentDto: StudentDto) {
     const newStudent = new Student();
@@ -37,13 +38,13 @@ export class StudentsController {
     return this.studentsService.create(newStudent);
   }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(AdminGuard)
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateStudentDto: StudentDto) {
     return this.studentsService.update(+id, updateStudentDto);
   }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(AdminGuard)
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.studentsService.remove(+id);

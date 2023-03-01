@@ -25,11 +25,7 @@ export class AuthController {
 
   @Post('signup')
   async signup(@Body() signUpDto: SignUpDto, @Res() res: Response) {
-    const newUser = new User();
-    newUser.email = signUpDto.email;
-    newUser.password = signUpDto.password;
-    newUser.role = 'student';
-    const newCreatedUser = await this.authService.signUp(newUser);
+    const newCreatedUser = await this.authService.signUp(signUpDto);
     this.logger.log(newCreatedUser);
     if (newCreatedUser) {
       return res.status(201).json('sign up success');

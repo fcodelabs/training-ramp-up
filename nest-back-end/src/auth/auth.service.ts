@@ -18,8 +18,12 @@ export class AuthService {
   ) {}
   private readonly logger = new Logger(AuthService.name);
 
-  async signUp(signUpUser: User) {
+  async signUp(signUpDto: SignUpDto) {
     try {
+      const signUpUser = new User();
+      signUpUser.email = signUpDto.email;
+      signUpUser.password = signUpDto.password;
+      signUpUser.role = 'student';
       const existingUser = await this.userRepository.findOneBy({
         email: signUpUser.email,
       });
@@ -50,7 +54,7 @@ export class AuthService {
 
   async login(user: any) {
     const payload = { email: user.email, sub: user.id };
-    const tokens = await this.getTokens(user.id, user.email);
+    const tokens = await this.getTokens(user.id, user.email, user.role);
     return {
       // access_token: this.jwtService.sign(payload),
       access_token: tokens.accessToken,
@@ -59,12 +63,13 @@ export class AuthService {
     };
   }
 
-  async getTokens(id: string, email: string) {
+  async getTokens(id: string, email: string, role: string) {
     const [accessToken, refreshToken] = await Promise.all([
       this.jwtService.signAsync(
         {
           id: id,
           email: email,
+          role: role,
         },
         {
           secret: this.configService.get<string>('ACCESS_TOKEN_SECRET'),
@@ -75,6 +80,7 @@ export class AuthService {
         {
           id: id,
           email: email,
+          role: role,
         },
         {
           secret: this.configService.get<string>('REFRESH_TOKEN_SECRET'),
@@ -92,14 +98,16 @@ export class AuthService {
     const decodedJwtAccessToken = this.jwtService.decode(refreshToken);
     const id = decodedJwtAccessToken['id'];
     const email = decodedJwtAccessToken['email'];
+    const role = decodedJwtAccessToken['role'];
     const accessToken = await this.jwtService.signAsync(
       {
         id: id,
         email: email,
+        role: role,
       },
       {
         secret: this.configService.get<string>('ACCESS_TOKEN_SECRET'),
-        expiresIn: '15s',
+        expiresIn: '60s',
       },
     );
     return accessToken;

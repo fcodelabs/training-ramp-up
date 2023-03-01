@@ -48,7 +48,7 @@ describe('AuthController', () => {
 
       await controller.signup(signUpDto, response);
 
-      expect(authService.signUp).toBeCalledWith(newUser);
+      expect(authService.signUp).toBeCalledWith(signUpDto);
       expect(response.status).toBeCalledWith(201);
       expect(response.json).toBeCalledWith('sign up success');
     });
@@ -66,7 +66,7 @@ describe('AuthController', () => {
 
       await controller.signup(signUpDto, response);
 
-      expect(authService.signUp).toBeCalledWith(expect.any(User));
+      expect(authService.signUp).toBeCalledWith(signUpDto);
       expect(response.status).toBeCalledWith(200);
       expect(response.json).toBeCalledWith('Email already exists');
     });

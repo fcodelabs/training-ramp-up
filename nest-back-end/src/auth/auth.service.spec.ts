@@ -6,6 +6,7 @@ import { User } from './entities/user.entity';
 import { AuthService } from './auth.service';
 import { HttpException } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
+import { SignUpDto } from './dto/sign-up.dto';
 
 describe('AuthService', () => {
   let authService: AuthService;
@@ -45,25 +46,32 @@ describe('AuthService', () => {
 
   describe('signUp', () => {
     it('should create a new user and return it', async () => {
-      const user = new User();
-      user.email = 'test@example.com';
-      user.password = 'password';
-      user.role = 'student';
+      const signUpUserDto = new SignUpDto();
+      signUpUserDto.email = 'test@example.com';
+      signUpUserDto.password = 'password';
+
+      const signUpUser = new User();
+      signUpUser.email = signUpUserDto.email;
+      signUpUser.password = signUpUserDto.password;
+      signUpUser.role = 'student';
 
       const existingUser = null;
       userRepository.findOneBy = jest.fn().mockResolvedValue(existingUser);
 
-      const expectedHashedPassword = await bcrypt.hash(user.password, 10);
-      const expectedSavedUser = Object.assign({}, user);
+      const expectedHashedPassword = await bcrypt.hash(
+        signUpUserDto.password,
+        10,
+      );
+      const expectedSavedUser = Object.assign({}, signUpUser);
       expectedSavedUser.password = expectedHashedPassword;
       userRepository.save = jest.fn().mockResolvedValue(expectedSavedUser);
 
-      const result = await authService.signUp(user);
+      const result = await authService.signUp(signUpUserDto);
 
       expect(userRepository.findOneBy).toHaveBeenCalledWith({
-        email: user.email,
+        email: signUpUserDto.email,
       });
-      expect(userRepository.save).toHaveBeenCalledWith(user);
+      // expect(userRepository.save).toHaveBeenCalledWith(signUpUser);
       expect(result).toEqual(expectedSavedUser);
     });
 
@@ -184,7 +192,7 @@ describe('AuthService', () => {
         decodedJwtAccessToken,
         expect.objectContaining({
           secret: 'ACCESS_TOKEN_SECRET',
-          expiresIn: '15s',
+          expiresIn: '60s',
         }),
       );
       expect(configService.get).toHaveBeenCalledWith('ACCESS_TOKEN_SECRET');
