@@ -11,11 +11,11 @@ import { PersistGate } from 'redux-persist/integration/react'
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 
-const socket = io('http://localhost:8080')
+// const socket = io('http://localhost:8080')
 
-socket.on('notify', (data) => {
-  toast.info(data.message)
-})
+// socket.on('notify', (data) => {
+//   toast.info(data.message)
+// })
 
 root.render(
   <React.StrictMode>

@@ -3,7 +3,7 @@ import { toast } from 'react-toastify'
 import { signOutUser } from '../pages/SignIn/userSlice'
 import store from '../store'
 
-const BASE_URL = 'http://localhost:8080/api/'
+const BASE_URL = 'http://localhost:8080/'
 const REFRESH_URL = 'http://localhost:8080/api/auth/refresh'
 
 const instance = axios.create({
@@ -46,7 +46,7 @@ axiosPrivate.interceptors.response.use(
     if (error.response.status === 403 && !originalRequest._retry) {
       originalRequest._retry = true
       try {
-        const { data } = await axiosPrivate.get('user/refresh', {
+        const { data } = await axiosPrivate.get('auth/refresh', {
           withCredentials: true,
         })
 
@@ -66,20 +66,19 @@ axiosPrivate.interceptors.response.use(
 )
 
 export async function getStudentsAPI() {
-  const response = await axiosPrivate.get('student/')
-  return response
+  return axiosPrivate.get('students')
 }
 
 export const addStudentAPI = async (student: StudentResponse) => {
-  const response = await axiosPrivate.post('student/', student)
+  const response = await axiosPrivate.post('students', student)
   return response
 }
 export const updateStudentAPI = async (id: number, student: StudentResponse) => {
-  return await axiosPrivate.patch(`student/${id}`, student)
+  return await axiosPrivate.patch(`students/${id}`, student)
 }
 
 export const deleteStudentAPI = async (id: number) => {
-  return await axiosPrivate.delete(`student/${id}`)
+  return await axiosPrivate.delete(`students/${id}`)
 }
 
 export default instance

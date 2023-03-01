@@ -10,7 +10,7 @@ export const signUp = async (user: userResponse) => {
 }
 
 export const signIn = async (user: userResponse) => {
-  const response = await client.post('user/login', user, {
+  const response = await client.post('auth/login', user, {
     withCredentials: true,
   })
 
@@ -18,7 +18,7 @@ export const signIn = async (user: userResponse) => {
 }
 
 export const signOut = async () => {
-  return client.get('user/logout', {
+  return client.get('auth/logout', {
     withCredentials: true,
   })
 }

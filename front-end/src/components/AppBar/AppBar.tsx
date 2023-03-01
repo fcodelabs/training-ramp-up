@@ -5,14 +5,16 @@ import Toolbar from '@mui/material/Toolbar'
 import Typography from '@mui/material/Typography'
 import Button from '@mui/material/Button'
 import { useNavigate } from 'react-router-dom'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { signOutUser } from '../../pages/SignIn/userSlice'
 
 export default function ButtonAppBar() {
   const dispatch = useDispatch()
+  const isSignedIn = useSelector((state: any) => state.user.signedIn)
 
   const handleLogout = () => {
     dispatch(signOutUser())
+    console.log('isSignedIn', isSignedIn)
   }
   return (
     <Box sx={{ flexGrow: 1 }}>

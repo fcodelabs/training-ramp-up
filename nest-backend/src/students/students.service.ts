@@ -22,9 +22,16 @@ export class StudentsService {
     return students;
   }
 
-  update(id: number, createStudentDto: CreateStudentDto) {
-    const updatedStudent = this.userRepository.update(id, createStudentDto);
-    return updatedStudent;
+  async update(id: number, createStudentDto: CreateStudentDto) {
+    const student = await this.userRepository.findOne({
+      where: { id: id },
+    });
+
+    if (student) {
+      this.userRepository.merge(student, createStudentDto);
+      const updatedStudent = await this.userRepository.save(student);
+      return updatedStudent;
+    }
   }
 
   remove(id: number) {
