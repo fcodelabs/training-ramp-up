@@ -6,7 +6,7 @@ interface userResponse {
 }
 
 export const signUp = async (user: userResponse) => {
-  return client.post('user/signup', user)
+  return client.post('users/signup', user)
 }
 
 export const signIn = async (user: userResponse) => {
