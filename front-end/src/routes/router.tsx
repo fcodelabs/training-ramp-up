@@ -11,6 +11,7 @@ export default function AppRouter() {
     <BrowserRouter>
       <Routes>
         <Route path='/' element={<SignIn />} />
+
         <Route element={<ProtectedRouter />}>
           <Route path='/grid' element={<Grid />} />
         </Route>

@@ -22,7 +22,8 @@ import { checkValid, age } from '../../utils/validators'
 function* getStudentsSaga(): Generator<any, any, any> {
   try {
     const response = yield call(getStudentsAPI)
-    const students: Student[] = response.data.data
+    const students: Student[] = response.data
+    console.log(students)
     students.map((item: Student) => {
       item.dob = new Date(item.dob)
     })
@@ -52,7 +53,7 @@ function* addStudentSaga(action: any): Generator<any, any, any> {
       // toast.success('Successfully Added', {
       //   position: toast.POSITION.TOP_RIGHT,
       // })
-      const addedStudent = response.data.data
+      const addedStudent = response.data
       addedStudent.dob = new Date(addedStudent.dob)
       yield put(addStudentSuccess(addedStudent))
     } catch (error) {
@@ -74,10 +75,10 @@ function* updateStudentSaga(action: any): Generator<any, any, any> {
   }
   try {
     const response = yield call(updateStudentAPI, id, itemToUpdate)
-    // toast.success('Successfully Updated', {
-    //   position: toast.POSITION.TOP_RIGHT,
-    // })
-    const updatedStudent = response.data.data
+    toast.success('Successfully Updated', {
+      position: toast.POSITION.TOP_RIGHT,
+    })
+    const updatedStudent = response.data
     updatedStudent.dob = new Date(updatedStudent.dob)
     yield put(updateStudentSuccess({ inEdit: false, ...updatedStudent }))
   } catch (error) {

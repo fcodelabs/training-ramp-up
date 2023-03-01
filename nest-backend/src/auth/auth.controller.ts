@@ -24,16 +24,46 @@ export class AuthController {
   @Post('login')
   async login(@Body() loginDto: LoginDto, @Res() res: Response) {
     const user = await this.authService.login(loginDto);
-    return res.status(200).json({
-      message: 'User logged in successfully',
-      user: user,
+    res
+      .cookie('jwt', user.refresh_token, {
+        httpOnly: true,
+        sameSite: 'none',
+        secure: true,
+
+        maxAge: 24 * 60 * 60 * 1000,
+      })
+      .status(200)
+      .json({
+        accessToken: user.access_token,
+        email: user.email,
+        userRole: user.userRole,
+      });
+  }
+
+  @Get('refresh')
+  async refresh(@Request() req, @Res() res: Response) {
+    const cookie = req.cookies;
+    console.log(cookie, 'cookie');
+
+    if (!cookie) {
+      res.status(401).json({
+        message: 'Unauthorized',
+      });
+    }
+    const access_token = await this.authService.refreshToken(cookie);
+    res.status(200).json({
+      accessToken: access_token,
     });
   }
 
-  // @UseGuards(AuthGuard('local'))
-  // @Post('sign-in')
-  // async signIn(@Request() req) {
-  //   console.log(req);
-  //   return req.body;
-  // }
+  @Get('logout')
+  async logout(@Res() res: Response) {
+    res.clearCookie('jwt', {
+      httpOnly: true,
+      sameSite: 'none',
+      secure: true,
+      maxAge: 24 * 60 * 60 * 1000,
+    });
+    res.status(200).json({ message: 'You have been successfully logged out' });
+  }
 }

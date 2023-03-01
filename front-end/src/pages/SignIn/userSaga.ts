@@ -27,14 +27,14 @@ function* signUpUserSaga(action: signUpUserAction): Generator<any, any, any> {
     const response = yield call(signUp, action.payload)
 
     if (response.status == 201) {
-      yield put(signUpUserSuccess(response.data.data))
+      yield put(signUpUserSuccess(response.data))
       toast.success('Registration Succesfull!')
       window.location.href = '/'
     } else if (response.status == 200) {
       toast.error('Email already registered!')
-      yield put(signUpUserFailure(response.data.data))
+      yield put(signUpUserFailure(response.data))
     } else {
-      yield put(signUpUserFailure(response.data.data))
+      yield put(signUpUserFailure(response.data))
     }
   } catch (error) {
     yield put(signUpUserFailure(error))
@@ -64,6 +64,7 @@ function* signInUserSaga(action: signUpUserAction): Generator<any, any, any> {
 
 function* logoutUserSaga(): Generator<any, any, any> {
   try {
+    console.log('logout')
     yield call(signOut)
 
     sessionStorage.removeItem('accessToken')
