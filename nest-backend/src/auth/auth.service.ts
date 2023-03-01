@@ -29,4 +29,17 @@ export class AuthService {
       throw new HttpException(error.message, error.status);
     }
   }
+
+  async validateUser(email: string, password: string): Promise<any> {
+    const user = await this.userRepository.findOne({
+      where: { email: email },
+    });
+
+    const checkPass = await bcrypt.compare(password, user.password);
+    if (user && checkPass) {
+      const { password, ...result } = user;
+      return result;
+    }
+    return null;
+  }
 }
