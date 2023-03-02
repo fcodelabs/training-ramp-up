@@ -18,7 +18,7 @@ export class UsersService {
         where: { email: createUserDto.email },
       });
       if (findUser) {
-        throw new HttpException('User already exists', 200);
+        throw new HttpException('User already exists', 400);
       }
 
       const newPassword = await bcrypt.hash(createUserDto.password, 10);
