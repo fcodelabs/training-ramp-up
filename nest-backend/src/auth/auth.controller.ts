@@ -46,7 +46,7 @@ export class AuthController {
     console.log(cookie, 'cookie');
 
     if (!cookie) {
-      res.status(401).json({
+      res.status(403).json({
         message: 'Unauthorized',
       });
     }
