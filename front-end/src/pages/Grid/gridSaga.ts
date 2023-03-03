@@ -75,9 +75,9 @@ function* updateStudentSaga(action: any): Generator<any, any, any> {
   }
   try {
     const response = yield call(updateStudentAPI, id, itemToUpdate)
-    toast.success('Successfully Updated', {
-      position: toast.POSITION.TOP_RIGHT,
-    })
+    // toast.success('Successfully Updated', {
+    //   position: toast.POSITION.TOP_RIGHT,
+    // })
     const updatedStudent = response.data
     updatedStudent.dob = new Date(updatedStudent.dob)
     yield put(updateStudentSuccess({ inEdit: false, ...updatedStudent }))

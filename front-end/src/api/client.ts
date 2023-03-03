@@ -19,14 +19,14 @@ interface StudentResponse {
   age: number
 }
 
-instance.interceptors.request.use(
-  async (config) => {
-    return config
-  },
-  (error) => {
-    return Promise.reject(error)
-  },
-)
+// instance.interceptors.request.use(
+//   async (config) => {
+//     return config
+//   },
+//   (error) => {
+//     return Promise.reject(error)
+//   },
+// )
 
 export const axiosPrivate = axios.create({
   baseURL: BASE_URL,
@@ -39,23 +39,25 @@ export const axiosPrivate = axios.create({
 
 axiosPrivate.interceptors.response.use(
   async (response) => {
+    console.log(response)
     return response
   },
   async (error) => {
+    console.log(error)
     const originalRequest = error.config
-    if (error.response.status === 403 && !originalRequest._retry) {
+    if (error.response.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true
       try {
         const { data } = await axiosPrivate.get('auth/refresh', {
           withCredentials: true,
         })
-
+        console.log(data)
         sessionStorage.setItem('accessToken', data.accessToken)
         axios.defaults.headers.common['Authorization'] = 'Bearer ' + data.accessToken
         originalRequest.headers['Authorization'] = 'Bearer ' + data.accessToken
         return await axiosPrivate(originalRequest)
       } catch (err: any) {
-        if (err.response.status === 401) {
+        if (err.response.status === 403) {
           store.dispatch(signOutUser())
         }
         return Promise.reject(err)

@@ -25,40 +25,38 @@ interface signUpUserAction {
 function* signUpUserSaga(action: signUpUserAction): Generator<any, any, any> {
   try {
     const response = yield call(signUp, action.payload)
-
-    if (response.status == 201) {
-      yield put(signUpUserSuccess(response.data))
-      toast.success('Registration Succesfull!')
-      window.location.href = '/'
-    } else if (response.status == 200) {
-      toast.error('Email already registered!')
-      yield put(signUpUserFailure(response.data))
+    yield put(signUpUserSuccess(response.data))
+    toast.success('Registration Succesfull!')
+    window.location.href = '/'
+  } catch (error: any) {
+    if (error.response.status === 400) {
+      // Handle 400 error response here
+      toast.error('User Already Exists!')
+      yield put(signUpUserFailure(error.response.data))
     } else {
-      yield put(signUpUserFailure(response.data))
+      yield put(signUpUserFailure(error.response.data))
     }
-  } catch (error) {
-    yield put(signUpUserFailure(error))
   }
 }
 
 function* signInUserSaga(action: signUpUserAction): Generator<any, any, any> {
   try {
     const response = yield call(signIn, action.payload)
-
-    if (response.status == 200) {
-      const userRole = response.data.userRole
-      const email = response.data.email
-      const user = { email, userRole }
-      yield put(signInUserSuccess(user))
-      sessionStorage.setItem('accessToken', response.data.accessToken)
-      toast.success('Login Succesfull!')
-      window.location.href = '/grid'
-    } else {
-      toast.error('Invalid Credentials!')
-      yield put(signInUserFailure(response))
-    }
+    const userRole = response.data.userRole
+    const email = response.data.email
+    const user = { email, userRole }
+    yield put(signInUserSuccess(user))
+    sessionStorage.setItem('accessToken', response.data.accessToken)
+    toast.success('Login Succesfull!')
+    window.location.href = '/grid'
   } catch (error: any) {
-    yield put(signInUserFailure(error))
+    if (error.response.status === 401) {
+      // Handle 400 error response here
+      toast.error('Invalid Credentials!')
+      yield put(signInUserFailure(error.response.data))
+    } else {
+      yield put(signInUserFailure(error.response.data))
+    }
   }
 }
 

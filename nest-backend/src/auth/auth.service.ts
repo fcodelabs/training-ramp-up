@@ -16,26 +16,6 @@ export class AuthService {
     private configService: ConfigService,
   ) {}
 
-  async logint(loginDto: LoginDto) {
-    try {
-      const user = await this.userRepository.findOne({
-        where: { email: loginDto.email },
-      });
-      if (!user) {
-        throw new HttpException('User not found', 200);
-      }
-      const checkPass = await bcrypt.compare(loginDto.password, user.password);
-      if (!checkPass) {
-        console.log('Invalid credentials');
-        // throw new HttpException('Invalid credentials', 200);
-      }
-      return user;
-    } catch (error) {
-      console.log(error.message);
-      throw new HttpException(error.message, error.status);
-    }
-  }
-
   async validateUser(email: string, password: string): Promise<any> {
     const user = await this.userRepository.findOne({
       where: { email: email },
@@ -55,7 +35,7 @@ export class AuthService {
     const tokens = await Promise.all([
       this.jwtService.signAsync(payload, {
         secret: this.configService.get<string>('ACCESS_TOKEN_SECRET'),
-        expiresIn: '20s',
+        expiresIn: '1hr',
       }),
       this.jwtService.signAsync(payload, {
         secret: this.configService.get<string>('REFRESH_TOKEN_SECRET'),
@@ -81,12 +61,11 @@ export class AuthService {
         throw new HttpException('No token provided', 400);
       }
       const decoded = this.jwtService.decode(refresh_token);
-      console.log(decoded);
       const accessToken = await this.jwtService.signAsync(
         { payload: decoded },
         {
           secret: this.configService.get<string>('ACCESS_TOKEN_SECRET'),
-          expiresIn: '20s',
+          expiresIn: '1hr',
         },
       );
 
