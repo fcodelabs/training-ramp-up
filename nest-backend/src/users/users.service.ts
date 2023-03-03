@@ -19,7 +19,6 @@ export class UsersService {
       });
       if (findUser) {
         throw new HttpException('User already exists', 400);
-        // return { message: 'User already exists' };
       }
 
       const newPassword = await bcrypt.hash(createUserDto.password, 10);
