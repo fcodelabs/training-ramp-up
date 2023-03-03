@@ -61,7 +61,6 @@ export class AuthService {
         throw new HttpException('No token provided', 400);
       }
       const decoded = this.jwtService.decode(refresh_token);
-      console.log(decoded);
       const accessToken = await this.jwtService.signAsync(
         { payload: decoded },
         {

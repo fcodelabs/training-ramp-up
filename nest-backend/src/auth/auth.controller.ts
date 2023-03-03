@@ -43,7 +43,6 @@ export class AuthController {
   @Get('refresh')
   async refresh(@Request() req, @Res() res: Response) {
     const cookie = req.cookies;
-    console.log(cookie, 'cookie');
 
     if (!cookie) {
       res.status(403).json({

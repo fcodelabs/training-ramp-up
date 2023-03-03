@@ -152,7 +152,7 @@ describe('AuthService', () => {
   describe('refreshToken', () => {
     it('should return an access token', async () => {
       let cookie = { jwt: 'refresh_token' };
-      // Arrange
+
       const decoded = { email: 'test@test.com', userRole: 'student' };
       jest.spyOn(jwtService, 'decode').mockReturnValue(decoded);
       jest.spyOn(jwtService, 'signAsync').mockResolvedValue('access_token');
@@ -172,15 +172,12 @@ describe('AuthService', () => {
     });
 
     it('should call decode with the correct parameter', async () => {
-      // Arrange
       let cookie = { jwt: 'refresh_token' };
       const decoded = { email: 'test@test.com', userRole: 'user' };
       jest.spyOn(jwtService, 'decode').mockReturnValue(decoded);
 
-      // Act
       await authService.refreshToken(cookie);
 
-      // Assert
       expect(jwtService.decode).toHaveBeenCalledWith(cookie.jwt);
     });
   });

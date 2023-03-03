@@ -39,7 +39,6 @@ describe('AuthController', () => {
         userRole: 'user',
       };
       jest.spyOn(authService, 'login').mockResolvedValue(user);
-      // const cookieSpy = jest.spyOn(Response.prototype, 'cookie' as never);
 
       const response = {
         cookie: jest.fn().mockReturnThis(),
@@ -90,7 +89,6 @@ describe('AuthController', () => {
         status: jest.fn().mockReturnThis(),
         json: jest.fn().mockReturnThis(),
       } as any;
-      // jest.spyOn(authService, 'refreshToken').mockResolvedValue(null);
 
       await authController.refresh(req, response);
       expect(response.status).toHaveBeenCalledWith(403);
