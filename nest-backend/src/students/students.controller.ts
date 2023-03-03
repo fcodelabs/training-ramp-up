@@ -12,7 +12,7 @@ import {
 } from '@nestjs/common';
 import { StudentsService } from './students.service';
 import { CreateStudentDto } from './dto/create-student.dto';
-import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
 @Controller('students')
 export class StudentsController {
@@ -43,6 +43,6 @@ export class StudentsController {
   @UseGuards(JwtAuthGuard)
   @Delete(':id')
   async remove(@Param('id') id: string) {
-    await this.studentsService.remove(+id);
+    return await this.studentsService.remove(+id);
   }
 }
