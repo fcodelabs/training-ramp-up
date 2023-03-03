@@ -55,7 +55,7 @@ export class StudentsService {
   async remove(id: number) {
     try {
       const deletedStudent = await this.userRepository.delete(id);
-      global.io.emit('notify', { message: `Student deleted` });
+      global.io.emit('notify', { message: `Student has deleted` });
       return deletedStudent;
     } catch (err) {
       throw new HttpException(err.message, err.status);
