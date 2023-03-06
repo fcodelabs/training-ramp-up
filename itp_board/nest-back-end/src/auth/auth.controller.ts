@@ -28,7 +28,7 @@ export class AuthController {
   @Post('login')
   async login(@Request() req, @Res({ passthrough: true }) response: Response) {
     if (req.user.data) {
-      const { email, admin } = req.user;
+      const { email, admin } = req.user.data;
       const tokens = this.authService.generateTokens({ email, admin });
       response
         .cookie('accessToken', tokens.accessToken, {
@@ -86,6 +86,7 @@ export class AuthController {
     @Res({ passthrough: true }) response: Response,
   ) {
     const tokens = this.authService.generateTokens(req.user);
+    console.log(req.user);
     response.cookie('accessToken', tokens.accessToken, {
       httpOnly: true,
       secure: true,

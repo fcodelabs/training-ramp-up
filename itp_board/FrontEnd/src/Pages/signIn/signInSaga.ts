@@ -9,6 +9,7 @@ import {
   signInUser,
   signOutUser,
 } from './signInSlice'
+import { changeNewAdded } from '../students/studentSlice'
 import { ResponseObj, tempResp, UserCredetial } from '../../utils/types'
 import { checkCredentials, signOut } from '../../apis/userAPIs'
 import { displayErrors } from '../../utils/toasts'
@@ -20,6 +21,7 @@ function* signOut_() {
     yield put(changeFirstName(''))
     yield put(changeLastName(''))
     yield put(changeEmail(''))
+    yield put(changeNewAdded(false))
     yield put(changeAdmin(false))
     yield put(changeSignInUser(false))
   } catch (error) {

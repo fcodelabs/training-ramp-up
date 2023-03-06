@@ -1,6 +1,7 @@
 import { put, takeEvery, call } from 'redux-saga/effects'
 import { PayloadAction } from '@reduxjs/toolkit'
 import {
+  changeAdmin,
   changeEmail,
   changeFirstName,
   changeLastName,
@@ -21,6 +22,7 @@ function* signUp(action: PayloadAction<User>) {
       yield put(changeFirstName(firstName))
       yield put(changeLastName(lastName))
       yield put(changeEmail(email))
+      yield put(changeAdmin(false))
       navigate('/students')
     }
   } catch (error: any) {

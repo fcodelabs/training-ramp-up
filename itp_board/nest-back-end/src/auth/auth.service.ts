@@ -5,6 +5,7 @@ import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { TokensDto } from './dto/tokens.dto';
 import { ValidatedUserDto } from './dto/validatedUser.dto';
+import { GenerateTokenDto } from './dto/generateToken.dto';
 
 @Injectable()
 export class AuthService {
@@ -30,13 +31,13 @@ export class AuthService {
     return { data: null, authorized: false };
   }
 
-  generateTokens(payload): TokensDto {
+  generateTokens(payload: GenerateTokenDto): TokensDto {
     const accessKey = this.configService.get<string>('TOKEN_KEY');
     const refreshKey = this.configService.get<string>('REFRESH_TOKEN_KEY');
     return {
       accessToken: this.jwtService.sign(payload, {
         secret: accessKey,
-        expiresIn: '60s',
+        expiresIn: '300s',
       }),
       refreshToken: this.jwtService.sign(payload, {
         secret: refreshKey,

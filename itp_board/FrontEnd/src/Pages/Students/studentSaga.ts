@@ -18,8 +18,6 @@ import {
 } from './studentSlice'
 import { createData, deleteData, fetchData, updateData } from '../../apis/studentApi'
 import { displayErrors } from '../../utils/toasts'
-import { signOut, updateTokens } from '../../apis/userAPIs'
-import { signOutUser } from '../signIn/signInSlice'
 
 function* get() {
   try {
