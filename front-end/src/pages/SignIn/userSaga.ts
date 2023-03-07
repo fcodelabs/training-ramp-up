@@ -62,7 +62,6 @@ function* signInUserSaga(action: signUpUserAction): Generator<any, any, any> {
 
 function* logoutUserSaga(): Generator<any, any, any> {
   try {
-    console.log('logout')
     yield call(signOut)
 
     sessionStorage.removeItem('accessToken')

@@ -14,7 +14,6 @@ export default function ButtonAppBar() {
 
   const handleLogout = () => {
     dispatch(signOutUser())
-    console.log('isSignedIn', isSignedIn)
   }
   return (
     <Box sx={{ flexGrow: 1 }}>

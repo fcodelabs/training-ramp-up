@@ -23,7 +23,6 @@ function* getStudentsSaga(): Generator<any, any, any> {
   try {
     const response = yield call(getStudentsAPI)
     const students: Student[] = response.data
-    console.log(students)
     students.map((item: Student) => {
       item.dob = new Date(item.dob)
     })
