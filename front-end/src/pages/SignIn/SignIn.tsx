@@ -13,9 +13,9 @@ import Typography from '@mui/material/Typography'
 import Container from '@mui/material/Container'
 import joi from 'joi'
 import { createTheme, ThemeProvider } from '@mui/material/styles'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { signInUser } from './userSlice'
 import Alert from '@mui/material/Alert'
 const theme = createTheme()
@@ -24,6 +24,13 @@ export default function SignIn() {
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const [user, setUser] = useState({ email: '', password: '' })
+  const isSignedIn = useSelector((state: any) => state.user.signedIn)
+
+  useEffect(() => {
+    if (isSignedIn) {
+      navigate('/grid')
+    }
+  }, [isSignedIn])
   const schema: { [key: string]: any } = joi.object({
     email: joi
       .string()

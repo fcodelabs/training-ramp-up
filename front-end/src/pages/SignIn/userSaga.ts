@@ -15,6 +15,7 @@ import { toast } from 'react-toastify'
 interface UserSignUp {
   email: string
   password: string
+  navigate: (path: string) => void
 }
 
 interface signUpUserAction {
@@ -24,10 +25,12 @@ interface signUpUserAction {
 
 function* signUpUserSaga(action: signUpUserAction): Generator<any, any, any> {
   try {
+    const { navigate } = action.payload
     const response = yield call(signUp, action.payload)
     yield put(signUpUserSuccess(response.data))
     toast.success('Registration Succesfull!')
-    window.location.href = '/'
+    navigate('/')
+    // window.location.href = '/'
   } catch (error: any) {
     if (error.response.status === 400) {
       // Handle 400 error response here
@@ -48,7 +51,6 @@ function* signInUserSaga(action: signUpUserAction): Generator<any, any, any> {
     yield put(signInUserSuccess(user))
     sessionStorage.setItem('accessToken', response.data.accessToken)
     toast.success('Login Succesfull!')
-    window.location.href = '/grid'
   } catch (error: any) {
     if (error.response.status === 401) {
       // Handle 400 error response here

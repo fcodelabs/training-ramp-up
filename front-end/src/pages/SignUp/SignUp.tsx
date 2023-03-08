@@ -12,9 +12,8 @@ import Typography from '@mui/material/Typography'
 import Container from '@mui/material/Container'
 import Alert from '@mui/material/Alert'
 import { useNavigate } from 'react-router-dom'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { signUpUser } from '../SignIn/userSlice'
-
 import { createTheme, ThemeProvider } from '@mui/material/styles'
 import { useState } from 'react'
 
@@ -99,7 +98,7 @@ export default function SignUp() {
     const result = schema.validate(user)
     const { error } = result
     if (!error) {
-      const usertoSign = { email: user.email, password: user.password }
+      const usertoSign = { email: user.email, password: user.password, navigate }
 
       dispatch(signUpUser(usertoSign))
     } else {
