@@ -1,4 +1,4 @@
-import { IsNotEmpty } from 'class-validator';
+import { IsDate, IsNotEmpty, IsNumber } from 'class-validator';
 
 export class CreateStudentDto {
   @IsNotEmpty()
@@ -10,7 +10,9 @@ export class CreateStudentDto {
   @IsNotEmpty()
   mobile: string;
   @IsNotEmpty()
+  @IsDate()
   dob: Date;
   @IsNotEmpty()
+  @IsNumber()
   age: number;
 }

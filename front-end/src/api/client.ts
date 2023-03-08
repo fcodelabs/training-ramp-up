@@ -39,11 +39,9 @@ export const axiosPrivate = axios.create({
 
 axiosPrivate.interceptors.response.use(
   async (response) => {
-    console.log(response)
     return response
   },
   async (error) => {
-    console.log(error)
     const originalRequest = error.config
     if (error.response.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true
@@ -51,7 +49,6 @@ axiosPrivate.interceptors.response.use(
         const { data } = await axiosPrivate.get('auth/refresh', {
           withCredentials: true,
         })
-        console.log(data)
         sessionStorage.setItem('accessToken', data.accessToken)
         axios.defaults.headers.common['Authorization'] = 'Bearer ' + data.accessToken
         originalRequest.headers['Authorization'] = 'Bearer ' + data.accessToken

@@ -35,6 +35,7 @@ export const userSlice = createSlice({
       state.signedUp = true
     },
     signUpUserFailure: (state, action) => {
+      state.signedUp = false
       state.isSignUpLoading = false
       state.error = action.payload
     },
