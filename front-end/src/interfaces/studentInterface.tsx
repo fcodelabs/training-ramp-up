@@ -3,7 +3,7 @@ export interface Student {
   name: string;
   gender: string;
   address: string;
-  mobile: number;
+  mobile: string;
   dob: string;
   age: number;
 }

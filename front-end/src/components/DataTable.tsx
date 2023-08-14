@@ -152,15 +152,24 @@ export const DataTable = () => {
       setSnackbar({ children: 'Please select gender', severity: 'error' });
     } else if (newRow.address.trim() === '') {
       setSnackbar({ children: 'Please fill address', severity: 'error' });
-    } else if (typeof newRow.mobile === 'string' && newRow.mobile.trim() === '') {
+    } else if (
+      typeof newRow.mobile === 'string' &&
+      newRow.mobile.trim() === ''
+    ) {
       setSnackbar({ children: 'Please fill mobile', severity: 'error' });
     } else if (!/^\d{10}$/.test(newRow.mobile)) {
-      setSnackbar({ children: 'Please add a valid mobile number with 10 digits', severity: 'error' });
+      setSnackbar({
+        children: 'Please add a valid mobile number with 10 digits',
+        severity: 'error',
+      });
     } else if (isNaN(newRow.dob)) {
       setSnackbar({ children: 'Please fill date of birth', severity: 'error' });
-    } else if (newAge < 18 ) {
-      setSnackbar({ children: 'Age must be above 18. Add birth of date again', severity: 'error' });
-    }  else {
+    } else if (newAge < 18) {
+      setSnackbar({
+        children: 'Age must be above 18. Add birth of date again',
+        severity: 'error',
+      });
+    } else {
       validated = true;
     }
 
