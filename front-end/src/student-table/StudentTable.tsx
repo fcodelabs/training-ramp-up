@@ -6,8 +6,9 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import EditButton from './EditButton';
-import RemoveButton from './RemoveButton';
+import CustomizeButton from './Button';
+import DatePick from './DatePicker';
+import { useState } from 'react';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -34,7 +35,12 @@ const data = [
     {id:3,name:"Ron",gender:"male",address:"Colombo",mobile_no:"011241989",date_of_birth:"1969-12-15",age:58},
 ]
 
-const StudentTable = ()=>{
+interface Props{
+    visible:boolean
+}
+
+const StudentTable = (visible:Props)=>{
+    const [editId,setEditId] = useState(-1)
     return(
         <TableContainer component={Paper}>
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -51,20 +57,78 @@ const StudentTable = ()=>{
                     </TableRow>
                 </TableHead>
                 <TableBody>
+                    {visible && <StyledTableRow>
+                        <TableCell align="left"></TableCell>
+                        <TableCell align="left">
+                            <input size={5} type="text" name="name" />
+                        </TableCell>
+                        <TableCell align="left">
+                            <input size={5}  type="text" name="gender"   />
+                        </TableCell>
+                        <TableCell align="left">
+                            <input size={5}  type="text" name="address"  />
+                        </TableCell>
+                        <TableCell align="left">
+                            <input size={5}  type="text" name="mobile_no"   />
+                        </TableCell>
+                        <TableCell align="left">
+                            <DatePick/>
+                        </TableCell>
+                        <TableCell align="left">age</TableCell>
+                        <TableCell align="left">
+                            <div><CustomizeButton label='Add' color='black' backgroundColor='#f0f8ff' onClick={()=>setEditId(2)}/></div>
+                            <div><CustomizeButton label='Discard' color='black' backgroundColor='#f0f8ff'onClick={()=>setEditId(-1)}/></div>
+                        </TableCell>
+                    </StyledTableRow>}
                     {data.map((val,key)=>{
-                        return(
-                            <StyledTableRow key={key}>
-                                <TableCell align="left">{val.id}</TableCell>
-                                <TableCell align="left">{val.name}</TableCell>
-                                <TableCell align="left">{val.gender}</TableCell>
-                                <TableCell align="left">{val.address}</TableCell>
-                                <TableCell align="left">{val.mobile_no}</TableCell>
-                                <TableCell align="left">{val.date_of_birth}</TableCell>
-                                <TableCell align="left">{val.age}</TableCell>
-                                <TableCell align="left"><EditButton/><RemoveButton/></TableCell>
-                            </StyledTableRow>
+                            if (key === editId) {
+                                // This is the first row, render input fields for editing
+                                return (
+                                  <StyledTableRow>
+                                    <TableCell align="left">{val.id}</TableCell>
+                                    <TableCell align="left">
+                                      <input size={5} type="text" name="name" value={val.name}/>
+                                    </TableCell>
+                                    <TableCell align="left">
+                                      <input size={5}  type="text" name="gender" value={val.gender}  />
+                                    </TableCell>
+                                    <TableCell align="left">
+                                      <input size={5}  type="text" name="address" value={val.address}  />
+                                    </TableCell>
+                                    <TableCell align="left">
+                                      <input size={5}  type="text" name="mobile_no" value={val.mobile_no}  />
+                                    </TableCell>
+                                    <TableCell align="left">
+                                      <DatePick/>
+                                    </TableCell>
+                                    <TableCell align="left">{val.age}</TableCell>
+                                    <TableCell align="left">
+                                        <div><CustomizeButton label='Update' color='black' backgroundColor='#f0f8ff' onClick={()=>setEditId(2)}/></div>
+                                        <div><CustomizeButton label='Cancel' color='black' backgroundColor='#f0f8ff'onClick={()=>setEditId(-1)}/></div>
+                                    </TableCell>
+                                  </StyledTableRow>
+                                );
+                            } else{
+                                return(
+                                <StyledTableRow>
+                                    <TableCell align="left">{val.id}</TableCell>
+                                    <TableCell align="left">{val.name}</TableCell>
+                                    <TableCell align="left">{val.gender}</TableCell>
+                                    <TableCell align="left">{val.address}</TableCell>
+                                    <TableCell align="left">{val.mobile_no}</TableCell>
+                                    <TableCell align="left">{val.date_of_birth}</TableCell>
+                                    <TableCell align="left">{val.age}</TableCell>
+                                    <TableCell align="left">
+                                        <CustomizeButton label='Edit' color='white' backgroundColor='red' onClick={()=>setEditId(key)}/>
+                                        <CustomizeButton label='Remove' color='black' backgroundColor='#f0f8ff' onClick={()=>setEditId(key)}/>
+                                    </TableCell>
+                                </StyledTableRow>
+                                )
+
+                            }
+                        }
                         )
-                    })}
+                    }
                 </TableBody>
             </Table>
         </TableContainer>

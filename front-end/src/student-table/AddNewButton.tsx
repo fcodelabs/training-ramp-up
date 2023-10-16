@@ -1,7 +1,13 @@
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box'
 
-const AddNewButton = ()=>{
+interface Props{
+    label:string
+    onClick:()=>void
+}
+
+const AddNewButton = ({label,onClick}:Props)=>{
+
     return(
         <>
             <Box
@@ -10,8 +16,8 @@ const AddNewButton = ()=>{
             justifyContent="flex-start"
             alignItems="flex-start"
             >
-                <Button sx={{ height: 30, backgroundColor:'#f0f8ff',color:'black'}}>
-                    Add New
+                <Button sx={{ height: 30, backgroundColor:'#f0f8ff',color:'black'}} onClick={onClick}>
+                    {label}
                 </Button>
             </Box>
         </>
