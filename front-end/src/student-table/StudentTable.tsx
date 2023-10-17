@@ -9,8 +9,12 @@ import Paper from "@mui/material/Paper";
 import CustomizeButton from "./Button";
 import { useState } from "react";
 import DatePicker from "react-datepicker";
+import { useSelector, useDispatch } from "react-redux";
 
 import "react-datepicker/dist/react-datepicker.css";
+import { addStudent } from "../redux/Reducer";
+import { RootState } from "../redux/Store";
+import TableCellInput from "./TableCellInput";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -31,42 +35,14 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-const data = [
-  {
-    id: 1,
-    name: "John",
-    gender: "male",
-    address: "Homagama",
-    mobileNo: "011258989",
-    dateOfBirth: new Date("10/17/1999"),
-    age: 25,
-  },
-  {
-    id: 2,
-    name: "Ann",
-    gender: "female",
-    address: "Horana",
-    mobileNo: "011258989",
-    dateOfBirth: new Date("10/17/1995"),
-    age: 26,
-  },
-  {
-    id: 3,
-    name: "Ron",
-    gender: "male",
-    address: "Colombo",
-    mobileNo: "011241989",
-    dateOfBirth: new Date("10/17/1989"),
-    age: 58,
-  },
-];
-
 interface Props {
   visible: boolean;
   onDiscardClick: () => void;
 }
 
 const StudentTable = ({ visible, onDiscardClick }: Props) => {
+  const existingStudent = useSelector((state: RootState) => state.students);
+  const dispatch = useDispatch();
   const [editId, setEditId] = useState(-1);
   const [student, setStudent] = useState({
     id: -1,
@@ -87,6 +63,8 @@ const StudentTable = ({ visible, onDiscardClick }: Props) => {
       dateOfBirth: new Date(),
       age: 0,
     });
+  console.log(student);
+
   return (
     <>
       <TableContainer component={Paper}>
@@ -107,58 +85,42 @@ const StudentTable = ({ visible, onDiscardClick }: Props) => {
             {visible && (
               <StyledTableRow>
                 <TableCell align="left"></TableCell>
-                <TableCell align="left">
-                  <input
-                    size={5}
-                    type="text"
-                    name="name"
-                    onChange={(event) =>
-                      setStudent({
-                        ...student,
-                        name: event.target.value,
-                      })
-                    }
-                  />
-                </TableCell>
-                <TableCell align="left">
-                  <input
-                    size={5}
-                    type="text"
-                    name="gender"
-                    onChange={(event) =>
-                      setStudent({
-                        ...student,
-                        gender: event.target.value,
-                      })
-                    }
-                  />
-                </TableCell>
-                <TableCell align="left">
-                  <input
-                    size={5}
-                    type="text"
-                    name="address"
-                    onChange={(event) =>
-                      setStudent({
-                        ...student,
-                        address: event.target.value,
-                      })
-                    }
-                  />
-                </TableCell>
-                <TableCell align="left">
-                  <input
-                    size={5}
-                    type="text"
-                    name="mobile_no"
-                    onChange={(event) =>
-                      setStudent({
-                        ...student,
-                        mobileNo: event.target.value,
-                      })
-                    }
-                  />
-                </TableCell>
+                <TableCellInput
+                  placeHolder=""
+                  onChange={(event) =>
+                    setStudent({
+                      ...student,
+                      name: event.target.value,
+                    })
+                  }
+                />
+                <TableCellInput
+                  placeHolder=""
+                  onChange={(event) =>
+                    setStudent({
+                      ...student,
+                      gender: event.target.value,
+                    })
+                  }
+                />
+                <TableCellInput
+                  placeHolder=""
+                  onChange={(event) =>
+                    setStudent({
+                      ...student,
+                      address: event.target.value,
+                    })
+                  }
+                />
+                <TableCellInput
+                  placeHolder=""
+                  onChange={(event) =>
+                    setStudent({
+                      ...student,
+                      mobileNo: event.target.value,
+                    })
+                  }
+                />
                 <TableCell align="left">
                   <DatePicker
                     selected={student.dateOfBirth}
@@ -170,14 +132,18 @@ const StudentTable = ({ visible, onDiscardClick }: Props) => {
                     }
                   />
                 </TableCell>
-                <TableCell align="left">age</TableCell>
+                <TableCell align="left">12</TableCell>
                 <TableCell align="left">
                   <div>
                     <CustomizeButton
                       label="Add"
                       color="black"
                       backgroundColor="#f0f8ff"
-                      onClick={() => setEditId(-1)}
+                      onClick={() => {
+                        dispatch(addStudent(student));
+                        clearStudentData();
+                        onDiscardClick();
+                      }}
                     />
                   </div>
                   <div>
@@ -194,67 +160,47 @@ const StudentTable = ({ visible, onDiscardClick }: Props) => {
                 </TableCell>
               </StyledTableRow>
             )}
-            {data.map((val, key) => {
+            {existingStudent.map((val, key) => {
               if (key === editId) {
                 return (
                   <StyledTableRow key={key}>
                     <TableCell align="left">{val.id}</TableCell>
-                    <TableCell align="left">
-                      <input
-                        size={5}
-                        placeholder={val.name}
-                        type="text"
-                        name="name"
-                        onChange={(event) =>
-                          setStudent({
-                            ...student,
-                            name: event.target.value,
-                          })
-                        }
-                      />
-                    </TableCell>
-                    <TableCell align="left">
-                      <input
-                        size={5}
-                        type="text"
-                        name="gender"
-                        placeholder={val.gender}
-                        onChange={(event) =>
-                          setStudent({
-                            ...student,
-                            gender: event.target.value,
-                          })
-                        }
-                      />
-                    </TableCell>
-                    <TableCell align="left">
-                      <input
-                        size={5}
-                        type="text"
-                        name="address"
-                        placeholder={val.address}
-                        onChange={(event) =>
-                          setStudent({
-                            ...student,
-                            address: event.target.value,
-                          })
-                        }
-                      />
-                    </TableCell>
-                    <TableCell align="left">
-                      <input
-                        size={5}
-                        type="text"
-                        name="mobileNo"
-                        placeholder={val.mobileNo}
-                        onChange={(event) =>
-                          setStudent({
-                            ...student,
-                            mobileNo: event.target.value,
-                          })
-                        }
-                      />
-                    </TableCell>
+                    <TableCellInput
+                      placeHolder={val.name}
+                      onChange={(event) =>
+                        setStudent({
+                          ...student,
+                          name: event.target.value,
+                        })
+                      }
+                    />
+                    <TableCellInput
+                      placeHolder={val.gender}
+                      onChange={(event) =>
+                        setStudent({
+                          ...student,
+                          gender: event.target.value,
+                        })
+                      }
+                    />
+                    <TableCellInput
+                      placeHolder={val.address}
+                      onChange={(event) =>
+                        setStudent({
+                          ...student,
+                          address: event.target.value,
+                        })
+                      }
+                    />
+                    <TableCellInput
+                      placeHolder={val.mobileNo}
+                      onChange={(event) =>
+                        setStudent({
+                          ...student,
+                          mobileNo: event.target.value,
+                        })
+                      }
+                    />
                     <TableCell align="left">
                       <DatePicker
                         placeholderText={new Date(
@@ -319,7 +265,10 @@ const StudentTable = ({ visible, onDiscardClick }: Props) => {
                         label="Edit"
                         color="white"
                         backgroundColor="red"
-                        onClick={() => setEditId(key)}
+                        onClick={() => {
+                          onDiscardClick();
+                          setEditId(key);
+                        }}
                       />
                       <CustomizeButton
                         label="Remove"

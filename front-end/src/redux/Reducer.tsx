@@ -17,10 +17,9 @@ const initialState: Student[] = [
     gender: "male",
     address: "Homagama",
     mobileNo: "011258989",
-    dateOfBirth: new Date("10/17/1999"),
+    dateOfBirth: new Date(),
     age: 25,
   },
-  // Add other students here...
 ];
 
 const studentsSlice = createSlice({
