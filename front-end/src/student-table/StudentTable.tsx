@@ -12,7 +12,7 @@ import DatePicker from "react-datepicker";
 import { useSelector, useDispatch } from "react-redux";
 
 import "react-datepicker/dist/react-datepicker.css";
-import { addStudent } from "../redux/Reducer";
+import { addStudent, deleteStudent, updateStudent } from "../redux/Reducer";
 import { RootState } from "../redux/Store";
 import TableCellInput from "./TableCellInput";
 
@@ -226,7 +226,13 @@ const StudentTable = ({ visible, onDiscardClick }: Props) => {
                           label="Update"
                           color="black"
                           backgroundColor="#f0f8ff"
-                          onClick={() => setEditId(2)}
+                          onClick={() => {
+                            setStudent({
+                              ...student,
+                              id: val.id,
+                            });
+                            dispatch(updateStudent(student));
+                          }}
                         />
                       </div>
                       <div>
@@ -237,6 +243,7 @@ const StudentTable = ({ visible, onDiscardClick }: Props) => {
                           onClick={() => {
                             setEditId(-1);
                             onDiscardClick();
+                            clearStudentData();
                           }}
                         />
                       </div>
@@ -274,7 +281,7 @@ const StudentTable = ({ visible, onDiscardClick }: Props) => {
                         label="Remove"
                         color="black"
                         backgroundColor="#f0f8ff"
-                        onClick={() => setEditId(key)}
+                        onClick={() => dispatch(deleteStudent(val.id))}
                       />
                     </TableCell>
                   </StyledTableRow>
