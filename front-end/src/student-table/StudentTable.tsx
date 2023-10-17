@@ -67,7 +67,6 @@ interface Props {
 }
 
 const StudentTable = ({ visible, onDiscardClick }: Props) => {
-  console.log(visible);
   const [editId, setEditId] = useState(-1);
   const [student, setStudent] = useState({
     id: -1,
@@ -88,7 +87,6 @@ const StudentTable = ({ visible, onDiscardClick }: Props) => {
       dateOfBirth: new Date(),
       age: 0,
     });
-  console.log(student);
   return (
     <>
       <TableContainer component={Paper}>
