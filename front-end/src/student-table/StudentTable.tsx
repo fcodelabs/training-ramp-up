@@ -48,7 +48,6 @@ const StudentTable = ({ visible, onDiscardClick }: Props) => {
   const maxId = existingStudent.reduce((max, student) => {
     return student.id > max ? student.id : max;
   }, 1);
-  // console.log(existingStudent);
   // Local
   const [editId, setEditId] = useState(-1);
   const [student, setStudent] = useState({
@@ -70,7 +69,6 @@ const StudentTable = ({ visible, onDiscardClick }: Props) => {
       dateOfBirth: "",
       age: 0,
     });
-  console.log(student);
   // Calculate age
   const calculateAge = (dateOfBirth: Date) => {
     const today = new Date();
@@ -97,6 +95,36 @@ const StudentTable = ({ visible, onDiscardClick }: Props) => {
     calculateAge(date);
   };
 
+  //validations
+  const validateForm = (action: string) => {
+    if (student.name.length === 0) {
+      return alert("Invalid Form, Name cannot be empty");
+    }
+    if (
+      student.gender.toLowerCase() !== "male" ||
+      student.gender.toLowerCase() !== "female"
+    ) {
+      return alert("Invalid Form, Gender should be Male or Female");
+    }
+    if (student.address.length == 0) {
+      return alert("Invalid Form, Address cannot be empty");
+    }
+    if (student.mobileNo.length == 0) {
+      return alert("Invalid Form, Mobile number cannot be empty");
+    }
+    if (student.dateOfBirth === "") {
+      return alert("Invalid Form, Date of birth cannot be empty");
+    }
+    if (student.age <= 18) {
+      return alert("Invalid Form, Age should greater than 18");
+    }
+    if (action === "Add") {
+      return dispatch(addStudent(student));
+    }
+    if (action === "Edit") {
+      return dispatch(updateStudent(student));
+    }
+  };
   return (
     <>
       <TableContainer component={Paper}>
@@ -167,7 +195,7 @@ const StudentTable = ({ visible, onDiscardClick }: Props) => {
                       color="black"
                       backgroundColor="#f0f8ff"
                       onClick={() => {
-                        dispatch(addStudent(student));
+                        validateForm("Add");
                         clearStudentData();
                         onDiscardClick();
                       }}
@@ -244,7 +272,7 @@ const StudentTable = ({ visible, onDiscardClick }: Props) => {
                           color="black"
                           backgroundColor="#f0f8ff"
                           onClick={() => {
-                            dispatch(updateStudent(student));
+                            validateForm("Edit");
                             setEditId(-1);
                             clearStudentData();
                           }}
@@ -283,26 +311,28 @@ const StudentTable = ({ visible, onDiscardClick }: Props) => {
                     </TableCell>
                     <TableCell align="left">{val.age}</TableCell>
                     <TableCell align="left">
-                      <CustomizeButton
-                        label="Edit"
-                        color="white"
-                        backgroundColor="red"
-                        onClick={() => {
-                          onDiscardClick();
-                          setEditId(key);
-                          setStudent({
-                            ...student,
-                            ...val,
-                          });
-                          setSelectedDate(new Date(val.dateOfBirth));
-                        }}
-                      />
-                      <CustomizeButton
-                        label="Remove"
-                        color="black"
-                        backgroundColor="#f0f8ff"
-                        onClick={() => dispatch(deleteStudent(val.id))}
-                      />
+                      <div>
+                        <CustomizeButton
+                          label="Edit"
+                          color="white"
+                          backgroundColor="red"
+                          onClick={() => {
+                            onDiscardClick();
+                            setEditId(key);
+                            setStudent({
+                              ...student,
+                              ...val,
+                            });
+                            setSelectedDate(new Date(val.dateOfBirth));
+                          }}
+                        />
+                        <CustomizeButton
+                          label="Remove"
+                          color="black"
+                          backgroundColor="#f0f8ff"
+                          onClick={() => dispatch(deleteStudent(val.id))}
+                        />
+                      </div>
                     </TableCell>
                   </StyledTableRow>
                 );
