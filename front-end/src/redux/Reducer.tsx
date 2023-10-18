@@ -6,7 +6,7 @@ interface Student {
   gender: string;
   address: string;
   mobileNo: string;
-  dateOfBirth: Date;
+  dateOfBirth: string;
   age: number;
 }
 
@@ -17,7 +17,7 @@ const initialState: Student[] = [
     gender: "male",
     address: "Homagama",
     mobileNo: "011258989",
-    dateOfBirth: new Date(),
+    dateOfBirth: new Date().toISOString(),
     age: 25,
   },
 ];

@@ -15,6 +15,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import { addStudent, deleteStudent, updateStudent } from "../redux/Reducer";
 import { RootState } from "../redux/Store";
 import TableCellInput from "./TableCellInput";
+import TableCellNewInput from "./TableCellNewInput";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -41,29 +42,60 @@ interface Props {
 }
 
 const StudentTable = ({ visible, onDiscardClick }: Props) => {
+  // Redux related
   const existingStudent = useSelector((state: RootState) => state.students);
   const dispatch = useDispatch();
+  const maxId = existingStudent.reduce((max, student) => {
+    return student.id > max ? student.id : max;
+  }, 1);
+  // console.log(existingStudent);
+  // Local
   const [editId, setEditId] = useState(-1);
   const [student, setStudent] = useState({
-    id: -1,
+    id: 0,
     name: "",
     gender: "",
     address: "",
     mobileNo: "",
-    dateOfBirth: new Date(),
+    dateOfBirth: "",
     age: 0,
   });
   const clearStudentData = () =>
     setStudent({
-      id: -1,
+      id: 0,
       name: "",
       gender: "",
       address: "",
       mobileNo: "",
-      dateOfBirth: new Date(),
+      dateOfBirth: "",
       age: 0,
     });
   console.log(student);
+  // Calculate age
+  const calculateAge = (dateOfBirth: Date) => {
+    const today = new Date();
+    let studentAge = today.getFullYear() - dateOfBirth.getFullYear();
+    const monthDiff = today.getMonth() - dateOfBirth.getMonth();
+
+    if (
+      monthDiff < 0 ||
+      (monthDiff === 0 && today.getDate() < dateOfBirth.getDate())
+    ) {
+      studentAge--;
+    }
+
+    setStudent({
+      ...student,
+      dateOfBirth: dateOfBirth.toISOString(),
+      age: studentAge,
+    });
+  };
+
+  const [selectedDate, setSelectedDate] = useState(new Date());
+  const handleDateChange = (date: Date) => {
+    setSelectedDate(date);
+    calculateAge(date);
+  };
 
   return (
     <>
@@ -85,17 +117,16 @@ const StudentTable = ({ visible, onDiscardClick }: Props) => {
             {visible && (
               <StyledTableRow>
                 <TableCell align="left"></TableCell>
-                <TableCellInput
-                  placeHolder=""
+                <TableCellNewInput
                   onChange={(event) =>
                     setStudent({
                       ...student,
+                      id: maxId + 1,
                       name: event.target.value,
                     })
                   }
                 />
-                <TableCellInput
-                  placeHolder=""
+                <TableCellNewInput
                   onChange={(event) =>
                     setStudent({
                       ...student,
@@ -103,8 +134,7 @@ const StudentTable = ({ visible, onDiscardClick }: Props) => {
                     })
                   }
                 />
-                <TableCellInput
-                  placeHolder=""
+                <TableCellNewInput
                   onChange={(event) =>
                     setStudent({
                       ...student,
@@ -112,8 +142,7 @@ const StudentTable = ({ visible, onDiscardClick }: Props) => {
                     })
                   }
                 />
-                <TableCellInput
-                  placeHolder=""
+                <TableCellNewInput
                   onChange={(event) =>
                     setStudent({
                       ...student,
@@ -123,16 +152,14 @@ const StudentTable = ({ visible, onDiscardClick }: Props) => {
                 />
                 <TableCell align="left">
                   <DatePicker
-                    selected={student.dateOfBirth}
-                    onChange={(date: Date) =>
-                      setStudent({
-                        ...student,
-                        dateOfBirth: date,
-                      })
-                    }
+                    selected={selectedDate}
+                    onChange={(date: Date) => {
+                      calculateAge(date);
+                      handleDateChange(date);
+                    }}
                   />
                 </TableCell>
-                <TableCell align="left">12</TableCell>
+                <TableCell align="left">{student.age}</TableCell>
                 <TableCell align="left">
                   <div>
                     <CustomizeButton
@@ -166,16 +193,16 @@ const StudentTable = ({ visible, onDiscardClick }: Props) => {
                   <StyledTableRow key={key}>
                     <TableCell align="left">{val.id}</TableCell>
                     <TableCellInput
-                      placeHolder={val.name}
-                      onChange={(event) =>
+                      defaultValue={val.name}
+                      onChange={(event) => {
                         setStudent({
                           ...student,
                           name: event.target.value,
-                        })
-                      }
+                        });
+                      }}
                     />
                     <TableCellInput
-                      placeHolder={val.gender}
+                      defaultValue={val.gender}
                       onChange={(event) =>
                         setStudent({
                           ...student,
@@ -184,7 +211,7 @@ const StudentTable = ({ visible, onDiscardClick }: Props) => {
                       }
                     />
                     <TableCellInput
-                      placeHolder={val.address}
+                      defaultValue={val.address}
                       onChange={(event) =>
                         setStudent({
                           ...student,
@@ -193,7 +220,7 @@ const StudentTable = ({ visible, onDiscardClick }: Props) => {
                       }
                     />
                     <TableCellInput
-                      placeHolder={val.mobileNo}
+                      defaultValue={val.mobileNo}
                       onChange={(event) =>
                         setStudent({
                           ...student,
@@ -203,23 +230,13 @@ const StudentTable = ({ visible, onDiscardClick }: Props) => {
                     />
                     <TableCell align="left">
                       <DatePicker
-                        placeholderText={new Date(
-                          val.dateOfBirth
-                        ).toLocaleDateString("en-US", {
-                          weekday: "short",
-                          year: "numeric",
-                          month: "short",
-                          day: "numeric",
-                        })}
-                        onChange={(date: Date) =>
-                          setStudent({
-                            ...student,
-                            dateOfBirth: date,
-                          })
-                        }
+                        selected={selectedDate}
+                        onChange={(date: Date) => {
+                          handleDateChange(date);
+                        }}
                       />
                     </TableCell>
-                    <TableCell align="left">{val.age}</TableCell>
+                    <TableCell align="left">{student.age}</TableCell>
                     <TableCell align="left">
                       <div>
                         <CustomizeButton
@@ -227,11 +244,9 @@ const StudentTable = ({ visible, onDiscardClick }: Props) => {
                           color="black"
                           backgroundColor="#f0f8ff"
                           onClick={() => {
-                            setStudent({
-                              ...student,
-                              id: val.id,
-                            });
                             dispatch(updateStudent(student));
+                            setEditId(-1);
+                            clearStudentData();
                           }}
                         />
                       </div>
@@ -275,6 +290,11 @@ const StudentTable = ({ visible, onDiscardClick }: Props) => {
                         onClick={() => {
                           onDiscardClick();
                           setEditId(key);
+                          setStudent({
+                            ...student,
+                            ...val,
+                          });
+                          setSelectedDate(new Date(val.dateOfBirth));
                         }}
                       />
                       <CustomizeButton

@@ -2,17 +2,17 @@ import { TableCell } from "@mui/material";
 
 interface Props {
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  placeHolder: string;
+  defaultValue: string;
 }
 
-const TableCellInput = ({ onChange, placeHolder }: Props) => {
+const TableCellInput = ({ onChange, defaultValue }: Props) => {
   return (
     <TableCell align="left">
       <input
         size={5}
         type="text"
+        defaultValue={defaultValue}
         onChange={onChange}
-        placeholder={placeHolder}
       />
     </TableCell>
   );
