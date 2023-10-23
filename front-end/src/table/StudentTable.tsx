@@ -8,14 +8,13 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import CustomizeButton from "./Button";
 import { useState } from "react";
-import DatePicker from "react-datepicker";
 import { useSelector, useDispatch } from "react-redux";
-
 import "react-datepicker/dist/react-datepicker.css";
 import { addStudent, deleteStudent, updateStudent } from "../redux/Reducer";
 import { RootState } from "../redux/Store";
 import TableCellInput from "./TableCellInput";
 import TableCellNewInput from "./TableCellNewInput";
+import DatePicker from "react-datepicker";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -101,15 +100,15 @@ const StudentTable = ({ visible, onDiscardClick }: Props) => {
       return alert("Invalid Form, Name cannot be empty");
     }
     if (
-      student.gender.toLowerCase() !== "male" ||
+      student.gender.toLowerCase() !== "male" &&
       student.gender.toLowerCase() !== "female"
     ) {
       return alert("Invalid Form, Gender should be Male or Female");
     }
-    if (student.address.length == 0) {
+    if (student.address.length === 0) {
       return alert("Invalid Form, Address cannot be empty");
     }
-    if (student.mobileNo.length == 0) {
+    if (student.mobileNo.length === 0) {
       return alert("Invalid Form, Mobile number cannot be empty");
     }
     if (student.dateOfBirth === "") {
@@ -179,6 +178,7 @@ const StudentTable = ({ visible, onDiscardClick }: Props) => {
                   }
                 />
                 <TableCell align="left">
+                  {" "}
                   <DatePicker
                     selected={selectedDate}
                     onChange={(date: Date) => {

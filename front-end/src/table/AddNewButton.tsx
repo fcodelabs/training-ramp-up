@@ -1,7 +1,7 @@
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 
-interface Props {
+export interface Props {
   label: string;
   onClick: () => void;
 }
@@ -14,6 +14,7 @@ const AddNewButton = ({ label, onClick }: Props) => {
         display="flex"
         justifyContent="flex-start"
         alignItems="flex-start"
+        data-testid="Add-new"
       >
         <Button
           sx={{
