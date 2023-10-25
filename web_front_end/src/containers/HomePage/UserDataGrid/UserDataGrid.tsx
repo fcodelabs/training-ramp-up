@@ -41,12 +41,15 @@ function UserDataGrid() {
     const userDataLists = useSelector(
         (state: RootState) => state.userDataList.userEntries,
     );
+    const currentUserRole = useSelector(
+        (state: RootState) => state.userDataList.currentUserRole,
+    );
 
     useEffect(() => {
         dispatch(userDataActions.fetchUsersData());
     }, [dispatch]);
 
-    const columns: GridColDef[] = [
+    let columns: GridColDef[] = [
         {
             field: "userName",
             headerName: "User Name",
@@ -179,12 +182,23 @@ function UserDataGrid() {
         },
     ];
 
+    if (currentUserRole == roleEnum.USER) {
+        // Hide specific columns based on the role
+        const columnsToHide = ["actions"];
+        columns = columns.filter(column => !columnsToHide.includes(column.field));
+    }
+    
     const transformedUserData = userDataLists.map((row) => ({
         ...row,
         
     }));
 
     function handleAddRow() {
+        if (currentUserRole == roleEnum.USER) {
+            // If the current user role is "user," prevent adding a user
+            alert("You do not have permission to add a user.");
+            return;
+        }
         const newRow: IUserData = {
             userId: -1,
             userName: "",
