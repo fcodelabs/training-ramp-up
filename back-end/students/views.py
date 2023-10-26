@@ -7,4 +7,6 @@ from students.models import Student
 
 class StudentViewSet(ModelViewSet):
     serializer_class = StudentSerializer 
-    queryset = Student.objects.all()
+    queryset = Student.objects.all().order_by("id")
+
+    
