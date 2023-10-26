@@ -18,7 +18,8 @@ const RootRouter = () => {
     if (isAuthenticated) {
       dispatch(userActions.setCurrentUser(email));
       navigate(HOME);
-    }else{
+      navigate(SIGN_UP);
+    } else {
       navigate(SIGN_IN);
     }
   }, [isAuthenticated]);
