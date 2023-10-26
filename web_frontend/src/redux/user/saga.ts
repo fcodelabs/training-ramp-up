@@ -29,7 +29,7 @@ interface IResponse {
 }
 
 function* saveAndUpdateUser(action: PayloadAction<IUserData>) {
-  const { email, name, password, role } = action.payload;
+  const { id, email, name, password, role } = action.payload;
 
   const user: IUser = {
     email: email,
@@ -38,7 +38,7 @@ function* saveAndUpdateUser(action: PayloadAction<IUserData>) {
     role: role,
   };
 
-  const isUpdate: boolean = email != "";
+  const isUpdate: boolean = id != 1 && email != "" && name != "" && password != "";
   try {
     yield call(isUpdate ? api.put : api.post, `/user/${isUpdate ? email : "add"}`, user, {
       headers: { "Content-Type": "application/json" },
