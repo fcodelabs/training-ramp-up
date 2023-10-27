@@ -1,6 +1,11 @@
 import { all, call, put, takeEvery } from "redux-saga/effects";
 import { PayloadAction } from "@reduxjs/toolkit";
-import { api } from "../../api/api";
+import {
+    addedStudentDataApi,
+    deleteStudentDataApi,
+    getStudentDataApi,
+    updateStudentDataApi,
+} from "../../api/api";
 import { tableDataActions } from "./studentSlice";
 
 // Define data types
@@ -27,11 +32,11 @@ const { fetchTableData, removeTableData, updateTableData, setTableData } =
 // Define saga functions
 function* getAllTableDataRows() {
     try {
-        const response: IResponseData = yield call(api.get, "/student");
+        const response: IResponseData = yield call(getStudentDataApi);
         console.log(response.data.data);
         yield put(setTableData(response.data.data));
     } catch (e) {
-        alert("Loading data failed. Please try again." + e);
+        console.log("Loading data failed. Please try again." + e);
     }
 }
 
@@ -49,24 +54,25 @@ function* updateTableDataRow(action: PayloadAction<ITableData>) {
     };
 
     try {
-        yield call(
-            isUpdate ? api.put : api.post,
-            `/student/${isUpdate ? data.studentId : ""}`,
-            tableData,
-        );
+        if (isUpdate) {
+            yield call(updateStudentDataApi, data.studentId, tableData);
+        } else {
+            yield call(addedStudentDataApi, tableData);
+        }
+
         yield call(getAllTableDataRows);
     } catch (e) {
-        alert("Saving or Updating data failed. Please try again." + e);
+        console.log("Saving or Updating data failed. Please try again." + e);
     }
 }
 
 function* deleteTableDataRow(action: PayloadAction<number>) {
     const id = action.payload;
     try {
-        yield call(api.delete, `/student/${id}`);
+        yield call(deleteStudentDataApi, id);
         yield call(getAllTableDataRows);
     } catch (e) {
-        alert("Deleting data failed. Please try again." + e + id);
+        console.log("Deleting data failed. Please try again." + e + id);
     }
 }
 

@@ -1,6 +1,14 @@
 import { all, call, put, takeEvery } from "redux-saga/effects";
 import { PayloadAction } from "@reduxjs/toolkit";
-import { api } from "../../api/api";
+import {
+    getUserDataApi,
+    signInUserDataApi,
+    deleteUserDataApi,
+    addedUserDataApi,
+    updateUserDataApi,
+    signOutDataApi,
+    getRoleTypeDataApi,
+} from "../../api/api";
 import { userDataActions } from "./userSlice";
 import { AxiosResponse } from "axios";
 
@@ -49,11 +57,11 @@ const {
 // Define saga functions
 function* getAllUserDataRows() {
     try {
-        const response: IResponseData = yield call(api.get, "/user");
+        const response: IResponseData = yield call(getUserDataApi);
         console.log(response.data.data);
         yield put(setUserData(response.data.data));
     } catch (e) {
-        alert("Loading data failed. Please try again." + e);
+        console.log("Loading data failed. Please try again." + e);
     }
 }
 
@@ -69,14 +77,15 @@ function* updateUserDataRow(action: PayloadAction<IUserData>) {
     };
 
     try {
-        yield call(
-            isUpdate ? api.put : api.post,
-            `/user/${isUpdate ? data.userEmail : ""}`,
-            userData,
-        );
+        if (isUpdate) {
+            yield call(updateUserDataApi, data.userEmail, userData);
+        } else {
+            yield call(addedUserDataApi, userData);
+        }
+
         yield call(getAllUserDataRows);
     } catch (e) {
-        alert("Saving or Updating data failed. Please try again." + e);
+        console.log("Saving or Updating data failed. Please try again." + e);
     }
 }
 
@@ -84,11 +93,11 @@ function* deleteUserDataRow(action: PayloadAction<string>) {
     const userEmail = action.payload;
     try {
         if (userEmail) {
-            yield call(api.delete, `/user/${userEmail}`);
+            yield call(deleteUserDataApi, userEmail);
             yield call(getAllUserDataRows);
         }
     } catch (e) {
-        alert("Deleting data failed. Please try again." + e);
+        console.log("Deleting data failed. Please try again." + e);
     }
 }
 
@@ -100,15 +109,7 @@ function* signInUserDataRow(action: PayloadAction<ISignInData>) {
     };
 
     try {
-        const res: AxiosResponse = yield call(
-            api.post,
-            "/user/signIn",
-            signInData,
-            {
-                headers: { "Content-Type": "application/json" },
-                withCredentials: true,
-            },
-        );
+        const res: AxiosResponse = yield call(signInUserDataApi, signInData);
         if (res.data.message == "Sign in Successfully") {
             alert("Sign in Successfully");
             yield put(setIsAuthenticatedData(true));
@@ -121,33 +122,25 @@ function* signInUserDataRow(action: PayloadAction<ISignInData>) {
 
 function* signOut() {
     try {
-        const res: AxiosResponse = yield call(
-            api.delete,
-            "/user/signOut/email",
-            {
-                withCredentials: true,
-            },
-        );
+        const res: AxiosResponse = yield call(signOutDataApi);
         if (res.data.message == "Sign out successfully") {
             yield put(setIsAuthenticatedData(false));
             yield put(setCurrentUserRoleData(""));
             yield put(setCurrentUserEmailData(""));
         }
     } catch (e) {
-        alert("Signing out failed. Please try again.");
+        console.log("Signing out failed. Please try again.");
     }
 }
 
 function* getRoleData(action: PayloadAction<string>) {
     try {
-        const res: AxiosResponse = yield call(api.get, `/user/${action.payload}`, {
-            withCredentials: true,
-        });
+        const res: AxiosResponse = yield call(getRoleTypeDataApi, action.payload);
         if (res.status == 200 || res.status == 201) {
             yield put(setCurrentUserRoleData(res.data.data.role));
         }
     } catch (e) {
-        alert("Signing out failed. Please try again.");
+        console.log("Signing out failed. Please try again.");
     }
 }
 
