@@ -1,8 +1,17 @@
-import { call, put, takeEvery } from "redux-saga/effects";
+import { put, takeEvery } from "redux-saga/effects";
 import { PayloadAction } from "@reduxjs/toolkit";
-import { api } from "../../api/api";
 import { userActions } from "./slice";
 import { AxiosResponse } from "axios";
+import { toast } from "react-toastify";
+import {
+  authUser,
+  createUser,
+  loadAllUsers,
+  logIn,
+  logOut,
+  removeUser,
+  updateUser,
+} from "../../api/userApi";
 
 interface IUserData {
   id: number;
@@ -24,10 +33,6 @@ interface IUser {
   role: string;
 }
 
-interface IResponse {
-  data: IUser[];
-}
-
 function* saveAndUpdateUser(action: PayloadAction<IUserData>) {
   const { id, email, name, password, role } = action.payload;
 
@@ -40,77 +45,68 @@ function* saveAndUpdateUser(action: PayloadAction<IUserData>) {
 
   const isUpdate: boolean = id != 1 && email != "" && name != "" && password != "";
   try {
-    yield call(isUpdate ? api.put : api.post, `/user/${isUpdate ? email : "add"}`, user, {
-      headers: { "Content-Type": "application/json" },
-      withCredentials: true,
-    });
+    if (isUpdate) {
+      yield updateUser(email, user);
+    } else {
+      yield createUser(user);
+    }
     yield put(userActions.fetchUser());
   } catch (error) {
-    alert(error);
+    toast("Something went wrong..!");
   }
 }
 
 function* getAllUsers() {
   try {
-    const response: IResponse = yield call(api.get, "/user");
-    yield put(userActions.setUser(response.data));
+    const response: IUser[] = yield loadAllUsers();
+    yield put(userActions.setUser(response));
   } catch (error) {
-    alert(error);
+    toast("Something went wrong..!");
   }
 }
 
 function* deleteUser(action: PayloadAction<string>) {
-  const email = action.payload;
-
   try {
-    yield call(api.delete, `/user/del/${email}`, {
-      withCredentials: true,
-    });
+    yield removeUser(action.payload);
+    yield put(userActions.fetchUser());
   } catch (error) {
-    alert(error);
+    toast("Something went wrong..!");
   }
 }
 
 function* signIn(action: PayloadAction<ISignInData>) {
   try {
-    const res: AxiosResponse = yield call(api.post, "/user/signIn", action.payload, {
-      headers: { "Content-Type": "application/json" },
-      withCredentials: true,
-    });
-    if (res.data.message == "Login Success") {
+    const res: string = yield logIn(action.payload);
+
+    if (res === "Login Success") {
       yield authorizeUser();
     }
   } catch (error) {
-    alert(error);
+    toast("Something went wrong..!");
   }
 }
 
 function* signOut() {
   try {
-    yield call(api.delete, "/user/signOut", {
-      withCredentials: true,
-    });
+    yield logOut();
     yield put(userActions.setAuthenticated(false));
     yield put(userActions.setCurrentUserRole(""));
     yield put(userActions.setCurrentUsername(""));
   } catch (error) {
-    alert(error);
+    toast("Something went wrong..!");
   }
 }
 
 function* authorizeUser() {
   try {
-    const res: AxiosResponse = yield call(api.post, "/auth/authorize", {
-      headers: { "Content-Type": "application/json" },
-      withCredentials: true,
-    });
-    if (res.data.message == "Authorized") {
+    const res: AxiosResponse = yield authUser();
+    if (res.data.message === "Authorized") {
       yield put(userActions.setAuthenticated(true));
       yield put(userActions.setCurrentEmail(res.data.data.data.email));
       yield put(userActions.setCurrentUserRole(res.data.data.data.role));
     }
   } catch (error) {
-    alert("You must sign in first..!");
+    toast("You must sign in first..!");
   }
 }
 

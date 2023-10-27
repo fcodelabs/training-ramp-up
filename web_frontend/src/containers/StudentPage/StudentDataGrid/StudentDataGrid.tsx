@@ -31,6 +31,7 @@ import {
 } from "../../../util/validationUtil";
 import { generateAge } from "../../../util/generateAgeUtil";
 import { Typography } from "@mui/material";
+import { ERole } from "../../../enum/roleEnum";
 
 interface IStudentData {
   id: number;
@@ -230,7 +231,7 @@ const StudentDataGrid = () => {
     },
   ];
 
-  if (role !== "admin") {
+  if (role !== ERole.ADMIN) {
     columns.splice(columns.length - 1, 1);
   }
 

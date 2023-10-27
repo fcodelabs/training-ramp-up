@@ -14,16 +14,7 @@ interface IStudentState {
 }
 
 const initialState: IStudentState = {
-  studentList: [
-    {
-      id: 1,
-      name: "John",
-      address: "USA",
-      mobile: "1234567890",
-      dob: new Date("1990-01-01").toDateString(),
-      gender: "Male",
-    },
-  ],
+  studentList: [],
 };
 
 export const studentSlice = createSlice({

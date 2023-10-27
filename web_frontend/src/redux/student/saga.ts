@@ -1,7 +1,8 @@
-import { call, put, takeEvery } from "redux-saga/effects";
+import { put, takeEvery } from "redux-saga/effects";
 import { PayloadAction } from "@reduxjs/toolkit";
-import { api } from "../../api/api";
 import { studentActions } from "./slice";
+import { createStudent, loadAllStudents, removeStudent, updateStudent } from "../../api/studentApi";
+import { toast } from "react-toastify";
 
 interface IStudentData {
   id: number;
@@ -12,56 +13,37 @@ interface IStudentData {
   gender: string;
 }
 
-interface IResponse {
-  data: IStudentData[];
-}
-
 function* saveAndUpdateStudent(action: PayloadAction<IStudentData>) {
-  const { id, name, address, mobile, dob, gender } = action.payload;
-
-  const student = {
-    id: id,
-    name: name,
-    address: address,
-    mobile: mobile,
-    dob: dob,
-    gender: gender,
-  };
-
-  const isUpdate: boolean = id != -1;
-
+  const isUpdate: boolean = action.payload.id != -1;
   try {
-    yield call(isUpdate ? api.put : api.post, `/student/${isUpdate ? id : ""}`, student, {
-      headers: { "Content-Type": "application/json" },
-      withCredentials: true,
-    });
+    if (isUpdate) {
+      yield updateStudent(action.payload.id, action.payload);
+    } else {
+      yield createStudent(action.payload);
+    }
     yield put(studentActions.fetchStudent());
   } catch (error) {
-    alert(error);
+    toast("Something went wrong..!");
   }
 }
 
 function* getAllStudents() {
   try {
-    const response: IResponse = yield call(api.get, "/student", {
-      headers: { "Content-Type": "application/json" },
-      withCredentials: true,
-    });
-    yield put(studentActions.setStudent(response.data));
+    const response: IStudentData[] = yield loadAllStudents();
+    yield put(studentActions.setStudent(response));
   } catch (error) {
-    alert(error);
+    toast("Something went wrong..!");
   }
 }
 
 function* deleteStudent(action: PayloadAction<number>) {
-  const id = action.payload;
-
   try {
-    if (id != -1) {
-      yield call(api.delete, `/student/${id}`, { withCredentials: true });
+    if (action.payload != -1) {
+      yield removeStudent(action.payload);
+      yield put(studentActions.fetchStudent());
     }
   } catch (error) {
-    alert(error);
+    toast("Something went wrong..!");
   }
 }
 

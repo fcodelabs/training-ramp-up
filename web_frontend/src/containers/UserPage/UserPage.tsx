@@ -7,6 +7,7 @@ import { STUDENT_ROUTE } from "../../util/routeUtil";
 
 const StudentPage = () => {
   const navigate = useNavigate();
+
   return (
     <>
       <Header />

@@ -9,16 +9,7 @@ const Notification = () => {
     const socket = io("http://localhost:5000");
 
     socket.on("message", (data: string) => {
-      toast("🦄 " + data, {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
+      toast("🦄 " + data);
     });
 
     return () => {
@@ -26,7 +17,17 @@ const Notification = () => {
     };
   }, []);
 
-  return <ToastContainer />;
+  return (
+    <ToastContainer
+      position="top-right"
+      autoClose={5000}
+      hideProgressBar={false}
+      closeOnClick={true}
+      pauseOnHover={true}
+      draggable={true}
+      theme="light"
+    />
+  );
 };
 
 export default Notification;

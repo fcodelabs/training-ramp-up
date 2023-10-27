@@ -7,6 +7,7 @@ import { STUDENT_ROUTE, USER_ROUTE } from "../../util/routeUtil";
 import studentImage from "../../assets/students.jpg";
 import userImage from "../../assets/users.jpg";
 import Header from "../../components/Header/Header";
+import { ERole } from "../../enum/roleEnum";
 
 const HomePage = () => {
   const currentRole = useSelector((state: RootState) => state.userList.currentUserRole);
@@ -41,12 +42,12 @@ const HomePage = () => {
                 Students
               </Typography>
               <Typography variant="body2" color="text.secondary">
-                {currentRole === "admin" ? "View and edit student data" : "View student data"}
+                {currentRole === ERole.ADMIN ? "View and edit student data" : "View student data"}
               </Typography>
             </CardContent>
           </Card>
         </Grid>
-        {currentRole === "admin" ? (
+        {currentRole === ERole.ADMIN ? (
           <Grid item xs={12} sm={8} md={6} lg={4}>
             <Card
               sx={{ maxWidth: 800, cursor: "pointer", ":hover": { boxShadow: "0 0 10px 0" } }}
