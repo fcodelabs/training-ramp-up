@@ -29,7 +29,7 @@ import {
     validateStudentName,
 } from "../../../util/validateStudent";
 import { generateAge } from "../../../util/generateAge";
-import genderEnum from "../../../enum/genderEnum";
+import ERoleEnum from "../../../enum/genderEnum";
 
 interface ITableData {
     studentId: number;
@@ -238,7 +238,7 @@ function StudentDataGrid() {
             studentMobile: "",
             studentDob: maxDate(),
             age: 0,
-            studentGender: genderEnum.MALE,
+            studentGender: ERoleEnum.MALE,
         };
         dispatch(tableDataActions.addTableData(newRow));
         setRowModesModel((oldModel) => ({

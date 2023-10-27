@@ -1,6 +1,6 @@
-enum roleEnum {
+enum ERoleEnum {
     ADMIN = "admin",
     USER = "user",
 }
 
-export default roleEnum;
+export default ERoleEnum;

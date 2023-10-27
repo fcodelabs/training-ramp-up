@@ -4,7 +4,7 @@ import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import { useAppDispatch } from "../../redux/store";
 import { userDataActions } from "../../redux/user/userSlice";
 import { useNavigate } from "react-router-dom";
-import roleEnum from "../../enum/roleEnum";
+import ERoleEnum from "../../enum/roleEnum";
 import { ROUTE_SIGNIN } from "../../util/routes";
 
 export default function SignUpPage() {
@@ -28,7 +28,7 @@ export default function SignUpPage() {
             userName: username,
             userEmail: email,
             userPassword: password,
-            role: roleEnum.USER,
+            role: ERoleEnum.USER,
         };
         dispatch(userDataActions.updateUserData(userData));
     };

@@ -24,7 +24,7 @@ import {
     validatePassword,
     validateUser,
 } from "../../../util/validateUser";
-import roleEnum from "../../../enum/roleEnum";
+import ERoleEnum from "../../../enum/roleEnum";
 
 interface IUserData {
     userId: number;
@@ -182,7 +182,7 @@ function UserDataGrid() {
         },
     ];
 
-    if (currentUserRole == roleEnum.USER) {
+    if (currentUserRole == ERoleEnum.USER) {
         // Hide specific columns based on the role
         const columnsToHide = ["actions"];
         columns = columns.filter(column => !columnsToHide.includes(column.field));
@@ -194,7 +194,7 @@ function UserDataGrid() {
     }));
 
     function handleAddRow() {
-        if (currentUserRole == roleEnum.USER) {
+        if (currentUserRole == ERoleEnum.USER) {
             // If the current user role is "user," prevent adding a user
             alert("You do not have permission to add a user.");
             return;
@@ -204,7 +204,7 @@ function UserDataGrid() {
             userName: "",
             userEmail: "",
             userPassword: "",
-            role: roleEnum.USER,
+            role: ERoleEnum.USER,
         };
         dispatch(userDataActions.addUserData(newRow));
         setRowModesModel((oldModel) => ({

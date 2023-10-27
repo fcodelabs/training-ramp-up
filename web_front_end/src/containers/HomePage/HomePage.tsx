@@ -5,7 +5,7 @@ import { RootState } from "../../redux/store";
 import StudentDataGrid from "./StudentDataGrid/StudentDataGrid";
 import UserDataGrid from "./UserDataGrid/UserDataGrid";
 import Header from "../../components/Header/Header";
-import roleEnum from "../../enum/roleEnum";
+import ERoleEnum from "../../enum/roleEnum";
 
 export default function HomePage() {
     const currentUserRole = useSelector(
@@ -13,10 +13,10 @@ export default function HomePage() {
     );
 
     const [showStudentDataGrid, setShowStudentDataGrid] = useState(
-        currentUserRole == roleEnum.USER ? false : true,
+        currentUserRole == ERoleEnum.USER ? false : true,
     );
     const [showUserDataGrid, setShowUserDataGrid] = useState(
-        currentUserRole == roleEnum.USER ? true : false,
+        currentUserRole == ERoleEnum.USER ? true : false,
     );
 
     const [selectedButton, setSelectedButton] = useState(0);
@@ -25,7 +25,7 @@ export default function HomePage() {
         <>
             <Header />
             <Box display="flex" justifyContent="start" paddingTop="5em">
-                {currentUserRole == roleEnum.ADMIN && (
+                {currentUserRole == ERoleEnum.ADMIN && (
                     <>
                         <Box
                             sx={{

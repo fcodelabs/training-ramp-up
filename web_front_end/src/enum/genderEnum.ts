@@ -1,6 +1,6 @@
-enum genderEnum {
+enum EGenderEnum {
     MALE = "male",
     FEMALE = "female",
 }
 
-export default genderEnum;
+export default EGenderEnum;
