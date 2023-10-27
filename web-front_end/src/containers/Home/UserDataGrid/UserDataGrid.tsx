@@ -35,6 +35,7 @@ import {
 } from "../../../util/validationUtilUser";
 import { generateAge } from "../../../util/generateAgeUtil";
 import { userActions } from "../../../redux/user/userSlice";
+import { ERoleTypeEnum } from "../../../enum/roleTypeEnum";
 
 interface IUserEntry {
   id: number;
@@ -182,7 +183,7 @@ const UserDataGrid = () => {
       minWidth: 120,
       headerClassName: "header-cell",
       type: "singleSelect",
-      valueOptions: ["ADMIN", "USER"],
+      valueOptions: [ERoleTypeEnum.ADMIN, ERoleTypeEnum.USER],
     },
     {
       field: "name",

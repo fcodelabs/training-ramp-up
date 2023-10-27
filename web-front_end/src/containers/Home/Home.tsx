@@ -7,11 +7,12 @@ import { RootState, useAppDispatch } from "../../redux/store";
 import { userActions } from "../../redux/user/userSlice";
 import { useNavigate } from "react-router-dom";
 import { SIGN_IN } from "../../util/routesUtil";
+import { ERoleTypeEnum } from "../../enum/roleTypeEnum";
 
 const Home = () => {
   const currentRoleType = useSelector((state: RootState) => state.userEntries.currentRoleType);
-  const [showStudentData, setShowStudentData] = useState(currentRoleType === "USER" ? false : true);
-  const [showUserData, setShowUserData] = useState(currentRoleType === "USER" ? true : false);
+  const [showStudentData, setShowStudentData] = useState(currentRoleType === ERoleTypeEnum.USER ? false : true);
+  const [showUserData, setShowUserData] = useState(currentRoleType === ERoleTypeEnum.USER ? true : false);
 
   const dispatch = useAppDispatch();
   const navigator = useNavigate();
@@ -31,7 +32,7 @@ const Home = () => {
       <Grid container spacing={3} justifyContent="space-between" alignItems="center">
         <Grid item xs={6}>
           <Box display="flex" justifyContent="center" paddingTop="2em">
-            {currentRoleType === "ADMIN" && (
+            {currentRoleType === ERoleTypeEnum.ADMIN && (
               <>
                 <Button
                   variant="contained"

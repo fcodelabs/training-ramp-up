@@ -33,6 +33,7 @@ import {
   minDateStudent,
 } from "../../../util/validationUtilStudent";
 import { generateAge } from "../../../util/generateAgeUtil";
+import { ERoleTypeEnum } from "../../../enum/roleTypeEnum";
 
 interface IStudentEntry {
   id: number;
@@ -82,7 +83,7 @@ const StudentDataGrid = () => {
           backgroundColor: "#ecf0f1",
         }}
       >
-        {currentRoleType === "ADMIN" && (
+        {currentRoleType === ERoleTypeEnum.ADMIN && (
           <Button
             color="primary"
             startIcon={<AddIcon />}
@@ -260,7 +261,7 @@ const StudentDataGrid = () => {
     },
   ];
 
-  if (currentRoleType === "ADMIN") {
+  if (currentRoleType === ERoleTypeEnum.ADMIN) {
     columns.push({
       field: "actions",
       type: "actions",
