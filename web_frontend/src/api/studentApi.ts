@@ -1,3 +1,4 @@
+import { STUDENT_API_PREFIX } from "../util/apiPrefixUtil";
 import { api } from "./api";
 
 interface IStudent {
@@ -10,25 +11,25 @@ interface IStudent {
 }
 
 export const createStudent = (student: IStudent) => {
-  return api.post(`/student`, student, {
+  return api.post(STUDENT_API_PREFIX, student, {
     headers: { "Content-Type": "application/json" },
   });
 };
 
 export const loadAllStudents = async (): Promise<IStudent[]> => {
   let data: IStudent[] = [];
-  await api.get(`/student`).then(response => {
+  await api.get(STUDENT_API_PREFIX).then(response => {
     data = response.data;
   });
   return data;
 };
 
 export const updateStudent = (id: number, student: IStudent) => {
-  return api.put(`/student/${id}`, student, {
+  return api.put(`${STUDENT_API_PREFIX}/${id}`, student, {
     headers: { "Content-Type": "application/json" },
   });
 };
 
 export const removeStudent = (id: number) => {
-  return api.delete(`/student/${id}`);
+  return api.delete(`${STUDENT_API_PREFIX}/${id}`);
 };
