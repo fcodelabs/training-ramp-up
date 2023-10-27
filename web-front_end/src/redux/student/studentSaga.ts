@@ -2,6 +2,7 @@ import { call, put, takeLatest } from "redux-saga/effects";
 import { studentActions } from "./studentSlice";
 import { api } from "../../api/api";
 import { PayloadAction } from "@reduxjs/toolkit";
+import { studentApi } from "../../api/crudApi";
 
 interface IStudentData {
   id: number;
@@ -21,7 +22,7 @@ interface IStudentResponse {
 
 function* fetchStudent() {
   try {
-    const response: IStudentResponse = yield call(api.get, "/students", { withCredentials: true });
+    const response: IStudentResponse = yield call(api.get, studentApi);
     yield put(studentActions.setStudentEntries(response.data.data));
   } catch (e) {
     alert("Error fetching student data " + e);
@@ -44,9 +45,9 @@ function* addAndUpdateStudent(action: PayloadAction<IStudentData>) {
 
   try {
     if (isUpdate) {
-      yield call(api.put, `/students/${data.id}`, studentData, { withCredentials: true });
+      yield call(api.put, `${studentApi}/${data.id}`, studentData);
     } else {
-      yield call(api.post, "/students", studentData, { withCredentials: true });
+      yield call(api.post, studentApi, studentData);
     }
     yield put(studentActions.fetchStudent());
   } catch (e) {
@@ -57,7 +58,7 @@ function* addAndUpdateStudent(action: PayloadAction<IStudentData>) {
 function* deleteStudent(action: PayloadAction<number>) {
   try {
     const id = action.payload;
-    yield call(api.delete, `/students/ ${id}`, { withCredentials: true });
+    yield call(api.delete, `${studentApi}/ ${id}`);
     yield put(studentActions.fetchStudent());
   } catch (e) {
     alert("Error deleting student data " + e);

@@ -3,6 +3,7 @@ import { userActions } from "./userSlice";
 import { api } from "../../api/api";
 import { PayloadAction } from "@reduxjs/toolkit";
 import { AxiosResponse } from "axios";
+import { userApi, userSignInApi, userSignOutApi } from "../../api/crudApi";
 
 interface IData {
   id: number;
@@ -41,7 +42,7 @@ interface IUserResponse {
 
 function* fetchUser() {
   try {
-    const response: IUserResponse = yield call(api.get, "/users", { withCredentials: true });
+    const response: IUserResponse = yield call(api.get, userApi);
     yield put(userActions.setUserEntries(response.data.data));
   } catch (e) {
     alert("Error fetching user data " + e);
@@ -66,9 +67,9 @@ function* addAndUpdateUser(action: PayloadAction<IData>) {
 
   try {
     if (isUpdate) {
-      yield call(api.put, `/users/${data.email}`, userData, { withCredentials: true });
+      yield call(api.put, `${userApi}/${data.email}`, userData);
     } else {
-      yield call(api.post, "/users", userData, { withCredentials: true });
+      yield call(api.post, userApi, userData);
     }
     yield put(userActions.fetchUser());
   } catch (e) {
@@ -79,7 +80,7 @@ function* addAndUpdateUser(action: PayloadAction<IData>) {
 function* deleteUser(action: PayloadAction<string>) {
   try {
     const email = action.payload;
-    yield call(api.delete, `/users/${email}`, { withCredentials: true });
+    yield call(api.delete, `${userApi}/${email}`);
     yield put(userActions.fetchUser());
   } catch (e) {
     alert("Error deleting user data " + e);
@@ -93,8 +94,7 @@ function* signIn(action: PayloadAction<ISignIn>) {
     password: password,
   };
   try {
-    const response: AxiosResponse = yield call(api.post, `/users/signIn`, userData, {
-      withCredentials: true,
+    const response: AxiosResponse = yield call(api.post, userSignInApi, userData, {
       headers: {
         "Content-Type": "application/json",
       },
@@ -111,7 +111,7 @@ function* signIn(action: PayloadAction<ISignIn>) {
 
 function* signOut() {
   try {
-    yield call(api.delete, `/users/signOut/user`, { withCredentials: true });
+    yield call(api.delete, userSignOutApi, { withCredentials: true });
     yield put(userActions.setAuthenticated(false));
     yield put(userActions.setRoleType(""));
     yield put(userActions.setEmail(""));
@@ -123,8 +123,7 @@ function* signOut() {
 function* setCurrentUser(action: PayloadAction<IUserData>) {
   const email = action.payload;
   try {
-    const response: IUserResponse = yield call(api.get, `/users/${email}`, {
-      withCredentials: true,
+    const response: IUserResponse = yield call(api.get, `${userApi}/${email}`, {
       headers: {
         "Content-Type": "application/json",
       },
