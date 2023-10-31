@@ -6,23 +6,20 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import CustomizeButton from "./Button";
+import CustomizeButton from "../Button/Button";
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import "react-datepicker/dist/react-datepicker.css";
-import studentReducer, {
+import {
   addStudent,
   deleteStudent,
   fetchStudents,
-  fetchStudentsSuccess,
-  selectStudents,
   updateStudent,
-} from "../redux/studentReducer";
-import TableCellInput from "./TableCellInput";
-import TableCellNewInput from "./TableCellNewInput";
+} from "../../redux/studentReducer";
+import TableCellInput from "../TableCellInput/TableCellInput";
+import TableCellNewInput from "../TableCellNewInput/TableCellNewInput";
 import DatePicker from "react-datepicker";
-import { RootState } from "../redux/store";
-import { actionChannel } from "redux-saga/effects";
+import { RootState } from "../../redux/store";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -58,7 +55,6 @@ const StudentTable = ({ visible, onDiscardClick }: Props) => {
   const existingStudent = useSelector((state: RootState) => state.students);
   console.log(existingStudent);
 
-  // console.log("", dispatch(getStudent()));
   const maxId = existingStudent.reduce((max, student) => {
     return student.id > max ? student.id : max;
   }, 1);

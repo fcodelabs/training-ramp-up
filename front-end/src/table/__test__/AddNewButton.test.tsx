@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { fireEvent, render, screen } from "@testing-library/react";
-import AddNewButton from "../AddNewButton";
+import AddNewButton from "../../components/AddNewButton/AddNewButton";
 
 describe("AddNewButton Component", () => {
   test("renders", () => {

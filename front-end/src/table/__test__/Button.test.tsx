@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { fireEvent, render, screen } from "@testing-library/react";
-import CustomizeButton from "../Button";
+import CustomizeButton from "../../components/Button/Button";
 
 describe("Button Component", () => {
   test("renders", () => {

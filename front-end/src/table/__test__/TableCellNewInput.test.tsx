@@ -1,7 +1,7 @@
 import React from "react";
 import { render, screen } from "@testing-library/react";
 import { Table, TableBody, TableRow } from "@mui/material";
-import TableCellNewInput from "../TableCellNewInput";
+import TableCellNewInput from "../../components/TableCellNewInput/TableCellNewInput";
 
 describe("TableCellNewInput Component", () => {
   it("renders with the default value and handles change", () => {

@@ -1,18 +1,29 @@
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 import "./App.css";
-import AddNewButton from "./table/AddNewButton";
-import StudentTable from "./table/StudentTable";
+import WebSocketService from "./websocket/webSocket";
+import HomePage from "./containers/HomePage/HomePage";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import LoginPage from "./containers/LoginPage/LoginPage";
 
 function App() {
-  const [visible, setVisible] = useState(false);
+  useEffect(() => {
+    WebSocketService.connect();
+    console.log("WebSocketService.connect()");
+
+    return () => {
+      WebSocketService.disconnect();
+    };
+  }, []);
+
   return (
-    <div>
-      <AddNewButton label="Add New" onClick={() => setVisible(!visible)} />
-      <StudentTable
-        visible={visible}
-        onDiscardClick={() => setVisible(false)}
-      />
-    </div>
+    <>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="login/" element={<LoginPage />} />
+        </Routes>
+      </BrowserRouter>
+    </>
   );
 }
 
