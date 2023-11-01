@@ -1,6 +1,6 @@
 import React from "react";
 import { render, screen } from "@testing-library/react";
-import TableCellInput from "../../components/TableCellInput/TableCellInput";
+import TableCellInput from "../../TableCellInput/TableCellInput";
 import { Table, TableBody, TableRow } from "@mui/material";
 
 describe("TableCellInput Component", () => {

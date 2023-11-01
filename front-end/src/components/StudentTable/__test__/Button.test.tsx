@@ -1,15 +1,20 @@
 import React, { useState } from "react";
 import { fireEvent, render, screen } from "@testing-library/react";
-import AddNewButton from "../../components/AddNewButton/AddNewButton";
+import CustomizeButton from "../../Button/Button";
 
-describe("AddNewButton Component", () => {
+describe("Button Component", () => {
   test("renders", () => {
     const TestComponent = () => {
       const [visible, setVisible] = useState(false);
 
       return (
         <div>
-          <AddNewButton label="Add New" onClick={() => setVisible(!visible)} />
+          <CustomizeButton
+            label="Add New"
+            backgroundColor="white"
+            color="red"
+            onClick={() => setVisible(!visible)}
+          />
           {visible && <p>Content is Visible</p>}
         </div>
       );

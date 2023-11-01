@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import { Provider } from "react-redux";
-import StudentTable from "../../components/StudentTable/StudentTable";
-import store from "../../redux/store";
+import StudentTable from "../StudentTable";
+import store from "../../../redux/store";
 
 test("renders StudentTable component", () => {
   render(
