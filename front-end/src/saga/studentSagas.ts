@@ -36,7 +36,7 @@ function* deleteStudentSaga(action: any): Generator<any, void, any> {
 function* getStudentSaga(action: any): Generator<any, void, any> {
   try {
     const response = yield call(apiService.getStudents);
-    yield put(fetchStudentsSuccess(response.data.results));
+    yield put(fetchStudentsSuccess(response.data));
   } catch (error) {
     console.error("getStudentSaga", error);
   }

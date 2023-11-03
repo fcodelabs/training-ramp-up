@@ -53,7 +53,6 @@ const StudentTable = ({ visible, onDiscardClick }: Props) => {
   }, []);
 
   const existingStudent = useSelector((state: RootState) => state.students);
-  console.log(existingStudent);
 
   const maxId = existingStudent.reduce((max, student) => {
     return student.id > max ? student.id : max;

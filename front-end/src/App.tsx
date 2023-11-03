@@ -8,10 +8,11 @@ import LoginPage from "./containers/LoginPage/LoginPage";
 function App() {
   useEffect(() => {
     WebSocketService.connect();
-    console.log("WebSocketService.connect()");
+    console.log("Connect to the server");
 
     return () => {
       WebSocketService.disconnect();
+      console.log("Disonnect to the server");
     };
   }, []);
 
