@@ -1,10 +1,11 @@
+import { alignProperty } from "@mui/material/styles/cssUtils";
 import { useState } from "react";
 
 const LoginPage = () => {
-  const [username, setUsername] = useState("");
+  const [email, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleUsernameChange = (e: any) => {
+  const handleEmailChange = (e: any) => {
     setUsername(e.target.value);
   };
 
@@ -13,13 +14,7 @@ const LoginPage = () => {
   };
 
   const handleLogin = () => {
-    // You can implement your login logic here
-    console.log(
-      "Logging in with username:",
-      username,
-      "and password:",
-      password
-    );
+    console.log("Logging in with email:", email, "and password:", password);
   };
 
   return (
@@ -27,39 +22,46 @@ const LoginPage = () => {
       className="login-page"
       style={{
         display: "flex",
-        flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
         height: "100vh",
       }}
     >
-      <div className="login-form">
-        <h1>Login</h1>
+      <div
+        className="login-form"
+        style={{ backgroundColor: "#fff8dc", padding: 40, borderRadius: 20 }}
+      >
+        <div style={{ textAlign: "center" }}>
+          <h1>Login</h1>
+        </div>
         <form>
-          <div className="form-group">
-            <label htmlFor="username">Username</label>
-            <input
-              type="text"
-              id="username"
-              value={username}
-              onChange={handleUsernameChange}
-            />
+          <div>
+            <label htmlFor="email">Email</label>
           </div>
-          <div className="form-group">
+          <input
+            type="text"
+            id="email"
+            value={email}
+            onChange={handleEmailChange}
+          />
+          <div>
             <label htmlFor="password">Password</label>
-            <input
-              type="password"
-              id="password"
-              value={password}
-              onChange={handlePasswordChange}
-            />
           </div>
-          <button type="button" onClick={handleLogin}>
-            Login
-          </button>
-          <button type="button" onClick={handleLogin}>
-            Register
-          </button>
+          <input
+            type="password"
+            id="password"
+            value={password}
+            onChange={handlePasswordChange}
+          />
+          <div>
+            {" "}
+            <button type="button" onClick={handleLogin}>
+              Login
+            </button>
+            <button type="button" onClick={handleLogin}>
+              Register
+            </button>
+          </div>
         </form>
       </div>
     </div>
