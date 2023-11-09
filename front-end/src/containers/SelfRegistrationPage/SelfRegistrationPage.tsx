@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 
-const LoginPage = () => {
+const SelfRegitrationPage = () => {
   const [email, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
@@ -32,9 +32,13 @@ const LoginPage = () => {
         style={{ backgroundColor: "#fff8dc", padding: 40, borderRadius: 20 }}
       >
         <div style={{ textAlign: "center" }}>
-          <h1>Login</h1>
+          <h1>Register</h1>
         </div>
         <form>
+          <div>
+            <label>Username</label>
+          </div>
+          <input value={email} onChange={handleEmailChange} />
           <div>
             <label>Email</label>
           </div>
@@ -45,10 +49,10 @@ const LoginPage = () => {
           <input value={password} onChange={handlePasswordChange} />
           <div>
             <button type="button" onClick={handleLogin}>
-              Login
+              <Link to="/login">Back</Link>
             </button>
-            <button type="button">
-              <Link to="/register">Register</Link>
+            <button type="button" onClick={handleLogin}>
+              Create Account
             </button>
           </div>
         </form>
@@ -57,4 +61,4 @@ const LoginPage = () => {
   );
 };
 
-export default LoginPage;
+export default SelfRegitrationPage;

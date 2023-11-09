@@ -12,6 +12,7 @@ export const getStudents = async (request: Request, response: Response) => {
     const token = request.headers.authorization || "";
 
     const verified = jwt.verify(token, jwtSecretKey);
+    console.log("verified", verified);
     if (verified) {
       try {
         const students = await StudentService.listStudents();
