@@ -9,7 +9,6 @@ import SelfRegitrationPage from "../containers/SelfRegistrationPage/SelfRegistra
 const Routes = () => {
   const { token } = useAuth();
 
-  //routes accessible only to authenticated users
   const routesForAuthenticatedOnly = [
     {
       path: "/",
@@ -27,7 +26,6 @@ const Routes = () => {
     },
   ];
 
-  //routes accessible only to non-authenticated users
   const routesForNotAuthenticatedOnly = [
     {
       path: "login/",
@@ -37,15 +35,17 @@ const Routes = () => {
       path: "register/",
       element: <SelfRegitrationPage />,
     },
+    {
+      path: "test/",
+      element: <UserPage />,
+    },
   ];
 
-  // Combine and conditionally include routes based on authentication status
   const router = createBrowserRouter([
     ...(!token ? routesForNotAuthenticatedOnly : []),
     ...routesForAuthenticatedOnly,
   ]);
 
-  // Provide the router configuration using RouterProvider
   return <RouterProvider router={router} />;
 };
 

@@ -14,7 +14,12 @@ import { deleteStudent } from "../../redux/studentReducer";
 import TableCellInput from "../TableCellInput/TableCellInput";
 import TableCellNewInput from "../TableCellNewInput/TableCellNewInput";
 import { RootState } from "../../redux/store";
-import { addUser, fetchUsers, updateUser } from "../../redux/userReducer";
+import {
+  addUser,
+  deleteUser,
+  fetchUsers,
+  updateUser,
+} from "../../redux/userReducer";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -59,6 +64,7 @@ const UserTable = ({ visible, onDiscardClick }: Props) => {
     userName: "",
     email: "",
     password: "",
+    role: "USER",
   });
 
   const clearUserData = () =>
@@ -67,9 +73,8 @@ const UserTable = ({ visible, onDiscardClick }: Props) => {
       userName: "",
       email: "",
       password: "",
+      role: "USER",
     });
-
-  console.log("user", user);
 
   //validations
   const validateForm = (action: string) => {
@@ -96,6 +101,7 @@ const UserTable = ({ visible, onDiscardClick }: Props) => {
               <StyledTableCell align="left">Username</StyledTableCell>
               <StyledTableCell align="left">Email</StyledTableCell>
               <StyledTableCell align="left">Password</StyledTableCell>
+              <StyledTableCell align="left">Role</StyledTableCell>
               <StyledTableCell align="left"></StyledTableCell>
             </TableRow>
           </TableHead>
@@ -128,6 +134,18 @@ const UserTable = ({ visible, onDiscardClick }: Props) => {
                     })
                   }
                 />
+                <select
+                  value={user.role}
+                  onChange={(event) =>
+                    setUser({
+                      ...user,
+                      role: event.target.value,
+                    })
+                  }
+                >
+                  <option value="ADMIN">ADMIN</option>
+                  <option value="USER">USER</option>
+                </select>
                 <TableCell align="left">
                   <div>
                     <CustomizeButton
@@ -187,6 +205,18 @@ const UserTable = ({ visible, onDiscardClick }: Props) => {
                         })
                       }
                     />
+                    <select
+                      value={user.role}
+                      onChange={(event) =>
+                        setUser({
+                          ...user,
+                          role: event.target.value,
+                        })
+                      }
+                    >
+                      <option value="ADMIN">ADMIN</option>
+                      <option value="USER">USER</option>
+                    </select>
                     <TableCell align="left">
                       <div>
                         <CustomizeButton
@@ -222,6 +252,7 @@ const UserTable = ({ visible, onDiscardClick }: Props) => {
                     <TableCell align="left">{val.userName}</TableCell>
                     <TableCell align="left">{val.email}</TableCell>
                     <TableCell align="left"></TableCell>
+                    <TableCell align="left">{val.role}</TableCell>
                     <TableCell align="left">
                       <div>
                         <CustomizeButton
@@ -241,7 +272,7 @@ const UserTable = ({ visible, onDiscardClick }: Props) => {
                           label="Remove"
                           color="black"
                           backgroundColor="#f0f8ff"
-                          onClick={() => dispatch(deleteStudent(val.id))}
+                          onClick={() => dispatch(deleteUser(val.id))}
                         />
                       </div>
                     </TableCell>

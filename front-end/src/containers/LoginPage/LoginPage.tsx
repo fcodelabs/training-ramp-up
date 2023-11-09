@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { login } from "../../saga/apiService";
 
 const LoginPage = () => {
   const [email, setUsername] = useState("");
@@ -14,7 +15,14 @@ const LoginPage = () => {
   };
 
   const handleLogin = () => {
-    console.log("Logging in with email:", email, "and password:", password);
+    login(email, password)
+      .then((data) => {
+        console.log("Logged in:", data);
+        window.location.href = "http://localhost:3000/";
+      })
+      .catch((error) => {
+        console.error("Login error:", error);
+      });
   };
 
   return (

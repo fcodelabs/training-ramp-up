@@ -1,9 +1,15 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { register } from "../../saga/apiService";
 
 const SelfRegitrationPage = () => {
-  const [email, setUsername] = useState("");
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  const handleUsernameChange = (e: any) => {
+    setUsername(e.target.value);
+  };
 
   const handleEmailChange = (e: any) => {
     setUsername(e.target.value);
@@ -13,8 +19,15 @@ const SelfRegitrationPage = () => {
     setPassword(e.target.value);
   };
 
-  const handleLogin = () => {
-    console.log("Logging in with email:", email, "and password:", password);
+  const handleRegister = () => {
+    register(email, username, password)
+      .then((data) => {
+        console.log("Logged in:", data);
+        window.location.href = "http://localhost:3000/login";
+      })
+      .catch((error) => {
+        console.error("Login error:", error);
+      });
   };
 
   return (
@@ -38,7 +51,7 @@ const SelfRegitrationPage = () => {
           <div>
             <label>Username</label>
           </div>
-          <input value={email} onChange={handleEmailChange} />
+          <input value={username} onChange={handleUsernameChange} />
           <div>
             <label>Email</label>
           </div>
@@ -48,10 +61,10 @@ const SelfRegitrationPage = () => {
           </div>
           <input value={password} onChange={handlePasswordChange} />
           <div>
-            <button type="button" onClick={handleLogin}>
+            <button type="button">
               <Link to="/login">Back</Link>
             </button>
-            <button type="button" onClick={handleLogin}>
+            <button type="button" onClick={handleRegister}>
               Create Account
             </button>
           </div>

@@ -20,24 +20,23 @@ export const apiService = {
 };
 
 export const register = (username: string, email: string, password: string) => {
-  return axios.post(API_BASE_URL + "signup", {
+  return axios.post(API_BASE_URL + "/register/", {
     username,
     email,
     password,
   });
 };
 
-export const login = (username: string, password: string) => {
+export const login = (email: string, password: string) => {
   return axios
-    .post(API_BASE_URL + "signin", {
-      username,
+    .post(API_BASE_URL + "/login/", {
+      email,
       password,
     })
     .then((response) => {
       if (response.data.accessToken) {
         localStorage.setItem("user", JSON.stringify(response.data));
       }
-
       return response.data;
     });
 };
