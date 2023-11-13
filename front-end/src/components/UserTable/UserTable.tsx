@@ -10,7 +10,6 @@ import CustomizeButton from "../Button/Button";
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import "react-datepicker/dist/react-datepicker.css";
-import { deleteStudent } from "../../redux/studentReducer";
 import TableCellInput from "../TableCellInput/TableCellInput";
 import TableCellNewInput from "../TableCellNewInput/TableCellNewInput";
 import { RootState } from "../../redux/store";

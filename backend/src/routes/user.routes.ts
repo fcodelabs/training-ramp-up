@@ -3,15 +3,21 @@ import type { Request, Response } from "express";
 import { body, validationResult } from "express-validator";
 
 import * as UserController from "../controllers/user.controllers";
+import { AuthenticationMiddleware } from "../middlewares/auth.middleware";
 
 export const userRouter = express.Router();
 
-userRouter.get("/", UserController.getUsers);
+userRouter.get("/", AuthenticationMiddleware("ADMIN"), UserController.getUsers);
 
-userRouter.get("/:id", UserController.getUser);
+userRouter.get(
+  "/:id",
+  AuthenticationMiddleware("ADMIN"),
+  UserController.getUser
+);
 
 userRouter.post(
   "/",
+  AuthenticationMiddleware("ADMIN"),
   body("username").isString(),
   body("email").isString(),
   body("password").isString(),
@@ -21,6 +27,7 @@ userRouter.post(
 
 userRouter.put(
   "/:id",
+  AuthenticationMiddleware("ADMIN"),
   body("username").isString(),
   body("email").isString(),
   body("password").isString(),
@@ -28,4 +35,8 @@ userRouter.put(
   UserController.updateUser
 );
 
-userRouter.delete("/:id", UserController.deleteUser);
+userRouter.delete(
+  "/:id",
+  AuthenticationMiddleware("ADMIN"),
+  UserController.deleteUser
+);

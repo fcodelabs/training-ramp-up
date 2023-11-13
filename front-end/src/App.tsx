@@ -1,6 +1,9 @@
+import { BrowserRouter, Route, Link, Routes } from "react-router-dom";
 import "./App.css";
-import AuthProvider from "./provider/authProvider";
-import Routes from "./routes";
+import { AuthContextProvider } from "./provider/authProvider";
+// import Routes from "./routes";
+import HomePage from "./containers/HomePage/HomePage";
+import LoginPage from "./containers/LoginPage/LoginPage";
 
 function App() {
   //   useEffect(() => {
@@ -14,9 +17,14 @@ function App() {
   //   }, []);
 
   return (
-    <AuthProvider>
-      <Routes />
-    </AuthProvider>
+    <BrowserRouter>
+      <AuthContextProvider>
+        <Routes>
+          <Route path="/" element={<HomePage />}></Route>
+          <Route path="/login" element={<LoginPage />}></Route>
+        </Routes>
+      </AuthContextProvider>
+    </BrowserRouter>
   );
 }
 

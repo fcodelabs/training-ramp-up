@@ -41,25 +41,15 @@ if (!process.env.PORT) {
 const PORT = parseInt(process.env.PORT, 10);
 const app = (0, express_1.default)();
 const httpServer = (0, http_1.createServer)(app);
-// const http = require("http").Server(app);
-// const io = require("socket.io")(http);
-// //Whenever someone connects this gets executed
-// io.on("connection", (socket: any) => {
-//   console.log("A user connected");
-//Whenever someone disconnects this piece of code executed
-//   socket.on("disconnect", function () {
-//     console.log("A user disconnected");
-//   });
-// });
+const io = new socket_io_1.Server(httpServer);
+io.on("connection", (soket) => {
+    console.log("client is connected");
+});
 app.use((0, cors_1.default)());
 app.use(express_1.default.json());
 app.use("/api/students", student_routes_1.studentRouter);
 app.use("/api/users", user_routes_1.userRouter);
 app.use("/api/auth", auth_routes_1.authRouter);
-const io = new socket_io_1.Server(httpServer);
-io.on("connection", (soket) => {
-    console.log("client is connected");
-});
 app.listen(PORT, () => {
     console.log(`Listening on port ${PORT}`);
 });

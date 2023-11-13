@@ -32,3 +32,9 @@ enum Role{
   USER
   ADMIN
 }
+
+model RefreshToken{
+  id String @id @unique @default(uuid())
+  token String
+  userId String
+}

@@ -12,7 +12,7 @@ const SelfRegitrationPage = () => {
   };
 
   const handleEmailChange = (e: any) => {
-    setUsername(e.target.value);
+    setEmail(e.target.value);
   };
 
   const handlePasswordChange = (e: any) => {

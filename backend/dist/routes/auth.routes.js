@@ -31,3 +31,4 @@ const express_1 = __importDefault(require("express"));
 const AuthController = __importStar(require("../controllers/auth.controllers"));
 exports.authRouter = express_1.default.Router();
 exports.authRouter.post("/login", AuthController.login);
+exports.authRouter.post("/refresh", AuthController.refresh);

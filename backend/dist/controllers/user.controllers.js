@@ -31,15 +31,32 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteUser = exports.updateUser = exports.createUser = exports.getUser = exports.getUsers = void 0;
 const express_validator_1 = require("express-validator");
 const UserService = __importStar(require("../services/user.services"));
+const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+let jwtSecretKey = process.env.JWT_ACCESS_SECRET || "";
 // GET: List of all Users
 const getUsers = (request, response) => __awaiter(void 0, void 0, void 0, function* () {
+    const token = request.headers.authorization || "";
     try {
-        const users = yield UserService.listUsers();
-        return response.status(200).json(users);
+        const verified = jsonwebtoken_1.default.verify(token, jwtSecretKey);
+        if (verified.role === "ADMIN") {
+            try {
+                const users = yield UserService.listUsers();
+                return response.status(200).json(users);
+            }
+            catch (error) {
+                return response.status(500).json(error.message);
+            }
+        }
+        else {
+            return response.status(401).json({ message: "User should be an admin" });
+        }
     }
     catch (error) {
         return response.status(500).json(error.message);
@@ -48,13 +65,25 @@ const getUsers = (request, response) => __awaiter(void 0, void 0, void 0, functi
 exports.getUsers = getUsers;
 // GET: A single User by ID
 const getUser = (request, response) => __awaiter(void 0, void 0, void 0, function* () {
-    const id = request.params.id;
+    const token = request.headers.authorization || "";
     try {
-        const user = yield UserService.getUser(id);
-        if (user) {
-            return response.status(200).json(user);
+        const verified = jsonwebtoken_1.default.verify(token, jwtSecretKey);
+        if (verified.role === "ADMIN") {
+            const id = request.params.id;
+            try {
+                const user = yield UserService.getUser(id);
+                if (user) {
+                    return response.status(200).json(user);
+                }
+                return response.status(404).json("User could not be found");
+            }
+            catch (error) {
+                return response.status(500).json(error.message);
+            }
         }
-        return response.status(404).json("User could not be found");
+        else {
+            return response.status(401).json({ message: "User should be an admin" });
+        }
     }
     catch (error) {
         return response.status(500).json(error.message);
@@ -79,15 +108,27 @@ const createUser = (request, response) => __awaiter(void 0, void 0, void 0, func
 exports.createUser = createUser;
 // PUT: Updating an User
 const updateUser = (request, response) => __awaiter(void 0, void 0, void 0, function* () {
-    const errors = (0, express_validator_1.validationResult)(request);
-    if (!errors.isEmpty()) {
-        return response.status(400).json({ errors: errors.array() });
-    }
-    const id = request.params.id;
+    const token = request.headers.authorization || "";
     try {
-        const user = request.body;
-        const updateUser = yield UserService.updateUser(user, id);
-        return response.status(200).json(updateUser);
+        const verified = jsonwebtoken_1.default.verify(token, jwtSecretKey);
+        if (verified.role === "ADMIN") {
+            const errors = (0, express_validator_1.validationResult)(request);
+            if (!errors.isEmpty()) {
+                return response.status(400).json({ errors: errors.array() });
+            }
+            const id = request.params.id;
+            try {
+                const user = request.body;
+                const updateUser = yield UserService.updateUser(user, id);
+                return response.status(200).json(updateUser);
+            }
+            catch (error) {
+                return response.status(500).json(error.message);
+            }
+        }
+        else {
+            return response.status(401).json({ message: "User should be an admin" });
+        }
     }
     catch (error) {
         return response.status(500).json(error.message);
@@ -96,10 +137,22 @@ const updateUser = (request, response) => __awaiter(void 0, void 0, void 0, func
 exports.updateUser = updateUser;
 // DELETE: Delete an User based on the id
 const deleteUser = (request, response) => __awaiter(void 0, void 0, void 0, function* () {
-    const id = request.params.id;
+    const token = request.headers.authorization || "";
     try {
-        yield UserService.deleteUser(id);
-        return response.status(204).json("User has been successfully deleted");
+        const verified = jsonwebtoken_1.default.verify(token, jwtSecretKey);
+        if (verified.role === "ADMIN") {
+            const id = request.params.id;
+            try {
+                yield UserService.deleteUser(id);
+                return response.status(204).json("User has been successfully deleted");
+            }
+            catch (error) {
+                return response.status(500).json(error.message);
+            }
+        }
+        else {
+            return response.status(401).json({ message: "User should be an admin" });
+        }
     }
     catch (error) {
         return response.status(500).json(error.message);
