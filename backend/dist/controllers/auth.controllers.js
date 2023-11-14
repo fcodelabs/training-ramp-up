@@ -67,6 +67,7 @@ const login = (request, response) => __awaiter(void 0, void 0, void 0, function*
             httpOnly: true,
             maxAge: 10 * 60 * 1000,
         });
+        return response.status(200).json({ message: "Success login" });
     }
     catch (error) {
         return response.status(500).json(error.message);

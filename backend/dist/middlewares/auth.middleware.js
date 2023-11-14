@@ -38,29 +38,51 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.AuthenticationMiddleware = void 0;
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const AuthController = __importStar(require("../controllers/auth.controllers"));
+const cookieParser = require("cookie-parser");
 const accessSecret = process.env.JWT_ACCESS_SECRET || "";
 const refreshSecret = process.env.JWT_ACCESS_SECRET || "";
 const AuthenticationMiddleware = (allowedUser) => (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
-    const token = request.cookies.accessToken;
-    if (!token) {
-        return response
-            .status(401)
-            .json({ message: "Unauthorized: Token not provided" });
-    }
+    var _a;
     try {
-        const decodedToken = jsonwebtoken_1.default.verify(token, refreshSecret);
-        if (decodedToken.userRole === allowedUser) {
-            return next;
+        const list = {};
+        const cookieHeader = (_a = request.headers) === null || _a === void 0 ? void 0 : _a.cookie;
+        if (!cookieHeader)
+            return list;
+        cookieHeader.split(`;`).forEach(function (cookie) {
+            let [name, ...rest] = cookie.split(`=`);
+            name = name === null || name === void 0 ? void 0 : name.trim();
+            if (!name)
+                return;
+            const value = rest.join(`=`).trim();
+            if (!value)
+                return;
+            list[name] = decodeURIComponent(value);
+        });
+        const token = list["accessToken"];
+        console.log(token);
+        if (!token) {
+            return response
+                .status(401)
+                .json({ message: "Unauthorized: Token not provided" });
         }
-        if (Date.now() >= decodedToken.exp * 1000) {
-            AuthController.refresh;
+        try {
+            const decodedToken = jsonwebtoken_1.default.verify(token, refreshSecret);
+            if (decodedToken.userRole === allowedUser) {
+                return next;
+            }
+            if (Date.now() >= decodedToken.exp * 1000) {
+                AuthController.refresh;
+            }
+            return response.status(401).json({ message: "Unauthorized access" });
         }
-        return response.status(401).json({ message: "Unauthorized access" });
+        catch (_b) {
+            return response
+                .status(401)
+                .json({ message: "Unauthorized: Token not provided" });
+        }
     }
-    catch (_a) {
-        return response
-            .status(401)
-            .json({ message: "Unauthorized: Token not provided" });
+    catch (_c) {
+        return response.status(401).json({ message: "Unauthorized access" });
     }
 });
 exports.AuthenticationMiddleware = AuthenticationMiddleware;

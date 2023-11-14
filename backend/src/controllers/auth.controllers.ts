@@ -16,7 +16,6 @@ export const login = async (request: Request, response: Response) => {
   if (!user || !(await bcrypt.compare(password, user.password))) {
     return response.status(401).json({ message: "Invalid email or password" });
   }
-
   const accessToken = jwt.sign(
     { userId: user.id, userRole: user.role },
     accessSecret,
@@ -45,6 +44,7 @@ export const login = async (request: Request, response: Response) => {
       httpOnly: true,
       maxAge: 10 * 60 * 1000,
     });
+    return response.status(200).json({ message: "Success login" });
   } catch (error: any) {
     return response.status(500).json(error.message);
   }

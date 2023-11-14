@@ -7,7 +7,7 @@ import { AuthenticationMiddleware } from "../middlewares/auth.middleware";
 
 export const userRouter = express.Router();
 
-userRouter.get("/", AuthenticationMiddleware("ADMIN"), UserController.getUsers);
+userRouter.get("/", UserController.getUsers);
 
 userRouter.get(
   "/:id",
@@ -17,7 +17,6 @@ userRouter.get(
 
 userRouter.post(
   "/",
-  AuthenticationMiddleware("ADMIN"),
   body("username").isString(),
   body("email").isString(),
   body("password").isString(),
