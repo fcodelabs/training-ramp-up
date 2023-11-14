@@ -10,11 +10,12 @@ interface ParsedCookies {
 export const AuthenticationMiddleware =
   (allowedUser: string) =>
   async (request: Request, response: Response, next: NextFunction) => {
+    console.log("in auth middleware");
     try {
       const list: ParsedCookies = {};
       const cookieHeader = request.headers?.cookie;
-      if (!cookieHeader) return list;
-
+      if (cookieHeader == undefined)
+        return response.status(401).json({ message: "Unauthorized access" });
       cookieHeader.split(`;`).forEach(function (cookie) {
         let [name, ...rest] = cookie.split(`=`);
         name = name?.trim();
@@ -24,16 +25,17 @@ export const AuthenticationMiddleware =
         list[name] = decodeURIComponent(value);
       });
       const token = list["accessToken"];
-      console.log(token);
+      if (!token)
+        return response.status(401).json({ message: "Unauthorized access" });
       try {
         const decodedToken = jwt.verify(token, accessSecret) as {
           userRole: string;
-          exp: number;
         };
         if (decodedToken.userRole === allowedUser) {
-          return next;
+          return next();
+        } else {
+          return response.status(401).json({ message: "Unauthorized access" });
         }
-        return response.status(401).json({ message: "Unauthorized access" });
       } catch (error: any) {
         if (error.name === "TokenExpiredError") {
           return AuthController.refresh;

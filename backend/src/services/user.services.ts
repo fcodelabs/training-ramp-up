@@ -25,10 +25,20 @@ export const listUsers = async (): Promise<Omit<User, "password">[]> => {
   });
 };
 
-export const getUser = async (id: string): Promise<User | null> => {
+export const getUser = async (
+  id: string
+): Promise<Omit<User, "password"> | null> => {
   return db.user.findUnique({
     where: {
       id,
+    },
+    select: {
+      id: true,
+      username: true,
+      email: true,
+      role: true,
+      createdAt: true,
+      updatedAt: true,
     },
   });
 };

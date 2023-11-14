@@ -1,8 +1,8 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export interface User {
-  id: number;
-  userName: string;
+  id: string;
+  username: string;
   email: string;
   password: string;
   role: string;
@@ -32,7 +32,7 @@ const usersSlice = createSlice({
         state[userIndex] = action.payload;
       }
     },
-    deleteUser: (state, action: PayloadAction<number>) => {
+    deleteUser: (state, action: PayloadAction<string>) => {
       return state.filter((user) => user.id !== action.payload);
     },
   },

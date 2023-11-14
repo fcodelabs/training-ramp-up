@@ -3,7 +3,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import studentsReducer from "./studentReducer";
 import { rootSaga } from "../saga/rootSaga";
 import usersReducer from "./userReducer";
-import CurrentUsersReducer from "./currentUserReducer";
+import CurrentUserReducer from "./currentUserReducer";
 
 const sagaMiddleware = createSagaMiddleware();
 
@@ -11,7 +11,7 @@ const store = configureStore({
   reducer: {
     students: studentsReducer,
     users: usersReducer,
-    currentUsers: CurrentUsersReducer,
+    currentUser: CurrentUserReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(sagaMiddleware),

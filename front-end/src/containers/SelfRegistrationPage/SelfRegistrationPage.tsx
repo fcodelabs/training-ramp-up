@@ -1,11 +1,13 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { register } from "../../saga/apiService";
 
 const SelfRegitrationPage = () => {
+  const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const role = "USER";
 
   const handleUsernameChange = (e: any) => {
     setUsername(e.target.value);
@@ -20,10 +22,10 @@ const SelfRegitrationPage = () => {
   };
 
   const handleRegister = () => {
-    register(email, username, password)
+    register(username, email, password, role)
       .then((data) => {
-        console.log("Logged in:", data);
-        window.location.href = "http://localhost:3000/login";
+        console.log("created:", data);
+        navigate("/login");
       })
       .catch((error) => {
         console.error("Login error:", error);

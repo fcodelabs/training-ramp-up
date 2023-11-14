@@ -40,14 +40,14 @@ const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const AuthController = __importStar(require("../controllers/auth.controllers"));
 const cookieParser = require("cookie-parser");
 const accessSecret = process.env.JWT_ACCESS_SECRET || "";
-const refreshSecret = process.env.JWT_ACCESS_SECRET || "";
 const AuthenticationMiddleware = (allowedUser) => (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
+    console.log("in auth middleware");
     try {
         const list = {};
         const cookieHeader = (_a = request.headers) === null || _a === void 0 ? void 0 : _a.cookie;
-        if (!cookieHeader)
-            return list;
+        if (cookieHeader == undefined)
+            return response.status(401).json({ message: "Unauthorized access" });
         cookieHeader.split(`;`).forEach(function (cookie) {
             let [name, ...rest] = cookie.split(`=`);
             name = name === null || name === void 0 ? void 0 : name.trim();
@@ -59,29 +59,27 @@ const AuthenticationMiddleware = (allowedUser) => (request, response, next) => _
             list[name] = decodeURIComponent(value);
         });
         const token = list["accessToken"];
-        console.log(token);
-        if (!token) {
-            return response
-                .status(401)
-                .json({ message: "Unauthorized: Token not provided" });
-        }
-        try {
-            const decodedToken = jsonwebtoken_1.default.verify(token, refreshSecret);
-            if (decodedToken.userRole === allowedUser) {
-                return next;
-            }
-            if (Date.now() >= decodedToken.exp * 1000) {
-                AuthController.refresh;
-            }
+        if (!token)
             return response.status(401).json({ message: "Unauthorized access" });
+        try {
+            const decodedToken = jsonwebtoken_1.default.verify(token, accessSecret);
+            if (decodedToken.userRole === allowedUser) {
+                return next();
+            }
+            else {
+                return response.status(401).json({ message: "Unauthorized access" });
+            }
         }
-        catch (_b) {
-            return response
-                .status(401)
-                .json({ message: "Unauthorized: Token not provided" });
+        catch (error) {
+            if (error.name === "TokenExpiredError") {
+                return AuthController.refresh;
+            }
+            else {
+                return response.status(401).json({ message: "Unauthorized access" });
+            }
         }
     }
-    catch (_c) {
+    catch (_b) {
         return response.status(401).json({ message: "Unauthorized access" });
     }
 });

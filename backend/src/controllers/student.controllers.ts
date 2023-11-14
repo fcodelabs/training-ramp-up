@@ -2,8 +2,6 @@ import type { Request, Response } from "express";
 import { body, validationResult } from "express-validator";
 
 import * as StudentService from "../services/student.services";
-import jwt from "jsonwebtoken";
-let jwtSecretKey = process.env.JWT_ACCESS_SECRET || "";
 
 // GET: List of all Students
 export const getStudents = async (request: Request, response: Response) => {

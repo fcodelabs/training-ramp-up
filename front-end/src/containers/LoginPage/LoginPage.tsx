@@ -1,12 +1,15 @@
 import { useContext, useState } from "react";
-import { Link } from "react-router-dom";
-import AuthContext from "../../provider/authProvider";
-// import { login } from "../../saga/apiService";
+import { Link, useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { setCurrentUser } from "../../redux/currentUserReducer";
+import { login } from "../../saga/apiService";
 
 const LoginPage = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const [email, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const { login }: any = useContext(AuthContext);
 
   const handleEmailChange = (e: any) => {
     setUsername(e.target.value);
@@ -17,19 +20,13 @@ const LoginPage = () => {
   };
 
   const handleLogin = async () => {
-    // login(email, password)
-    //   .then((data) => {
-    //     console.log("Logged in:", data);
-    //     window.location.href = "http://localhost:3000/";
-    //   })
-    //   .catch((error) => {
-    //     console.error("Login error:", error);
-    //   });
-    let payload = {
-      email: email,
-      password: password,
-    };
-    await login(payload);
+    console.log("email", email, "password", password);
+    const user = login(email, password).catch((error: any) => {
+      console.error("Login error:", error);
+    });
+    console.log("user", user);
+    // dispatch(setCurrentUser(user));
+    navigate("/");
   };
 
   return (

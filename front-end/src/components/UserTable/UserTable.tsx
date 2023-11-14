@@ -53,14 +53,11 @@ const UserTable = ({ visible, onDiscardClick }: Props) => {
 
   const existingUsers = useSelector((state: RootState) => state.users);
 
-  const maxId = existingUsers.reduce((max, user) => {
-    return user.id > max ? user.id : max;
-  }, 1);
   // Local
   const [editId, setEditId] = useState(-1);
   const [user, setUser] = useState({
-    id: 0,
-    userName: "",
+    id: "",
+    username: "",
     email: "",
     password: "",
     role: "USER",
@@ -68,8 +65,8 @@ const UserTable = ({ visible, onDiscardClick }: Props) => {
 
   const clearUserData = () =>
     setUser({
-      id: 0,
-      userName: "",
+      id: "",
+      username: "",
       email: "",
       password: "",
       role: "USER",
@@ -77,7 +74,7 @@ const UserTable = ({ visible, onDiscardClick }: Props) => {
 
   //validations
   const validateForm = (action: string) => {
-    if (user.userName.length === 0) {
+    if (user.username.length === 0) {
       return alert("Invalid Form, username cannot be empty");
     }
     if (user.email.length === 0) {
@@ -96,8 +93,7 @@ const UserTable = ({ visible, onDiscardClick }: Props) => {
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>
             <TableRow>
-              <StyledTableCell align="left">ID</StyledTableCell>
-              <StyledTableCell align="left">Username</StyledTableCell>
+              <StyledTableCell align="left">username</StyledTableCell>
               <StyledTableCell align="left">Email</StyledTableCell>
               <StyledTableCell align="left">Password</StyledTableCell>
               <StyledTableCell align="left">Role</StyledTableCell>
@@ -107,13 +103,11 @@ const UserTable = ({ visible, onDiscardClick }: Props) => {
           <TableBody>
             {visible && (
               <StyledTableRow>
-                <TableCell align="left"></TableCell>
                 <TableCellNewInput
                   onChange={(event) =>
                     setUser({
                       ...user,
-                      id: maxId + 1,
-                      userName: event.target.value,
+                      username: event.target.value,
                     })
                   }
                 />
@@ -176,13 +170,12 @@ const UserTable = ({ visible, onDiscardClick }: Props) => {
               if (key === editId) {
                 return (
                   <StyledTableRow key={key}>
-                    <TableCell align="left">{val.id}</TableCell>
                     <TableCellInput
-                      defaultValue={val.userName}
+                      defaultValue={val.username}
                       onChange={(event) => {
                         setUser({
                           ...user,
-                          userName: event.target.value,
+                          username: event.target.value,
                         });
                       }}
                     />
@@ -247,8 +240,7 @@ const UserTable = ({ visible, onDiscardClick }: Props) => {
               } else {
                 return (
                   <StyledTableRow key={key}>
-                    <TableCell align="left">{val.id}</TableCell>
-                    <TableCell align="left">{val.userName}</TableCell>
+                    <TableCell align="left">{val.username}</TableCell>
                     <TableCell align="left">{val.email}</TableCell>
                     <TableCell align="left"></TableCell>
                     <TableCell align="left">{val.role}</TableCell>

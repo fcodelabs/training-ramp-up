@@ -17,6 +17,7 @@ if (!process.env.PORT) {
 const PORT: number = parseInt(process.env.PORT as string, 10);
 
 const app = express();
+
 const httpServer = createServer(app);
 const io = new Server(httpServer);
 
@@ -24,7 +25,14 @@ io.on("connection", (soket) => {
   console.log("client is connected");
 });
 
-app.use(cors());
+app.use(
+  cors({
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    origin: true,
+  })
+);
+app.options("*", cors());
 app.use(express.json());
 app.use("/api/students", studentRouter);
 app.use("/api/users", userRouter);

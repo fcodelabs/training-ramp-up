@@ -29,6 +29,55 @@ export const getUser = async (request: Request, response: Response) => {
   }
 };
 
+const accessSecret: string = process.env.JWT_ACCESS_SECRET || "";
+interface ParsedCookies {
+  [key: string]: string;
+}
+
+export const getUserdetail = async (request: Request, response: Response) => {
+  console.log("start");
+  try {
+    console.log("headers", request.headers);
+    const list: ParsedCookies = {};
+    const cookieHeader = request.headers?.cookie;
+    console.log("cookieHeader", cookieHeader);
+    if (cookieHeader == undefined)
+      return response.status(401).json({ message: "Unauthorized access" });
+    cookieHeader.split(`;`).forEach(function (cookie) {
+      let [name, ...rest] = cookie.split(`=`);
+      name = name?.trim();
+      if (!name) return;
+      const value = rest.join(`=`).trim();
+      if (!value) return;
+      list[name] = decodeURIComponent(value);
+    });
+    console.log("list", list);
+    const token = list["accessToken"];
+    if (!token)
+      return response.status(401).json({ message: "Unauthorized access" });
+    try {
+      const decodedToken = jwt.verify(token, accessSecret) as {
+        userId: string;
+      };
+      const id: string = decodedToken.userId;
+      console.log("id", id);
+      try {
+        const user = await UserService.getUser(id);
+        if (user) {
+          return response.status(200).json(user);
+        }
+        return response.status(404).json("User could not be found");
+      } catch (error: any) {
+        return response.status(500).json(error.message);
+      }
+    } catch {
+      return response.status(401).json({ message: "Unauthorized access" });
+    }
+  } catch {
+    return response.status(401).json({ message: "Unauthorized access" });
+  }
+};
+
 // POST: Create an User
 export const createUser = async (request: Request, response: Response) => {
   const errors = validationResult(request);

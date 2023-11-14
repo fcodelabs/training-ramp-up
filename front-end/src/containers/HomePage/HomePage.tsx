@@ -1,21 +1,49 @@
-import { useContext, useState } from "react";
+import { useEffect, useState } from "react";
 import AddNewButton from "../../components/AddNewButton/AddNewButton";
-import { NotifiactionComponent } from "../../components/Notification/Notification";
 import StudentTable from "../../components/StudentTable/StudentTable";
-import AuthContext from "../../provider/authProvider";
+import { useSelector } from "react-redux";
+import { RootState } from "../../redux/store";
+import { useNavigate } from "react-router-dom";
+import LogoutButton from "../../components/LogoutButton/LogoutButton";
 
 const HomePage = () => {
+  const navigate = useNavigate();
   const [visible, setVisible] = useState(false);
-  // const { user }: any = useContext(AuthContext);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const currentUser = useSelector((state: RootState) => state.currentUser);
+
+  useEffect(() => {
+    if (currentUser.role === "") {
+      navigate("/login");
+    }
+  }, []);
+  if (currentUser.role === "ADMIN") {
+    setIsAdmin(true);
+    return null;
+  }
+
+  const renderComponents = () => {
+    return (
+      <>
+        {isAdmin && (
+          <AddNewButton label="Add New" onClick={() => setVisible(!visible)} />
+        )}
+        <StudentTable
+          visible={visible}
+          onDiscardClick={() => setVisible(false)}
+          isAdmin={isAdmin}
+        />
+        <LogoutButton />
+      </>
+    );
+  };
+
   return (
     <div>
-      {/* <div>{user.username}</div> */}
-      <AddNewButton label="Add New" onClick={() => setVisible(!visible)} />
-      <StudentTable
-        visible={visible}
-        onDiscardClick={() => setVisible(false)}
-      />
-      <NotifiactionComponent message="AA" />
+      <div>{currentUser.userName}</div>
+      {currentUser.role === "ADMIN" || currentUser.role === "USER"
+        ? renderComponents()
+        : null}
     </div>
   );
 };

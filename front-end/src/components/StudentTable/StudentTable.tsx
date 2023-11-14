@@ -41,11 +41,12 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 interface Props {
+  isAdmin: boolean;
   visible: boolean;
   onDiscardClick: () => void;
 }
 
-const StudentTable = ({ visible, onDiscardClick }: Props) => {
+const StudentTable = ({ isAdmin, visible, onDiscardClick }: Props) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -148,7 +149,9 @@ const StudentTable = ({ visible, onDiscardClick }: Props) => {
               <StyledTableCell align="left">Mobile No</StyledTableCell>
               <StyledTableCell align="left">Date of Birth</StyledTableCell>
               <StyledTableCell align="left">Age</StyledTableCell>
-              <StyledTableCell align="left">Command</StyledTableCell>
+              {isAdmin && (
+                <StyledTableCell align="left">Command</StyledTableCell>
+              )}
             </TableRow>
           </TableHead>
           <TableBody>
@@ -199,31 +202,33 @@ const StudentTable = ({ visible, onDiscardClick }: Props) => {
                   />
                 </TableCell>
                 <TableCell align="left">{student.age}</TableCell>
-                <TableCell align="left">
-                  <div>
-                    <CustomizeButton
-                      label="Add"
-                      color="black"
-                      backgroundColor="#f0f8ff"
-                      onClick={() => {
-                        validateForm("Add");
-                        clearStudentData();
-                        onDiscardClick();
-                      }}
-                    />
-                  </div>
-                  <div>
-                    <CustomizeButton
-                      label="Discard"
-                      color="black"
-                      backgroundColor="#f0f8ff"
-                      onClick={() => {
-                        onDiscardClick();
-                        clearStudentData();
-                      }}
-                    />
-                  </div>
-                </TableCell>
+                {isAdmin && (
+                  <TableCell align="left">
+                    <div>
+                      <CustomizeButton
+                        label="Add"
+                        color="black"
+                        backgroundColor="#f0f8ff"
+                        onClick={() => {
+                          validateForm("Add");
+                          clearStudentData();
+                          onDiscardClick();
+                        }}
+                      />
+                    </div>
+                    <div>
+                      <CustomizeButton
+                        label="Discard"
+                        color="black"
+                        backgroundColor="#f0f8ff"
+                        onClick={() => {
+                          onDiscardClick();
+                          clearStudentData();
+                        }}
+                      />
+                    </div>
+                  </TableCell>
+                )}
               </StyledTableRow>
             )}
             {existingStudent.map((val, key) => {
@@ -276,32 +281,34 @@ const StudentTable = ({ visible, onDiscardClick }: Props) => {
                       />
                     </TableCell>
                     <TableCell align="left">{student.age}</TableCell>
-                    <TableCell align="left">
-                      <div>
-                        <CustomizeButton
-                          label="Update"
-                          color="black"
-                          backgroundColor="#f0f8ff"
-                          onClick={() => {
-                            validateForm("Edit");
-                            setEditId(-1);
-                            clearStudentData();
-                          }}
-                        />
-                      </div>
-                      <div>
-                        <CustomizeButton
-                          label="Cancel"
-                          color="black"
-                          backgroundColor="#f0f8ff"
-                          onClick={() => {
-                            setEditId(-1);
-                            onDiscardClick();
-                            clearStudentData();
-                          }}
-                        />
-                      </div>
-                    </TableCell>
+                    {isAdmin && (
+                      <TableCell align="left">
+                        <div>
+                          <CustomizeButton
+                            label="Update"
+                            color="black"
+                            backgroundColor="#f0f8ff"
+                            onClick={() => {
+                              validateForm("Edit");
+                              setEditId(-1);
+                              clearStudentData();
+                            }}
+                          />
+                        </div>
+                        <div>
+                          <CustomizeButton
+                            label="Cancel"
+                            color="black"
+                            backgroundColor="#f0f8ff"
+                            onClick={() => {
+                              setEditId(-1);
+                              onDiscardClick();
+                              clearStudentData();
+                            }}
+                          />
+                        </div>
+                      </TableCell>
+                    )}
                   </StyledTableRow>
                 );
               } else {
@@ -321,30 +328,32 @@ const StudentTable = ({ visible, onDiscardClick }: Props) => {
                       })}
                     </TableCell>
                     <TableCell align="left">{val.age}</TableCell>
-                    <TableCell align="left">
-                      <div>
-                        <CustomizeButton
-                          label="Edit"
-                          color="white"
-                          backgroundColor="red"
-                          onClick={() => {
-                            onDiscardClick();
-                            setEditId(key);
-                            setStudent({
-                              ...student,
-                              ...val,
-                            });
-                            setSelectedDate(new Date(val.dateOfBirth));
-                          }}
-                        />
-                        <CustomizeButton
-                          label="Remove"
-                          color="black"
-                          backgroundColor="#f0f8ff"
-                          onClick={() => dispatch(deleteStudent(val.id))}
-                        />
-                      </div>
-                    </TableCell>
+                    {isAdmin && (
+                      <TableCell align="left">
+                        <div>
+                          <CustomizeButton
+                            label="Edit"
+                            color="white"
+                            backgroundColor="red"
+                            onClick={() => {
+                              onDiscardClick();
+                              setEditId(key);
+                              setStudent({
+                                ...student,
+                                ...val,
+                              });
+                              setSelectedDate(new Date(val.dateOfBirth));
+                            }}
+                          />
+                          <CustomizeButton
+                            label="Remove"
+                            color="black"
+                            backgroundColor="#f0f8ff"
+                            onClick={() => dispatch(deleteStudent(val.id))}
+                          />
+                        </div>
+                      </TableCell>
+                    )}
                   </StyledTableRow>
                 );
               }

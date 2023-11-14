@@ -45,7 +45,12 @@ const io = new socket_io_1.Server(httpServer);
 io.on("connection", (soket) => {
     console.log("client is connected");
 });
-app.use((0, cors_1.default)());
+app.use((0, cors_1.default)({
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    origin: true,
+}));
+app.options("*", (0, cors_1.default)());
 app.use(express_1.default.json());
 app.use("/api/students", student_routes_1.studentRouter);
 app.use("/api/users", user_routes_1.userRouter);

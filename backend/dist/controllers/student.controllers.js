@@ -35,7 +35,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteStudent = exports.updateStudent = exports.createStudent = exports.getStudent = exports.getStudents = void 0;
 const express_validator_1 = require("express-validator");
 const StudentService = __importStar(require("../services/student.services"));
-let jwtSecretKey = process.env.JWT_ACCESS_SECRET || "";
 // GET: List of all Students
 const getStudents = (request, response) => __awaiter(void 0, void 0, void 0, function* () {
     try {

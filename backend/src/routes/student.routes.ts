@@ -1,4 +1,4 @@
-import express, { request, response } from "express";
+import express from "express";
 import { body } from "express-validator";
 
 import * as StudentController from "../controllers/student.controllers";

@@ -1,10 +1,10 @@
-import { BrowserRouter, Route, Link, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./App.css";
-import { AuthContextProvider } from "./provider/authProvider";
 // import Routes from "./routes";
 import HomePage from "./containers/HomePage/HomePage";
 import LoginPage from "./containers/LoginPage/LoginPage";
 import UserPage from "./containers/UserPage/UserPage";
+import SelfRegitrationPage from "./containers/SelfRegistrationPage/SelfRegistrationPage";
 
 function App() {
   //   useEffect(() => {
@@ -19,14 +19,13 @@ function App() {
 
   return (
     <BrowserRouter>
-      <AuthContextProvider>
-        <Routes>
-          <Route path="/" element={<HomePage />}></Route>
-          <Route path="/users" element={<UserPage />}></Route>
-          <Route path="/login" element={<LoginPage />}></Route>
-          <Route path="*" element={<div>Page not found</div>}></Route>
-        </Routes>
-      </AuthContextProvider>
+      <Routes>
+        <Route path="/" element={<HomePage />}></Route>
+        <Route path="/users" element={<UserPage />}></Route>
+        <Route path="/login" element={<LoginPage />}></Route>
+        <Route path="/register" element={<SelfRegitrationPage />}></Route>
+        <Route path="*" element={<div>Page not found</div>}></Route>
+      </Routes>
     </BrowserRouter>
   );
 }

@@ -19,30 +19,31 @@ export const apiService = {
     axios.delete(`${API_BASE_URL}/users/${userId}/`),
 };
 
-export const register = (username: string, email: string, password: string) => {
-  return axios.post(API_BASE_URL + "/register/", {
+export const register = (
+  username: string,
+  email: string,
+  password: string,
+  role: string
+) => {
+  return axios.post(API_BASE_URL + "/users/", {
     username,
     email,
     password,
+    role,
   });
 };
 
-export const login = (email: string, password: string) => {
-  return axios
-    .post(API_BASE_URL + "/login/", {
-      email,
-      password,
-    })
-    .then((response) => {
-      if (response.data.accessToken) {
-        localStorage.setItem("user", JSON.stringify(response.data));
-      }
-      return response.data;
-    });
-};
-
-export const logout = () => {
-  localStorage.removeItem("user");
+export const login = async (email: string, password: string) => {
+  const response = await axios.post(API_BASE_URL + "/auth/login", {
+    email,
+    password,
+  });
+  console.log("success-1");
+  const apiResponse = await axios.get(API_BASE_URL + "/users/detail", {
+    withCredentials: true,
+  });
+  console.log("success-2", response);
+  return apiResponse;
 };
 
 export const getCurrentUser = () => {

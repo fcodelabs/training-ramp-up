@@ -6,7 +6,7 @@ import store from "../../../redux/store";
 test("renders StudentTable component", () => {
   render(
     <Provider store={store}>
-      <StudentTable visible={true} onDiscardClick={() => {}} />
+      <StudentTable isAdmin={true} visible={true} onDiscardClick={() => {}} />
     </Provider>
   );
 
@@ -22,7 +22,7 @@ test("renders StudentTable component", () => {
 test("handles form validation correctly", () => {
   render(
     <Provider store={store}>
-      <StudentTable visible={true} onDiscardClick={() => {}} />
+      <StudentTable isAdmin={true} visible={true} onDiscardClick={() => {}} />
     </Provider>
   );
 });

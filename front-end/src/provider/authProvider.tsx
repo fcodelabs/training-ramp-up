@@ -1,60 +1,51 @@
 import axios from "axios";
-import { createContext, ReactNode, useState } from "react";
+import { createContext, ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { setCurrentUser } from "../redux/currentUserReducer";
 
-interface UserProfile {
-  id: string;
-  username: string;
-  email: string;
-  role: string;
-}
+// interface UserProfile {
+//   id: string;
+//   userName: string;
+//   email: string;
+//   role: string;
+// }
 
-interface AuthContextProps {
-  user: UserProfile | null;
-  login: (payload: any) => Promise<void>;
-}
+// interface AuthContextProps {
+//   login: (payload: any) => Promise<void>;
+// }
 
-const AuthContext = createContext<AuthContextProps | undefined>(undefined);
+// const AuthContext = createContext<AuthContextProps | undefined>(undefined);
 
-interface AuthContextProviderProps {
-  children: ReactNode;
-}
+// interface AuthContextProviderProps {
+//   children: ReactNode;
+// }
 
-export const AuthContextProvider: React.FC<AuthContextProviderProps> = ({
-  children,
-}) => {
-  const [user, setUser] = useState<UserProfile | null>(() => {
-    let userProfile = localStorage.getItem("userProfile");
-    if (userProfile) {
-      return JSON.parse(userProfile);
-    }
-    return null;
-  });
+// export const AuthContextProvider: React.FC<AuthContextProviderProps> = ({
+//   children,
+// }) => {
+//   const dispatch = useDispatch();
+//   const navigate = useNavigate();
 
-  const navigate = useNavigate();
+//   // const login = async (payload: any): Promise<void> => {
+//   //   await axios.post("http://localhost:8000/api/auth/login/", payload, {
+//   //     withCredentials: true,
+//   //   });
 
-  const login = async (payload: any): Promise<void> => {
-    await axios.post("http://localhost:8000/api/auth/login/", payload, {
-      withCredentials: true,
-    });
+//   //   let apiResponse = await axios.get<UserProfile>(
+//   //     "http://localhost:8000/api/users/",
+//   //     {
+//   //       withCredentials: true,
+//   //     }
+//   //   );
 
-    let apiResponse = await axios.get<UserProfile>(
-      "http://localhost:8000/api/users/",
-      {
-        withCredentials: true,
-      }
-    );
+//   //   dispatch(setCurrentUser(apiResponse.data));
+//   //   navigate("/");
+//   // };
 
-    localStorage.setItem("userProfile", JSON.stringify(apiResponse.data));
-    setUser(apiResponse.data);
-    navigate("/");
-  };
+//   return (
+//     <AuthContext.Provider value={{ login }}>{children}</AuthContext.Provider>
+//   );
+// };
 
-  return (
-    <AuthContext.Provider value={{ user, login }}>
-      {children}
-    </AuthContext.Provider>
-  );
-};
-
-export default AuthContext;
+// export default AuthContext;

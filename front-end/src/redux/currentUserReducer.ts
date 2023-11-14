@@ -1,48 +1,49 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export interface CurrentUser {
-  id: number;
+  id: string;
   userName: string;
   role: string;
 }
 
-const initialState: CurrentUser[] = [];
+const initialState: CurrentUser = { id: "", userName: "", role: "" };
 const currentUsersSlice = createSlice({
   name: "users",
   initialState,
   reducers: {
-    fetchCurrentUsers: (state) => {
+    fetchCurrentUser: (state) => {
       return state;
     },
-    addCurrentUser: (state, action: PayloadAction<CurrentUser>) => {
-      state.push(action.payload);
+    setCurrentUser: (state, action: PayloadAction<CurrentUser>) => {
+      state = action.payload;
+      return state;
     },
     updateCurrentUser: (state, action: PayloadAction<CurrentUser>) => {
-      const userIndex = state.findIndex(
-        (user) => user.id === action.payload.id
-      );
-      if (userIndex !== -1) {
-        state[userIndex] = action.payload;
+      if (state && state.id === action.payload.id) {
+        state = action.payload;
+        return state;
       }
+      return state;
     },
-    deleteCurrentUser: (state, action: PayloadAction<number>) => {
-      return state.filter((user) => user.id !== action.payload);
+    clearCurrentUser: (state) => {
+      state = { id: "", userName: "", role: "" };
+      return state;
     },
   },
 });
 
 //Actions
 export const {
-  fetchCurrentUsers,
-  addCurrentUser,
+  fetchCurrentUser,
+  setCurrentUser,
   updateCurrentUser,
-  deleteCurrentUser,
+  clearCurrentUser,
 } = currentUsersSlice.actions;
 
 //Selectors
-export const selectUsers = (state: { userReducer: CurrentUser[] }) =>
+export const selectUser = (state: { userReducer: CurrentUser }) =>
   state.userReducer;
 
 //Reducer
-const CurrentUsersReducer = currentUsersSlice.reducer;
-export default CurrentUsersReducer;
+const CurrentUserReducer = currentUsersSlice.reducer;
+export default CurrentUserReducer;

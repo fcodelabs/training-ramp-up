@@ -33,6 +33,14 @@ const getUser = (id) => __awaiter(void 0, void 0, void 0, function* () {
         where: {
             id,
         },
+        select: {
+            id: true,
+            username: true,
+            email: true,
+            role: true,
+            createdAt: true,
+            updatedAt: true,
+        },
     });
 });
 exports.getUser = getUser;

@@ -35,7 +35,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.refresh = exports.login = void 0;
+exports.refresh = exports.logout = exports.login = void 0;
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const UserServices = __importStar(require("../services/user.services"));
 const AuthService = __importStar(require("../services/auth.service"));
@@ -67,6 +67,7 @@ const login = (request, response) => __awaiter(void 0, void 0, void 0, function*
             httpOnly: true,
             maxAge: 10 * 60 * 1000,
         });
+        console.log("cookies");
         return response.status(200).json({ message: "Success login" });
     }
     catch (error) {
@@ -74,6 +75,40 @@ const login = (request, response) => __awaiter(void 0, void 0, void 0, function*
     }
 });
 exports.login = login;
+const logout = (request, response) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
+    try {
+        const list = {};
+        const cookieHeader = (_a = request.headers) === null || _a === void 0 ? void 0 : _a.cookie;
+        if (!cookieHeader)
+            return list;
+        cookieHeader.split(`;`).forEach(function (cookie) {
+            let [name, ...rest] = cookie.split(`=`);
+            name = name === null || name === void 0 ? void 0 : name.trim();
+            if (!name)
+                return;
+            const value = rest.join(`=`).trim();
+            if (!value)
+                return;
+            list[name] = decodeURIComponent(value);
+        });
+        const token = list["refreshToken"];
+        try {
+            const decodedToken = jsonwebtoken_1.default.verify(token, refreshSecret);
+            AuthService.deleteToken(decodedToken.id);
+            response.clearCookie("accessToken");
+            response.clearCookie("refreshToken");
+            return response.status(200).json({ message: "Logged out" });
+        }
+        catch (_b) {
+            return response.status(401).json("Refresh token is not valid");
+        }
+    }
+    catch (_c) {
+        return response.status(401).json("Refresh token is not valid");
+    }
+});
+exports.logout = logout;
 const refresh = (request, response) => __awaiter(void 0, void 0, void 0, function* () {
     const token = request.cookies.refreshToken;
     const verified = jsonwebtoken_1.default.verify(token, refreshSecret);
