@@ -1,22 +1,25 @@
 import axios from "axios";
 
 const API_BASE_URL = "http://127.0.0.1:8000/api";
+const BaseInstance = axios.create({
+  baseURL: "http://127.0.0.1:8000/api",
+  withCredentials: true,
+});
 
 export const apiService = {
-  getStudents: () => axios.get(`${API_BASE_URL}/students/`),
+  getStudents: () => BaseInstance.get(`/students/`),
   addStudent: (studentData: any) =>
-    axios.post(`${API_BASE_URL}/students/`, studentData),
+    BaseInstance.post(`/students/`, studentData),
   updateStudent: (studentData: any) =>
-    axios.put(`${API_BASE_URL}/students/${studentData.id}/`, studentData),
+    BaseInstance.put(`/students/${studentData.id}/`, studentData),
   deleteStudent: (studentId: number) =>
-    axios.delete(`${API_BASE_URL}/students/${studentId}/`),
+    BaseInstance.delete(`/students/${studentId}/`),
 
-  getUsers: () => axios.get(`${API_BASE_URL}/users/`),
-  addUser: (userData: any) => axios.post(`${API_BASE_URL}/users/`, userData),
+  getUsers: () => BaseInstance.get(`/users/`),
+  addUser: (userData: any) => BaseInstance.post(`/users/`, userData),
   updateUser: (userData: any) =>
-    axios.put(`${API_BASE_URL}/users/${userData.id}/`, userData),
-  deleteUser: (userId: number) =>
-    axios.delete(`${API_BASE_URL}/users/${userId}/`),
+    BaseInstance.put(`/users/${userData.id}/`, userData),
+  deleteUser: (userId: number) => BaseInstance.delete(`/users/${userId}/`),
 };
 
 export const register = (
@@ -34,16 +37,18 @@ export const register = (
 };
 
 export const login = async (email: string, password: string) => {
-  const response = await axios.post(API_BASE_URL + "/auth/login", {
+  await BaseInstance.post("/auth/login", {
     email,
     password,
   });
   console.log("success-1");
-  const apiResponse = await axios.get(API_BASE_URL + "/users/detail", {
-    withCredentials: true,
-  });
-  console.log("success-2", response);
+  const apiResponse = await BaseInstance.get("/users/detail");
+  console.log("success-2", apiResponse);
   return apiResponse;
+};
+
+export const logout = async () => {
+  await BaseInstance.post("/auth/logout");
 };
 
 export const getCurrentUser = () => {

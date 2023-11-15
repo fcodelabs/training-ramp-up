@@ -63,6 +63,11 @@ const AuthenticationMiddleware = (allowedUser) => (request, response, next) => _
             return response.status(401).json({ message: "Unauthorized access" });
         try {
             const decodedToken = jsonwebtoken_1.default.verify(token, accessSecret);
+            if (decodedToken.userRole === "ADMIN") {
+                if (allowedUser === "USER") {
+                    return next();
+                }
+            }
             if (decodedToken.userRole === allowedUser) {
                 return next();
             }

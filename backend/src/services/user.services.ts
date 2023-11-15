@@ -47,12 +47,13 @@ export const createUser = async (
   user: Omit<User, "id">
 ): Promise<Omit<User, "password">> => {
   user.password = bcrypt.hashSync(user.password, 12);
-  const { username, email, password } = user;
+  const { username, email, role, password } = user;
   return db.user.create({
     data: {
       username,
       email,
       password,
+      role,
     },
     select: {
       id: true,

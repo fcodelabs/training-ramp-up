@@ -1,27 +1,23 @@
-import axios from "axios";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { clearCurrentUser } from "../../redux/currentUserReducer";
-
-const API_BASE_URL = "http://127.0.0.1:8000/api";
+import { logout } from "../../saga/apiService";
 
 const LogoutButton = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const logout = async () => {
-    try {
-      await axios.post(API_BASE_URL + "/logout/");
-      dispatch(clearCurrentUser());
-      navigate("/login");
-    } catch (error) {
-      console.error("Logout error:", error);
-    }
+  const handleLogout = async () => {
+    await logout().catch((error: any) => {
+      console.error("Login error:", error);
+    });
+    dispatch(clearCurrentUser());
+    navigate("/login");
   };
 
   return (
     <div>
-      <button onClick={logout}>Logout</button>
+      <button onClick={handleLogout}>Logout</button>
     </div>
   );
 };

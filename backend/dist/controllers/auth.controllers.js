@@ -50,7 +50,7 @@ const login = (request, response) => __awaiter(void 0, void 0, void 0, function*
         return response.status(401).json({ message: "Invalid email or password" });
     }
     const accessToken = jsonwebtoken_1.default.sign({ userId: user.id, userRole: user.role }, accessSecret, {
-        expiresIn: "10m",
+        expiresIn: "1d",
     });
     const id = uuidv4();
     const refreshToken = jsonwebtoken_1.default.sign({ id: id, userId: user.id, userRole: user.role }, refreshSecret, {
@@ -62,10 +62,14 @@ const login = (request, response) => __awaiter(void 0, void 0, void 0, function*
         response.cookie("refreshToken", refreshToken, {
             httpOnly: true,
             maxAge: 24 * 60 * 60 * 1000,
+            sameSite: "none",
+            secure: true,
         });
         response.cookie("accessToken", accessToken, {
             httpOnly: true,
-            maxAge: 10 * 60 * 1000,
+            maxAge: 10 * 60 * 60 * 1000,
+            sameSite: "none",
+            secure: true,
         });
         console.log("cookies");
         return response.status(200).json({ message: "Success login" });

@@ -31,6 +31,11 @@ export const AuthenticationMiddleware =
         const decodedToken = jwt.verify(token, accessSecret) as {
           userRole: string;
         };
+        if (decodedToken.userRole === "ADMIN") {
+          if (allowedUser === "USER") {
+            return next();
+          }
+        }
         if (decodedToken.userRole === allowedUser) {
           return next();
         } else {

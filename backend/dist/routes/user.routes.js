@@ -32,11 +32,9 @@ const express_validator_1 = require("express-validator");
 const UserController = __importStar(require("../controllers/user.controllers"));
 const auth_middleware_1 = require("../middlewares/auth.middleware");
 exports.userRouter = express_1.default.Router();
-exports.userRouter.get("/", UserController.getUsers);
+exports.userRouter.get("/", (0, auth_middleware_1.AuthenticationMiddleware)("ADMIN"), UserController.getUsers);
 exports.userRouter.get("/detail", UserController.getUserdetail);
 exports.userRouter.get("/:id", (0, auth_middleware_1.AuthenticationMiddleware)("ADMIN"), UserController.getUser);
 exports.userRouter.post("/", (0, express_validator_1.body)("username").isString(), (0, express_validator_1.body)("email").isString(), (0, express_validator_1.body)("password").isString(), (0, express_validator_1.body)("role").isString(), UserController.createUser);
-exports.userRouter.put("/:id", 
-// AuthenticationMiddleware("ADMIN"),
-(0, express_validator_1.body)("username").isString(), (0, express_validator_1.body)("email").isString(), (0, express_validator_1.body)("password").isString(), (0, express_validator_1.body)("role").isString(), UserController.updateUser);
-exports.userRouter.delete("/:id", UserController.deleteUser);
+exports.userRouter.put("/:id", (0, auth_middleware_1.AuthenticationMiddleware)("ADMIN"), (0, express_validator_1.body)("username").isString(), (0, express_validator_1.body)("email").isString(), (0, express_validator_1.body)("password").isString(), (0, express_validator_1.body)("role").isString(), UserController.updateUser);
+exports.userRouter.delete("/:id", (0, auth_middleware_1.AuthenticationMiddleware)("ADMIN"), UserController.deleteUser);

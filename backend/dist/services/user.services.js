@@ -46,12 +46,13 @@ const getUser = (id) => __awaiter(void 0, void 0, void 0, function* () {
 exports.getUser = getUser;
 const createUser = (user) => __awaiter(void 0, void 0, void 0, function* () {
     user.password = bcrypt_1.default.hashSync(user.password, 12);
-    const { username, email, password } = user;
+    const { username, email, role, password } = user;
     return db_server_1.db.user.create({
         data: {
             username,
             email,
             password,
+            role,
         },
         select: {
             id: true,

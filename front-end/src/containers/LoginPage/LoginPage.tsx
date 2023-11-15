@@ -21,12 +21,14 @@ const LoginPage = () => {
 
   const handleLogin = async () => {
     console.log("email", email, "password", password);
-    const user = login(email, password).catch((error: any) => {
+    const user = await login(email, password).catch((error: any) => {
       console.error("Login error:", error);
     });
     console.log("user", user);
-    // dispatch(setCurrentUser(user));
-    navigate("/");
+    if (user) {
+      dispatch(setCurrentUser(user.data));
+      navigate("/");
+    }
   };
 
   return (

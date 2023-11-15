@@ -18,7 +18,6 @@ userRouter.get(
 
 userRouter.post(
   "/",
-  AuthenticationMiddleware("ADMIN"),
   body("username").isString(),
   body("email").isString(),
   body("password").isString(),
