@@ -1,7 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 import * as AuthController from "../controllers/auth.controllers";
-const cookieParser = require("cookie-parser");
 import * as dotenv from "dotenv";
 
 dotenv.config();

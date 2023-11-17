@@ -6,16 +6,21 @@ import { AuthenticationMiddleware } from "../middlewares/auth.middleware";
 
 export const studentRouter = express.Router();
 
-studentRouter.get("/", StudentController.getStudents);
+studentRouter.get(
+  "/",
+  AuthenticationMiddleware("USER"),
+  StudentController.getStudents
+);
 
 studentRouter.get(
   "/:id",
-  AuthenticationMiddleware("ADMIN"),
+  AuthenticationMiddleware("USER"),
   StudentController.getStudent
 );
 
 studentRouter.post(
   "/",
+  AuthenticationMiddleware("ADMIN"),
   body("name").isString(),
   body("gender").isString(),
   body("address").isString(),
