@@ -4,20 +4,18 @@ const SOCKET_SERVER_URL = "http://localhost:8000/";
 
 const socket = io(SOCKET_SERVER_URL);
 
-socket.on("connect", () => {
-  console.log("Connected to the WebSocket server");
-});
-
-socket.on("notification", (message: string) => {
-  console.log("Received notification:", message);
-});
-
 const WebSocketService = {
   connect: () => {
     socket.connect();
   },
   disconnect: () => {
     socket.disconnect();
+  },
+  onNotification: <T>(callback: (message: T) => void): void => {
+    socket.on("Notification", callback);
+  },
+  offNotification: <T>(callback: (message: T) => void): void => {
+    socket.off("Notification", callback);
   },
 };
 

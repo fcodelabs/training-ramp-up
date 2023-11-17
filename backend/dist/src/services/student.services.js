@@ -10,83 +10,49 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteStudent = exports.updateStudent = exports.createStudent = exports.getStudent = exports.listStudents = void 0;
-const db_server_1 = require("../utils/db.server");
+const student_1 = require("../entity/student");
 const listStudents = () => __awaiter(void 0, void 0, void 0, function* () {
-    return db_server_1.db.student.findMany({
-        select: {
-            id: true,
-            name: true,
-            gender: true,
-            address: true,
-            mobileNo: true,
-            dateOfBirth: true,
-            age: true,
-        },
-    });
+    return yield student_1.Student.find();
 });
 exports.listStudents = listStudents;
 const getStudent = (id) => __awaiter(void 0, void 0, void 0, function* () {
-    return db_server_1.db.student.findUnique({
-        where: {
-            id,
-        },
+    return student_1.Student.findOneBy({
+        id: id,
     });
 });
 exports.getStudent = getStudent;
 const createStudent = (student) => __awaiter(void 0, void 0, void 0, function* () {
     const { name, gender, address, mobileNo, dateOfBirth, age } = student;
-    return db_server_1.db.student.create({
-        data: {
-            name,
-            gender,
-            address,
-            mobileNo,
-            dateOfBirth,
-            age,
-        },
-        select: {
-            id: true,
-            name: true,
-            gender: true,
-            address: true,
-            mobileNo: true,
-            dateOfBirth: true,
-            age: true,
-        },
-    });
+    const newStudent = new student_1.Student();
+    newStudent.name = name;
+    newStudent.gender = gender;
+    newStudent.address = address;
+    newStudent.mobileNo = mobileNo;
+    newStudent.dateOfBirth = dateOfBirth;
+    newStudent.age = age;
+    return newStudent.save();
 });
 exports.createStudent = createStudent;
 const updateStudent = (student, id) => __awaiter(void 0, void 0, void 0, function* () {
     const { name, gender, address, mobileNo, dateOfBirth, age } = student;
-    return db_server_1.db.student.update({
-        where: {
-            id,
-        },
-        data: {
-            name,
-            gender,
-            address,
-            mobileNo,
-            dateOfBirth,
-            age,
-        },
-        select: {
-            id: true,
-            name: true,
-            gender: true,
-            address: true,
-            mobileNo: true,
-            dateOfBirth: true,
-            age: true,
-        },
-    });
+    const studentToUpdate = yield student_1.Student.findOneBy({ id: id });
+    if (!studentToUpdate) {
+        throw new Error("Student not found");
+    }
+    studentToUpdate.name = name;
+    studentToUpdate.gender = gender;
+    studentToUpdate.address = address;
+    studentToUpdate.mobileNo = mobileNo;
+    studentToUpdate.dateOfBirth = dateOfBirth;
+    studentToUpdate.age = age;
+    return studentToUpdate.save();
 });
 exports.updateStudent = updateStudent;
 const deleteStudent = (id) => __awaiter(void 0, void 0, void 0, function* () {
-    yield db_server_1.db.student.delete({
-        where: {
-            id,
-        },
-    });
+    const studentToDelete = yield student_1.Student.findOneBy({ id: id });
+    if (!studentToDelete) {
+        throw new Error("Student not found");
+    }
+    studentToDelete.remove();
 });
 exports.deleteStudent = deleteStudent;

@@ -24,7 +24,6 @@ const SelfRegitrationPage = () => {
   const handleRegister = () => {
     register(username, email, password, role)
       .then((data) => {
-        console.log("created:", data);
         navigate("/login");
       })
       .catch((error) => {

@@ -2,15 +2,17 @@ import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 import * as AuthController from "../controllers/auth.controllers";
 const cookieParser = require("cookie-parser");
+import * as dotenv from "dotenv";
 
+dotenv.config();
 const accessSecret: string = process.env.JWT_ACCESS_SECRET || "";
 interface ParsedCookies {
   [key: string]: string;
 }
+
 export const AuthenticationMiddleware =
   (allowedUser: string) =>
   async (request: Request, response: Response, next: NextFunction) => {
-    console.log("in auth middleware");
     try {
       const list: ParsedCookies = {};
       const cookieHeader = request.headers?.cookie;

@@ -1,6 +1,9 @@
+import { error } from "console";
+import { Student } from "../entity/student";
+import { User } from "../entity/user";
 import { db } from "../utils/db.server";
 
-export type Student = {
+export type StudentObject = {
   id: number;
   name: string;
   gender: string;
@@ -10,86 +13,52 @@ export type Student = {
   age: number;
 };
 
-export const listStudents = async (): Promise<Student[]> => {
-  return db.student.findMany({
-    select: {
-      id: true,
-      name: true,
-      gender: true,
-      address: true,
-      mobileNo: true,
-      dateOfBirth: true,
-      age: true,
-    },
-  });
+export const listStudents = async (): Promise<StudentObject[]> => {
+  return await Student.find();
 };
 
-export const getStudent = async (id: number): Promise<Student | null> => {
-  return db.student.findUnique({
-    where: {
-      id,
-    },
+export const getStudent = async (id: number): Promise<StudentObject | null> => {
+  return Student.findOneBy({
+    id: id,
   });
 };
 
 export const createStudent = async (
-  student: Omit<Student, "id">
-): Promise<Student> => {
+  student: Omit<StudentObject, "id">
+): Promise<StudentObject> => {
   const { name, gender, address, mobileNo, dateOfBirth, age } = student;
-  return db.student.create({
-    data: {
-      name,
-      gender,
-      address,
-      mobileNo,
-      dateOfBirth,
-      age,
-    },
-    select: {
-      id: true,
-      name: true,
-      gender: true,
-      address: true,
-      mobileNo: true,
-      dateOfBirth: true,
-      age: true,
-    },
-  });
+  const newStudent = new Student();
+  newStudent.name = name;
+  newStudent.gender = gender;
+  newStudent.address = address;
+  newStudent.mobileNo = mobileNo;
+  newStudent.dateOfBirth = dateOfBirth;
+  newStudent.age = age;
+  return newStudent.save();
 };
 
 export const updateStudent = async (
-  student: Omit<Student, "id">,
+  student: Omit<StudentObject, "id">,
   id: number
-): Promise<Student> => {
+): Promise<StudentObject> => {
   const { name, gender, address, mobileNo, dateOfBirth, age } = student;
-  return db.student.update({
-    where: {
-      id,
-    },
-    data: {
-      name,
-      gender,
-      address,
-      mobileNo,
-      dateOfBirth,
-      age,
-    },
-    select: {
-      id: true,
-      name: true,
-      gender: true,
-      address: true,
-      mobileNo: true,
-      dateOfBirth: true,
-      age: true,
-    },
-  });
+  const studentToUpdate = await Student.findOneBy({ id: id });
+  if (!studentToUpdate) {
+    throw new Error("Student not found");
+  }
+  studentToUpdate.name = name;
+  studentToUpdate.gender = gender;
+  studentToUpdate.address = address;
+  studentToUpdate.mobileNo = mobileNo;
+  studentToUpdate.dateOfBirth = dateOfBirth;
+  studentToUpdate.age = age;
+  return studentToUpdate.save();
 };
 
 export const deleteStudent = async (id: number): Promise<void> => {
-  await db.student.delete({
-    where: {
-      id,
-    },
-  });
+  const studentToDelete = await Student.findOneBy({ id: id });
+  if (!studentToDelete) {
+    throw new Error("Student not found");
+  }
+  studentToDelete.remove();
 };

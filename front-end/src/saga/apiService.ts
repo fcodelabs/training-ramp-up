@@ -41,9 +41,7 @@ export const login = async (email: string, password: string) => {
     email,
     password,
   });
-  console.log("success-1");
   const apiResponse = await BaseInstance.get("/users/detail");
-  console.log("success-2", apiResponse);
   return apiResponse;
 };
 

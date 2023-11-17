@@ -6,13 +6,17 @@ import { RootState } from "../../redux/store";
 import { useNavigate } from "react-router-dom";
 import LogoutButton from "../../components/LogoutButton/LogoutButton";
 import CustomizeButton from "../../components/Button/Button";
+import { NotifiactionComponent } from "../../components/Notification/Notification";
 
-const HomePage = () => {
+interface NotificationProps {
+  notifications: string[];
+}
+
+const HomePage = ({ notifications }: NotificationProps) => {
   const navigate = useNavigate();
   const [visible, setVisible] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const currentUser = useSelector((state: RootState) => state.currentUser);
-  console.log("currentUser", currentUser);
 
   useEffect(() => {
     if (currentUser.role === "") {
@@ -50,6 +54,7 @@ const HomePage = () => {
           isAdmin={isAdmin}
         />
         <LogoutButton />
+        <NotifiactionComponent notifications={notifications} />
       </>
     );
   };

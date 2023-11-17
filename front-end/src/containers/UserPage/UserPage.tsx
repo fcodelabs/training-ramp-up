@@ -6,8 +6,13 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 import LogoutButton from "../../components/LogoutButton/LogoutButton";
 import CustomizeButton from "../../components/Button/Button";
+import { NotifiactionComponent } from "../../components/Notification/Notification";
 
-const UserPage = () => {
+interface NotificationProps {
+  notifications: string[];
+}
+
+const UserPage = ({ notifications }: NotificationProps) => {
   const navigate = useNavigate();
   const [visible, setVisible] = useState(false);
   const currentUser = useSelector((state: RootState) => state.currentUser);
@@ -37,6 +42,7 @@ const UserPage = () => {
       <AddNewButton label="Add New" onClick={() => setVisible(!visible)} />
       <UserTable visible={visible} onDiscardClick={() => setVisible(false)} />
       <LogoutButton />
+      <NotifiactionComponent notifications={notifications} />
     </div>
   );
 };

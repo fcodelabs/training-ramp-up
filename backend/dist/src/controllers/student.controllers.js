@@ -35,6 +35,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteStudent = exports.updateStudent = exports.createStudent = exports.getStudent = exports.getStudents = void 0;
 const express_validator_1 = require("express-validator");
 const StudentService = __importStar(require("../services/student.services"));
+const __1 = require("..");
 // GET: List of all Students
 const getStudents = (request, response) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -70,6 +71,9 @@ const createStudent = (request, response) => __awaiter(void 0, void 0, void 0, f
     try {
         const student = request.body;
         const newStudent = yield StudentService.createStudent(student);
+        __1.io.emit("Notification", {
+            message: "A new student has been created",
+        }, console.log("A new student has been created"));
         return response.status(201).json(newStudent);
     }
     catch (error) {
@@ -87,6 +91,9 @@ const updateStudent = (request, response) => __awaiter(void 0, void 0, void 0, f
     try {
         const student = request.body;
         const updateStudent = yield StudentService.updateStudent(student, id);
+        __1.io.emit("Notification", {
+            message: "Student has been updated",
+        }, console.log("Student has been updated"));
         return response.status(200).json(updateStudent);
     }
     catch (error) {
@@ -99,6 +106,9 @@ const deleteStudent = (request, response) => __awaiter(void 0, void 0, void 0, f
     const id = parseInt(request.params.id, 10);
     try {
         yield StudentService.deleteStudent(id);
+        __1.io.emit("Notification", {
+            message: "Student has been deleted",
+        }, console.log("Student has been deleted"));
         return response.status(204).json("Student has been successfully deleted");
     }
     catch (error) {

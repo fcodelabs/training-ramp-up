@@ -39,10 +39,12 @@ exports.refresh = exports.logout = exports.login = void 0;
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const UserServices = __importStar(require("../services/user.services"));
 const AuthService = __importStar(require("../services/auth.service"));
+const dotenv = __importStar(require("dotenv"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const { v4: uuidv4 } = require("uuid");
+dotenv.config();
 const accessSecret = process.env.JWT_ACCESS_SECRET || "";
-const refreshSecret = process.env.JWT_ACCESS_SECRET || "";
+const refreshSecret = process.env.JWT_REFRESH_SECRET || "";
 const login = (request, response) => __awaiter(void 0, void 0, void 0, function* () {
     const { email, password } = request.body;
     const user = yield UserServices.findUserByEmail(email);
@@ -56,6 +58,7 @@ const login = (request, response) => __awaiter(void 0, void 0, void 0, function*
     const refreshToken = jsonwebtoken_1.default.sign({ id: id, userId: user.id, userRole: user.role }, refreshSecret, {
         expiresIn: "1d",
     });
+    console.log("refreshToken", refreshToken);
     try {
         const tokenObject = { id: id, token: refreshToken, userId: user.id };
         yield AuthService.createToken(tokenObject);
@@ -71,7 +74,6 @@ const login = (request, response) => __awaiter(void 0, void 0, void 0, function*
             sameSite: "none",
             secure: true,
         });
-        console.log("cookies");
         return response.status(200).json({ message: "Success login" });
     }
     catch (error) {

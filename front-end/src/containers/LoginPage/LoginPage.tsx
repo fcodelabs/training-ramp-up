@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setCurrentUser } from "../../redux/currentUserReducer";
@@ -20,11 +20,9 @@ const LoginPage = () => {
   };
 
   const handleLogin = async () => {
-    console.log("email", email, "password", password);
     const user = await login(email, password).catch((error: any) => {
       console.error("Login error:", error);
     });
-    console.log("user", user);
     if (user) {
       dispatch(setCurrentUser(user.data));
       navigate("/");

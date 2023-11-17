@@ -69,12 +69,9 @@ exports.getUser = getUser;
 const accessSecret = process.env.JWT_ACCESS_SECRET || "";
 const getUserdetail = (request, response) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
-    console.log("start");
     try {
-        console.log("headers", request.headers);
         const list = {};
         const cookieHeader = (_a = request.headers) === null || _a === void 0 ? void 0 : _a.cookie;
-        console.log("cookieHeader", cookieHeader);
         if (cookieHeader == undefined)
             return response.status(401).json({ message: "Unauthorized access" });
         cookieHeader.split(`;`).forEach(function (cookie) {
@@ -87,14 +84,12 @@ const getUserdetail = (request, response) => __awaiter(void 0, void 0, void 0, f
                 return;
             list[name] = decodeURIComponent(value);
         });
-        console.log("list", list);
         const token = list["accessToken"];
         if (!token)
             return response.status(401).json({ message: "Unauthorized access" });
         try {
             const decodedToken = jsonwebtoken_1.default.verify(token, accessSecret);
             const id = decodedToken.userId;
-            console.log("id", id);
             try {
                 const user = yield UserService.getUser(id);
                 if (user) {
@@ -118,7 +113,6 @@ exports.getUserdetail = getUserdetail;
 // POST: Create an User
 const createUser = (request, response) => __awaiter(void 0, void 0, void 0, function* () {
     const errors = (0, express_validator_1.validationResult)(request);
-    console.log(request.body);
     if (!errors.isEmpty()) {
         return response.status(400).json({ errors: errors.array() });
     }

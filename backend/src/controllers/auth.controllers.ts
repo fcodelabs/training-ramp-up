@@ -2,13 +2,14 @@ import { Request, Response } from "express";
 import bcrypt from "bcrypt";
 import * as UserServices from "../services/user.services";
 import * as AuthService from "../services/auth.service";
+import * as dotenv from "dotenv";
 
 import jwt from "jsonwebtoken";
-import { cookie } from "express-validator";
 const { v4: uuidv4 } = require("uuid");
+dotenv.config();
 
 const accessSecret: string = process.env.JWT_ACCESS_SECRET || "";
-const refreshSecret: string = process.env.JWT_ACCESS_SECRET || "";
+const refreshSecret: string = process.env.JWT_REFRESH_SECRET || "";
 
 export const login = async (request: Request, response: Response) => {
   const { email, password } = request.body;
@@ -31,6 +32,7 @@ export const login = async (request: Request, response: Response) => {
       expiresIn: "1d",
     }
   );
+  console.log("refreshToken", refreshToken);
 
   try {
     const tokenObject = { id: id, token: refreshToken, userId: user.id };
@@ -47,7 +49,6 @@ export const login = async (request: Request, response: Response) => {
       sameSite: "none",
       secure: true,
     });
-    console.log("cookies");
     return response.status(200).json({ message: "Success login" });
   } catch (error: any) {
     return response.status(500).json(error.message);

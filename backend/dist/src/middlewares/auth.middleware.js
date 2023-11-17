@@ -39,10 +39,11 @@ exports.AuthenticationMiddleware = void 0;
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const AuthController = __importStar(require("../controllers/auth.controllers"));
 const cookieParser = require("cookie-parser");
+const dotenv = __importStar(require("dotenv"));
+dotenv.config();
 const accessSecret = process.env.JWT_ACCESS_SECRET || "";
 const AuthenticationMiddleware = (allowedUser) => (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
-    console.log("in auth middleware");
     try {
         const list = {};
         const cookieHeader = (_a = request.headers) === null || _a === void 0 ? void 0 : _a.cookie;

@@ -35,12 +35,9 @@ interface ParsedCookies {
 }
 
 export const getUserdetail = async (request: Request, response: Response) => {
-  console.log("start");
   try {
-    console.log("headers", request.headers);
     const list: ParsedCookies = {};
     const cookieHeader = request.headers?.cookie;
-    console.log("cookieHeader", cookieHeader);
     if (cookieHeader == undefined)
       return response.status(401).json({ message: "Unauthorized access" });
     cookieHeader.split(`;`).forEach(function (cookie) {
@@ -51,7 +48,6 @@ export const getUserdetail = async (request: Request, response: Response) => {
       if (!value) return;
       list[name] = decodeURIComponent(value);
     });
-    console.log("list", list);
     const token = list["accessToken"];
     if (!token)
       return response.status(401).json({ message: "Unauthorized access" });
@@ -60,7 +56,6 @@ export const getUserdetail = async (request: Request, response: Response) => {
         userId: string;
       };
       const id: string = decodedToken.userId;
-      console.log("id", id);
       try {
         const user = await UserService.getUser(id);
         if (user) {
@@ -81,7 +76,6 @@ export const getUserdetail = async (request: Request, response: Response) => {
 // POST: Create an User
 export const createUser = async (request: Request, response: Response) => {
   const errors = validationResult(request);
-  console.log(request.body);
   if (!errors.isEmpty()) {
     return response.status(400).json({ errors: errors.array() });
   }
