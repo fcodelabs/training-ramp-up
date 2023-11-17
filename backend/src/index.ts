@@ -7,7 +7,7 @@ import { Server } from "socket.io";
 import { studentRouter } from "./routes/student.routes";
 import { userRouter } from "./routes/user.routes";
 import { authRouter } from "./routes/auth.routes";
-import { myDataSource } from "../app-data-source";
+import { myDataSource } from "./utils/app-data-source";
 
 dotenv.config();
 

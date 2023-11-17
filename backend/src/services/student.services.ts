@@ -1,7 +1,4 @@
-import { error } from "console";
 import { Student } from "../entity/student";
-import { User } from "../entity/user";
-import { db } from "../utils/db.server";
 
 export type StudentObject = {
   id: number;
