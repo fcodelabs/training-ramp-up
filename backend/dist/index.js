@@ -26,7 +26,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.io = void 0;
+exports.io = exports.app = void 0;
 const dotenv = __importStar(require("dotenv"));
 const express_1 = __importDefault(require("express"));
 const cors_1 = __importDefault(require("cors"));
@@ -49,8 +49,8 @@ app_data_source_1.myDataSource
     .catch((err) => {
     console.error("Error during Data Source initialization:", err);
 });
-const app = (0, express_1.default)();
-const server = http_1.default.createServer(app);
+exports.app = (0, express_1.default)();
+const server = http_1.default.createServer(exports.app);
 exports.io = new socket_io_1.Server(server, {
     cors: { origin: "http://localhost:3000" },
 });
@@ -60,15 +60,15 @@ exports.io.on("connection", (socket) => {
         console.log("user disconnected");
     });
 });
-app.use((0, cors_1.default)({
+exports.app.use((0, cors_1.default)({
     credentials: true,
     origin: true,
 }));
-app.options("*", (0, cors_1.default)());
-app.use(express_1.default.json());
-app.use("/api/students", student_routes_1.studentRouter);
-app.use("/api/users", user_routes_1.userRouter);
-app.use("/api/auth", auth_routes_1.authRouter);
+exports.app.options("*", (0, cors_1.default)());
+exports.app.use(express_1.default.json());
+exports.app.use("/api/students", student_routes_1.studentRouter);
+exports.app.use("/api/users", user_routes_1.userRouter);
+exports.app.use("/api/auth", auth_routes_1.authRouter);
 server.listen(PORT, () => {
     console.log(`Listening on port ${PORT}`);
 });

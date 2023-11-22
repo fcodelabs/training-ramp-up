@@ -38,7 +38,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.AuthenticationMiddleware = void 0;
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const AuthController = __importStar(require("../controllers/auth.controllers"));
-const cookieParser = require("cookie-parser");
 const dotenv = __importStar(require("dotenv"));
 dotenv.config();
 const accessSecret = process.env.JWT_ACCESS_SECRET || "";

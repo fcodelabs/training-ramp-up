@@ -26,7 +26,7 @@ myDataSource
     console.error("Error during Data Source initialization:", err);
   });
 
-const app = express();
+export const app = express();
 
 const server = http.createServer(app);
 export const io = new Server(server, {

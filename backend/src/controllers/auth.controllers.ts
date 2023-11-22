@@ -32,7 +32,6 @@ export const login = async (request: Request, response: Response) => {
       expiresIn: "1d",
     }
   );
-  console.log("refreshToken", refreshToken);
 
   try {
     const tokenObject = { id: id, token: refreshToken, userId: user.id };

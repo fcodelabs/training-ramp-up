@@ -58,7 +58,6 @@ const login = (request, response) => __awaiter(void 0, void 0, void 0, function*
     const refreshToken = jsonwebtoken_1.default.sign({ id: id, userId: user.id, userRole: user.role }, refreshSecret, {
         expiresIn: "1d",
     });
-    console.log("refreshToken", refreshToken);
     try {
         const tokenObject = { id: id, token: refreshToken, userId: user.id };
         yield AuthService.createToken(tokenObject);

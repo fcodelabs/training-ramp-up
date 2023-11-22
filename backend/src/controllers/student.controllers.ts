@@ -8,7 +8,6 @@ import { io } from "..";
 export const getStudents = async (request: Request, response: Response) => {
   try {
     const students = await StudentService.listStudents();
-
     return response.status(200).json(students);
   } catch (error: any) {
     return response.status(500).json(error.message);

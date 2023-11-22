@@ -6,18 +6,25 @@ import UserPage from "./containers/UserPage/UserPage";
 import SelfRegitrationPage from "./containers/SelfRegistrationPage/SelfRegistrationPage";
 import { useEffect, useState } from "react";
 import WebSocketService from "./websocket/webSocket";
+import { useDispatch } from "react-redux";
+import { fetchStudents } from "./redux/studentReducer";
+import { fetchUsers } from "./redux/userReducer";
 
-interface NotificationProp {
+interface Notification {
   message: string;
 }
 
 function App() {
+  const dispatch = useDispatch();
   const [notifications, setNotifications] = useState<string[]>([]);
+
   useEffect(() => {
+    dispatch(fetchStudents());
+    dispatch(fetchUsers());
     WebSocketService.connect();
     console.log("Connect to the server");
 
-    const notificationListener = (message: NotificationProp) => {
+    const notificationListener = (message: Notification) => {
       setNotifications((prevNotifications) => [
         ...prevNotifications,
         message.message,

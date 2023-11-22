@@ -47,10 +47,6 @@ interface Props {
 const UserTable = ({ visible, onDiscardClick }: Props) => {
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    dispatch(fetchUsers());
-  }, []);
-
   const existingUsers = useSelector((state: RootState) => state.users);
 
   // Local

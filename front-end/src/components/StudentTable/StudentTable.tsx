@@ -49,10 +49,6 @@ interface Props {
 const StudentTable = ({ isAdmin, visible, onDiscardClick }: Props) => {
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    dispatch(fetchStudents());
-  }, []);
-
   const existingStudent = useSelector((state: RootState) => state.students);
 
   const maxId = existingStudent.reduce((max, student) => {

@@ -49,6 +49,7 @@ const getStudents = (request, response) => __awaiter(void 0, void 0, void 0, fun
 exports.getStudents = getStudents;
 // GET: A single Student by ID
 const getStudent = (request, response) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log("--------------------------------------------in the getall");
     const id = parseInt(request.params.id, 10);
     try {
         const student = yield StudentService.getStudent(id);
@@ -64,6 +65,7 @@ const getStudent = (request, response) => __awaiter(void 0, void 0, void 0, func
 exports.getStudent = getStudent;
 // POST: Create a Student
 const createStudent = (request, response) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log("--------------------------------------------in the create");
     const errors = (0, express_validator_1.validationResult)(request);
     if (!errors.isEmpty()) {
         return response.status(400).json({ errors: errors.array() });
@@ -73,7 +75,7 @@ const createStudent = (request, response) => __awaiter(void 0, void 0, void 0, f
         const newStudent = yield StudentService.createStudent(student);
         __1.io.emit("Notification", {
             message: "A new student has been created",
-        }, console.log("A new student has been created"));
+        });
         return response.status(201).json(newStudent);
     }
     catch (error) {
@@ -93,7 +95,7 @@ const updateStudent = (request, response) => __awaiter(void 0, void 0, void 0, f
         const updateStudent = yield StudentService.updateStudent(student, id);
         __1.io.emit("Notification", {
             message: "Student has been updated",
-        }, console.log("Student has been updated"));
+        });
         return response.status(200).json(updateStudent);
     }
     catch (error) {
@@ -103,12 +105,13 @@ const updateStudent = (request, response) => __awaiter(void 0, void 0, void 0, f
 exports.updateStudent = updateStudent;
 // DELETE: Delete a student based on the id
 const deleteStudent = (request, response) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log("--------------------------------------------in the delete");
     const id = parseInt(request.params.id, 10);
     try {
         yield StudentService.deleteStudent(id);
         __1.io.emit("Notification", {
             message: "Student has been deleted",
-        }, console.log("Student has been deleted"));
+        });
         return response.status(204).json("Student has been successfully deleted");
     }
     catch (error) {
