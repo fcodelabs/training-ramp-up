@@ -16,7 +16,7 @@ import {
 import {
     randomCreatedDate,
 } from '@mui/x-data-grid-generator';
-import { TextField } from '@mui/material';
+import { Skeleton, TextField } from '@mui/material';
 import ErrorPopup from '../../../Components/ErrorNotification/ErrorNotification';
 
 const Container = styled.div`
@@ -82,10 +82,30 @@ const StyledDataGrid = styled(DataGrid)((theme) => ({
 const genders = ['Male', 'female', 'other'];
 
 const initialRows: GridRowsProp = [
-    { id: 1, col1: 1, col2: 'World', col3: 'Male', col4: 'Kathmandu', col5: '9841000000', col6: randomCreatedDate(), col7: '30' },
-    { id: 2, col1: 2, col2: 'is Awesome', col3: 'Male', col4: 'Kathmandu', col5: '9841000000', col6: randomCreatedDate(), col7: '30' },
-    { id: 3, col1: 3, col2: 'is Amazing', col3: 'Female', col4: 'Kathmandu', col5: '9841000000', col6: randomCreatedDate(), col7: '30' },
+    // { id: 1, col1: 1, col2: 'World', col3: 'Male', col4: 'Kathmandu', col5: '9841000000', col6: randomCreatedDate(), col7: '30' },
+    // { id: 2, col1: 2, col2: 'is Awesome', col3: 'Male', col4: 'Kathmandu', col5: '9841000000', col6: randomCreatedDate(), col7: '30' },
+    // { id: 3, col1: 3, col2: 'is Amazing', col3: 'Female', col4: 'Kathmandu', col5: '9841000000', col6: randomCreatedDate(), col7: '30' },
 ];
+
+const emptyRows: GridRowsProp = [
+    { id: 1, col1: '', col2: '', col3: '', col4: '', col5: '', col6: '', col7: '' },
+    { id: 2, col1: '', col2: '', col3: '', col4: '', col5: '', col6: '', col7: '' },
+    { id: 3, col1: '', col2: '', col3: '', col4: '', col5: '', col6: '', col7: '' },
+
+]
+
+const emptyColumns: GridColDef[] =
+    [
+        { field: 'col1', headerName: 'ID', type: 'number', flex: 1, minWidth: 100, editable: true, renderCell: () => <Skeleton animation="wave" height={20} width={80} /> },
+        { field: 'col2', headerName: 'Name', type: 'string', flex: 1, minWidth: 100, editable: true, renderCell: () => <Skeleton animation="wave" height={20} width={80} /> },
+        { field: 'col3', headerName: 'Gender', type: 'singleSelect', flex: 1, minWidth: 100, valueOptions: genders, sortable: false, editable: true, renderCell: () => <Skeleton animation="wave" height={20} width={80} /> },
+        { field: 'col4', headerName: 'Address', type: 'string', flex: 1, minWidth: 100, sortable: false, editable: true, renderCell: () => <Skeleton animation="wave" height={20} width={80} /> },
+        { field: 'col5', headerName: 'Mobile No.', flex: 1, minWidth: 100, sortable: false, editable: true, renderCell: () => <Skeleton animation="wave" height={20} width={80} /> },
+        { field: 'col6', headerName: 'Date of Birth', type: 'date', flex: 1, minWidth: 100, editable: true, renderCell: () => <Skeleton animation="wave" height={20} width={80} /> },
+        { field: 'col7', headerName: 'Age', type: 'number', flex: 1, minWidth: 100, sortable: false, editable: true, renderCell: () => <Skeleton animation="wave" height={20} width={80} /> },
+        { field: 'col8', headerName: 'Action', type: 'number', flex: 1, minWidth: 200, sortable: false, editable: true, renderCell: () => <Skeleton animation="wave" height={20} width={80} /> },
+
+    ];
 
 const Table = () => {
 
@@ -162,7 +182,8 @@ const Table = () => {
         },
         { field: 'col6', headerName: 'Date of Birth', type: 'date', flex: 1, minWidth: 100, editable: true },
         { field: 'col7', headerName: 'Age', type: 'number', flex: 1, minWidth: 100, sortable: false, editable: true },
-        {   field: 'col8',
+        {
+            field: 'col8',
             type: 'actions',
             headerName: 'Actions',
             flex: 1,
@@ -212,43 +233,52 @@ const Table = () => {
 
             },
 
-            },
+        },
     ];
 
     const [isErrorPopupOpen, setIsErrorPopupOpen] = React.useState<boolean>(false);
 
     React.useEffect(() => {
-      const simulateErrorCondition = () => {
-        setIsErrorPopupOpen(true);
-      };
-      simulateErrorCondition();
-    }, []); 
-  
+        if (rows.length === 0)
+            setIsErrorPopupOpen(true);
+
+    }, []);
+
     const handleCloseErrorPopup = () => {
-      setIsErrorPopupOpen(false);
+        setIsErrorPopupOpen(false);
     };
+
+
 
     return (
         <Container>
-                    <Title>User Details</Title>
-                    <ButtonWrapper>
-                        <Button variant="contained">Add new</Button>
-                    </ButtonWrapper>
-                    <StyledDataGrid
-                        rows={rows}
-                        columns={columns}
-                        editMode="row"
-                        rowModesModel={rowModesModel}
-                        checkboxSelection
-                        onRowModesModelChange={handleRowModesModelChange}
-                        onRowEditStop={handleRowEditStop}
-                        processRowUpdate={processRowUpdate}
-                        getRowHeight={getRowHeight}
+            <Title>User Details</Title>
+            <ButtonWrapper>
+                <Button variant="contained">Add new</Button>
+            </ButtonWrapper>
+            {rows.length === 0 ? (
+                <DataGrid
+                    rows={emptyRows}
+                    columns={emptyColumns}
+                    checkboxSelection
 
-                    />
-                <ErrorPopup open={isErrorPopupOpen} onClose={handleCloseErrorPopup} />
+                />
+            ) : (
+                <DataGrid
+                    rows={rows}
+                    columns={columns}
+                    editMode="row"
+                    rowModesModel={rowModesModel}
+                    checkboxSelection
+                    onRowModesModelChange={handleRowModesModelChange}
+                    onRowEditStop={handleRowEditStop}
+                    processRowUpdate={processRowUpdate}
+                    getRowHeight={getRowHeight}
+                />
+            )}
+            <ErrorPopup open={isErrorPopupOpen} onClose={handleCloseErrorPopup} />
 
-                </Container>
+        </Container>
     )
 }
 
