@@ -16,11 +16,9 @@ import { useAppSelector } from '../../../Redux/hooks';
 import { emptyColumns, emptyRows } from './TableColumns/TableSkeletons/TableSkeletons';
 import { Container, ButtonWrapper, StyledDataGrid, Title } from '../../../Utilities/TableStyles';
 import GridActionsColumn from './TableColumns/ActionColumn/ActionColumn';
-import { randomId } from '@mui/x-data-grid-generator';
 
 
 const Table = () => {
-    const genders = ['Male', 'female', 'other'];
     const initialRows: GridRowsProp = useAppSelector((state) => state.user.rows);
     const [rows, setRows] = React.useState(initialRows);
     const [rowModesModel, setRowModesModel] = React.useState<GridRowModesModel>({});
@@ -79,6 +77,7 @@ const Table = () => {
             headerName: 'Actions',
             flex: 1,
             minWidth: 200,
+            
             cellClassName: 'actions',
             renderCell: ({ id }) => (
                 <GridActionsColumn

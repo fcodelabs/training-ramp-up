@@ -8,7 +8,8 @@ export const Container = styled.div`
     width: 80%;
     height: 70%;
     border: 1px solid #e0e0e0;
-    border-radius: 5px;   
+    border-radius: 5px; 
+
 `;
 
 export const Title = styled.div`
@@ -52,11 +53,21 @@ export const StyledDataGrid = styled(DataGrid)((theme) => ({
         display: 'none !important',
     },
     "& .MuiDataGrid-columnHeader": {
-        backgroundColor: 'rgba(33, 150, 243, 0.1) !important'
+        backgroundColor: 'rgba(33, 150, 243, 0.1) !important',
     },
-
     '& .MuiDataGrid-cell:focus-within': {
         outline: 'none !important',
     },
+ 
+    '& .MuiDataGrid-cell': {
+        justifyContent: 'flex-start !important',
+    },    
+    '& .MuiDataGrid-columnHeaderTitleContainer': {
+        justifyContent: 'flex-start !important',
+    },
+    // do above for all headers
+
+    
+
 
 }));
