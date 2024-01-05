@@ -1,7 +1,8 @@
-import { DataGrid } from '@mui/x-data-grid';
+import { DataGrid, GridColumnMenu, GridColumnMenuProps } from '@mui/x-data-grid';
 import styled from 'styled-components';
 import * as React from 'react';
 import Button from '@mui/material/Button';
+import "./test.css"
 import {
     GridRowsProp,
     GridRowModesModel,
@@ -18,6 +19,7 @@ import {
 } from '@mui/x-data-grid-generator';
 import { Skeleton, TextField } from '@mui/material';
 import ErrorPopup from '../../../Components/ErrorNotification/ErrorNotification';
+import { useAppSelector } from '../../../Redux/hooks';
 
 const Container = styled.div`
     display: flex;
@@ -62,9 +64,8 @@ const StyledDataGrid = styled(DataGrid)((theme) => ({
     "& .MuiDataGrid-iconButtonContainer": {
         visibility: 'visible',
     },
-
-    "& .MuiDataGrid-columnHeaderTitleContainer": {
-        justifyContent: 'space-between',
+    "&. MuiDataGrid-root-MuiDataGrid-menuIcon": {
+        display: 'none !important',
     },
     "& .MuiDataGrid-columnSeparator": {
         display: 'none !important',
@@ -76,41 +77,42 @@ const StyledDataGrid = styled(DataGrid)((theme) => ({
     '& .MuiDataGrid-cell:focus-within': {
         outline: 'none !important',
     },
+   
 }));
 
 
 const genders = ['Male', 'female', 'other'];
 
-const initialRows: GridRowsProp = [
-    // { id: 1, col1: 1, col2: 'World', col3: 'Male', col4: 'Kathmandu', col5: '9841000000', col6: randomCreatedDate(), col7: '30' },
-    // { id: 2, col1: 2, col2: 'is Awesome', col3: 'Male', col4: 'Kathmandu', col5: '9841000000', col6: randomCreatedDate(), col7: '30' },
-    // { id: 3, col1: 3, col2: 'is Amazing', col3: 'Female', col4: 'Kathmandu', col5: '9841000000', col6: randomCreatedDate(), col7: '30' },
-];
+
 
 const emptyRows: GridRowsProp = [
-    { id: 1, col1: '', col2: '', col3: '', col4: '', col5: '', col6: '', col7: '' },
-    { id: 2, col1: '', col2: '', col3: '', col4: '', col5: '', col6: '', col7: '' },
-    { id: 3, col1: '', col2: '', col3: '', col4: '', col5: '', col6: '', col7: '' },
+    { id: 1, uid: 1,name: '', gender: '', address: '', mobile: '', birthday: '', age: '', action: '' },
+    { id: 2, uid: 2,name: '', gender: '', address: '', mobile: '', birthday: '', age: '', action: '' },
+    { id: 3, uid: 3,name: '', gender: '', address: '', mobile: '', birthday: '', age: '', action: '' },
 
 ]
 
+const colStyles = { flex: 1, minWidth: 100, sortable:false ,editable: true, renderCell: () => <Skeleton animation="wave" height={20} width={80} /> 
+}
+
 const emptyColumns: GridColDef[] =
     [
-        { field: 'col1', headerName: 'ID', type: 'number', flex: 1, minWidth: 100, editable: true, renderCell: () => <Skeleton animation="wave" height={20} width={80} /> },
-        { field: 'col2', headerName: 'Name', type: 'string', flex: 1, minWidth: 100, editable: true, renderCell: () => <Skeleton animation="wave" height={20} width={80} /> },
-        { field: 'col3', headerName: 'Gender', type: 'singleSelect', flex: 1, minWidth: 100, valueOptions: genders, sortable: false, editable: true, renderCell: () => <Skeleton animation="wave" height={20} width={80} /> },
-        { field: 'col4', headerName: 'Address', type: 'string', flex: 1, minWidth: 100, sortable: false, editable: true, renderCell: () => <Skeleton animation="wave" height={20} width={80} /> },
-        { field: 'col5', headerName: 'Mobile No.', flex: 1, minWidth: 100, sortable: false, editable: true, renderCell: () => <Skeleton animation="wave" height={20} width={80} /> },
-        { field: 'col6', headerName: 'Date of Birth', type: 'date', flex: 1, minWidth: 100, editable: true, renderCell: () => <Skeleton animation="wave" height={20} width={80} /> },
-        { field: 'col7', headerName: 'Age', type: 'number', flex: 1, minWidth: 100, sortable: false, editable: true, renderCell: () => <Skeleton animation="wave" height={20} width={80} /> },
-        { field: 'col8', headerName: 'Action', type: 'number', flex: 1, minWidth: 200, sortable: false, editable: true, renderCell: () => <Skeleton animation="wave" height={20} width={80} /> },
+        { field: 'uid', headerName: 'ID', type: 'number', ...colStyles },
+        { field: 'name', headerName: 'Name', type: 'string', ...colStyles },
+        { field: 'gender', headerName: 'Gender', type: 'singleSelect', ...colStyles },
+        { field: 'address', headerName: 'Address', type: 'string', ...colStyles },
+        { field: 'mobile', headerName: 'Mobile No.', ...colStyles },
+        { field: 'birthday', headerName: 'Date of Birth', type: 'date', ...colStyles },
+        { field: 'age', headerName: 'Age', type: 'number', ...colStyles },
+        { field: 'action', headerName: 'Action', type: 'number', ...colStyles }
 
     ];
 
 const Table = () => {
-
+    const initialRows: GridRowsProp = useAppSelector((state) => state.user.rows);
     const [rows, setRows] = React.useState(initialRows);
     const [rowModesModel, setRowModesModel] = React.useState<GridRowModesModel>({});
+
 
     const handleRowEditStop: GridEventListener<'rowEditStop'> = (params, event) => {
         if (params.reason === GridRowEditStopReasons.rowFocusOut) {
@@ -158,14 +160,22 @@ const Table = () => {
 
 
     const columns: GridColDef[] = [
-        { field: 'col1', headerName: 'ID', type: 'number', flex: 1, minWidth: 100, editable: true },
-        { field: 'col2', headerName: 'Name', type: 'string', flex: 1, minWidth: 100, editable: true },
-        { field: 'col3', headerName: 'Gender', type: 'singleSelect', flex: 1, minWidth: 100, valueOptions: genders, sortable: false, editable: true },
-        { field: 'col4', headerName: 'Address', type: 'string', flex: 1, minWidth: 100, sortable: false, editable: true },
+        { field: 'uid', headerName: 'ID', type: 'number', flex: 0.2, minWidth: 40, editable: true , sortable: false, },
+        { field: 'name', headerName: 'Name', type: 'string', flex: 1, minWidth: 100, editable: true , sortingOrder:[ 'desc', 'asc'], renderHeader: (params) => {
+            return (
+                <div style={{paddingRight:'50px'}}>
+                   Name
+                </div>
+                   
+            
+            )
+        }},
+        { field: 'gender', headerName: 'Gender', type: 'singleSelect', flex: 1, minWidth: 100, valueOptions: genders, sortable: false, editable: true },
+        { field: 'address', headerName: 'Address', type: 'string', flex: 1, minWidth: 100, sortable: false, editable: true },
         {
-            field: 'col5', headerName: 'Mobile No.', flex: 1, minWidth: 100, sortable: false, editable: true,
+            field: 'mobile', headerName: 'Mobile No.', flex: 1, minWidth: 100, sortable: false, editable: true,
             renderEditCell: (params) => {
-                if (params.field === 'col5') {
+                if (params.field === 'mobile') {
                     return (
                         <TextField
                             fullWidth
@@ -180,10 +190,16 @@ const Table = () => {
                 }
             }
         },
-        { field: 'col6', headerName: 'Date of Birth', type: 'date', flex: 1, minWidth: 100, editable: true },
-        { field: 'col7', headerName: 'Age', type: 'number', flex: 1, minWidth: 100, sortable: false, editable: true },
+        { field: 'birthday', headerName: 'Date of Birth', type: 'date', flex: 1, minWidth: 100, editable: true, sortingOrder:[ 'desc', 'asc'], renderHeader: (params) => {
+            return (
+                <div style={{paddingRight:'25px'}}>
+                   Date of Birth
+                </div>
+            )
+        } },
+        { field: 'age', headerName: 'Age', type: 'number', flex: 0.4, minWidth: 40, sortable: false, editable: true },
         {
-            field: 'col8',
+            field: 'actions',
             type: 'actions',
             headerName: 'Actions',
             flex: 1,
@@ -248,6 +264,21 @@ const Table = () => {
         setIsErrorPopupOpen(false);
     };
 
+    function CustomColumnMenu(props: GridColumnMenuProps) {
+        return (
+          <GridColumnMenu
+            {...props}
+            slotProps={{
+            
+              columnMenuSortItem: {
+                displayOrder: 0, // Previously `0`
+              },
+
+            }}
+          />
+        );
+      }
+      
 
 
     return (
@@ -257,14 +288,14 @@ const Table = () => {
                 <Button variant="contained">Add new</Button>
             </ButtonWrapper>
             {rows.length === 0 ? (
-                <DataGrid
+                <StyledDataGrid
                     rows={emptyRows}
                     columns={emptyColumns}
                     checkboxSelection
 
                 />
             ) : (
-                <DataGrid
+                <StyledDataGrid
                     rows={rows}
                     columns={columns}
                     editMode="row"
@@ -274,6 +305,11 @@ const Table = () => {
                     onRowEditStop={handleRowEditStop}
                     processRowUpdate={processRowUpdate}
                     getRowHeight={getRowHeight}
+                    disableColumnMenu
+                    slots={{
+                        columnMenu: CustomColumnMenu,
+                     
+                    }}
                 />
             )}
             <ErrorPopup open={isErrorPopupOpen} onClose={handleCloseErrorPopup} />
