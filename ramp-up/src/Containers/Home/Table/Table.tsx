@@ -16,6 +16,7 @@ import { useAppSelector } from '../../../Redux/hooks';
 import { emptyColumns, emptyRows } from './TableColumns/TableSkeletons/TableSkeletons';
 import { Container, ButtonWrapper, StyledDataGrid, Title } from '../../../Utilities/TableStyles';
 import GridActionsColumn from './TableColumns/ActionColumn/ActionColumn';
+import { randomId } from '@mui/x-data-grid-generator';
 
 
 const Table = () => {
@@ -95,12 +96,20 @@ const Table = () => {
             setIsErrorPopupOpen(true);
 
     }, []);
-
+    
+    const maxId = rows.reduce((max, row) => (row.id > max ? row.id : max), 0);  
+    const handleClick = () => {
+          const id = maxId + 1;
+          setRows((oldRows) => [ { id, uid: id, name: '', gender: '', address: '', mobile: '', birthday: '', age: '', action: '' }, ...oldRows,]);
+          setRowModesModel((oldModel) => ({ ...oldModel, [id]: { mode: GridRowModes.Edit, fieldToFocus: 'uid' },
+          }));
+        };
+  
     return (
         <Container>
             <Title>User Details</Title>
             <ButtonWrapper>
-                <Button variant="contained">Add new</Button>
+                <Button variant="contained" onClick={handleClick}>Add new</Button>
             </ButtonWrapper>
             {rows.length === 0 ? (
                 <StyledDataGrid
