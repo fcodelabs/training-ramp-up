@@ -4,8 +4,7 @@ import { GridColDef, GridRowsProp } from "@mui/x-data-grid";
 export const emptyRows: GridRowsProp = [
     { id: 1, uid: 1, name: '', gender: '', address: '', mobile: '', birthday: '', age: '', action: '' },
     { id: 2, uid: 2, name: '', gender: '', address: '', mobile: '', birthday: '', age: '', action: '' },
-    { id: 3, uid: 3, name: '', gender: '', address: '', mobile: '', birthday: '', age: '', action: '' },
-
+    { id: 3, uid: 3, name: '', gender: '', address: '', mobile: '', birthday: '', age: '', action: '' }
 ]
 
 const colStyles = {

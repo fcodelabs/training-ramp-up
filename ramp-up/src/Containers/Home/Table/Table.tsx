@@ -10,11 +10,12 @@ import {
     GridRowModel,
     GridRowEditStopReasons,
 } from '@mui/x-data-grid';
-import { TextField } from '@mui/material';
+import {FixedColumns} from './TableColumns/FixedColumns/FixedColumns';
 import ErrorPopup from '../../../Components/ErrorNotification/ErrorNotification';
 import { useAppSelector } from '../../../Redux/hooks';
-import { emptyColumns, emptyRows } from './TableSkeletons/TableSkeletons';
+import { emptyColumns, emptyRows } from './TableColumns/TableSkeletons/TableSkeletons';
 import { Container, ButtonWrapper, StyledDataGrid, Title } from '../../../Utilities/TableStyles';
+import GridActionsColumn from './TableColumns/ActionColumn/ActionColumn';
 
 
 const Table = () => {
@@ -63,27 +64,37 @@ const Table = () => {
     const handleCancelClick = (id: GridRowId) => () => {
         setRowModesModel({
             ...rowModesModel,
-            [id]: { mode: GridRowModes.View, ignoreModifications: true },
-        });
-
+            [id]: { mode: GridRowModes.View, ignoreModifications: true }});
+        
         const editedRow = rows.find((row) => row.id === id);
         if (editedRow!.isNew) {
-            setRows(rows.filter((row) => row.id !== id));
-        }
+            setRows(rows.filter((row) => row.id !== id)) }
     };
 
     const columns: GridColDef[] = [
-       
+        ...FixedColumns, {
+            field: 'actions',
+            type: 'actions',
+            headerName: 'Actions',
+            flex: 1,
+            minWidth: 200,
+            cellClassName: 'actions',
+            renderCell: ({ id }) => (
+                <GridActionsColumn
+                    id={id}
+                    isInEditMode={rowModesModel[id]?.mode === GridRowModes.Edit}
+                    handleSaveClick={handleSaveClick(id)}
+                    handleCancelClick={handleCancelClick(id)}
+                    handleEditClick={handleEditClick(id)}
+                    handleDeleteClick={handleDeleteClick(id)}
+                />
+                )}
     ];
-
-
     React.useEffect(() => {
         if (rows.length === 0)
             setIsErrorPopupOpen(true);
 
     }, []);
-
-   
 
     return (
         <Container>
