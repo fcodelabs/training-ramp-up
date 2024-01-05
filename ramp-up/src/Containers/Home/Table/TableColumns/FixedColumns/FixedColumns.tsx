@@ -1,12 +1,30 @@
-import { TextField } from '@mui/material';
+import { MenuItem, Select, TextField } from '@mui/material';
 import { GridColDef } from '@mui/x-data-grid';
+import styled from 'styled-components';
 
 const genders = ['Male', 'female', 'other'];
 
+interface Props {
+    error: boolean;
+}
+
+const StyledTextFieldWrapper = styled(TextField)<Props>(({ error }) => ({
+    variant: "outlined",
+    textAlign: 'end',
+    '& .MuiOutlinedInput-root': {
+        '& fieldset': {
+            borderColor: error ? 'red' : 'rgba(33, 150, 243, 0.7)',
+        },
+
+    },
+}));
+
 export const FixedColumns: GridColDef[] = [
 
-    { field: 'uid', headerName: 'ID', type: 'number', width: 10, editable: false, sortable: false, 
-    renderHeader: () => <div style={{ paddingRight:'50px' }}>ID</div> },
+    {
+        field: 'uid', headerName: 'ID', type: 'number', width: 10, editable: false, sortable: false,
+        renderHeader: () => <div style={{ paddingRight: '50px' }}>ID</div>
+    },
     {
         field: 'name', headerName: 'Name', type: 'string', flex: 1, minWidth: 50, editable: true, sortingOrder: ['desc', 'asc'], renderHeader: () => {
             return (
@@ -18,11 +36,10 @@ export const FixedColumns: GridColDef[] = [
         renderEditCell: (params) => {
             if (params.field === 'name') {
                 return (
-                    <TextField
+                    <StyledTextFieldWrapper
+                        error={params.value === ''}
                         fullWidth
                         type="text"
-                        variant="outlined"
-                        style={{ border: '1px solid #e0e0e0' }}
                         value={params.value || ''}
                         onChange={(e) => params.api.setEditCellValue({ id: params.id, field: params.field, value: e.target.value })}
                     />
@@ -30,17 +47,36 @@ export const FixedColumns: GridColDef[] = [
             }
         }
     },
-    { field: 'gender', headerName: 'Gender', type: 'singleSelect', flex: 1, minWidth: 100, valueOptions: genders, sortable: false, editable: true },
+    {
+        field: 'gender', headerName: 'Gender', type: 'singleSelect', flex: 1, minWidth: 100, valueOptions: genders, sortable: false, editable: true,
+        renderEditCell: (params) => {
+            if (params.field === 'gender')
+                return (
+                    <StyledTextFieldWrapper
+                        error={params.value === ''}
+                        select
+                        fullWidth
+                        value={params.value || 'Male'}
+                        onChange={(e) => params.api.setEditCellValue({ id: params.id, field: params.field, value: e.target.value })}
+                    >
+                        {genders.map((option) => (
+                            <MenuItem key={option} value={option}>
+                                {option}
+                            </MenuItem>
+                        ))}
+                    </StyledTextFieldWrapper>
+                )
+        },
+    },
     {
         field: 'address', headerName: 'Address', type: 'string', flex: 1, minWidth: 100, sortable: false, editable: true,
         renderEditCell: (params) => {
             if (params.field === 'address') {
                 return (
-                    <TextField
+                    <StyledTextFieldWrapper
                         fullWidth
                         type="text"
-                        variant="outlined"
-                        style={{ border: '1px solid #e0e0e0' }}
+                        error={params.value === ''}
                         value={params.value || ''}
                         onChange={(e) => params.api.setEditCellValue({ id: params.id, field: params.field, value: e.target.value })}
                     />
@@ -53,12 +89,11 @@ export const FixedColumns: GridColDef[] = [
         renderEditCell: (params) => {
             if (params.field === 'mobile') {
                 return (
-                    <TextField
+                    <StyledTextFieldWrapper
                         fullWidth
                         type="tel"
                         placeholder='+'
-                        variant="outlined"
-                        style={{ border: '1px solid #e0e0e0' }}
+                        error={params.value === ''}
                         value={params.value || ''}
                         onChange={(e) => params.api.setEditCellValue({ id: params.id, field: params.field, value: e.target.value })}
                     />
@@ -67,7 +102,7 @@ export const FixedColumns: GridColDef[] = [
         }
     },
     {
-        field: 'birthday', headerName: 'Date of Birth', type: 'date', flex: 1, minWidth: 100, editable: true, sortingOrder: ['desc', 'asc'],
+        field: 'birthday', headerName: 'Date of Birth', type: 'string', flex: 1, minWidth: 100, editable: true, sortingOrder: ['desc', 'asc'],
         renderHeader: () => {
             return (
                 <div style={{ paddingRight: '25px' }}>
@@ -75,27 +110,46 @@ export const FixedColumns: GridColDef[] = [
                 </div>
             )
         },
+        renderCell: (params) => {
+            const dateObject = params.value ? new Date(params.value) : null;
+    
+            const formattedDate = dateObject
+              ? `${dateObject.toLocaleDateString('en-US', { weekday: 'short' })}
+                 ${dateObject.toLocaleDateString('en-US', { month: 'short' })} 
+                 ${dateObject.toLocaleDateString('en-US', { day: 'numeric' })} 
+                 ${dateObject.toLocaleDateString('en-US', { year: 'numeric' })}`
+                : '';
+    
+            return (
+                <div>
+                    {formattedDate}
+                </div>
+            );
+        },
         renderEditCell: (params) => {
             if (params.field === 'birthday') {
+                const dateObject = params.value ? new Date(params.value) : null;
+    
                 return (
-                    <TextField
+                    <StyledTextFieldWrapper
+                        error={params.value === ''}
                         fullWidth
                         type="date"
-                        variant="outlined"
-                        style={{ border: '1px solid #e0e0e0' }}
-                        value={params.value || ''}
-                        onChange={(e) => params.api.setEditCellValue({ id: params.id, field: params.field, value: e.target.value })}
+                        value={dateObject ? dateObject.toISOString().slice(0, 10) : ''}
+                        onChange={(e) => {
+                            const newDateObject = e.target.value ? new Date(e.target.value) : null;
+                            params.api.setEditCellValue({ id: params.id, field: params.field, value: newDateObject });
+                        }}
                     />
                 );
             }
-        }
-
+        },
     },
     {
         field: 'age', headerName: 'Age', type: 'number', flex: 0.4, minWidth: 40, sortable: false, editable: true,
         renderHeader() {
             return (
-                <div style={{ paddingRight:'100px'}}>
+                <div style={{ paddingRight: '50px' }}>
                     Age
                 </div>
             )
@@ -103,11 +157,10 @@ export const FixedColumns: GridColDef[] = [
         renderEditCell: (params) => {
             if (params.field === 'age') {
                 return (
-                    <TextField
+                    <StyledTextFieldWrapper
+                        error={params.value === ''}
                         fullWidth
                         type="number"
-                        variant="outlined"
-                        style={{ border: '1px solid #e0e0e0', justifyContent: 'flexStart' }}
                         value={params.value || ''}
                         onChange={(e) => params.api.setEditCellValue({ id: params.id, field: params.field, value: e.target.value })}
                     />
