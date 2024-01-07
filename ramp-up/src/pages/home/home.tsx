@@ -1,7 +1,6 @@
 import React from "react";
 import { AppBar, Toolbar, Button, Card, CardContent, CardHeader } from "@mui/material";
 import { styled } from '@mui/material/styles';
-import { DataGrid, GridColDef, GridCellParams } from '@mui/x-data-grid';
 import DataTable from "./DataGrid/DataTable";
 
 const CustomButton = styled(Button)({
@@ -24,6 +23,7 @@ const styles ={
         alignItems:"center",
         justifyContent:"center",
         minHeight:"100vh",
+        gap:"84px"
     },
     toolbar:{
         padding:"8px 24px",
@@ -57,8 +57,9 @@ const styles ={
     },
    
     card:{
+        position: "relative" as "relative",
+        maxWidth: "calc(100vw - 32px)",    
         padding: "0px",
-        minHeight: "300px",
         borderLeft: '1px solid rgba(0,0,0,0.01)', 
         borderRight: '1px solid rgba(0,0,0,0.01)',
     },

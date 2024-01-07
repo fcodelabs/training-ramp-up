@@ -3,7 +3,9 @@ import { styled } from '@mui/material/styles';
 import { DataGrid, GridColDef, GridCellParams } from '@mui/x-data-grid';
 import { Button } from '@mui/material';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-
+import { useSelector } from 'react-redux';
+import { RootState } from '../../../redux/store';
+import ErrorModal from '../../../components/ErrorModal/ErrorModal';
 
 const theme = createTheme({
     components: {
@@ -51,13 +53,13 @@ const StyledDataGrid = styled(DataGrid)((theme) => ({
     ));
 
     const columns: GridColDef[] = [
-        { field: 'id', headerName: 'ID',sortable: false, },
-        { field: 'name', headerName: 'Name'},
-        { field: 'Gender', headerName: 'Gender', sortable: false,},
-        { field: 'Address', headerName: 'Address', sortable: false,},
-        { field: 'Mobile', headerName: 'Mobile No:', sortable: false,},
-        { field: 'DOB', headerName: 'Date of Birth',width:150},
-        { field: 'Age', headerName: 'Age', sortable: false,},
+        { field: 'id', headerName: 'ID',sortable: false,width:100 },
+        { field: 'name', headerName: 'Name',width:137},
+        { field: 'gender', headerName: 'Gender', sortable: false, width:100 },
+        { field: 'address', headerName: 'Address', sortable: false, width:137},
+        { field: 'mobile', headerName: 'Mobile No:', sortable: false,width:137},
+        { field: 'dob', headerName: 'Date of Birth',width:175},
+        { field: 'age', headerName: 'Age', sortable: false,width:100},
         { field: 'Action', headerName: 'Action', sortable: false, width:250,
         renderCell: (params: GridCellParams) => {
             return (
@@ -67,13 +69,13 @@ const StyledDataGrid = styled(DataGrid)((theme) => ({
                     flexDirection:"row",
                     gap:"32px",
                     }}>
-                        <ThemeProvider theme={theme}>
-                        <Button variant='outlined'>edit</Button>
-                        </ThemeProvider>
-                   
-                    <ThemeProvider theme={theme}>
-                        <Button variant='outlined' color='error'>remove</Button>
-                        </ThemeProvider>
+                      <ThemeProvider theme={theme}>
+                      <Button variant='outlined'>edit</Button>
+                      </ThemeProvider>
+                  
+                      <ThemeProvider theme={theme}>
+                      <Button variant='outlined' color='error'>remove</Button>
+                      </ThemeProvider>
                 </div>
             );
         },
@@ -81,11 +83,22 @@ const StyledDataGrid = styled(DataGrid)((theme) => ({
     ]
 
 function DataTable(){
+
+  const data = useSelector((state: RootState) => state.student.students);
+
+  const [open, setOpen] = React.useState(true);
+
+  const handleClose = () => {
+    setOpen(false);
+  }
+
     return(
      <div style={{ height: 400, width: '100%' }}>
+      {/* <ErrorModal open={open} onClose={handleClose} message='Error Error Error' dismiss ={true} buttonName='close' onClick={handleClose}/> */}
+
       <StyledDataGrid
         sx={{ '&, [class^=MuiDataGrid-root]': { border: 'none' } }}
-        rows={[{id:1,}]}
+        rows={data} 
         columns={columns}
         initialState={{
           pagination: {
@@ -96,17 +109,6 @@ function DataTable(){
         pageSizeOptions={[5, 10]}
         checkboxSelection
         disableColumnMenu={true}
-        sortModel={[
-            {
-              field: 'id',
-              sort: 'asc',
-            },
-            { field: 'name', 
-            sort: 'desc' 
-        },
-          
-        ]}
-        
       />
         </div>
     );
