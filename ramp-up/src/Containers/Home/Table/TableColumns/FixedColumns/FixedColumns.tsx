@@ -2,7 +2,7 @@ import { MenuItem, TextField, Typography } from '@mui/material';
 import { GridColDef } from '@mui/x-data-grid';
 import styled from 'styled-components';
 import { validateName, validateAddress, validateMobile, validateAge, validateBirthday } from '../../../../../Utilities/ValidateUser';
-
+import calculateAge from '../../../../../Utilities/calculateAge';
 const genders = ['Male', 'female', 'other'];
 
 interface Props {
@@ -25,9 +25,6 @@ const StyledTextFieldWrapper = styled(TextField)<Props>(({ error }) => ({
 
     }
 }));
-
-
-
 
 export const FixedColumns: GridColDef[] = [
 
@@ -107,7 +104,19 @@ export const FixedColumns: GridColDef[] = [
         field: 'mobile', headerName: 'Mobile No.', flex: 1, minWidth: 100, sortable: false, editable: true,
         renderEditCell: (params) => {
             if (params.field === 'mobile') {
-                const error=!validateMobile(params.value)
+                const error = !validateMobile(params.value);
+                const formatMobileInput = (input: string) => {
+                    // Format the mobile number input with spaces (e.g., '0714668617' to '071 466 8617')
+                    const formattedInput = input.replace(/\D/g, ''); // Remove non-numeric characters
+                    const parts = formattedInput.match(/^(\d{1,3})(\d{1,2})?(\d{1,2})?(\d{1,4})?(\d{1,4})?(\d{1,4})?(\d{1,4})?$/);
+                
+                    if (parts) {
+                        parts.shift(); // Remove the first empty element
+                        return parts.filter(Boolean).join(' ');
+                    }
+                
+                    return '';
+                };
                 return (
                     <StyledTextFieldWrapper
                         fullWidth
@@ -115,12 +124,29 @@ export const FixedColumns: GridColDef[] = [
                         placeholder='+'
                         error={error}
                         value={params.value || ''}
-                        onChange={(e) => params.api.setEditCellValue({ id: params.id, field: params.field, value: e.target.value })}
-                        helperText={error && "This field is required"}
+                        onChange={(e) => {
+                            const formattedInput = formatMobileInput(e.target.value);
+                            params.api.setEditCellValue({ id: params.id, field: params.field, value: e.target.value })}}
+                        helperText={error && 'Please enter a valid mobile number'}
                     />
                 );
             }
-        }
+        },
+        renderCell: (params) => {
+            const formatMobileDisplay = (mobile: string) => {
+                // Format mobile number for display (e.g., '+94 766 847 479' to '076-684-7479')
+                const formattedInput = mobile.replace(/\D/g, ''); // Remove non-numeric characters
+                const parts = formattedInput.match(/^(\d{3})(\d{2,3})(\d{2,4})$/);
+            
+                if (parts) {
+                    return `${parts[1]}-${parts[2]}-${parts[3]}${parts[4] ? `-${parts[4]}` : ''}`;
+                }
+            
+                return '';
+            };
+            const formattedMobile = formatMobileDisplay(params.value);
+            return <div>{formattedMobile}</div>;
+        },
     },
     {
         field: 'birthday', headerName: 'Date of Birth', type: 'string', flex: 1, minWidth: 100, editable: true, sortingOrder: ['desc', 'asc'],
@@ -149,7 +175,9 @@ export const FixedColumns: GridColDef[] = [
             );
         },
         renderEditCell: (params) => {
+        
             if (params.field === 'birthday') {
+                const error = !validateBirthday(params.value)
                 const dateObject = params.value ? new Date(params.value) : null;
     
                 const handleDateChange = (newDate: string) => {
@@ -164,12 +192,12 @@ export const FixedColumns: GridColDef[] = [
     
                 return (
                     <StyledTextFieldWrapper
-                        error={params.value === ''}
+                        error={error}
                         fullWidth
                         type="date"
                         value={dateObject ? dateObject.toISOString().slice(0, 10) : ''}
                         onChange={(e) => handleDateChange(e.target.value)}
-                        helperText={params.value === '' && "This field is required"}
+                        helperText={error && "This field is required"}
                     />
                 );
             }
@@ -211,19 +239,3 @@ export const FixedColumns: GridColDef[] = [
 
 
 
-const calculateAge = (dateOfBirth: Date) => {
-    if (!dateOfBirth) {
-        return null;
-    }
-
-    const today = new Date();
-    const birthDate = new Date(dateOfBirth);
-    let age = today.getFullYear() - birthDate.getFullYear();
-    const monthDiff = today.getMonth() - birthDate.getMonth();
-
-    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
-        age--;
-    }
-
-    return age;
-};

@@ -26,13 +26,11 @@ const validateAge = (age: number) => {
     return true;
 }
 
-const validateMobile = (mobile:string) => {
-    const phoneRegex = /^(\+\d{1,})?\d{10}$/;
-  
-    const isValid = phoneRegex.test(mobile);
-  
-    return isValid;
-  };
+const validateMobile = (mobile: string) => {
+    // Add your mobile validation logic here
+    const mobileRegex = /^\+(\d{1,3})\s(\d{1,2}\s?){1,5}$/;
+    return mobileRegex.test(mobile);
+};
 
 const validateAddress = (address:string) => {
     if (address==='') {
