@@ -1,5 +1,6 @@
 import * as React from 'react';
 import Button from '@mui/material/Button';
+import { useState } from 'react';
 import {
     GridRowsProp,
     GridRowModesModel,
@@ -10,7 +11,7 @@ import {
     GridRowModel,
     GridRowEditStopReasons,
 } from '@mui/x-data-grid';
-import {FixedColumns} from './TableColumns/FixedColumns/FixedColumns';
+import { FixedColumns } from './TableColumns/FixedColumns/FixedColumns';
 import ErrorPopup from '../../../Components/ErrorNotification/ErrorNotification';
 import { useAppSelector } from '../../../Redux/hooks';
 import { emptyColumns, emptyRows } from './TableColumns/TableSkeletons/TableSkeletons';
@@ -20,10 +21,14 @@ import GridActionsColumn from './TableColumns/ActionColumn/ActionColumn';
 
 const Table = () => {
     const initialRows: GridRowsProp = useAppSelector((state) => state.user.rows);
-    const [rows, setRows] = React.useState(initialRows);
-    const [rowModesModel, setRowModesModel] = React.useState<GridRowModesModel>({});
-    const [isErrorPopupOpen, setIsErrorPopupOpen] = React.useState<boolean>(false);
-   
+    const [rows, setRows] = useState(initialRows);
+    const [rowModesModel, setRowModesModel] = useState<GridRowModesModel>({});
+    const [notification, setNotification] = useState({ open: false, onConfirm: () => { }, type: '' });
+
+    const handleCloseNotification = () => {
+        setNotification({ open: false, onConfirm: () => { }, type: '' });
+    };
+
     const handleRowEditStop: GridEventListener<'rowEditStop'> = (params, event) => {
         if (params.reason === GridRowEditStopReasons.rowFocusOut) {
             event.defaultMuiPrevented = true;
@@ -43,31 +48,86 @@ const Table = () => {
         return rowModesModel[params.id]?.mode === GridRowModes.Edit ? 100 : 60;
     };
 
-    const handleCloseErrorPopup = () => {
-        setIsErrorPopupOpen(false);
-    };
 
     const handleEditClick = (id: GridRowId) => () => {
-        console.log(id);
         setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.Edit } });
     };
 
+    const validateUser = (user: GridRowModel, requiredFields: string[]) => {
+        console.log(requiredFields)
+        for (const field of requiredFields) {
+            const fieldValue = user[field as keyof GridRowModel];
+            if (fieldValue === '' || fieldValue === null) {
+                return false;
+            }
+            console.log(fieldValue, field)
+        }
+        return true
+    };
+
     const handleSaveClick = (id: GridRowId) => () => {
-        setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.View } });
+        try {
+            const editedRow = rows.find((row) => row.id === id)!;
+            if (validateUser(editedRow, emptyColumns.map((column) => column.field))) {
+                setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.View } });
+                setNotification({
+                    open: true,
+                    onConfirm: handleCloseNotification,
+                    type: 'SAVE_USER'
+                })
+            }
+            else {
+                setNotification({
+                    open: true,
+                    onConfirm: () => { },
+                    type: 'MISSING_FIELDS'
+                });
+            }
+        }
+        catch (error) {
+            console.log(error);
+            setNotification({
+                open: true,
+                onConfirm: () => { },
+                type: 'FAIL_SAVE_USER'
+            });
+        }
     };
 
     const handleDeleteClick = (id: GridRowId) => () => {
-        setRows(rows.filter((row) => row.id !== id));
+        const confirmDelete = () => {
+            setRows(rows.filter((row) => row.id !== id));
+            handleCloseNotification();
+        };
+
+        setNotification({
+            open: true,
+            onConfirm: confirmDelete,
+            type: 'DELETE_USER'
+        });
     };
 
     const handleCancelClick = (id: GridRowId) => () => {
-        setRowModesModel({
-            ...rowModesModel,
-            [id]: { mode: GridRowModes.View, ignoreModifications: true }});
+        const comfirmDiscard = () => {
+            setRowModesModel({
+                ...rowModesModel,
+                [id]: { mode: GridRowModes.View, ignoreModifications: true }
+            });
+
+            const editedRow = rows.find((row) => row.id === id)!;
+            console.log(editedRow, 'editrow')
+            if (!validateUser(editedRow, emptyColumns.map((column) => column.field))) {
+                setRows(rows.filter((row) => row.id !== id))
+            }
         
-        const editedRow = rows.find((row) => row.id === id);
-        if (editedRow!.isNew) {
-            setRows(rows.filter((row) => row.id !== id)) }
+            handleCloseNotification();
+        }
+
+        setNotification({
+            open: true,
+            onConfirm: comfirmDiscard,
+            type: 'DISCARD_CHANGES'
+        });
     };
 
     const columns: GridColDef[] = [
@@ -77,7 +137,7 @@ const Table = () => {
             headerName: 'Actions',
             flex: 1,
             minWidth: 200,
-            
+
             cellClassName: 'actions',
             renderCell: ({ id }) => (
                 <GridActionsColumn
@@ -88,27 +148,27 @@ const Table = () => {
                     handleEditClick={handleEditClick(id)}
                     handleDeleteClick={handleDeleteClick(id)}
                 />
-                )}
+            )
+        }
     ];
-    React.useEffect(() => {
-        if (rows.length === 0)
-            setIsErrorPopupOpen(true);
 
-    }, []);
-    
-    const maxId = rows.reduce((max, row) => (row.id > max ? row.id : max), 0);  
-    const handleClick = () => {
-          const id = maxId + 1;
-          setRows((oldRows) => [ { id, uid: id, name: '', gender: '', address: '', mobile: '', birthday: '', age: '', action: '' }, ...oldRows,]);
-          setRowModesModel((oldModel) => ({ ...oldModel, [id]: { mode: GridRowModes.Edit, fieldToFocus: 'uid' },
-          }));
-        };
-  
+    const maxId = rows.reduce((max, row) => (row.id > max ? row.id : max), 0);
+    const handleAddClick = () => {
+
+        const id = maxId + 1;
+        setRows((oldRows) => [{ id, uid: id, name: '', gender: '', address: '', mobile: '', birthday: '', age: '', action: '' }, ...oldRows,]);
+        setRowModesModel((oldModel) => ({
+            ...oldModel, [id]: { mode: GridRowModes.Edit, fieldToFocus: 'uid' },
+
+        }));
+
+    };
+
     return (
         <Container>
             <Title>User Details</Title>
             <ButtonWrapper>
-                <Button variant="contained" onClick={handleClick}>Add new</Button>
+                <Button variant="contained" onClick={handleAddClick}>Add new</Button>
             </ButtonWrapper>
             {rows.length === 0 ? (
                 <StyledDataGrid
@@ -130,7 +190,12 @@ const Table = () => {
                     disableColumnMenu
                 />
             )}
-            <ErrorPopup open={isErrorPopupOpen} onClose={handleCloseErrorPopup} />
+
+            <ErrorPopup
+                open={notification.open}
+                onClose={handleCloseNotification}
+                type={notification.type}
+                onSubmit={notification.onConfirm} />
 
         </Container>
     )

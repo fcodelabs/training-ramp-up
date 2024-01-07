@@ -22,7 +22,8 @@ const initialState: initialDataType = {
     isLoading: false,
     rows: [
     { id: 1, uid: 1, name: 'thambara', gender: 'Male', address: 'kk,ksksd,sdsa', mobile: '07162727876', birthday: randomCreatedDate(), age: 20 },
-    { id: 2, uid: 2, name: 'sahass', gender: 'Male', address: 'kk,ksksd,sdsa', mobile: '07162727876', birthday: randomCreatedDate(), age: 30 }]
+    { id: 2, uid: 2, name: 'sahass', gender: 'Male', address: 'kk,ksksd,sdsa', mobile: '07162727876', birthday: randomCreatedDate(), age: 30 }
+]
 }
 
 const userSlice = createSlice({
