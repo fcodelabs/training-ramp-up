@@ -54,13 +54,11 @@ const Table = () => {
     };
 
     const validateUser = (user: GridRowModel, requiredFields: string[]) => {
-        console.log(requiredFields)
         for (const field of requiredFields) {
             const fieldValue = user[field as keyof GridRowModel];
             if (fieldValue === '' || fieldValue === null) {
                 return false;
             }
-            console.log(fieldValue, field)
         }
         return true
     };

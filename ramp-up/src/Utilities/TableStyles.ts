@@ -65,6 +65,11 @@ export const StyledDataGrid = styled(DataGrid)((theme) => ({
     '& .MuiDataGrid-columnHeaderTitleContainer': {
         justifyContent: 'flex-start !important',
     },
+    '& .MuiDataGrid-cell.MuiDataGrid-cell--editing': {
+        alignItems: 'flex-start !important',
+        paddingTop:'21px !important',
+    },
+
     // do above for all headers
 
     

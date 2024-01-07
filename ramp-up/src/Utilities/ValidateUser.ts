@@ -13,14 +13,46 @@ const validateUser = (user: GridRowModel, requiredFields: string[]) => {
 };
 
 const validateName = (name: string) => {
-    if (name.length < 3) {
+    if (name==='') {
+        return false;
+    }
+    return true;
+}
+
+const validateAge = (age: number) => {
+    if (age<18) {
+        return false;
+    }
+    return true;
+}
+
+const validateMobile = (mobile:string) => {
+    const phoneRegex = /^(\+\d{1,})?\d{10}$/;
+  
+    const isValid = phoneRegex.test(mobile);
+  
+    return isValid;
+  };
+
+const validateAddress = (address:string) => {
+    if (address==='') {
+        return false;
+    }
+    return true;
+
+}
+
+const validateBirthday = (birthday:Date) => {
+    if (birthday===null) {
         return false;
     }
     return true;
 }
 
 
+  
 
 
 
-export default validateUser;
+
+export {validateUser, validateName, validateAge, validateMobile, validateAddress, validateBirthday};
