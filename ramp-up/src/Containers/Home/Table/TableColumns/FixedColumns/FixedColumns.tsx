@@ -1,8 +1,11 @@
-import { MenuItem, TextField, Typography } from '@mui/material';
+import { FormHelperText, MenuItem, TextField, Typography } from '@mui/material';
 import { GridColDef } from '@mui/x-data-grid';
 import styled from 'styled-components';
 import { validateName, validateAddress, validateMobile, validateAge, validateBirthday } from '../../../../../Utilities/ValidateUser';
 import calculateAge from '../../../../../Utilities/calculateAge';
+import 'react-phone-number-input/style.css';
+import PhoneInput from 'react-phone-number-input';
+
 const genders = ['Male', 'female', 'other'];
 
 interface Props {
@@ -21,10 +24,48 @@ const StyledTextFieldWrapper = styled(TextField)<Props>(({ error }) => ({
     },
     '& .MuiFormHelperText-root': {
         marginLeft: 0,
-        fontSize: 7,
+        fontSize: 8,
 
     }
 }));
+
+const StyledPhoneInputWrapper = styled.div({
+    width: '100%',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+})
+
+const StyledFormHelperText = styled.div({
+    fontSize: 7.5,
+    width: '100%',
+    paddingTop: '4.5px',
+    textAlign: 'start',
+    color: '#d32f2f'
+
+});
+
+const StyledPhoneInput = styled(PhoneInput)<Props>(({ error }) => ({
+    display: 'flex',
+    width: '99%',
+    "& .PhoneInputCountry": {
+        display: 'none',
+    },
+    "& .PhoneInputInput": {
+        // border: error ? '1px solid red' : '1px solid rgba(33, 150, 243, 0.7)',
+        height: '52.5px',
+        border: error ? '0.9px solid #ce1515' : '0.9px solid rgba(33, 150, 243, 0.7)',
+        borderRadius: '5px',
+        "&:focus": {
+            outline: error ? '0.9px solid #ce1515' : '0.9px solid rgba(33, 150, 243, 0.7)',
+        }
+    },
+
+
+}))
+
+
 
 export const FixedColumns: GridColDef[] = [
 
@@ -42,7 +83,7 @@ export const FixedColumns: GridColDef[] = [
         },
         renderEditCell: (params) => {
             if (params.field === 'name') {
-                const error=!validateName(params.value)
+                const error = !validateName(params.value)
 
                 return (
                     <StyledTextFieldWrapper
@@ -84,7 +125,7 @@ export const FixedColumns: GridColDef[] = [
         field: 'address', headerName: 'Address', type: 'string', flex: 1, minWidth: 100, sortable: false, editable: true,
         renderEditCell: (params) => {
             if (params.field === 'address') {
-                const error=!validateAddress(params.value)
+                const error = !validateAddress(params.value)
                 return (
                     <StyledTextFieldWrapper
                         type="text"
@@ -101,52 +142,45 @@ export const FixedColumns: GridColDef[] = [
         }
     },
     {
-        field: 'mobile', headerName: 'Mobile No.', flex: 1, minWidth: 100, sortable: false, editable: true,
+        field: 'mobile', headerName: 'Mobile No.', flex: 1.1, minWidth: 100, sortable: false, editable: true,
         renderEditCell: (params) => {
             if (params.field === 'mobile') {
                 const error = !validateMobile(params.value);
-                const formatMobileInput = (input: string) => {
-                    // Format the mobile number input with spaces (e.g., '0714668617' to '071 466 8617')
-                    const formattedInput = input.replace(/\D/g, ''); // Remove non-numeric characters
-                    const parts = formattedInput.match(/^(\d{1,3})(\d{1,2})?(\d{1,2})?(\d{1,4})?(\d{1,4})?(\d{1,4})?(\d{1,4})?$/);
-                
-                    if (parts) {
-                        parts.shift(); // Remove the first empty element
-                        return parts.filter(Boolean).join(' ');
-                    }
-                
-                    return '';
-                };
+                console.log(error, typeof params.value);
+
                 return (
-                    <StyledTextFieldWrapper
-                        fullWidth
-                        type="tel"
-                        placeholder='+'
-                        error={error}
-                        value={params.value || ''}
-                        onChange={(e) => {
-                            const formattedInput = formatMobileInput(e.target.value);
-                            params.api.setEditCellValue({ id: params.id, field: params.field, value: e.target.value })}}
-                        helperText={error && 'Please enter a valid mobile number'}
-                    />
+                    <StyledPhoneInputWrapper>
+                        <StyledPhoneInput
+                            error={error}
+                            placeholder="+"
+                            value={params.value || ''}
+                            maxLength={16}
+                            onChange={(value: any) => {
+                                params.api.setEditCellValue({ id: params.id, field: params.field, value: value });
+                            }}
+                        >
+                        </StyledPhoneInput>
+                        {error && <StyledFormHelperText >This field is required</StyledFormHelperText>}
+                    </StyledPhoneInputWrapper>
                 );
             }
         },
         renderCell: (params) => {
             const formatMobileDisplay = (mobile: string) => {
-                // Format mobile number for display (e.g., '+94 766 847 479' to '076-684-7479')
-                const formattedInput = mobile.replace(/\D/g, ''); // Remove non-numeric characters
-                const parts = formattedInput.match(/^(\d{3})(\d{2,3})(\d{2,4})$/);
-            
-                if (parts) {
-                    return `${parts[1]}-${parts[2]}-${parts[3]}${parts[4] ? `-${parts[4]}` : ''}`;
+                const numericMobile = mobile.replace(/\D/g, '');
+                if (numericMobile.startsWith('94')) {
+                    const formattedMobile = '0' + numericMobile.slice(2);
+
+                    return formattedMobile.replace(/(\d{3})(\d{3})(\d{4})/, '$1-$2-$3');
+                } else {
+                    return numericMobile.replace(/^\+/, '').replace(/(\d{3})(\d{3})(\d{3,})/, '$1-$2-$3');
                 }
-            
-                return '';
             };
+
             const formattedMobile = formatMobileDisplay(params.value);
             return <div>{formattedMobile}</div>;
         },
+
     },
     {
         field: 'birthday', headerName: 'Date of Birth', type: 'string', flex: 1, minWidth: 100, editable: true, sortingOrder: ['desc', 'asc'],
@@ -175,21 +209,20 @@ export const FixedColumns: GridColDef[] = [
             );
         },
         renderEditCell: (params) => {
-        
+
             if (params.field === 'birthday') {
                 const error = !validateBirthday(params.value)
                 const dateObject = params.value ? new Date(params.value) : null;
-    
+
                 const handleDateChange = (newDate: string) => {
                     const newDateObject = newDate ? new Date(newDate) : null;
                     params.api.setEditCellValue({ id: params.id, field: params.field, value: newDateObject });
-    
+
                     // Calculate and set age
                     const age = calculateAge(newDateObject!);
-                    console.log(age, 'age')
                     params.api.setEditCellValue({ id: params.id, field: 'age', value: age });
                 };
-    
+
                 return (
                     <StyledTextFieldWrapper
                         error={error}

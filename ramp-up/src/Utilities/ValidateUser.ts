@@ -1,14 +1,11 @@
 import { GridRowModel } from "@mui/x-data-grid";
+import parsePhoneNumber from 'libphonenumber-js';
+
+
 
 const validateUser = (user: GridRowModel, requiredFields: string[]) => {
     console.log(requiredFields)
-    for (const field of requiredFields) {
-        const fieldValue = user[field as keyof GridRowModel];
-        if (fieldValue === '' || fieldValue === null) {
-            return false;
-        }
-        console.log(fieldValue, field)
-    }
+    
     return true
 };
 
@@ -26,11 +23,6 @@ const validateAge = (age: number) => {
     return true;
 }
 
-const validateMobile = (mobile: string) => {
-    // Add your mobile validation logic here
-    const mobileRegex = /^\+(\d{1,3})\s(\d{1,2}\s?){1,5}$/;
-    return mobileRegex.test(mobile);
-};
 
 const validateAddress = (address:string) => {
     if (address==='') {
@@ -39,6 +31,14 @@ const validateAddress = (address:string) => {
     return true;
 
 }
+const validateMobile = (inputValue: string) => {
+    try{
+      const phoneNumberObj = parsePhoneNumber(inputValue);
+      return (phoneNumberObj!.isValid());
+    } catch (error) {
+      return false;
+    }
+  };
 
 const validateBirthday = (birthday:Date) => {
     if (birthday===null) {
