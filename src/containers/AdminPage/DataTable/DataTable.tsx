@@ -79,7 +79,7 @@ const StyledAddButton = styled(Button)`
 
 const StyledDataTableBox = styled(Box)`
   &&& {
-    width: 1152px;
+    width: auto;
     height: auto;
     border-radius: 4px;
     background: #FFFFFF;

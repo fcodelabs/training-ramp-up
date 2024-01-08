@@ -1,13 +1,73 @@
 import React from 'react';
 import DataTable from './DataTable/DataTable';
+import { Button, Typography, Box } from '@mui/material';
+import styled from 'styled-components';
+import "@fontsource/roboto";
+
+const StyledHeaderBox = styled(Box)`
+  &&& {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    align-content: flex-start;
+    padding: 8px 24px;
+    box-shadow: 0px 2px 1px -1px rgba(0, 0, 0, 0.1);
+  }
+`;
+
+const StyledLoginButton = styled(Button)`
+&&&{
+    border-color: #2196F380;
+    color: #2196F3;
+    font-family: Roboto;
+    font-weight: 500;
+    font-size: 13px;
+    line-height: 22px;
+    Letter-spacing: 0.46px;
+    }
+`;
+
+const StyledTypography = styled(Typography)`
+  &&& {
+    width: 181px;
+    height: 32px;
+    font-family: Roboto;
+    font-size: 24px;
+    font-weight: 600;
+    line-height: 32px;
+    letter-spacing: 0px;
+    text-align: left;
+    color: #1E88E5;
+  }
+`;
+
+const StyledDataBox = styled(Box)`
+    &&& {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        width: 100vw;
+        
+        
+    }
+    `;
+
 
 function AdminPage() {
-  return (
-    <div>
-      <h1>Admin Page</h1>
-        <DataTable />
-    </div>
-  );
+    return (
+        <div>
+
+            <StyledHeaderBox>
+                <StyledTypography variant='h5' >Ramp Up Project</StyledTypography>
+                <StyledLoginButton variant="outlined">LOGIN</StyledLoginButton>
+            </StyledHeaderBox>
+            <StyledDataBox>
+                <DataTable />
+            </StyledDataBox>
+
+        </div>
+    );
 };
 
 export default AdminPage;
