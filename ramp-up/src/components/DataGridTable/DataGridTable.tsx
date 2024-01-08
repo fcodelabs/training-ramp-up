@@ -52,7 +52,10 @@ interface EditToolbarProps {
 }
 
 function EditToolbar(props: EditToolbarProps) {
-  idValue = useSelector((state: RootState) => state.student.students).length;
+  idValue = useSelector((state: RootState) => state.student.students).reduce(
+    (maxId, obj) => Math.max(maxId, obj.id),
+    0
+  );
   const currentRows = useSelector((state: RootState) => state.student.students);
   const dispatch = useDispatch();
   const isMobile = useMediaQuery("(max-width: 400px)");
