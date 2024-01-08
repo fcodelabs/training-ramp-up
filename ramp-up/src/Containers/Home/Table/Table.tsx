@@ -1,5 +1,5 @@
 import Button from '@mui/material/Button';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import {
     GridRowsProp,
     GridRowModesModel,
@@ -9,20 +9,26 @@ import {
     GridRowId,
     GridRowModel,
     GridRowEditStopReasons,
+    useGridApiRef,
 } from '@mui/x-data-grid';
 import { FixedColumns } from './TableColumns/FixedColumns/FixedColumns';
 import ErrorPopup from '../../../Components/ErrorNotification/ErrorNotification';
-import { useAppSelector } from '../../../Redux/hooks';
+import { useAppSelector, useAppDispatch } from '../../../Redux/hooks';
 import { emptyColumns, emptyRows } from './TableColumns/TableSkeletons/TableSkeletons';
 import { Container, ButtonWrapper, StyledDataGrid, Title } from '../../../Utilities/TableStyles';
 import GridActionsColumn from './TableColumns/ActionColumn/ActionColumn';
 import { validateUser } from '../../../Utilities/ValidateUser';
+import { addUser, saveUser } from '../../../Redux/user/userSlice';
+import { wait } from '@testing-library/user-event/dist/utils';
+
 
 const Table = () => {
     const initialRows: GridRowsProp = useAppSelector((state) => state.user.rows);
     const [rows, setRows] = useState(initialRows);
     const [rowModesModel, setRowModesModel] = useState<GridRowModesModel>({});
     const [notification, setNotification] = useState({ open: false, onConfirm: () => { }, type: '' });
+    const dispatch = useAppDispatch();
+    const apiRef = useGridApiRef();
 
     const handleCloseNotification = () => {
         setNotification({ open: false, onConfirm: () => { }, type: '' });
@@ -51,11 +57,11 @@ const Table = () => {
         setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.Edit } });
     };
 
-    const handleSaveClick = (id: GridRowId) => () => {
+    const handleSaveClick = (params: any) => () => {
         try {
-            const editedRow = rows.find((row) => row.id === id)!;
+            const editedRow = initialRows.find((row) => row.id === params.id)!;
             if (validateUser(editedRow, emptyColumns.map((column) => column.field))) {
-                setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.View } });
+                setRowModesModel({ ...rowModesModel, [params.id]: { mode: GridRowModes.View } });
                 setNotification({
                     open: true,
                     onConfirm: handleCloseNotification,
@@ -63,6 +69,7 @@ const Table = () => {
                 })
             }
             else {
+                setRowModesModel({ ...rowModesModel, [params.id]: { mode: GridRowModes.Edit} });
                 setNotification({
                     open: true,
                     onConfirm: () => { },
@@ -120,14 +127,13 @@ const Table = () => {
             flex: 1,
             minWidth: 200,
             cellClassName: 'actions',
-            renderCell: ({ id }) => (
+            renderCell: ( params ) => (
                 <GridActionsColumn
-                    id={id}
-                    isInEditMode={rowModesModel[id]?.mode === GridRowModes.Edit}
-                    handleSaveClick={handleSaveClick(id)}
-                    handleCancelClick={handleCancelClick(id)}
-                    handleEditClick={handleEditClick(id)}
-                    handleDeleteClick={handleDeleteClick(id)}
+                    isInEditMode={rowModesModel[params.id]?.mode === GridRowModes.Edit}
+                    handleSaveClick={handleSaveClick(params)}
+                    handleCancelClick={handleCancelClick(params.id)}
+                    handleEditClick={handleEditClick(params.id)}
+                    handleDeleteClick={handleDeleteClick(params.id)}
                 />
             )
         }
@@ -136,7 +142,8 @@ const Table = () => {
     const maxId = rows.reduce((max, row) => (row.id > max ? row.id : max), 0);
     const handleAddClick = () => {
         const id = maxId + 1;
-        setRows((oldRows) => [{ id, uid: id, name: '', gender: '', address: '', mobile: '', birthday: '', age: '', action: '' }, ...oldRows,]);
+        setRows((oldRows) => [{ id, uid: id, name: '', gender: '', address: '', mobile: '', birthday: '', age: '', action: '', isNew: true }, ...oldRows,]);
+        dispatch(addUser({id:id, uid: id, name: '', gender: '', address: '', mobile: '', birthday: new Date(), age: Number()} ))
         setRowModesModel((oldModel) => ({
             ...oldModel, [id]: { mode: GridRowModes.Edit, fieldToFocus: 'uid' },
         }));
@@ -157,6 +164,7 @@ const Table = () => {
                 />
             ) : (
                 <StyledDataGrid
+                    apiRef={apiRef}
                     rows={rows}
                     columns={columns}
                     editMode="row"
@@ -165,6 +173,7 @@ const Table = () => {
                     onRowModesModelChange={handleRowModesModelChange}
                     onRowEditStop={handleRowEditStop}
                     processRowUpdate={processRowUpdate}
+                    
                     getRowHeight={getRowHeight}
                     disableColumnMenu
                 />

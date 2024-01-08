@@ -1,6 +1,10 @@
 import { StyledTextFieldWrapper } from "../../../../../../Utilities/TableStyles"
 import { validateBirthday } from "../../../../../../Utilities/ValidateUser"
 import calculateAge from "../../../../../../Utilities/calculateAge"
+import { useAppDispatch } from "../../../../../../Redux/hooks";
+import { updateBirthday, updateAge } from "../../../../../../Redux/user/userSlice";
+
+
 
 const BirthdayHeader = (props: any) => {
     return (<div style={{ paddingRight: '25px' }}>
@@ -9,6 +13,7 @@ const BirthdayHeader = (props: any) => {
 }
 
 const BirthdayCell: React.FC<{ params: any }> = ({ params }) => {
+    
     const dateObject = params.value ? new Date(params.value) : null;
 
     const formattedDate = dateObject
@@ -27,6 +32,7 @@ const BirthdayCell: React.FC<{ params: any }> = ({ params }) => {
 }
 
 const BirthdayEditCell: React.FC<{ params: any }> = ({ params }) => {
+    const dispatch = useAppDispatch();
     const error = !validateBirthday(params.value)
     const dateObject = params.value ? new Date(params.value) : null;
     const handleDateChange = (newDate: string) => {
@@ -34,6 +40,17 @@ const BirthdayEditCell: React.FC<{ params: any }> = ({ params }) => {
         params.api.setEditCellValue({ id: params.id, field: params.field, value: newDateObject });
         const age = calculateAge(newDateObject!);
         params.api.setEditCellValue({ id: params.id, field: 'age', value: age });
+        const Birthday = {
+            uid: params.id,
+            birthday: newDateObject!,
+        }
+        const Age = {
+            uid: params.id,
+            age: Number(age),
+        }
+        dispatch(updateBirthday(Birthday))
+        dispatch(updateAge(Age))
+
     };
 
     return (

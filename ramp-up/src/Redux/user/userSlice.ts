@@ -33,18 +33,40 @@ const userSlice = createSlice({
         fetchUsers: (state, action: PayloadAction<String>) => {
             state.isLoading = false;
         },
-
         fetchUsersFailure: (state) => {
             state.isLoading = true;
         },
         addUser: (state, action: PayloadAction<User>) => {
             state.rows.push(action.payload);
-        }
+        },
+        discardUser: (state, action: PayloadAction<User>) => {
+            state.rows = state.rows.filter((user) => user.uid !== action.payload.uid);
+        },
+        saveUser: (state, action: PayloadAction<User>) => {
+            state.rows = state.rows.map((user) => user.uid === action.payload.uid ? action.payload : user);
+        },
+        updateName: (state, action: PayloadAction<{ uid: number, name: string }>) => {
+            state.rows = state.rows.map((user) => user.uid === action.payload.uid ? { ...user, name: action.payload.name } : user);
+        },
+        updateAddress: (state, action: PayloadAction<{ uid: number, address: string }>) => {
+            state.rows = state.rows.map((user) => user.uid === action.payload.uid ? { ...user, address: action.payload.address } : user);
+        },
+        updateMobile: (state, action: PayloadAction<{ uid: number, mobile: string }>) => {
+            state.rows = state.rows.map((user) => user.uid === action.payload.uid ? { ...user, mobile: action.payload.mobile } : user);
+        },
+        updateBirthday: (state, action: PayloadAction<{ uid: number, birthday: Date }>) => {
+            state.rows = state.rows.map((user) => user.uid === action.payload.uid ? { ...user, birthday: action.payload.birthday } : user);
+        },
+        updateAge: (state, action: PayloadAction<{ uid: number, age: number }>) => {
+            state.rows = state.rows.map((user) => user.uid === action.payload.uid ? { ...user, age: action.payload.age } : user);
+        },
+        updateGender: (state, action: PayloadAction<{ uid: number, gender: string }>) => {
+            state.rows = state.rows.map((user) => user.uid === action.payload.uid ? { ...user, gender: action.payload.gender } : user);}
 
     }
 })
 
-export const { fetchUsers, fetchUsersFailure, addUser } = userSlice.actions;
+export const { fetchUsers, fetchUsersFailure, addUser, discardUser, saveUser, updateName, updateAge, updateAddress, updateBirthday, updateGender, updateMobile } = userSlice.actions;
 
 export default userSlice.reducer;
 
