@@ -1,21 +1,37 @@
+import dayjs from "dayjs";
+import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../../redux/store";
+import { updateStudent } from "../../redux/slice/studentSlice";
 import {
   Button,
   Container,
   Grid,
+  MenuItem,
   Paper,
+  Select,
   Stack,
+  TextField,
   Typography,
   useMediaQuery,
 } from "@mui/material";
 import {
   DataGrid,
   GridColDef,
+  GridEventListener,
+  GridRenderCellParams,
+  GridRowEditStopReasons,
+  GridRowId,
+  GridRowModel,
   GridRowModes,
   GridRowModesModel,
   GridRowsProp,
   GridToolbarContainer,
 } from "@mui/x-data-grid";
-import { useState } from "react";
 
 let idValue = 0;
 
@@ -23,44 +39,10 @@ const uniqueIdGenerator = () => {
   idValue += 1;
   return idValue;
 };
-const InitialRows = [
-  {
-    id: uniqueIdGenerator(),
-    name: "Snow",
-    gender: "Male",
-    address: "Matara",
-    mobileno: "071-466-8617",
-    dateofbirth: new Date(1998, 11, 4),
-    age: 23,
-  },
-  {
-    id: uniqueIdGenerator(),
-    name: "Snow",
-    gender: "Male",
-    address: "Matara",
-    mobileno: "071-466-8617",
-    dateofbirth: new Date(1999, 11, 4),
-    age: 23,
-  },
-  {
-    id: uniqueIdGenerator(),
-    name: "Snow",
-    gender: "Male",
-    address: "Matara",
-    mobileno: "071-466-8617",
-    dateofbirth: new Date(2004, 11, 4),
-    age: 23,
-  },
-  {
-    id: uniqueIdGenerator(),
-    name: "Snow",
-    gender: "Male",
-    address: "Matara",
-    mobileno: "071-466-8617",
-    dateofbirth: new Date(1999, 11, 4),
-    age: 23,
-  },
-];
+
+const idReducer = () => {
+  idValue -= 1;
+};
 
 interface EditToolbarProps {
   setRows: (newRows: (oldRows: GridRowsProp) => GridRowsProp) => void;
@@ -70,12 +52,29 @@ interface EditToolbarProps {
 }
 
 function EditToolbar(props: EditToolbarProps) {
+  idValue = useSelector((state: RootState) => state.student.students).length;
+  const currentRows = useSelector((state: RootState) => state.student.students);
+  const dispatch = useDispatch();
   const isMobile = useMediaQuery("(max-width: 400px)");
-  const { setRows, setRowModesModel } = props;
+  const { setRowModesModel } = props;
 
   const handleClick = () => {
     const id = uniqueIdGenerator();
-    setRows((oldRows) => [...oldRows, { id, name: "", age: "", isNew: true }]);
+    dispatch(
+      updateStudent([
+        {
+          id,
+          name: "",
+          gender: "",
+          address: "",
+          mobileno: "",
+          dateofbirth: dayjs(new Date()),
+          age: "",
+          isNew: true,
+        },
+        ...currentRows,
+      ])
+    );
     setRowModesModel((oldModel) => ({
       ...oldModel,
       [id]: { mode: GridRowModes.Edit, fieldToFocus: "name" },
@@ -101,7 +100,7 @@ function EditToolbar(props: EditToolbarProps) {
           <Button
             color="primary"
             size="small"
-            variant="outlined"
+            variant="contained"
             onClick={handleClick}
           >
             Add New
@@ -111,145 +110,351 @@ function EditToolbar(props: EditToolbarProps) {
     </GridToolbarContainer>
   );
 }
-const columns: GridColDef[] = [
-  {
-    field: "id",
-    type: "number",
-    headerName: "ID",
-    headerClassName: "super-app-theme--header",
 
-    width: 86,
-    sortable: false,
-    valueFormatter: (params) => {
-      const id = Number(params.value);
-      const formattedId = id.toString().padStart(2, "0");
-      return formattedId;
-    },
-  },
-  {
-    field: "name",
-    headerName: "Name",
-    headerClassName: "super-app-theme--header",
-    width: 135,
-    sortable: true,
-    editable: true,
-  },
-  {
-    field: "gender",
-    headerName: "Gender",
-    headerClassName: "super-app-theme--header",
-    type: "singleSelect",
-    valueOptions: ["male", "Female", "Other"],
-    width: 137,
-    sortable: false,
-    editable: true,
-  },
-  {
-    field: "address",
-    headerName: "Address",
-    headerClassName: "super-app-theme--header",
-    width: 137,
-    sortable: false,
-    editable: true,
-  },
-  {
-    field: "mobileno",
-    headerName: "Mobile No:",
-    headerClassName: "super-app-theme--header",
-    sortable: false,
-    width: 135,
-    editable: true,
-  },
-  {
-    field: "dateofbirth",
-    headerName: "Date of Birth",
-    headerClassName: "super-app-theme--header",
-    type: "date",
-    valueFormatter: (params) => {
-      const date = new Date(params.value);
-      return date
-        .toLocaleDateString("en-US", {
-          day: "2-digit",
-          month: "short",
-          year: "numeric",
-          weekday: "short",
-        })
-        .replace(/,/g, "");
-    },
-    sortable: true,
-    editable: true,
-    width: 175,
-  },
-  {
-    field: "age",
-    headerName: "Age",
-    headerClassName: "super-app-theme--header",
-    type: "number",
-    sortable: false,
-    width: 101,
-    valueGetter: ({ row }) => {
-      try {
-        const dateOfBirth = new Date(row.dateofbirth);
+const DataGridTable = () => {
+  const initialRows: GridRowsProp = useSelector(
+    (state: RootState) => state.student.students
+  );
+  const dispatch = useDispatch();
 
-        const today = new Date();
-        const age =
-          today.getFullYear() -
-          dateOfBirth.getFullYear() -
-          (today.getMonth() < dateOfBirth.getMonth() ||
-          (today.getMonth() === dateOfBirth.getMonth() &&
-            today.getDate() < dateOfBirth.getDate())
-            ? 1
-            : 0);
-        return age;
-      } catch (error) {
-        return 0;
-      }
-    },
-  },
-  {
-    field: "actions",
-    type: "actions",
-    headerClassName: "super-app-theme--header",
-    headerName: "Actions",
-    width: 195,
-    cellClassName: "actions",
-    getActions: () => {
-      const isInEditMode = false;
+  const [rowModesModel, setRowModesModel] = useState<GridRowModesModel>({});
+  const handleRowEditStop: GridEventListener<"rowEditStop"> = (
+    params,
+    event
+  ) => {
+    if (params.reason === GridRowEditStopReasons.rowFocusOut) {
+      event.defaultMuiPrevented = true;
+    }
+  };
 
-      if (isInEditMode) {
+  const handleEditClick = (id: GridRowId) => () => {
+    setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.Edit } });
+  };
+
+  const handleSaveClick = (id: GridRowId) => () => {
+    setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.View } });
+  };
+
+  const handleDeleteClick = (id: GridRowId) => () => {
+    dispatch(updateStudent(initialRows.filter((row) => row.id !== id)));
+    idReducer();
+  };
+
+  const handleCancelClick = (id: GridRowId) => () => {
+    setRowModesModel({
+      ...rowModesModel,
+      [id]: { mode: GridRowModes.View, ignoreModifications: true },
+    });
+
+    const editedRow = initialRows.find((row) => row.id === id);
+    if (editedRow!.isNew) {
+      dispatch(updateStudent(initialRows.filter((row) => row.id !== id)));
+    }
+    idReducer();
+  };
+
+  const processRowUpdate = (newRow: GridRowModel) => {
+    const updatedRow = { ...newRow, isNew: false };
+
+    dispatch(
+      updateStudent(
+        initialRows.map((row) => (row.id === newRow.id ? updatedRow : row))
+      )
+    );
+    return updatedRow;
+  };
+
+  const handleRowModesModelChange = (newRowModesModel: GridRowModesModel) => {
+    setRowModesModel(newRowModesModel);
+  };
+  const columns: GridColDef[] = [
+    {
+      field: "id",
+      type: "number",
+      headerName: "ID",
+      headerClassName: "super-app-theme--header",
+      headerAlign: "left",
+      align: "left",
+      width: 80,
+      sortable: false,
+      valueFormatter: (params) => {
+        const id = Number(params.value);
+        const formattedId = id.toString().padStart(2, "0");
+        return formattedId;
+      },
+    },
+    {
+      field: "name",
+      headerName: "Name",
+      headerClassName: "super-app-theme--header",
+      headerAlign: "left",
+      align: "left",
+      width: 100,
+      sortable: true,
+      editable: true,
+
+      renderEditCell: (params: GridRenderCellParams<any, string>) => (
+        <TextField
+          size="small"
+          value={params.value as string}
+          onChange={(e) =>
+            params.api.setEditCellValue({
+              id: params.id,
+              field: params.field,
+              value: e.target.value,
+            })
+          }
+          sx={{
+            boxShadow: "0px 3px 1px -2px rgba(0, 0, 0, 0.2)",
+            border: "1px solid rgba(33, 150, 243, 1)",
+            borderRadius: "5px",
+          }}
+        />
+      ),
+    },
+    {
+      field: "gender",
+      headerName: "Gender",
+      headerClassName: "super-app-theme--header",
+      headerAlign: "left",
+      align: "left",
+      type: "singleSelect",
+      valueOptions: ["male", "Female", "Other"],
+      width: 120,
+      sortable: false,
+      editable: true,
+      renderEditCell: (params: GridRenderCellParams<any, string>) => (
+        <Select
+          size="small"
+          fullWidth
+          value={params.value as string}
+          onChange={(e) =>
+            params.api.setEditCellValue({
+              id: params.id,
+              field: params.field,
+              value: e.target.value,
+            })
+          }
+          sx={{
+            boxShadow: "0px 3px 1px -2px rgba(0, 0, 0, 0.2)",
+            border: "1px solid rgba(33, 150, 243, 1)",
+            borderRadius: "5px",
+          }}
+        >
+          <MenuItem value={"Male"}>Male</MenuItem>
+          <MenuItem value={"Female"}>Female</MenuItem>
+          <MenuItem value={"Other"}>Other</MenuItem>
+        </Select>
+      ),
+    },
+    {
+      field: "address",
+      headerName: "Address",
+      headerClassName: "super-app-theme--header",
+      headerAlign: "left",
+      align: "left",
+      width: 150,
+      sortable: false,
+      editable: true,
+      renderEditCell: (params: GridRenderCellParams<any, string>) => (
+        <TextField
+          size="small"
+          value={params.value as string}
+          onChange={(e) =>
+            params.api.setEditCellValue({
+              id: params.id,
+              field: params.field,
+              value: e.target.value,
+            })
+          }
+          sx={{
+            boxShadow: "0px 3px 1px -2px rgba(0, 0, 0, 0.2)",
+            border: "1px solid rgba(33, 150, 243, 1)",
+            borderRadius: "5px",
+          }}
+        />
+      ),
+    },
+    {
+      field: "mobileno",
+      headerName: "Mobile No:",
+      headerClassName: "super-app-theme--header",
+      headerAlign: "left",
+      align: "left",
+      sortable: false,
+      width: 150,
+      editable: true,
+      renderEditCell: (params: GridRenderCellParams<any, string>) => (
+        <TextField
+          size="small"
+          value={params.value as string}
+          onChange={(e) =>
+            params.api.setEditCellValue({
+              id: params.id,
+              field: params.field,
+              value: e.target.value,
+            })
+          }
+          sx={{
+            boxShadow: "0px 3px 1px -2px rgba(0, 0, 0, 0.2)",
+            border: "1px solid rgba(33, 150, 243, 1)",
+            borderRadius: "5px",
+          }}
+        />
+      ),
+    },
+    {
+      field: "dateofbirth",
+      headerName: "Date of Birth",
+      headerClassName: "super-app-theme--header",
+      headerAlign: "left",
+      align: "left",
+      type: "date",
+      valueFormatter: (params) => {
+        const date = dayjs(new Date(params.value));
+        return date.format("ddd MMM DD YYYY");
+      },
+      sortable: true,
+      editable: true,
+      width: 205,
+      renderEditCell: (
+        params: GridRenderCellParams<any, dayjs.Dayjs | null>
+      ) => {
+        const dateValue = params.value ? dayjs(params.value) : null;
+        return (
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DemoContainer
+              components={["DatePicker"]}
+              sx={{ paddingTop: "0px" }}
+            >
+              <DatePicker
+                value={dateValue}
+                onChange={(newValue) =>
+                  params.api.setEditCellValue({
+                    id: params.id,
+                    field: params.field,
+                    value: newValue,
+                  })
+                }
+                slotProps={{
+                  textField: {
+                    size: "small",
+                    sx: {
+                      boxShadow: "0px 3px 1px -2px rgba(0, 0, 0, 0.2)",
+                      border: "1px solid rgba(33, 150, 243, 1)",
+                      borderRadius: "5px",
+                      alignContent: "center",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    },
+                  },
+                }}
+              />
+            </DemoContainer>
+          </LocalizationProvider>
+        );
+      },
+    },
+    {
+      field: "age",
+      headerName: "Age",
+      headerClassName: "super-app-theme--header",
+      headerAlign: "left",
+      align: "left",
+      type: "number",
+      sortable: false,
+      width: 80,
+      valueGetter: ({ row }) => {
+        try {
+          const dateOfBirth = new Date(row.dateofbirth);
+
+          const today = new Date();
+          const age =
+            today.getFullYear() -
+            dateOfBirth.getFullYear() -
+            (today.getMonth() < dateOfBirth.getMonth() ||
+            (today.getMonth() === dateOfBirth.getMonth() &&
+              today.getDate() < dateOfBirth.getDate())
+              ? 1
+              : 0);
+          return age;
+        } catch (error) {
+          return 0;
+        }
+      },
+    },
+    {
+      field: "actions",
+      type: "actions",
+      headerClassName: "super-app-theme--header",
+      headerAlign: "left",
+
+      headerName: "Actions",
+      width: 215,
+      cellClassName: "actions",
+      getActions: ({ id }) => {
+        const isInEditMode = rowModesModel[id]?.mode === GridRowModes.Edit;
+
+        if (isInEditMode) {
+          return [
+            <Stack direction="column" spacing={1} paddingY="10px">
+              <Button
+                size="small"
+                variant="outlined"
+                color="primary"
+                onClick={handleSaveClick(id)}
+                sx={{ width: "30px", fontSize: "13px", fontWeight: 500 }}
+              >
+                Add
+              </Button>
+              <Button
+                size="small"
+                variant="outlined"
+                color="error"
+                onClick={handleCancelClick(id)}
+                sx={{
+                  width: "150px",
+                  fontSize: "13px",
+                  fontWeight: 500,
+                }}
+              >
+                Discard Changes
+              </Button>
+            </Stack>,
+          ];
+        }
+
         return [
-          <Stack direction="row" spacing={1}>
-            <Button size="small" variant="outlined" color="primary">
-              Add
+          <Stack direction="row" spacing={3}>
+            <Button
+              size="small"
+              variant="outlined"
+              color="primary"
+              onClick={handleEditClick(id)}
+              sx={{ fontSize: "13px", fontWeight: 500 }}
+            >
+              Edit
             </Button>
-            <Button size="small" variant="outlined" color="error">
-              Discard Chages
+            <Button
+              size="small"
+              variant="outlined"
+              color="error"
+              onClick={handleDeleteClick(id)}
+              sx={{ fontSize: "13px", fontWeight: 500 }}
+            >
+              Remove
             </Button>
           </Stack>,
         ];
-      }
-
-      return [
-        <Stack direction="row" spacing={1}>
-          <Button size="small" variant="outlined" color="primary">
-            Edit
-          </Button>
-          <Button size="small" variant="outlined" color="error">
-            Remove
-          </Button>
-        </Stack>,
-      ];
+      },
     },
-  },
-];
-const DataGridTable = () => {
-  const [rows, setRows] = useState(InitialRows);
-  const [rowModesModel, setRowModesModel] = useState<GridRowModesModel>({});
+  ];
+
   return (
     <Container>
       <Paper
         sx={{
-          height: 500,
+          height: "auto",
           width: "100%",
           "& .super-app-theme--header": {
             backgroundColor: "rgba(33, 150, 243, 0.08)",
@@ -257,25 +462,21 @@ const DataGridTable = () => {
         }}
       >
         <DataGrid
-          rows={rows}
+          rows={initialRows}
           columns={columns}
-          initialState={{
-            pagination: {
-              paginationModel: {
-                pageSize: 5,
-              },
-            },
-          }}
-          pageSizeOptions={[5]}
           checkboxSelection
           disableRowSelectionOnClick
+          getRowHeight={() => "auto"}
           editMode="row"
           rowModesModel={rowModesModel}
+          onRowModesModelChange={handleRowModesModelChange}
+          onRowEditStop={handleRowEditStop}
+          processRowUpdate={processRowUpdate}
           slots={{
             toolbar: EditToolbar,
           }}
           slotProps={{
-            toolbar: { setRows, setRowModesModel },
+            toolbar: { setRowModesModel },
           }}
         />
       </Paper>
