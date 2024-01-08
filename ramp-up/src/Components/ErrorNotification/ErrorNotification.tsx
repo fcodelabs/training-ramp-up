@@ -3,8 +3,10 @@ import { Dialog, DialogContent, Typography, Button, Backdrop } from '@mui/materi
 import styled from 'styled-components';
 
 interface ErrorPopupProps {
-    open: boolean;
-    onClose: () => void;
+  open: boolean;
+  onSubmit: () => void,
+  onClose: () => void;
+  type: string;
 }
 
 const ButtonWrapper = styled.div`
@@ -29,6 +31,7 @@ const StyledDialogContent = styled(Dialog)`
   && {
     .MuiDialogContent-root {
         padding: 15px 20px 5px 20px !important;
+        min-width: 300px;
       }}
 `;
 
@@ -38,26 +41,79 @@ const StyledButton = styled(Button)`
   margin-right: 0px !important;
   padding: 5px !important;
 `;
+const NotificationPopup: React.FC<ErrorPopupProps> = ({ open, onClose, type, onSubmit }) => {
+  let errorMessage = '';
+  let button :React.ReactNode = null;
 
-const ErrorPopup: React.FC<ErrorPopupProps> = ({ open, onClose }) => {
-    return (
-        <div>
-            <StyledBackdrop open={open} />
-            <StyledDialogContent open={open} onClose={onClose}>
-                <DialogContent>
-                    <Typography variant="body1">Unable to retrieve table details. Please try again later.</Typography>
-                    <ButtonWrapper>
-                        <StyledButton variant="outlined" color="primary" onClick={onClose}>
-                            Dismiss
-                        </StyledButton>
-                        <StyledButton variant="outlined" color="secondary" onClick={onClose}>
-                            Confirm
-                        </StyledButton>
-                    </ButtonWrapper>
-                </DialogContent>
-            </StyledDialogContent>
-        </div>
-    );
+  const ButtonSet: React.FC = () => {
+    return <>
+      <StyledButton variant="outlined" color="primary" onClick={onClose}>
+        Dismiss
+      </StyledButton>
+      <StyledButton variant="outlined" color="secondary" onClick={onSubmit}>
+        Confirm
+      </StyledButton>
+    </>;
+  }
+
+  const SingleButton: React.FC<{ text: string }> = ({ text }) => {
+    return <>
+      <StyledButton variant="outlined" color="primary" onClick={onClose}>
+        {text}
+      </StyledButton>
+    </>;
+  }
+
+  if (type === 'TABLE_ERROR') {
+    errorMessage = 'Unable to retrieve table details. Please try again later.';
+    button = <ButtonSet />
+  }
+  else if (type === 'ADD_USER') { //done
+    errorMessage = 'A new student added successfully';
+    button = <SingleButton text='Confirm' />
+  }
+  else if (type === 'SAVE_USER'){ //done
+    errorMessage = 'Student details updated successfully';
+    button = <SingleButton text='Confirm' />
+  }
+  else if (type === 'MISSING_FIELDS'){  //done
+    errorMessage = 'Mandatory fields missing.'
+    button = <SingleButton text='keep editing' />
+  }
+  else if (type === 'DISCARD_CHANGES') { //done
+    errorMessage = 'Discard changes?'
+    button = <ButtonSet />
+  }
+
+
+  else if (type === 'FAIL_SAVE_USER') {
+    errorMessage = 'Unable to add the new student. Please try again later';
+    button = <SingleButton text='Try Again' />
+  }
+  else if (type === 'DELETE_USER') {
+    errorMessage = 'Some other type of error message.';
+    button = <ButtonSet />
+  }
+
+
+
+
+  return (
+    <div>
+      <StyledBackdrop open={open} />
+      <StyledDialogContent open={open} onClose={onClose}>
+        <DialogContent>
+          <Typography variant="body1">{errorMessage}</Typography>
+          <ButtonWrapper>
+            {button}
+          </ButtonWrapper>
+        </DialogContent>
+      </StyledDialogContent>
+    </div>
+  );
 };
 
-export default ErrorPopup;
+export default NotificationPopup;
+
+
+
