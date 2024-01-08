@@ -17,7 +17,7 @@ const EditButtonWrapper = styled.div`
     flex-direction: column;
     align-items: flex-start;`
 
-const GridActionsColumn: React.FC<Props> = ({ id, isInEditMode, handleSaveClick, handleCancelClick, handleEditClick, handleDeleteClick }) => {
+const GridActionsColumn: React.FC<Props> = ({id, isInEditMode, handleSaveClick, handleCancelClick, handleEditClick, handleDeleteClick }) => {
     if (isInEditMode) {
         return (
             <EditButtonWrapper>

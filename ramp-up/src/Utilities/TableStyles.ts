@@ -1,5 +1,9 @@
+import { TextField } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
+import PhoneInput from "react-phone-number-input";
 import styled from "styled-components";
+
+export const genders = ['Male', 'female', 'other'];
 
 
 export const Container = styled.div`
@@ -76,3 +80,60 @@ export const StyledDataGrid = styled(DataGrid)((theme) => ({
 
 
 }));
+
+
+interface Props {
+    error: boolean;
+}
+
+
+export const StyledTextFieldWrapper = styled(TextField)<Props>(({ error }) => ({
+
+    variant: "outlined",
+    textAlign: 'end',
+    '& .MuiOutlinedInput-root': {
+        '& fieldset': {
+            borderColor: error ? 'red' : 'rgba(33, 150, 243, 0.7)',
+        },
+
+    },
+    '& .MuiFormHelperText-root': {
+        marginLeft: 0,
+        fontSize: 8,
+
+    }
+}));
+
+
+export const StyledPhoneInputWrapper = styled.div({
+    width: '100%',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+})
+
+export const StyledFormHelperText = styled.div({
+    fontSize: 7.5,
+    width: '100%',
+    paddingTop: '4.5px',
+    textAlign: 'start',
+    color: '#d32f2f'
+
+});
+
+export const StyledPhoneInput = styled(PhoneInput)<Props>(({ error }) => ({
+    display: 'flex',
+    width: '99%',
+    "& .PhoneInputCountry": {
+        display: 'none',
+    },
+    "& .PhoneInputInput": {
+        height: '52.5px',
+        border: error ? '0.9px solid #ce1515' : '0.9px solid rgba(33, 150, 243, 0.7)',
+        borderRadius: '5px',
+        "&:focus": {
+            outline: error ? '0.9px solid #ce1515' : '0.9px solid rgba(33, 150, 243, 0.7)',
+        }
+    },
+}))

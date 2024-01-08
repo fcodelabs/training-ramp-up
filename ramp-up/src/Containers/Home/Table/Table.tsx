@@ -1,4 +1,3 @@
-import * as React from 'react';
 import Button from '@mui/material/Button';
 import { useState } from 'react';
 import {
@@ -17,7 +16,7 @@ import { useAppSelector } from '../../../Redux/hooks';
 import { emptyColumns, emptyRows } from './TableColumns/TableSkeletons/TableSkeletons';
 import { Container, ButtonWrapper, StyledDataGrid, Title } from '../../../Utilities/TableStyles';
 import GridActionsColumn from './TableColumns/ActionColumn/ActionColumn';
-
+import { validateUser } from '../../../Utilities/ValidateUser';
 
 const Table = () => {
     const initialRows: GridRowsProp = useAppSelector((state) => state.user.rows);
@@ -48,14 +47,8 @@ const Table = () => {
         return rowModesModel[params.id]?.mode === GridRowModes.Edit ? 100 : 60;
     };
 
-
     const handleEditClick = (id: GridRowId) => () => {
         setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.Edit } });
-    };
-
-    const validateUser = (user: GridRowModel, requiredFields: string[]) => {
-       
-        return true
     };
 
     const handleSaveClick = (id: GridRowId) => () => {
@@ -78,7 +71,6 @@ const Table = () => {
             }
         }
         catch (error) {
-            console.log(error);
             setNotification({
                 open: true,
                 onConfirm: () => { },
@@ -106,13 +98,10 @@ const Table = () => {
                 ...rowModesModel,
                 [id]: { mode: GridRowModes.View, ignoreModifications: true }
             });
-
             const editedRow = rows.find((row) => row.id === id)!;
-            console.log(editedRow, 'editrow')
             if (!validateUser(editedRow, emptyColumns.map((column) => column.field))) {
                 setRows(rows.filter((row) => row.id !== id))
             }
-        
             handleCloseNotification();
         }
 
@@ -130,7 +119,6 @@ const Table = () => {
             headerName: 'Actions',
             flex: 1,
             minWidth: 200,
-
             cellClassName: 'actions',
             renderCell: ({ id }) => (
                 <GridActionsColumn
@@ -147,12 +135,10 @@ const Table = () => {
 
     const maxId = rows.reduce((max, row) => (row.id > max ? row.id : max), 0);
     const handleAddClick = () => {
-
         const id = maxId + 1;
         setRows((oldRows) => [{ id, uid: id, name: '', gender: '', address: '', mobile: '', birthday: '', age: '', action: '' }, ...oldRows,]);
         setRowModesModel((oldModel) => ({
             ...oldModel, [id]: { mode: GridRowModes.Edit, fieldToFocus: 'uid' },
-
         }));
 
     };
