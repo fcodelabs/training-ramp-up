@@ -2,7 +2,7 @@ import React from 'react';
 import { MenuItem } from '@mui/material';
 import { StyledFormHelperText, StyledPhoneInput, StyledPhoneInputWrapper, StyledTextFieldWrapper } from '../../../../../../Utilities/TableStyles';
 import { useAppDispatch } from '../../../../../../Redux/hooks';
-import { updateAge, updateBirthday, updateUser } from '../../../../../../Redux/user/userSlice';
+import { updateUser } from '../../../../../../Redux/user/userSlice';
 import { Typography } from '@mui/material';
 import calculateAge from '../../../../../../Utilities/calculateAge';
 
@@ -11,7 +11,7 @@ interface EditableCellProps {
   field: string;
   value: any;
   validate: (value: any) => boolean;
-  options?: string[]; 
+  options?: string[];
 }
 
 const EditableCell: React.FC<EditableCellProps> = ({ params, field, value, validate, options }) => {
@@ -34,66 +34,64 @@ const EditableCell: React.FC<EditableCellProps> = ({ params, field, value, valid
     const newDateObject = newDate ? new Date(newDate) : null;
     params.api.setEditCellValue({ id: params.id, field: params.field, value: newDateObject });
     const age = calculateAge(newDateObject!);
-    params.api.setEditCellValue({ id: params.id, field: 'age', value: age });
-    const Birthday = {
-        uid: params.id,
-        birthday: newDateObject!,
-    }
-    const Age = {
-        uid: params.id,
+    params.api.setEditCellValue({ id: params.id, field: 'age', value: (Number(age)<=0)? 0: age });
+    const updateAge = {
+      uid: params.id,
+      updates: {
         age: Number(age),
+        Birthday: newDateObject!,
+      }
     }
-    dispatch(updateBirthday(Birthday))
-    dispatch(updateAge(Age))
-};
+    dispatch(updateUser(updateAge))
+  };
 
-  if (field==="age"){
+  if (field === "age") {
     return (
       <StyledTextFieldWrapper
         error={error}
         fullWidth
         type="number"
-        value={value || ''}
+        value={value || 0}
         onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChange(e.target.value)}
         helperText={error && (
-                <Typography variant="body2" color="error" fontSize={6.5} lineHeight={1}>
-                    Individual is below the
-                    <br />
-                    minimum age allowed
-                </Typography>
-            )}
+          <Typography variant="body2" color="error" fontSize={6.5} lineHeight={1}>
+            Individual is below the
+            <br />
+            minimum age allowed
+          </Typography>
+        )}
       />
     );
   }
 
-  if (field==='mobile'){
+  if (field === 'mobile') {
     return (
-        <StyledPhoneInputWrapper>
-            <StyledPhoneInput
-                error={error}
-                type="local"
-                placeholder=""
-                value={params.value || ''}
-                maxLength={16}
-                onChange={(e: any) => handleChange(e)} 
-                >
-            </StyledPhoneInput>
-            {error && <StyledFormHelperText >This field is required</StyledFormHelperText>}
-        </StyledPhoneInputWrapper>
+      <StyledPhoneInputWrapper>
+        <StyledPhoneInput
+          error={error}
+          type="local"
+          placeholder=""
+          value={params.value || ''}
+          maxLength={16}
+          onChange={(e: any) => handleChange(e)}
+        >
+        </StyledPhoneInput>
+        {error && <StyledFormHelperText >This field is required</StyledFormHelperText>}
+      </StyledPhoneInputWrapper>
     );
   }
 
-  if (field==='birthday'){
-    const dateObject = params.value ? new Date(params.value) : null;
+  if (field === 'birthday') {
+    const dateObject = params.value ? new Date(params.value) : new Date();
     return (
-        <StyledTextFieldWrapper
-            error={error}
-            fullWidth
-            type="date"
-            value={dateObject ? dateObject.toISOString().slice(0, 10) : ''}
-            onChange={(e) => handleDateChange(e.target.value)}
-            helperText={error && "This field is required"}
-        />
+      <StyledTextFieldWrapper
+        error={error}
+        fullWidth
+        type="date"
+        value={dateObject ? dateObject.toISOString().slice(0, 10) : ''}
+        onChange={(e) => handleDateChange(e.target.value)}
+        helperText={error && "This field is required"}
+      />
     );
   }
 
@@ -103,11 +101,12 @@ const EditableCell: React.FC<EditableCellProps> = ({ params, field, value, valid
         error={error}
         select
         fullWidth
+        defaultValue={options[0]}
         value={value || options[0]}
         onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChange(e.target.value)}
       >
         {options.map((option) => (
-          <MenuItem key={option} value={option}>
+          <MenuItem key={option} value={option} defaultValue={option[0]}>
             {option}
           </MenuItem>
         ))}

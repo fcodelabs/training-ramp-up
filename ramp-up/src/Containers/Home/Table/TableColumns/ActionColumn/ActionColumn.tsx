@@ -4,6 +4,7 @@ import { GridActionsCellItem, GridRowId } from '@mui/x-data-grid';
 import styled from 'styled-components';
 
 interface Props {
+    params: any;
     isInEditMode: boolean;
     handleSaveClick: () => void;
     handleCancelClick: () => void;
@@ -16,12 +17,15 @@ const EditButtonWrapper = styled.div`
     flex-direction: column;
     align-items: flex-start;`
 
-const GridActionsColumn: React.FC<Props> = ({isInEditMode, handleSaveClick, handleCancelClick, handleEditClick, handleDeleteClick }) => {
+const GridActionsColumn: React.FC<Props> = ({params,isInEditMode, handleSaveClick, handleCancelClick, handleEditClick, handleDeleteClick }) => {
     if (isInEditMode) {
+        const isNew = params.row.isNew;
         return (
             <EditButtonWrapper>
                 <GridActionsCellItem
-                    icon={<Button variant='outlined' size='small' >Add</Button>}
+                    icon={<Button variant='outlined' size='small' >{
+                        isNew ? 'Add' : 'Update'
+                    }</Button>}
                     label="Save"
                     sx={{
                         color: 'primary.main',
