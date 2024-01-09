@@ -1,5 +1,17 @@
 import * as React from 'react';
-import { DataGrid, GridColDef, GridValueGetterParams } from '@mui/x-data-grid';
+import {
+    GridRowsProp,
+    GridRowModesModel,
+    GridRowModes,
+    DataGrid,
+    GridColDef,
+    GridToolbarContainer,
+    GridActionsCellItem,
+    GridEventListener,
+    GridRowId,
+    GridRowModel,
+    GridRowEditStopReasons,
+} from '@mui/x-data-grid';
 import Button from '@mui/material/Button';
 import styled from 'styled-components';
 import "@fontsource/roboto";
@@ -8,6 +20,14 @@ import Typography from '@mui/material/Typography';
 import generateId from '../../../utility/generateId';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../../../redux/store';
+import { useState } from 'react';
+
+import AddIcon from '@mui/icons-material/Add';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/DeleteOutlined';
+import SaveIcon from '@mui/icons-material/Save';
+import CancelIcon from '@mui/icons-material/Close';
+
 
 
 const handleEdit = () => {
@@ -43,6 +63,30 @@ const StyledRemoveButton = styled(Button)`
     }
 `;
 
+const StyledAddButton = styled(Button)`
+&&&{
+    border-color: #2196F380;
+    color: #2196F3;
+    font-family: Roboto;
+    font-weight: 500;
+    font-size: 13px;
+    line-height: 22px;
+    Letter-spacing: 0.46px;
+    }
+`;
+
+const StyledDiscardButton = styled(Button)`
+&&&{
+    border-color: #D32F2F80;
+    color: #D32F2F;
+    font-family: Roboto;
+    font-weight: 500;
+    font-size: 13px;
+    line-height: 22px;
+    Letter-spacing: 0.46px;
+    }
+`;
+
 const StyledGridTitle = styled(Typography)`
 &&&{
     display: flex;
@@ -65,7 +109,7 @@ const StyledButtonBox = styled(Box)`
     }
 `;
 
-const StyledAddButton = styled(Button)`
+const StyledAddNewButton = styled(Button)`
 &&&{
     background-color: #2196F3;
     color: #FFFFFF;
@@ -92,52 +136,155 @@ const StyledDataTableBox = styled(Box)`
     fontSize: 14px;
     lineHeight: 20.02px;
     letterSpacing: 0.17px;
+    .action-buttons{
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start; 
+        gap: 8px; 
+    }
+    
   }
 `;
+interface IStudent {
+    id: number;
+    name: string;
+    age: number;
+    gender: string;
+    address: string;
+    mobile: string;
+    dob: Date;
+    isNew?: boolean;
+}
 
-const columns: GridColDef[] = [
-    { field: 'id', headerName: 'ID', width: 86, editable: false, sortable: false, disableColumnMenu: true, headerClassName: 'custom-header' },
-    { field: 'name', headerName: 'Name', width: 135, sortable: true, disableColumnMenu: true, headerClassName: 'custom-header' },
-    { field: 'gender', headerName: 'Gender', width: 135, sortable: false, disableColumnMenu: true, headerClassName: 'custom-header' },
-    { field: 'address', headerName: 'Address', width: 135, sortable: false, disableColumnMenu: true, headerClassName: 'custom-header' },
-    { field: 'mobile', headerName: 'Mobile No:', width: 135, sortable: false, disableColumnMenu: true, headerClassName: 'custom-header' },
-    { field: 'dob', headerName: 'Date of Birth', width: 175, sortable: true, disableColumnMenu: true, headerClassName: 'custom-header' },
-    { field: 'age', headerName: 'Age', width: 101, disableColumnMenu: true, sortable: false, headerClassName: 'custom-header' },
-    {
-        field: 'action',
-        headerName: 'Action',
-        width: 195,
-        disableColumnMenu: true,
-        sortable: false,
-        headerClassName: 'custom-header',
-        renderCell: (params) => (
-            <div>
+interface EditToolbarProps {
+    setRows: (newRows: (oldRows: GridRowsProp) => GridRowsProp) => void;
+    setRowModesModel: (
+        newModel: (oldModel: GridRowModesModel) => GridRowModesModel,
+    ) => void;
+}
 
-                <StyledEditButton variant="outlined" size='small'>EDIT</StyledEditButton>
-                <StyledRemoveButton variant="outlined" size='small'>REMOVE</StyledRemoveButton>
-            </div>
-        ),
-    },
-];
+function EditToolbar(props: EditToolbarProps) {
+    const { setRows, setRowModesModel } = props;
 
+    const handleClick = () => {
+        const id = generateId();
+        setRows((oldRows) => [...oldRows, { id, name: '', gender: '', address: '', mobile: '', dob: '', isNew: true }]);
+        setRows((oldRows) => [{ id, name: '', gender: '', address: '', mobile: '', dob: '', isNew: true }, ...oldRows]);
+        setRowModesModel((oldModel) => ({
+            ...oldModel,
+            [id]: { mode: GridRowModes.Edit, fieldToFocus: 'name' },
+        }));
+    };
+
+
+    return (
+
+        <StyledButtonBox>
+            <StyledAddNewButton variant="contained" onClick={handleClick}>ADD NEW</StyledAddNewButton>
+        </StyledButtonBox>
+
+    );
+}
 // const rows = [
-    // { id: generateId(), name: 'Snow', age: 35, gender: 'Male', address: 'Delhi', mobile: '1234567890', dob: 'Sun Dec 03 2000' },
-    // { id: generateId(), name: 'Lannister', age: 42, gender: 'Male', address: 'Delhi', mobile: '1234567890', dob: 'Sun Dec 03 2000' },
-    // { id: generateId(), name: 'Sersi', age: 45, gender: 'Male', address: 'Delhi', mobile: '1234567890', dob: 'Sun Dec 03 2000' },
-    // { id: generateId(), name: 'Stark', age: 16, gender: 'Male', address: 'Delhi', mobile: '1234567890', dob: 'Sun Dec 03 2000' },
-    // { id: generateId(), name: 'Targaryen', age: null, gender: 'Male', address: 'Delhi', mobile: '1234567890', dob: 'Sun Dec 03 2000' },
-    // { id: generateId(), name: 'Melisandre', age: 150, gender: 'Male', address: 'Delhi', mobile: '1234567890', dob: 'Sun Dec 03 2000' },
+// { id: generateId(), name: 'Snow', age: 35, gender: 'Male', address: 'Delhi', mobile: '1234567890', dob: 'Sun Dec 03 2000' },
+// { id: generateId(), name: 'Lannister', age: 42, gender: 'Male', address: 'Delhi', mobile: '1234567890', dob: 'Sun Dec 03 2000' },
+// { id: generateId(), name: 'Sersi', age: 45, gender: 'Male', address: 'Delhi', mobile: '1234567890', dob: 'Sun Dec 03 2000' },
+// { id: generateId(), name: 'Stark', age: 16, gender: 'Male', address: 'Delhi', mobile: '1234567890', dob: 'Sun Dec 03 2000' },
+// { id: generateId(), name: 'Targaryen', age: null, gender: 'Male', address: 'Delhi', mobile: '1234567890', dob: 'Sun Dec 03 2000' },
+// { id: generateId(), name: 'Melisandre', age: 150, gender: 'Male', address: 'Delhi', mobile: '1234567890', dob: 'Sun Dec 03 2000' },
 
 // ];
 
 export default function DataTable() {
-    const rows = useSelector((state: RootState) => state.student.students);
+    const [rows, setRows] = useState(useSelector((state: RootState) => state.student.students));
+
+    const [rowModesModel, setRowModesModel] = React.useState<GridRowModesModel>({});
+
+    const handleRowEditStop: GridEventListener<'rowEditStop'> = (params, event) => {
+        if (params.reason === GridRowEditStopReasons.rowFocusOut) {
+            event.defaultMuiPrevented = true;
+        }
+    };
+
+    const handleEditClick = (id: GridRowId) => () => {
+        setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.Edit } });
+    };
+
+    const handleSaveClick = (id: GridRowId) => () => {
+        setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.View } });
+    };
+
+    const handleDeleteClick = (id: GridRowId) => () => {
+        setRows(rows.filter((row) => row.id !== id));
+    };
+
+    const handleCancelClick = (id: GridRowId) => () => {
+        setRowModesModel({
+            ...rowModesModel,
+            [id]: { mode: GridRowModes.View, ignoreModifications: true },
+        });
+
+        const editedRow = rows.find((row) => row.id === id);
+        if (editedRow!.isNew) {
+            setRows(rows.filter((row) => row.id !== id));
+        }
+    };
+
+    const processRowUpdate = (newRow: GridRowModel) => {
+        const { isNew, ...updatedRow } = newRow as IStudent;
+        setRows((oldRows) =>
+            oldRows.map((row) => (row.id === newRow.id ? { ...row, ...updatedRow } : row))
+        );
+        return { ...updatedRow, isNew: false } as IStudent;
+    };
+
+    const handleRowModesModelChange = (newRowModesModel: GridRowModesModel) => {
+        setRowModesModel(newRowModesModel);
+    };
+
+    const columns: GridColDef[] = [
+        { field: 'id', headerName: 'ID', width: 86, editable: false, sortable: false, disableColumnMenu: true, headerClassName: 'custom-header' },
+        { field: 'name', headerName: 'Name', width: 135, sortable: true, disableColumnMenu: true, headerClassName: 'custom-header', editable: true },
+        { field: 'gender', headerName: 'Gender', width: 135, sortable: false, disableColumnMenu: true, headerClassName: 'custom-header', editable: true },
+        { field: 'address', headerName: 'Address', width: 135, sortable: false, disableColumnMenu: true, headerClassName: 'custom-header', editable: true },
+        { field: 'mobile', headerName: 'Mobile No:', width: 135, sortable: false, disableColumnMenu: true, headerClassName: 'custom-header', editable: true },
+        { field: 'dob', headerName: 'Date of Birth', width: 175, sortable: true, disableColumnMenu: true, headerClassName: 'custom-header', editable: true },
+        { field: 'age', headerName: 'Age', width: 101, disableColumnMenu: true, sortable: false, headerClassName: 'custom-header', editable: true },
+        {
+            field: 'action',
+            headerName: 'Action',
+            width: 195,
+            disableColumnMenu: true,
+            sortable: false,
+            headerClassName: 'custom-header',
+            type: 'actions',
+            getActions: ({ id }: { id: GridRowId }) => {
+                const isInEditMode = rowModesModel[id]?.mode === GridRowModes.Edit;
+
+                if (isInEditMode) {
+                    return [
+                        <div className='action-buttons'>
+                            <StyledAddButton onClick={handleSaveClick(id)} size='small' variant="outlined">ADD</StyledAddButton>
+                            <StyledDiscardButton onClick={handleCancelClick(id)} size='small' variant="outlined">DISCARD CHANGES</StyledDiscardButton>
+                        </div>
+                    ];
+                }
+
+                return [
+                    <div>
+
+                        <StyledEditButton variant="outlined" size='small'>EDIT</StyledEditButton>
+                        <StyledRemoveButton variant="outlined" size='small'>REMOVE</StyledRemoveButton>
+                    </div>
+                ];
+            },
+        },
+    ];
+
     return (
         <StyledDataTableBox>
             <StyledGridTitle variant="h4">User Details</StyledGridTitle>
-            <StyledButtonBox>
-                <StyledAddButton variant="contained">ADD NEW</StyledAddButton>
-            </StyledButtonBox>
+
             <DataGrid
                 sx={{
                     '.MuiDataGrid-columnSeparator': {
@@ -161,10 +308,22 @@ export default function DataTable() {
                     },
                     "& .MuiDataGrid-iconButtonContainer": {
                         visibility: 'visible',
-                    }
+                    },
+                    
                 }}
                 rows={rows}
                 columns={columns}
+                editMode='row'
+                rowModesModel={rowModesModel}
+                onRowModesModelChange={handleRowModesModelChange}
+                onRowEditStop={handleRowEditStop}
+                processRowUpdate={processRowUpdate}
+                slots={
+                    { toolbar: EditToolbar }
+                }
+                slotProps={
+                    { toolbar: { setRows, setRowModesModel } }
+                }
                 initialState={{
                     pagination: {
                         paginationModel: { page: 0, pageSize: 5 },
@@ -172,6 +331,7 @@ export default function DataTable() {
                 }}
                 pageSizeOptions={[5, 10]}
                 checkboxSelection
+                getRowHeight={(params) => (rowModesModel[params.id]?.mode === GridRowModes.Edit ? 100 : 62)}
             />
         </StyledDataTableBox>
     );
