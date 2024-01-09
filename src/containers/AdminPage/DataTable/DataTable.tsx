@@ -28,6 +28,9 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs, { Dayjs } from 'dayjs';
 
+
+
+
 const StyledEditButton = styled(Button)`
 &&&{
     border-color: #2196F380;
@@ -132,6 +135,12 @@ const StyledDataTableBox = styled(Box)`
         align-items: flex-start; 
         gap: 8px; 
     }
+    .action-edit-buttons{
+        display: flex;
+        flex-direction: row;
+        align-items: flex-start; 
+        gap: 8px; 
+    }
     padding: 10px;
     
   }
@@ -159,8 +168,12 @@ function EditToolbar(props: EditToolbarProps) {
 
     const handleClick = () => {
         const id = generateId();
-        setRows((oldRows) => [...oldRows, { id, name: '', gender: '', address: '', mobile: '', dob: '', isNew: true }]);
-        setRows((oldRows) => [{ id, name: '', gender: '', address: '', mobile: '', dob: '', isNew: true }, ...oldRows]);
+        // Add the new row only once
+        setRows((oldRows) => [
+            { id, name: '', gender: '', address: '', mobile: '', isNew: true },
+            ...oldRows,
+        ]);
+        // Set the mode for the new row
         setRowModesModel((oldModel) => ({
             ...oldModel,
             [id]: { mode: GridRowModes.Edit, fieldToFocus: 'name' },
@@ -186,25 +199,13 @@ function EditToolbar(props: EditToolbarProps) {
 
 // ];
 
-const getAge = (dob: Date): number => {
-    const today = new Date();
-    const birthDate = new Date(dob);
-    let age = today.getFullYear() - birthDate.getFullYear();
-    const monthDiff = today.getMonth() - birthDate.getMonth();
-  
-    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
-      age--;
-    }
-  
-    return age;
-};
 
 export default function DataTable() {
     const [rows, setRows] = useState(useSelector((state: RootState) => state.student.students));
 
     const [rowModesModel, setRowModesModel] = React.useState<GridRowModesModel>({});
 
-    const [value, setValue] = React.useState<Dayjs | null>(dayjs('2022-04-17'));
+    const [mode, setMode] = useState<'Add' | 'Edit'>('Add'); // Track the mode (Add or Edit)
 
 
     const handleRowEditStop: GridEventListener<'rowEditStop'> = (params, event) => {
@@ -215,10 +216,12 @@ export default function DataTable() {
 
     const handleEditClick = (id: GridRowId) => () => {
         setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.Edit } });
+        setMode('Edit');
     };
 
     const handleSaveClick = (id: GridRowId) => () => {
         setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.View } });
+        setMode('Add');
     };
 
     const handleDeleteClick = (id: GridRowId) => () => {
@@ -235,6 +238,7 @@ export default function DataTable() {
         if (editedRow!.isNew) {
             setRows(rows.filter((row) => row.id !== id));
         }
+        setMode('Add');
     };
 
     const processRowUpdate = (newRow: GridRowModel) => {
@@ -249,26 +253,39 @@ export default function DataTable() {
         setRowModesModel(newRowModesModel);
     };
 
+    const calculateAge = (dob: Date): number | null => {
+        if (!dob) {
+            return 0;
+        }
+    
+        const today = new Date();
+        const birthDate = new Date(dob);
+        const age = today.getFullYear() - birthDate.getFullYear();
+    
+        return age;
+    };
+
     const columns: GridColDef[] = [
         { field: 'id', headerName: 'ID', width: 86, editable: false, sortable: false, disableColumnMenu: true, headerClassName: 'custom-header' },
         { field: 'name', headerName: 'Name', width: 135, sortable: true, disableColumnMenu: true, headerClassName: 'custom-header', editable: true },
-        { field: 'gender', headerName: 'Gender', width: 135, sortable: false, disableColumnMenu: true, headerClassName: 'custom-header', editable: true },
+        { field: 'gender', headerName: 'Gender', type: 'singleSelect', valueOptions: ['Male', 'Female'], width: 135, sortable: false, disableColumnMenu: true, headerClassName: 'custom-header', editable: true },
         { field: 'address', headerName: 'Address', width: 135, sortable: false, disableColumnMenu: true, headerClassName: 'custom-header', editable: true },
-        { field: 'mobile', headerName: 'Mobile No:', width: 135, sortable: false, disableColumnMenu: true, headerClassName: 'custom-header', editable: true },
-        { field: 'dob', headerName: 'Date of Birth', width: 175, sortable: true, disableColumnMenu: true, headerClassName: 'custom-header', editable: true,
-        renderEditCell: (params) => (
-            <>
-              <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <DatePicker
-                  label=""
-                  value={value}
-                  onChange={(newValue) => setValue(newValue)}
-                />
-              </LocalizationProvider>
-              
-            </>
-          ), },
-        { field: 'age', headerName: 'Age', width: 101, disableColumnMenu: true, sortable: false, headerClassName: 'custom-header', editable: true, },
+        { field: 'mobile', headerName: 'Mobile No:', width: 135, sortable: false, disableColumnMenu: true, headerClassName: 'custom-header', editable: true, },
+        {
+            field: 'dob', headerName: 'Date of Birth', type: 'date', width: 175, sortable: true, disableColumnMenu: true, headerClassName: 'custom-header', editable: true, valueFormatter: (params) => {
+                // Format the date using your preferred format
+                const formattedDate = dayjs(params.value).format('ddd MMM DD YYYY');
+                return formattedDate;
+            },
+
+        },
+        { field: 'age', headerName: 'Age', width: 101, disableColumnMenu: true, sortable: false, headerClassName: 'custom-header', editable: false, valueGetter: (params) => {
+            // Access the 'dob' field from the row data
+            const dob = params.row.dob;
+
+            // Call the calculateAge function to get the age
+            return calculateAge(dob);
+        },},
         {
             field: 'action',
             headerName: 'Action',
@@ -282,9 +299,18 @@ export default function DataTable() {
 
                 if (isInEditMode) {
                     return [
-                        <div className='action-buttons'>
-                            <StyledAddButton onClick={handleSaveClick(id)} size='small' variant="outlined">ADD</StyledAddButton>
-                            <StyledDiscardButton onClick={handleCancelClick(id)} size='small' variant="outlined">DISCARD CHANGES</StyledDiscardButton>
+                        <div>
+                            {mode === 'Add' ? (
+                                <div className='action-buttons'>
+                                    <StyledAddButton onClick={handleSaveClick(id)} size='small' variant="outlined">ADD</StyledAddButton>
+                                    <StyledDiscardButton onClick={handleCancelClick(id)} size='small' variant="outlined">DISCARD CHANGES</StyledDiscardButton>
+                                </div>
+                            ) : (
+                                <div className='action-edit-buttons'>
+                                    <StyledAddButton onClick={handleSaveClick(id)} size='small' variant="outlined">UPDATE</StyledAddButton>
+                                    <StyledDiscardButton onClick={handleCancelClick(id)} size='small' variant="outlined">CANCEL</StyledDiscardButton>
+                                </div>
+                            )}
                         </div>
                     ];
                 }
@@ -331,7 +357,7 @@ export default function DataTable() {
                     "& .MuiDataGrid-cell": {
                         visibility: 'visible',
                     },
-                    
+
                 }}
                 rows={rows}
                 columns={columns}
@@ -354,7 +380,7 @@ export default function DataTable() {
                 pageSizeOptions={[5, 10]}
                 checkboxSelection
                 getRowHeight={(params) => (rowModesModel[params.id]?.mode === GridRowModes.Edit ? 100 : 52)}
-                
+
             />
         </StyledDataTableBox>
     );
