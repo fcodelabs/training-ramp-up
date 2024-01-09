@@ -11,6 +11,7 @@ import {
     GridRowId,
     GridRowModel,
     GridRowEditStopReasons,
+    GridRowSpacingParams,
 } from '@mui/x-data-grid';
 import Button from '@mui/material/Button';
 import styled from 'styled-components';
@@ -22,21 +23,10 @@ import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../../../redux/store';
 import { useState } from 'react';
 
-import AddIcon from '@mui/icons-material/Add';
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/DeleteOutlined';
-import SaveIcon from '@mui/icons-material/Save';
-import CancelIcon from '@mui/icons-material/Close';
-
-
-
-const handleEdit = () => {
-    console.log('edit');
-};
-
-const handleDelete = () => {
-    console.log('delete');
-};
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import dayjs, { Dayjs } from 'dayjs';
 
 const StyledEditButton = styled(Button)`
 &&&{
@@ -142,6 +132,7 @@ const StyledDataTableBox = styled(Box)`
         align-items: flex-start; 
         gap: 8px; 
     }
+    padding: 10px;
     
   }
 `;
@@ -195,10 +186,26 @@ function EditToolbar(props: EditToolbarProps) {
 
 // ];
 
+const getAge = (dob: Date): number => {
+    const today = new Date();
+    const birthDate = new Date(dob);
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const monthDiff = today.getMonth() - birthDate.getMonth();
+  
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+      age--;
+    }
+  
+    return age;
+};
+
 export default function DataTable() {
     const [rows, setRows] = useState(useSelector((state: RootState) => state.student.students));
 
     const [rowModesModel, setRowModesModel] = React.useState<GridRowModesModel>({});
+
+    const [value, setValue] = React.useState<Dayjs | null>(dayjs('2022-04-17'));
+
 
     const handleRowEditStop: GridEventListener<'rowEditStop'> = (params, event) => {
         if (params.reason === GridRowEditStopReasons.rowFocusOut) {
@@ -248,8 +255,20 @@ export default function DataTable() {
         { field: 'gender', headerName: 'Gender', width: 135, sortable: false, disableColumnMenu: true, headerClassName: 'custom-header', editable: true },
         { field: 'address', headerName: 'Address', width: 135, sortable: false, disableColumnMenu: true, headerClassName: 'custom-header', editable: true },
         { field: 'mobile', headerName: 'Mobile No:', width: 135, sortable: false, disableColumnMenu: true, headerClassName: 'custom-header', editable: true },
-        { field: 'dob', headerName: 'Date of Birth', width: 175, sortable: true, disableColumnMenu: true, headerClassName: 'custom-header', editable: true },
-        { field: 'age', headerName: 'Age', width: 101, disableColumnMenu: true, sortable: false, headerClassName: 'custom-header', editable: true },
+        { field: 'dob', headerName: 'Date of Birth', width: 175, sortable: true, disableColumnMenu: true, headerClassName: 'custom-header', editable: true,
+        renderEditCell: (params) => (
+            <>
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DatePicker
+                  label=""
+                  value={value}
+                  onChange={(newValue) => setValue(newValue)}
+                />
+              </LocalizationProvider>
+              
+            </>
+          ), },
+        { field: 'age', headerName: 'Age', width: 101, disableColumnMenu: true, sortable: false, headerClassName: 'custom-header', editable: true, },
         {
             field: 'action',
             headerName: 'Action',
@@ -273,8 +292,8 @@ export default function DataTable() {
                 return [
                     <div>
 
-                        <StyledEditButton variant="outlined" size='small'>EDIT</StyledEditButton>
-                        <StyledRemoveButton variant="outlined" size='small'>REMOVE</StyledRemoveButton>
+                        <StyledEditButton variant="outlined" size='small' onClick={handleEditClick(id)}>EDIT</StyledEditButton>
+                        <StyledRemoveButton variant="outlined" size='small' onClick={handleDeleteClick(id)}>REMOVE</StyledRemoveButton>
                     </div>
                 ];
             },
@@ -309,6 +328,9 @@ export default function DataTable() {
                     "& .MuiDataGrid-iconButtonContainer": {
                         visibility: 'visible',
                     },
+                    "& .MuiDataGrid-cell": {
+                        visibility: 'visible',
+                    },
                     
                 }}
                 rows={rows}
@@ -331,7 +353,8 @@ export default function DataTable() {
                 }}
                 pageSizeOptions={[5, 10]}
                 checkboxSelection
-                getRowHeight={(params) => (rowModesModel[params.id]?.mode === GridRowModes.Edit ? 100 : 62)}
+                getRowHeight={(params) => (rowModesModel[params.id]?.mode === GridRowModes.Edit ? 100 : 52)}
+                
             />
         </StyledDataTableBox>
     );
