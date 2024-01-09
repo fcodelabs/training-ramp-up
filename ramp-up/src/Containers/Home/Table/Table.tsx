@@ -18,7 +18,7 @@ import { emptyColumns, emptyRows } from './TableColumns/TableSkeletons/TableSkel
 import { Container, ButtonWrapper, StyledDataGrid, Title } from '../../../Utilities/TableStyles';
 import GridActionsColumn from './TableColumns/ActionColumn/ActionColumn';
 import { validateUser } from '../../../Utilities/ValidateUser';
-import { addUser, saveUser } from '../../../Redux/user/userSlice';
+import { addUser, discardUser, saveUser } from '../../../Redux/user/userSlice';
 import { wait } from '@testing-library/user-event/dist/utils';
 
 
@@ -60,6 +60,7 @@ const Table = () => {
     const handleSaveClick = (params: any) => () => {
         try {
             const editedRow = initialRows.find((row) => row.id === params.id)!;
+            
             if (validateUser(editedRow, emptyColumns.map((column) => column.field))) {
                 setRowModesModel({ ...rowModesModel, [params.id]: { mode: GridRowModes.View } });
                 setNotification({
@@ -106,8 +107,9 @@ const Table = () => {
                 [id]: { mode: GridRowModes.View, ignoreModifications: true }
             });
             const editedRow = rows.find((row) => row.id === id)!;
-            if (!validateUser(editedRow, emptyColumns.map((column) => column.field))) {
+            if (rows.find((row) => row.id === id)!.isNew) {
                 setRows(rows.filter((row) => row.id !== id))
+                dispatch(discardUser(Number(id)))
             }
             handleCloseNotification();
         }
@@ -143,7 +145,7 @@ const Table = () => {
     const handleAddClick = () => {
         const id = maxId + 1;
         setRows((oldRows) => [{ id, uid: id, name: '', gender: '', address: '', mobile: '', birthday: '', age: '', action: '', isNew: true }, ...oldRows,]);
-        dispatch(addUser({id:id, uid: id, name: '', gender: '', address: '', mobile: '', birthday: new Date(), age: Number()} ))
+        dispatch(addUser({id:id, uid: id, name: '', gender: '', address: '', mobile: '', birthday: new Date(), age: Number(),isNew: true} ))
         setRowModesModel((oldModel) => ({
             ...oldModel, [id]: { mode: GridRowModes.Edit, fieldToFocus: 'uid' },
         }));
