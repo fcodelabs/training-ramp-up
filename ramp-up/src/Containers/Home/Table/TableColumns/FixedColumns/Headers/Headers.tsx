@@ -1,9 +1,8 @@
 
 const Header:React.FC<{text: any}> = ( {text} ) => {
     const headerStyle = {
-        paddingRight: '50px', // Add your common styling here
+        paddingRight: '50px', 
     };
-
     return (
         <div style={headerStyle}>
             {text}
