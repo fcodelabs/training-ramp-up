@@ -2,7 +2,8 @@ import { GridRowModel } from "@mui/x-data-grid";
 import parsePhoneNumber from 'libphonenumber-js';
 
 const validateUser = (user: GridRowModel, requiredFields: string[]) => {
-
+    try{
+        // throw new Error("Error in validating user") ;
     if (requiredFields.includes('name') && !validateName(user.name)) {
         return false;
     }
@@ -17,6 +18,9 @@ const validateUser = (user: GridRowModel, requiredFields: string[]) => {
     }
     if (requiredFields.includes('birthday') && !validateBirthday(user.birthday)) {
         return false;
+    }}
+    catch(error){
+        throw new Error("Error in validating user") ;
     }
     return true
 };

@@ -84,12 +84,19 @@ const NotificationPopup: React.FC<ErrorPopupProps> = ({ open, onClose, type, onS
     errorMessage = 'Discard changes?'
     button = <ButtonSet />
   }
+  else if (type === 'SAVE_NEW_USER') { //done
+    errorMessage = 'A new student added successfully';
+    button = <SingleButton text='ok' />}
 
-
-  else if (type === 'FAIL_SAVE_USER') {
+  else if (type === 'FAIL_SAVE_NEW_USER') {//done
     errorMessage = 'Unable to add the new student. Please try again later';
     button = <SingleButton text='Try Again' />
   }
+  else if (type === 'FAIL_UPDATE_USER') { //done
+    errorMessage = 'Cannnot update the student details. Please try again later';
+    button = <SingleButton text='Try Again' />}
+
+    
   else if (type === 'DELETE_USER') {
     errorMessage = 'Some other type of error message.';
     button = <ButtonSet />
