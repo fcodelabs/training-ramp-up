@@ -34,6 +34,7 @@ import {
 } from "@mui/x-data-grid";
 import { ageCalculator, validatePhoneNumber } from "../../utility";
 import SingleButtonPopupMessage from "../SingleButtonPopupMessage/SingleButtonPopupMessage";
+import DoubleButtonPopupMessage from "../DoubleButtonPopupMessage/DoubleButtonPopupMessage";
 
 let idValue = 0;
 
@@ -126,6 +127,11 @@ const DataGridTable = () => {
   const [keepEditingPopup, setKeepEditingPopup] = useState(false);
   const [addedSuccessfullyPopup, setAddedSuccessfullyPopup] = useState(false);
   const [unableToAddPopup, setUnableToAdd] = useState(false);
+  const [discardChangesPopup, setDiscardChangesPopup] = useState(false);
+  const [isConfirmingDiscardChanges, setIsConfirmingDiscardChanges] =
+    useState(false);
+  const [currentRowId, setCurrentRowId] = useState<GridRowId | null>(null);
+
   const [rowModesModel, setRowModesModel] = useState<GridRowModesModel>({});
   const handleRowEditStop: GridEventListener<"rowEditStop"> = (
     params,
@@ -150,6 +156,10 @@ const DataGridTable = () => {
   };
 
   const handleCancelClick = (id: GridRowId) => () => {
+    setDiscardChangesPopup(true);
+    setCurrentRowId(id);
+  };
+  const handleConfirmClick = (id: GridRowId) => {
     setRowModesModel({
       ...rowModesModel,
       [id]: { mode: GridRowModes.View, ignoreModifications: true },
@@ -579,6 +589,19 @@ const DataGridTable = () => {
           title={"Unable to add a new student.Please try again later"}
           handleClick={() => setUnableToAdd(false)}
           buttonName="Try again"
+        />
+      )}
+      {discardChangesPopup && (
+        <DoubleButtonPopupMessage
+          open={discardChangesPopup}
+          title={"Discard changes?"}
+          handleClickFirstButton={() => setDiscardChangesPopup(false)}
+          handleClickSecondButton={() => {
+            handleConfirmClick(currentRowId as GridRowId);
+            setDiscardChangesPopup(false);
+          }}
+          firstButtonName="Dismiss"
+          secondButtonName="Confirm"
         />
       )}
     </>
