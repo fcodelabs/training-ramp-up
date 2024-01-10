@@ -76,7 +76,13 @@ const StyledButtonBox = styled(Box)`
         gap: 8px;
     }
 `;
-function DiscardChangesCard() {
+
+interface IDiscardChangesCardProps {
+    onConfirm: () => void;
+    onDismiss: () => void;
+}
+
+const DiscardChangesCard: React.FC<IDiscardChangesCardProps>  = ({ onConfirm, onDismiss }) => {
     return (
     
 
@@ -87,8 +93,8 @@ function DiscardChangesCard() {
     </StyledTypography>
     </StyledTypographyBox>
     <StyledButtonBox>
-        <StyledDismissButton variant="text">DISSMISS</StyledDismissButton>
-        <StyledConfirmButton variant="text">CONFIRM</StyledConfirmButton>
+        <StyledDismissButton variant="text" onClick={onDismiss}>DISSMISS</StyledDismissButton>
+        <StyledConfirmButton variant="text" onClick={onConfirm}>CONFIRM</StyledConfirmButton>
     </StyledButtonBox>
   </StyledDialogBox>
     );   

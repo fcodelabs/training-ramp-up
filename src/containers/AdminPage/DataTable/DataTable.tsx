@@ -30,6 +30,14 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs, { Dayjs } from 'dayjs';
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 
+import Modal from '@mui/material/Modal';
+import Paper from '@mui/material/Paper';
+
+import FieldMissingCard from '../Cards/FieldMissingCard';
+import DiscardChangesCard from '../Cards/DiscardChangesCard';
+import AddingSuccessCard from '../Cards/AddingSuccessCard';
+import AddingFailedCard from '../Cards/AddingFailedCard';
+import LoadingErrorCard from '../Cards/LoadingErrorCard';
 
 
 
@@ -209,6 +217,10 @@ export default function DataTable() {
 
     const [mode, setMode] = useState<'Add' | 'Edit'>('Add'); // Track the mode (Add or Edit)
 
+    const [showSuccessModal, setShowSuccessModal] = useState(false);
+    const [showDiscardModal, setShowDiscardModal] = useState(false);
+
+
 
     const handleRowEditStop: GridEventListener<'rowEditStop'> = (params, event) => {
         if (params.reason === GridRowEditStopReasons.rowFocusOut) {
@@ -224,23 +236,60 @@ export default function DataTable() {
     const handleSaveClick = (id: GridRowId) => () => {
         setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.View } });
         setMode('Add');
+        setShowSuccessModal(true);
     };
 
     const handleDeleteClick = (id: GridRowId) => () => {
         setRows(rows.filter((row) => row.id !== id));
     };
 
-    const handleCancelClick = (id: GridRowId) => () => {
-        setRowModesModel({
-            ...rowModesModel,
-            [id]: { mode: GridRowModes.View, ignoreModifications: true },
-        });
+    // const handleCancelClick = (id: GridRowId) => () => {
+    //     setRowModesModel({
+    //         ...rowModesModel,
+    //         [id]: { mode: GridRowModes.View, ignoreModifications: true },
+    //     });
 
-        const editedRow = rows.find((row) => row.id === id);
-        if (editedRow!.isNew) {
-            setRows(rows.filter((row) => row.id !== id));
+    //     const editedRow = rows.find((row) => row.id === id);
+    //     if (editedRow!.isNew) {
+    //         setRows(rows.filter((row) => row.id !== id));
+    //     }
+    //     setMode('Add');
+    // };
+
+    const handleCancelClick = (id: GridRowId) => () => {
+        // Check if there are changes in the row
+        const isRowModified = Object.keys(rowModesModel).some((key) => key === id.toString());
+
+        if (isRowModified) {
+            // If changes exist, show the discard changes modal
+            setShowDiscardModal(true);
+        } else {
+            // If no changes, proceed with canceling
+            setRowModesModel({
+                ...rowModesModel,
+                [id]: { mode: GridRowModes.View, ignoreModifications: true },
+            });
+
+            const editedRow = rows.find((row) => row.id === id);
+            if (editedRow!.isNew) {
+                setRows(rows.filter((row) => row.id !== id));
+            }
+            setMode('Add');
         }
+    };
+
+    const handleConfirmDiscard = () => {
+        // User confirmed discarding changes, remove the editing row
+        const editingRowId = Object.keys(rowModesModel)[0];
+        setRows(rows.filter((row) => row.id !== parseInt(editingRowId)));
+        setRowModesModel({});
+        setShowDiscardModal(false);
         setMode('Add');
+    };
+
+    const handleDismissDiscard = () => {
+        // User dismissed discarding changes, close the modal
+        setShowDiscardModal(false);
     };
 
     const processRowUpdate = (newRow: GridRowModel) => {
@@ -311,6 +360,15 @@ export default function DataTable() {
                                 value: event.target.value,
                             })
                         }
+                        sx={{
+                            '& .MuiOutlinedInput-notchedOutline': {
+                                borderColor: '#2196F3',
+                                borderRadius: 0,
+                            },
+                            '&:hover .MuiOutlinedInput-notchedOutline': {
+                                borderColor: '#2196F3',
+                            },
+                        }}
                     />
                 );
             },
@@ -338,9 +396,14 @@ export default function DataTable() {
                         })
                     }
                     sx={{
-                        boxShadow: "0px 3px 1px -2px rgba(0, 0, 0, 0.2)",
-                        border: "1px solid rgba(33, 150, 243, 1)",
-                        borderRadius: "5px",
+
+                        '& .MuiOutlinedInput-notchedOutline': {
+                            borderColor: '#2196F3',
+                            borderRadius: 0,
+                        },
+                        '&:hover .MuiOutlinedInput-notchedOutline': {
+                            borderColor: '#2196F3',
+                        },
                     }}
                 >
                     <MenuItem value={"Male"}>Male</MenuItem>
@@ -369,6 +432,15 @@ export default function DataTable() {
                                 value: event.target.value,
                             })
                         }
+                        sx={{
+                            '& .MuiOutlinedInput-notchedOutline': {
+                                borderColor: '#2196F3',
+                                borderRadius: 0,
+                            },
+                            '&:hover .MuiOutlinedInput-notchedOutline': {
+                                borderColor: '#2196F3',
+                            },
+                        }}
                     />
                 );
             },
@@ -405,6 +477,16 @@ export default function DataTable() {
                             value={params.value as string}
                             onChange={handleChange}
                             error={!validatePhoneNumber(params.value as string)}
+                            sx={{
+
+                                '& .MuiOutlinedInput-notchedOutline': {
+                                    borderColor: '#2196F3',
+                                    borderRadius: 0,
+                                },
+                                '&:hover .MuiOutlinedInput-notchedOutline': {
+                                    borderColor: '#2196F3',
+                                },
+                            }}
                         />
                         <Typography
                             variant="caption"
@@ -455,7 +537,7 @@ export default function DataTable() {
                     if (newValue !== null) {
                         const newAge = calculateAge(newValue.toDate());
                         const rowId = params.id;
-                        
+
                         setAgeValues((prevAgeValues) => ({
                             ...prevAgeValues,
                             [rowId]: newAge,
@@ -481,9 +563,13 @@ export default function DataTable() {
                                     textField: {
                                         size: "small",
                                         sx: {
-                                            boxShadow: "0px 3px 1px -2px rgba(0, 0, 0, 0.2)",
-                                            border: "1px solid rgba(33, 150, 243, 1)",
-                                            borderRadius: "5px",
+                                            "& .MuiOutlinedInput-notchedOutline": {
+                                                borderColor: "#2196F3",
+                                                borderRadius: 0,
+                                            },
+                                            "&:hover .MuiOutlinedInput-notchedOutline": {
+                                                borderColor: "#2196F3",
+                                            },
                                             alignContent: "center",
                                             justifyContent: "center",
                                             alignItems: "center",
@@ -510,7 +596,7 @@ export default function DataTable() {
             renderCell: (params: GridRenderCellParams<any, string>) => {
                 const age = ageValues[params.row.id] !== undefined ? ageValues[params.row.id]?.toString() : '';
                 const isBelowMinimumAge = age !== undefined && parseInt(age, 10) < 16;
-            
+
                 if (params.row.id in rowModesModel && rowModesModel[params.row.id]?.mode === GridRowModes.Edit) {
                     // Render a text field when in edit mode
                     return (
@@ -525,22 +611,32 @@ export default function DataTable() {
                                         value: event.target.value,
                                     })
                                 }
-                                error={isBelowMinimumAge}  
+                                error={isBelowMinimumAge}
+                                sx={{
+
+                                    '& .MuiOutlinedInput-notchedOutline': {
+                                        borderColor: '#2196F3',
+                                        borderRadius: 0,
+                                    },
+                                    '&:hover .MuiOutlinedInput-notchedOutline': {
+                                        borderColor: '#2196F3',
+                                    },
+                                }}
                             />
                             {isBelowMinimumAge && (
                                 <Typography
-                                variant="caption"
-                                color="error"
-                                sx={{
-    
-                                    overflowWrap: 'break-word', // Allow text to wrap onto the next line
-                                    whiteSpace: 'normal', // Handle white space properly
-                                    wordBreak: 'break-all', // Break words when needed
-                                    textAlign: 'left',
-                                    gap: '0px',
-                                    fontSize: '10px',
-                                }}
-                            >
+                                    variant="caption"
+                                    color="error"
+                                    sx={{
+
+                                        overflowWrap: 'break-word', // Allow text to wrap onto the next line
+                                        whiteSpace: 'normal', // Handle white space properly
+                                        wordBreak: 'break-all', // Break words when needed
+                                        textAlign: 'left',
+                                        gap: '0px',
+                                        fontSize: '10px',
+                                    }}
+                                >
                                     Individual is below the minimum age allowed
                                 </Typography>
                             )}
@@ -560,9 +656,9 @@ export default function DataTable() {
                     );
                 }
             },
-            
+
         },
-        
+
         {
             field: 'action',
             headerName: 'Action',
@@ -660,6 +756,43 @@ export default function DataTable() {
                 getRowHeight={(params) => (rowModesModel[params.id]?.mode === GridRowModes.Edit ? 100 : 52)}
 
             />
+            {/* Modal for Adding Success */}
+            <Modal
+                open={showSuccessModal}
+                onClose={() => setShowSuccessModal(false)}
+                aria-labelledby="modal-modal-title"
+                aria-describedby="modal-modal-description"
+            >
+                <Paper style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', borderRadius: '12px' }}>
+                    <AddingSuccessCard onClose={() => setShowSuccessModal(false)} />
+                </Paper>
+            </Modal>
+                
+                {/* Modal for Discard Changes */}
+                {showDiscardModal && (
+                <Modal
+                    open={showDiscardModal}
+                    onClose={handleDismissDiscard}
+                    aria-labelledby="discard-modal-title"
+                    aria-describedby="discard-modal-description"
+                >
+                    <Paper
+                        style={{
+                            position: 'absolute',
+                            top: '50%',
+                            left: '50%',
+                            transform: 'translate(-50%, -50%)',
+                            borderRadius: '12PX'
+                            
+                        }}
+                    >
+                        <DiscardChangesCard
+                            onConfirm={handleConfirmDiscard}
+                            onDismiss={handleDismissDiscard}
+                        />
+                    </Paper>
+                </Modal>
+            )}
         </StyledDataTableBox>
     );
 }

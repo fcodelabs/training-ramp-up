@@ -59,7 +59,12 @@ const StyledButtonBox = styled(Box)`
         gap: 8px;
     }
 `;
-function AddingSuccessCard() {
+
+interface IAddingSuccessCardProps {
+    onClose: () => void;
+}
+
+const AddingSuccessCard: React.FC<IAddingSuccessCardProps> = ({ onClose }) => {
     return (
     
 
@@ -71,7 +76,7 @@ function AddingSuccessCard() {
     </StyledTypographyBox>
     <StyledButtonBox>
         
-        <StyledConfirmButton variant="text">OK</StyledConfirmButton>
+        <StyledConfirmButton variant="text" onClick={onClose}>OK</StyledConfirmButton>
     </StyledButtonBox>
   </StyledDialogBox>
     );   
