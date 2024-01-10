@@ -12,11 +12,12 @@ import {
     GridRowModel,
     GridRowEditStopReasons,
     GridRowSpacingParams,
+    GridRenderCellParams
 } from '@mui/x-data-grid';
 import Button from '@mui/material/Button';
 import styled from 'styled-components';
 import "@fontsource/roboto";
-import { Box } from '@mui/material';
+import { Box, TextField, MenuItem, Select } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import generateId from '../../../utility/generateId';
 import { useSelector, useDispatch } from 'react-redux';
@@ -27,6 +28,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs, { Dayjs } from 'dayjs';
+import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 
 
 
@@ -170,7 +172,7 @@ function EditToolbar(props: EditToolbarProps) {
         const id = generateId();
         // Add the new row only once
         setRows((oldRows) => [
-            { id, name: '', gender: '', address: '', mobile: '', isNew: true },
+            { id, name: '', address: '', mobile: '', isNew: true },
             ...oldRows,
         ]);
         // Set the mode for the new row
@@ -257,35 +259,264 @@ export default function DataTable() {
         if (!dob) {
             return 0;
         }
-    
+
         const today = new Date();
         const birthDate = new Date(dob);
         const age = today.getFullYear() - birthDate.getFullYear();
-    
+
         return age;
     };
 
+    const validatePhoneNumber = (value: string): boolean => {
+        // Regular expression for validating phone numbers
+        const phoneNumberRegex = /^\+?\d+$/;
+
+        // Check if the value matches the regex
+        return phoneNumberRegex.test(value);
+    };
+
     const columns: GridColDef[] = [
-        { field: 'id', headerName: 'ID', width: 86, editable: false, sortable: false, disableColumnMenu: true, headerClassName: 'custom-header' },
-        { field: 'name', headerName: 'Name', type: 'string' , width: 135, sortable: true, disableColumnMenu: true, headerClassName: 'custom-header', editable: true,},
-        { field: 'gender', headerName: 'Gender', type: 'singleSelect', valueOptions: ['Male', 'Female', 'Other'], width: 135, sortable: false, disableColumnMenu: true, headerClassName: 'custom-header', editable: true },
-        { field: 'address', headerName: 'Address', width: 135, sortable: false, disableColumnMenu: true, headerClassName: 'custom-header', editable: true },
-        { field: 'mobile', headerName: 'Mobile No:', width: 135, sortable: false, disableColumnMenu: true, headerClassName: 'custom-header', editable: true,  },
+
         {
-            field: 'dob', headerName: 'Date of Birth', type: 'date', width: 175, sortable: true, disableColumnMenu: true, headerClassName: 'custom-header', editable: true, valueFormatter: (params) => {
-                // Format the date using your preferred format
-                const formattedDate = dayjs(params.value).format('ddd MMM DD YYYY');
-                return formattedDate;
+            field: 'id',
+            headerName: 'ID',
+            width: 86,
+            editable: false,
+            sortable: false,
+            disableColumnMenu: true,
+            headerClassName: 'custom-header',
+        },
+        {
+            field: 'name',
+            headerName: 'Name',
+            type: 'string',
+            width: 135,
+            sortable: true,
+            disableColumnMenu: true,
+            headerClassName: 'custom-header',
+            editable: true,
+            renderEditCell(params: GridRenderCellParams<any, string>) {
+                return (
+                    <TextField
+                        size='small'
+                        value={params.value as string}
+                        onChange={(event) =>
+                            params.api.setEditCellValue({
+                                id: params.id,
+                                field: params.field,
+                                value: event.target.value,
+                            })
+                        }
+                    />
+                );
+            },
+        },
+        {
+            field: 'gender',
+            headerName: 'Gender',
+            type: 'singleSelect',
+            valueOptions: ['Male', 'Female', 'Other'],
+            width: 135,
+            sortable: false,
+            disableColumnMenu: true,
+            headerClassName: 'custom-header',
+            editable: true,
+            renderEditCell: (params: GridRenderCellParams<any, string>) => (
+                <Select
+                    size="small"
+                    fullWidth
+                    value={params.value as string}
+                    onChange={(e) =>
+                        params.api.setEditCellValue({
+                            id: params.id,
+                            field: params.field,
+                            value: e.target.value,
+                        })
+                    }
+                    sx={{
+                        boxShadow: "0px 3px 1px -2px rgba(0, 0, 0, 0.2)",
+                        border: "1px solid rgba(33, 150, 243, 1)",
+                        borderRadius: "5px",
+                    }}
+                >
+                    <MenuItem value={"Male"}>Male</MenuItem>
+                    <MenuItem value={"Female"}>Female</MenuItem>
+                    <MenuItem value={"Other"}>Other</MenuItem>
+                </Select>
+            ),
+        },
+        {
+            field: 'address',
+            headerName: 'Address',
+            width: 135,
+            sortable: false,
+            disableColumnMenu: true,
+            headerClassName: 'custom-header',
+            editable: true,
+            renderEditCell(params: GridRenderCellParams<any, string>) {
+                return (
+                    <TextField
+                        size='small'
+                        value={params.value as string}
+                        onChange={(event) =>
+                            params.api.setEditCellValue({
+                                id: params.id,
+                                field: params.field,
+                                value: event.target.value,
+                            })
+                        }
+                    />
+                );
+            },
+        },
+        {
+            field: 'mobile',
+            headerName: 'Mobile No:',
+            width: 135,
+            sortable: false,
+            disableColumnMenu: true,
+            headerClassName: 'custom-header',
+            editable: true,
+            renderEditCell(params: GridRenderCellParams<any, string>) {
+                const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+                    const newValue = event.target.value;
+
+                    // Check if the entered phone number is valid
+                    const isValidPhoneNumber = validatePhoneNumber(newValue);
+
+                    // Update the cell value if the phone number is valid
+                    if (isValidPhoneNumber || newValue === '') {
+                        params.api.setEditCellValue({
+                            id: params.id,
+                            field: params.field,
+                            value: newValue,
+                        });
+                    }
+                };
+
+                return (
+                    <div style={{ display: 'flex', flexDirection: 'column'}}>
+                        <TextField
+                            size='small'
+                            value={params.value as string}
+                            onChange={handleChange}
+                            error={!validatePhoneNumber(params.value as string)}
+                        />
+                        <Typography
+                            variant="caption"
+                            color="error"
+                            sx={{
+                                
+                                overflowWrap: 'break-word', // Allow text to wrap onto the next line
+                                whiteSpace: 'normal', // Handle white space properly
+                                wordBreak: 'break-all', // Break words when needed
+                                textAlign: 'left',
+                                gap: '0px',
+                                fontSize: '10px',
+                            }}
+                        >
+                            {!validatePhoneNumber(params.value as string)
+                                ? 'Please enter a valid phone number'
+                                : ''}
+                        </Typography>
+                    </div>
+                );
+            },
+        },
+        {
+            field: 'dob',
+            headerName: 'Date of Birth',
+            type: 'date',
+            width: 205,
+            sortable: true,
+            disableColumnMenu: true,
+            headerClassName: 'custom-header',
+            editable: true,
+            valueFormatter: (params) => {
+                const date = dayjs(new Date(params.value));
+                return date.format("ddd MMM DD YYYY");
             },
 
-        },
-        { field: 'age', headerName: 'Age', width: 101, disableColumnMenu: true, sortable: false, headerClassName: 'custom-header', editable: false, valueGetter: (params) => {
-            // Access the 'dob' field from the row data
-            const dob = params.row.dob;
+            renderEditCell: (
+                params: GridRenderCellParams<any, dayjs.Dayjs | null>
+            ) => {
+                const dateValue = params.value ? dayjs(params.value) : null;
+                return (
+                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                        <DemoContainer
+                            components={["DatePicker"]}
+                            sx={{ paddingTop: "0px" }}
+                        >
+                            <DatePicker
+                                value={dateValue}
 
-            // Call the calculateAge function to get the age
-            return calculateAge(dob);
-        },},
+                                onChange={(newValue) =>
+                                    params.api.setEditCellValue({
+                                        id: params.id,
+                                        field: params.field,
+                                        value: newValue,
+                                    })
+                                }
+                                slotProps={{
+                                    textField: {
+                                        size: "small",
+                                        sx: {
+                                            boxShadow: "0px 3px 1px -2px rgba(0, 0, 0, 0.2)",
+                                            border: "1px solid rgba(33, 150, 243, 1)",
+                                            borderRadius: "5px",
+                                            alignContent: "center",
+                                            justifyContent: "center",
+                                            alignItems: "center",
+                                        },
+                                    },
+                                }}
+                            />
+                        </DemoContainer>
+                    </LocalizationProvider>
+                );
+            },
+        },
+
+
+        {
+            field: 'age',
+            headerName: 'Age',
+            width: 101,
+            disableColumnMenu: true,
+            sortable: false,
+            headerClassName: 'custom-header',
+            editable: false,
+            
+            valueGetter: (params) => {
+                const dob = params.row.dob;
+                const age = calculateAge(dob);
+                return age !== null ? age.toString() : '';
+            },
+            renderCell: (params: GridRenderCellParams<any, string>) => {
+                const dob = params.row.dob;
+                const age = calculateAge(dob);
+
+                if (params.row.id in rowModesModel && rowModesModel[params.row.id]?.mode === GridRowModes.Edit) {
+                    // Render a text field when in edit mode
+                    return (
+                        <TextField
+                            size='small'
+                            value={age !== null ? age.toString() : ''}
+                            onChange={(event) =>
+                                params.api.setEditCellValue({
+                                    id: params.id,
+                                    field: params.field,
+                                    value: event.target.value,
+                                })
+                            }
+                        />
+                    );
+                } else {
+                    // Render the age as plain text in view mode
+                    return age !== null ? age.toString() : '';
+                }
+            },
+        },
         {
             field: 'action',
             headerName: 'Action',
