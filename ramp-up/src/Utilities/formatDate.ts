@@ -1,6 +1,6 @@
 
 const formatDate = (value: string | null): string => {
-    const dateObject = value ? new Date(value) : null;
+    const dateObject = value ? new Date(value) : new Date();
   
     return dateObject
       ? `${dateObject.toLocaleDateString('en-US', { weekday: 'short' })}

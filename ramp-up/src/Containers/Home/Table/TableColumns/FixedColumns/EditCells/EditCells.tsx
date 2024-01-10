@@ -5,6 +5,7 @@ import { useAppDispatch } from '../../../../../../Redux/hooks';
 import { updateUser } from '../../../../../../Redux/user/userSlice';
 import { Typography } from '@mui/material';
 import calculateAge from '../../../../../../Utilities/calculateAge';
+import formatDate from '../../../../../../Utilities/formatDate';
 
 interface EditableCellProps {
   params: any;
@@ -31,7 +32,7 @@ const EditableCell: React.FC<EditableCellProps> = ({ params, field, value, valid
   };
 
   const handleDateChange = (newDate: string) => {
-    const newDateObject = newDate ? new Date(newDate) : null;
+    const newDateObject = newDate ? new Date(newDate) : new Date();
     params.api.setEditCellValue({ id: params.id, field: params.field, value: newDateObject });
     const age = calculateAge(newDateObject!);
     params.api.setEditCellValue({ id: params.id, field: 'age', value: (Number(age)<=0)? 0: age });
@@ -39,7 +40,7 @@ const EditableCell: React.FC<EditableCellProps> = ({ params, field, value, valid
       uid: params.id,
       updates: {
         age: Number(age),
-        Birthday: newDateObject!,
+        Birthday: newDateObject!
       }
     }
     dispatch(updateUser(updateAge))
@@ -66,23 +67,23 @@ const EditableCell: React.FC<EditableCellProps> = ({ params, field, value, valid
 
   if (field === 'mobile') {
     return (
-      <StyledPhoneInputWrapper>
-        <StyledPhoneInput
+
+      <StyledTextFieldWrapper
           error={error}
-          type="local"
+          fullWidth
+          type="string"
           placeholder=""
-          value={params.value || ''}
-          maxLength={16}
-          onChange={(e: any) => handleChange(e)}
+          value={value || ''}
+          onChange={(e: any) => handleChange(e.target.value)}
         >
-        </StyledPhoneInput>
         {error && <StyledFormHelperText >This field is required</StyledFormHelperText>}
-      </StyledPhoneInputWrapper>
+      </StyledTextFieldWrapper>
     );
   }
 
   if (field === 'birthday') {
     const dateObject = params.value ? new Date(params.value) : new Date();
+    console.log(dateObject) 
     return (
       <StyledTextFieldWrapper
         error={error}

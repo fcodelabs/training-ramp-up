@@ -95,11 +95,13 @@ const NotificationPopup: React.FC<ErrorPopupProps> = ({ open, onClose, type, onS
   else if (type === 'FAIL_UPDATE_USER') { //done
     errorMessage = 'Cannnot update the student details. Please try again later';
     button = <SingleButton text='Try Again' />}
-
-    
   else if (type === 'DELETE_USER') {
-    errorMessage = 'Some other type of error message.';
+    errorMessage = 'Are you sure you want to remove this student?';
     button = <ButtonSet />
+  }
+  else if (type === 'DELETE_USER_SUCCESS') {
+    errorMessage = 'Student deleted successfully';
+    button = <SingleButton text='ok' />
   }
 
 

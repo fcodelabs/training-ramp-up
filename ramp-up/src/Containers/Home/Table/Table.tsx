@@ -111,7 +111,13 @@ const Table = () => {
     const handleDeleteClick = (id: GridRowId) => () => {
         const confirmDelete = () => {
             setRows(rows.filter((row) => row.id !== id));
+            dispatch(discardUser(Number(id)))
             handleCloseNotification();
+            setNotification({
+                open: true,
+                onConfirm: handleCloseNotification,
+                type: 'DELETE_USER_SUCCESS'
+            })
         };
 
         setNotification({
