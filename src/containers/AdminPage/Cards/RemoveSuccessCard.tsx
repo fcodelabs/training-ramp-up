@@ -60,26 +60,26 @@ const StyledButtonBox = styled(Box)`
     }
 `;
 
-interface IFieldMissingCardProps {
-    onClick: () => void;
+interface IAddingSuccessCardProps {
+    onClose: () => void;
 }
 
-const FieldMissingCard: React.FC<IFieldMissingCardProps> = ({onClick}) => {
+const RemoveSuccessCard: React.FC<IAddingSuccessCardProps> = ({ onClose }) => {
     return (
     
 
   <StyledDialogBox>
     <StyledTypographyBox>
     <StyledTypography>
-    Mandatory fields missing.
+    The student removed successfully.
     </StyledTypography>
     </StyledTypographyBox>
     <StyledButtonBox>
         
-        <StyledConfirmButton variant="text" onClick={onClick}>KEEP EDITING</StyledConfirmButton>
+        <StyledConfirmButton variant="text" onClick={onClose}>OK</StyledConfirmButton>
     </StyledButtonBox>
   </StyledDialogBox>
     );   
 };
 
-export default FieldMissingCard;
+export default RemoveSuccessCard;
