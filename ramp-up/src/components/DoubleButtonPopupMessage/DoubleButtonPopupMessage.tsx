@@ -30,7 +30,7 @@ const DoubleButtonPopupMessage = ({
             sx={{
               fontSize: "14px",
               fontWeight: 500,
-              color: "background: rgba(156, 39, 176, 1)",
+              color: "rgba(156, 39, 176, 1)",
             }}
           >
             {firstButtonName}
@@ -41,7 +41,7 @@ const DoubleButtonPopupMessage = ({
             sx={{
               fontSize: "14px",
               fontWeight: 500,
-              color: "background: rgba(33, 150, 243, 1)",
+              color: "rgba(33, 150, 243, 1)",
             }}
           >
             {secondButtonName}

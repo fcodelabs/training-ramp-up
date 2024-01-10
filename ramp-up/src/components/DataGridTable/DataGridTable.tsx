@@ -93,7 +93,7 @@ function EditToolbar(props: EditToolbarProps) {
         padding="12px"
         sx={{ fontSize: "24px", fontWeight: 400, fontFamily: "Roboto" }}
       >
-        User Profile
+        User Details
       </Typography>
 
       <Grid
@@ -104,10 +104,10 @@ function EditToolbar(props: EditToolbarProps) {
       >
         <Grid item>
           <Button
-            color="primary"
             size="small"
             variant="contained"
             onClick={handleClick}
+            sx={{ backgroundColor: "rgba(33, 150, 243, 1)" }}
           >
             Add New
           </Button>
@@ -130,6 +130,7 @@ const DataGridTable = () => {
   const [unableToAddPopup, setUnableToAdd] = useState(false);
   const [unableToEditPopup, setUnableToEdit] = useState(false);
   const [discardChangesPopup, setDiscardChangesPopup] = useState(false);
+  const [deletePopup, setDeletePopup] = useState(false);
   const [currentRowId, setCurrentRowId] = useState<GridRowId | null>(null);
 
   const [rowModesModel, setRowModesModel] = useState<GridRowModesModel>({});
@@ -151,6 +152,11 @@ const DataGridTable = () => {
   };
 
   const handleDeleteClick = (id: GridRowId) => () => {
+    setDeletePopup(true);
+    setCurrentRowId(id);
+  };
+
+  const handleConfirmDeleteClick = (id: GridRowId) => {
     dispatch(updateStudent(initialRows.filter((row) => row.id !== id)));
     idReducer();
   };
@@ -201,6 +207,8 @@ const DataGridTable = () => {
           initialRows.map((row) => (row.id === newRow.id ? updatedRow : row))
         )
       );
+      setAgeValidateError(false);
+      setNumberValidateError(false);
       if (newRow!.isNew) {
         setAddedSuccessfullyPopup(true);
       } else {
@@ -473,9 +481,9 @@ const DataGridTable = () => {
       type: "actions",
       headerClassName: "super-app-theme--header",
       headerAlign: "left",
-
+      align: "left",
       headerName: "Actions",
-      width: 215,
+      width: 195,
       cellClassName: "actions",
       getActions: ({ id }) => {
         const isInEditMode = rowModesModel[id]?.mode === GridRowModes.Edit;
@@ -500,7 +508,7 @@ const DataGridTable = () => {
                   color="error"
                   onClick={handleDiscardClick(id)}
                   sx={{
-                    width: "150px",
+                    width: "145px",
                     fontSize: "13px",
                     fontWeight: 500,
                   }}
@@ -511,7 +519,7 @@ const DataGridTable = () => {
             ];
           }
           return [
-            <Stack direction="row" spacing={2} paddingY="10px">
+            <Stack direction="row" spacing={1} paddingY="10px">
               <Button
                 size="small"
                 variant="outlined"
@@ -538,7 +546,7 @@ const DataGridTable = () => {
         }
 
         return [
-          <Stack direction="row" spacing={3}>
+          <Stack direction="row" spacing={1}>
             <Button
               size="small"
               variant="outlined"
@@ -650,6 +658,19 @@ const DataGridTable = () => {
           handleClickSecondButton={() => {
             handleConfirmClick(currentRowId as GridRowId);
             setDiscardChangesPopup(false);
+          }}
+          firstButtonName="Dismiss"
+          secondButtonName="Confirm"
+        />
+      )}
+      {deletePopup && (
+        <DoubleButtonPopupMessage
+          open={deletePopup}
+          title={"Are you sure you want to remove this student?"}
+          handleClickFirstButton={() => setDeletePopup(false)}
+          handleClickSecondButton={() => {
+            handleConfirmDeleteClick(currentRowId as GridRowId);
+            setDeletePopup(false);
           }}
           firstButtonName="Dismiss"
           secondButtonName="Confirm"
