@@ -16,7 +16,7 @@ export const FixedColumns: GridColDef[] = [
         renderHeader: () => <div style={{ paddingRight: '50px' }}>ID</div> ,
     },
     {
-        field: 'name', headerName: 'Name', type: 'string', flex: 1, minWidth: 50, editable: true, sortingOrder: ['desc', 'asc'],
+        field: 'name', headerName: 'Name', type: 'string', flex: 1, minWidth: 100, editable: true, sortingOrder: ['desc', 'asc'],
         renderHeader: () => { return (<Header text='name' />) },
         renderEditCell: (params) => { return <EditableCell params={params} field="name" value={params.value} validate={validateName} />; },
         renderCell: (params) => {
@@ -62,7 +62,7 @@ export const FixedColumns: GridColDef[] = [
         renderEditCell: (params) => { return <EditableCell params={params} field="birthday" value={params.value} validate={validateBirthday} />; },
     },
     {
-        field: 'age', headerName: 'Age', type: 'number', flex: 0.4, minWidth: 40, sortable: false, editable: true,
+        field: 'age', headerName: 'Age', type: 'number', flex: 0.5, minWidth: 50, sortable: false, editable: true,
         renderHeader() { return (<Header text='Age' />) },
         renderCell: (params) => {
             if (params.row.error) return (<div>  <Skeleton animation="wave" height={20} width={50} /> </div>)

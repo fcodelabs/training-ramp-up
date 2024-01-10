@@ -55,7 +55,7 @@ const EditableCell: React.FC<EditableCellProps> = ({ params, field, value, valid
         value={value || 0}
         onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChange(e.target.value)}
         helperText={error && (
-          <Typography variant="body2" color="error" fontSize={6.5} lineHeight={1}>
+          <Typography variant="body2" color="error" fontSize={8} lineHeight={1}>
             Individual is below the
             <br />
             minimum age allowed
@@ -75,8 +75,9 @@ const EditableCell: React.FC<EditableCellProps> = ({ params, field, value, valid
           placeholder=""
           value={value || ''}
           onChange={(e: any) => handleChange(e.target.value)}
+          helperText={error && "This field is required"}
+
         >
-        {error && <StyledFormHelperText >This field is required</StyledFormHelperText>}
       </StyledTextFieldWrapper>
     );
   }
