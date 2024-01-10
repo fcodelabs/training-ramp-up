@@ -275,6 +275,10 @@ export default function DataTable() {
         return phoneNumberRegex.test(value);
     };
 
+    const [ageValues, setAgeValues] = React.useState<{ [key: string]: number | null }>({});
+
+
+
     const columns: GridColDef[] = [
 
         {
@@ -395,7 +399,7 @@ export default function DataTable() {
                 };
 
                 return (
-                    <div style={{ display: 'flex', flexDirection: 'column'}}>
+                    <div style={{ display: 'flex', flexDirection: 'column' }}>
                         <TextField
                             size='small'
                             value={params.value as string}
@@ -406,7 +410,7 @@ export default function DataTable() {
                             variant="caption"
                             color="error"
                             sx={{
-                                
+
                                 overflowWrap: 'break-word', // Allow text to wrap onto the next line
                                 whiteSpace: 'normal', // Handle white space properly
                                 wordBreak: 'break-all', // Break words when needed
@@ -437,26 +441,42 @@ export default function DataTable() {
                 return date.format("ddd MMM DD YYYY");
             },
 
-            renderEditCell: (
-                params: GridRenderCellParams<any, dayjs.Dayjs | null>
-            ) => {
+            renderEditCell: (params: GridRenderCellParams<any, dayjs.Dayjs | null>) => {
                 const dateValue = params.value ? dayjs(params.value) : null;
+
+                const handleDateChange = (newValue: dayjs.Dayjs | null) => {
+                    params.api.setEditCellValue({
+                        id: params.id,
+                        field: params.field,
+                        value: newValue,
+                    });
+
+                    // Calculate the age only if newValue is not null
+                    if (newValue !== null) {
+                        const newAge = calculateAge(newValue.toDate());
+                        const rowId = params.id;
+                        
+                        setAgeValues((prevAgeValues) => ({
+                            ...prevAgeValues,
+                            [rowId]: newAge,
+                        }));
+
+                        // Update the 'age' field
+                        params.api.setEditCellValue({
+                            id: params.id,
+                            field: 'age',
+                            value: newAge,
+                        });
+                        console.log(newAge);
+                    }
+                };
+
                 return (
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
-                        <DemoContainer
-                            components={["DatePicker"]}
-                            sx={{ paddingTop: "0px" }}
-                        >
+                        <DemoContainer components={["DatePicker"]} sx={{ paddingTop: "0px" }}>
                             <DatePicker
                                 value={dateValue}
-
-                                onChange={(newValue) =>
-                                    params.api.setEditCellValue({
-                                        id: params.id,
-                                        field: params.field,
-                                        value: newValue,
-                                    })
-                                }
+                                onChange={handleDateChange}
                                 slotProps={{
                                     textField: {
                                         size: "small",
@@ -475,6 +495,7 @@ export default function DataTable() {
                     </LocalizationProvider>
                 );
             },
+
         },
 
 
@@ -486,37 +507,62 @@ export default function DataTable() {
             sortable: false,
             headerClassName: 'custom-header',
             editable: false,
-            
-            valueGetter: (params) => {
-                const dob = params.row.dob;
-                const age = calculateAge(dob);
-                return age !== null ? age.toString() : '';
-            },
             renderCell: (params: GridRenderCellParams<any, string>) => {
-                const dob = params.row.dob;
-                const age = calculateAge(dob);
-
+                const age = ageValues[params.row.id] !== undefined ? ageValues[params.row.id]?.toString() : '';
+                const isBelowMinimumAge = age !== undefined && parseInt(age, 10) < 16;
+            
                 if (params.row.id in rowModesModel && rowModesModel[params.row.id]?.mode === GridRowModes.Edit) {
                     // Render a text field when in edit mode
                     return (
-                        <TextField
-                            size='small'
-                            value={age !== null ? age.toString() : ''}
-                            onChange={(event) =>
-                                params.api.setEditCellValue({
-                                    id: params.id,
-                                    field: params.field,
-                                    value: event.target.value,
-                                })
-                            }
-                        />
+                        <div style={{ display: 'flex', flexDirection: 'column' }}>
+                            <TextField
+                                size='small'
+                                value={age}
+                                onChange={(event) =>
+                                    params.api.setEditCellValue({
+                                        id: params.id,
+                                        field: params.field,
+                                        value: event.target.value,
+                                    })
+                                }
+                                error={isBelowMinimumAge}  
+                            />
+                            {isBelowMinimumAge && (
+                                <Typography
+                                variant="caption"
+                                color="error"
+                                sx={{
+    
+                                    overflowWrap: 'break-word', // Allow text to wrap onto the next line
+                                    whiteSpace: 'normal', // Handle white space properly
+                                    wordBreak: 'break-all', // Break words when needed
+                                    textAlign: 'left',
+                                    gap: '0px',
+                                    fontSize: '10px',
+                                }}
+                            >
+                                    Individual is below the minimum age allowed
+                                </Typography>
+                            )}
+                        </div>
                     );
                 } else {
                     // Render the age as plain text in view mode
-                    return age !== null ? age.toString() : '';
+                    return (
+                        <div style={{ display: 'flex', flexDirection: 'column' }}>
+                            <Typography variant="body2">{age}</Typography>
+                            {isBelowMinimumAge && (
+                                <Typography variant="caption" color="error">
+                                    Individual is below the minimum age allowed
+                                </Typography>
+                            )}
+                        </div>
+                    );
                 }
             },
+            
         },
+        
         {
             field: 'action',
             headerName: 'Action',
@@ -593,6 +639,7 @@ export default function DataTable() {
                 rows={rows}
                 columns={columns}
                 editMode='row'
+                disableRowSelectionOnClick
                 rowModesModel={rowModesModel}
                 onRowModesModelChange={handleRowModesModelChange}
                 onRowEditStop={handleRowEditStop}
