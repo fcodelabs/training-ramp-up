@@ -267,10 +267,10 @@ export default function DataTable() {
 
     const columns: GridColDef[] = [
         { field: 'id', headerName: 'ID', width: 86, editable: false, sortable: false, disableColumnMenu: true, headerClassName: 'custom-header' },
-        { field: 'name', headerName: 'Name', width: 135, sortable: true, disableColumnMenu: true, headerClassName: 'custom-header', editable: true },
-        { field: 'gender', headerName: 'Gender', type: 'singleSelect', valueOptions: ['Male', 'Female'], width: 135, sortable: false, disableColumnMenu: true, headerClassName: 'custom-header', editable: true },
+        { field: 'name', headerName: 'Name', type: 'string' , width: 135, sortable: true, disableColumnMenu: true, headerClassName: 'custom-header', editable: true,},
+        { field: 'gender', headerName: 'Gender', type: 'singleSelect', valueOptions: ['Male', 'Female', 'Other'], width: 135, sortable: false, disableColumnMenu: true, headerClassName: 'custom-header', editable: true },
         { field: 'address', headerName: 'Address', width: 135, sortable: false, disableColumnMenu: true, headerClassName: 'custom-header', editable: true },
-        { field: 'mobile', headerName: 'Mobile No:', width: 135, sortable: false, disableColumnMenu: true, headerClassName: 'custom-header', editable: true, },
+        { field: 'mobile', headerName: 'Mobile No:', width: 135, sortable: false, disableColumnMenu: true, headerClassName: 'custom-header', editable: true,  },
         {
             field: 'dob', headerName: 'Date of Birth', type: 'date', width: 175, sortable: true, disableColumnMenu: true, headerClassName: 'custom-header', editable: true, valueFormatter: (params) => {
                 // Format the date using your preferred format

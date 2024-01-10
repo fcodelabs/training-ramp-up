@@ -76,14 +76,14 @@ const StyledButtonBox = styled(Box)`
         gap: 8px;
     }
 `;
-function LoadingErrorCard() {
+function DiscardChangesCard() {
     return (
     
 
   <StyledDialogBox>
     <StyledTypographyBox>
     <StyledTypography>
-    Unable to retrieve table details. Please try again later.
+    Discard changes?
     </StyledTypography>
     </StyledTypographyBox>
     <StyledButtonBox>
@@ -94,4 +94,4 @@ function LoadingErrorCard() {
     );   
 };
 
-export default LoadingErrorCard;
+export default DiscardChangesCard;

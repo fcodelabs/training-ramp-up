@@ -35,23 +35,6 @@ const StyledTypography = styled(Typography)`
     
     }
 `;
-
-const StyledDismissButton = styled(Button)`
-    &&& {
-        width: 58px;
-        height: 24px;
-        padding: 6px 8px;
-        border-radius: 4px;
-        color:#9C27B0;
-        font-family: Roboto;
-        font-weight: 500;
-        font-size: 14px;
-        line-height: 24px;
-        Letter-spacing: 0.4px;
-        gap: 8px;
-    }
-`;
-
 const StyledConfirmButton = styled(Button)`
     &&& {
         width: 58px;
@@ -76,22 +59,22 @@ const StyledButtonBox = styled(Box)`
         gap: 8px;
     }
 `;
-function LoadingErrorCard() {
+function AddingFailedCard() {
     return (
     
 
   <StyledDialogBox>
     <StyledTypographyBox>
     <StyledTypography>
-    Unable to retrieve table details. Please try again later.
+    Unable to add the new student. Please try again later.
     </StyledTypography>
     </StyledTypographyBox>
     <StyledButtonBox>
-        <StyledDismissButton variant="text">DISSMISS</StyledDismissButton>
-        <StyledConfirmButton variant="text">CONFIRM</StyledConfirmButton>
+        
+        <StyledConfirmButton variant="text">TRY AGAIN</StyledConfirmButton>
     </StyledButtonBox>
   </StyledDialogBox>
     );   
 };
 
-export default LoadingErrorCard;
+export default AddingFailedCard;
