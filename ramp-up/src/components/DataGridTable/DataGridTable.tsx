@@ -47,14 +47,14 @@ const idReducer = () => {
   idValue -= 1;
 };
 
-interface EditToolbarProps {
+interface IEditToolbarProps {
   setRows: (newRows: (oldRows: GridRowsProp) => GridRowsProp) => void;
   setRowModesModel: (
     newModel: (oldModel: GridRowModesModel) => GridRowModesModel
   ) => void;
 }
 
-function EditToolbar(props: EditToolbarProps) {
+function EditToolbar(props: IEditToolbarProps) {
   idValue = useSelector((state: RootState) => state.student.students).reduce(
     (maxId, obj) => Math.max(maxId, obj.id),
     0

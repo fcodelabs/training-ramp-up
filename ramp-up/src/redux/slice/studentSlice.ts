@@ -3,11 +3,11 @@ import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import { ageCalculator } from "../../utility";
 
-interface InitialState {
+interface IinitialState {
   students: GridValidRowModel[];
 }
 
-const initialState: InitialState = {
+const initialState: IinitialState = {
   students: [
     {
       id: 1,

@@ -1,6 +1,6 @@
 import { Button, Dialog, DialogActions, DialogTitle } from "@mui/material";
 
-interface Props {
+interface IProps {
   open: boolean;
   title: string;
   handleClick: () => void;
@@ -12,7 +12,7 @@ const SingleButtonPopupMessage = ({
   title,
   handleClick,
   buttonName,
-}: Props) => {
+}: IProps) => {
   return (
     <>
       <Dialog open={open}>

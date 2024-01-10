@@ -1,6 +1,6 @@
 import { Button, Dialog, DialogActions, DialogTitle } from "@mui/material";
 
-interface Props {
+interface IProps {
   open: boolean;
   title: string;
   handleClickFirstButton: () => void;
@@ -16,7 +16,7 @@ const DoubleButtonPopupMessage = ({
   handleClickSecondButton,
   firstButtonName,
   secondButtonName,
-}: Props) => {
+}: IProps) => {
   return (
     <>
       <Dialog open={open}>
