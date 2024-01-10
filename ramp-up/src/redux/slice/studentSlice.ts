@@ -1,22 +1,13 @@
 import { GridValidRowModel } from "@mui/x-data-grid";
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
+import { ageCalculator } from "../../utility";
 
-export interface studentState {
-  id: number;
-  name: string;
-  gender: string;
-  address: string;
-  mobileno: string;
-  dateofbirth: Date;
-  age: number;
-}
-
-interface InitialState {
+interface IinitialState {
   students: GridValidRowModel[];
 }
 
-const initialState: InitialState = {
+const initialState: IinitialState = {
   students: [
     {
       id: 1,
@@ -25,7 +16,7 @@ const initialState: InitialState = {
       address: "Matara",
       mobileno: "071-466-8617",
       dateofbirth: new Date(1998, 11, 4),
-      age: 23,
+      age: ageCalculator(new Date(1998, 11, 4)),
     },
     {
       id: 2,
@@ -34,7 +25,7 @@ const initialState: InitialState = {
       address: "Matara",
       mobileno: "071-466-8617",
       dateofbirth: new Date(1999, 11, 4),
-      age: 23,
+      age: ageCalculator(new Date(1999, 11, 4)),
     },
     {
       id: 3,
@@ -43,7 +34,7 @@ const initialState: InitialState = {
       address: "Matara",
       mobileno: "071-466-8617",
       dateofbirth: new Date(2004, 11, 4),
-      age: 23,
+      age: ageCalculator(new Date(2004, 11, 4)),
     },
     {
       id: 4,
@@ -52,7 +43,7 @@ const initialState: InitialState = {
       address: "Matara",
       mobileno: "071-466-8617",
       dateofbirth: new Date(1999, 11, 4),
-      age: 23,
+      age: ageCalculator(new Date(1999, 11, 4)),
     },
   ],
 };

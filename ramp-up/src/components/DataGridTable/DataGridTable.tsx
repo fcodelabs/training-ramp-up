@@ -32,6 +32,9 @@ import {
   GridRowsProp,
   GridToolbarContainer,
 } from "@mui/x-data-grid";
+import { ageCalculator, validatePhoneNumber } from "../../utility";
+import SingleButtonPopupMessage from "../SingleButtonPopupMessage/SingleButtonPopupMessage";
+import DoubleButtonPopupMessage from "../DoubleButtonPopupMessage/DoubleButtonPopupMessage";
 
 let idValue = 0;
 
@@ -44,15 +47,18 @@ const idReducer = () => {
   idValue -= 1;
 };
 
-interface EditToolbarProps {
+interface IEditToolbarProps {
   setRows: (newRows: (oldRows: GridRowsProp) => GridRowsProp) => void;
   setRowModesModel: (
     newModel: (oldModel: GridRowModesModel) => GridRowModesModel
   ) => void;
 }
 
-function EditToolbar(props: EditToolbarProps) {
-  idValue = useSelector((state: RootState) => state.student.students).length;
+function EditToolbar(props: IEditToolbarProps) {
+  idValue = useSelector((state: RootState) => state.student.students).reduce(
+    (maxId, obj) => Math.max(maxId, obj.id),
+    0
+  );
   const currentRows = useSelector((state: RootState) => state.student.students);
   const dispatch = useDispatch();
   const isMobile = useMediaQuery("(max-width: 400px)");
@@ -87,7 +93,7 @@ function EditToolbar(props: EditToolbarProps) {
         padding="12px"
         sx={{ fontSize: "24px", fontWeight: 400, fontFamily: "Roboto" }}
       >
-        User Profile
+        User Details
       </Typography>
 
       <Grid
@@ -98,10 +104,10 @@ function EditToolbar(props: EditToolbarProps) {
       >
         <Grid item>
           <Button
-            color="primary"
             size="small"
             variant="contained"
             onClick={handleClick}
+            sx={{ backgroundColor: "rgba(33, 150, 243, 1)" }}
           >
             Add New
           </Button>
@@ -116,6 +122,16 @@ const DataGridTable = () => {
     (state: RootState) => state.student.students
   );
   const dispatch = useDispatch();
+  const [numbervalidateError, setNumberValidateError] = useState(false);
+  const [agevalidateError, setAgeValidateError] = useState(false);
+  const [keepEditingPopup, setKeepEditingPopup] = useState(false);
+  const [addedSuccessfullyPopup, setAddedSuccessfullyPopup] = useState(false);
+  const [editedSuccessfullyPopup, setEditedSuccessfullyPopup] = useState(false);
+  const [unableToAddPopup, setUnableToAdd] = useState(false);
+  const [unableToEditPopup, setUnableToEdit] = useState(false);
+  const [discardChangesPopup, setDiscardChangesPopup] = useState(false);
+  const [deletePopup, setDeletePopup] = useState(false);
+  const [currentRowId, setCurrentRowId] = useState<GridRowId | null>(null);
 
   const [rowModesModel, setRowModesModel] = useState<GridRowModesModel>({});
   const handleRowEditStop: GridEventListener<"rowEditStop"> = (
@@ -136,11 +152,20 @@ const DataGridTable = () => {
   };
 
   const handleDeleteClick = (id: GridRowId) => () => {
+    setDeletePopup(true);
+    setCurrentRowId(id);
+  };
+
+  const handleConfirmDeleteClick = (id: GridRowId) => {
     dispatch(updateStudent(initialRows.filter((row) => row.id !== id)));
     idReducer();
   };
 
-  const handleCancelClick = (id: GridRowId) => () => {
+  const handleDiscardClick = (id: GridRowId) => () => {
+    setDiscardChangesPopup(true);
+    setCurrentRowId(id);
+  };
+  const handleConfirmClick = (id: GridRowId) => {
     setRowModesModel({
       ...rowModesModel,
       [id]: { mode: GridRowModes.View, ignoreModifications: true },
@@ -155,12 +180,49 @@ const DataGridTable = () => {
 
   const processRowUpdate = (newRow: GridRowModel) => {
     const updatedRow = { ...newRow, isNew: false };
+    const isPhoneNumberValid = validatePhoneNumber(newRow.mobileno);
+    const isAgeValid = newRow.age > 18;
 
-    dispatch(
-      updateStudent(
-        initialRows.map((row) => (row.id === newRow.id ? updatedRow : row))
-      )
-    );
+    if (newRow.name === "" || newRow.gender === "" || newRow.address === "") {
+      setKeepEditingPopup(true);
+
+      return {};
+    }
+    if (!isPhoneNumberValid && !isAgeValid) {
+      setNumberValidateError(true);
+      setAgeValidateError(true);
+      return {};
+    }
+    if (!isPhoneNumberValid) {
+      setNumberValidateError(true);
+      return {};
+    }
+    if (!isAgeValid) {
+      setAgeValidateError(true);
+      return {};
+    }
+    try {
+      dispatch(
+        updateStudent(
+          initialRows.map((row) => (row.id === newRow.id ? updatedRow : row))
+        )
+      );
+      setAgeValidateError(false);
+      setNumberValidateError(false);
+      if (newRow!.isNew) {
+        setAddedSuccessfullyPopup(true);
+      } else {
+        setEditedSuccessfullyPopup(true);
+      }
+    } catch (error) {
+      if (newRow!.isNew) {
+        setUnableToAdd(true);
+      } else {
+        setUnableToEdit(true);
+      }
+      console.error(error);
+      return {};
+    }
     return updatedRow;
   };
 
@@ -295,11 +357,25 @@ const DataGridTable = () => {
               value: e.target.value,
             })
           }
-          sx={{
-            boxShadow: "0px 3px 1px -2px rgba(0, 0, 0, 0.2)",
-            border: "1px solid rgba(33, 150, 243, 1)",
-            borderRadius: "5px",
+          InputProps={{
+            sx: {
+              boxShadow: "0px 3px 1px -2px rgba(0, 0, 0, 0.2)",
+              border: numbervalidateError
+                ? ""
+                : "1px solid rgba(33, 150, 243, 1)", // Adjust the border as needed
+            },
           }}
+          sx={{
+            "& .MuiFormHelperText-root": {
+              fontSize: 10,
+              marginLeft: "0px",
+            },
+            marginTop: numbervalidateError ? "35px" : "0px",
+          }}
+          error={numbervalidateError}
+          helperText={
+            numbervalidateError ? "Please enter a valid phone number" : null
+          }
         />
       ),
     },
@@ -329,13 +405,18 @@ const DataGridTable = () => {
             >
               <DatePicker
                 value={dateValue}
-                onChange={(newValue) =>
+                onChange={(newValue) => {
                   params.api.setEditCellValue({
                     id: params.id,
                     field: params.field,
                     value: newValue,
-                  })
-                }
+                  });
+                  params.api.setEditCellValue({
+                    id: params.id,
+                    field: "age",
+                    value: ageCalculator(newValue),
+                  });
+                }}
                 slotProps={{
                   textField: {
                     size: "small",
@@ -362,70 +443,110 @@ const DataGridTable = () => {
       headerAlign: "left",
       align: "left",
       type: "number",
+      editable: true,
       sortable: false,
-      width: 80,
-      valueGetter: ({ row }) => {
-        try {
-          const dateOfBirth = new Date(row.dateofbirth);
-
-          const today = new Date();
-          const age =
-            today.getFullYear() -
-            dateOfBirth.getFullYear() -
-            (today.getMonth() < dateOfBirth.getMonth() ||
-            (today.getMonth() === dateOfBirth.getMonth() &&
-              today.getDate() < dateOfBirth.getDate())
-              ? 1
-              : 0);
-          return age;
-        } catch (error) {
-          return 0;
-        }
-      },
+      width: 100,
+      renderEditCell: (params: GridRenderCellParams<any, string>) => (
+        <TextField
+          size="small"
+          value={params.value as string}
+          error={agevalidateError}
+          helperText={
+            agevalidateError
+              ? "individual is below the minimum age allowed"
+              : null
+          }
+          InputProps={{
+            sx: {
+              boxShadow: "0px 3px 1px -2px rgba(0, 0, 0, 0.2)",
+              border: numbervalidateError
+                ? ""
+                : "1px solid rgba(33, 150, 243, 1)", // Adjust the border as needed
+            },
+          }}
+          sx={{
+            "& .MuiFormHelperText-root": {
+              fontSize: 9,
+              marginLeft: "0px",
+              width: "100%",
+            },
+            marginTop: agevalidateError ? "35px" : "0px",
+          }}
+        />
+      ),
     },
+
     {
       field: "actions",
       type: "actions",
       headerClassName: "super-app-theme--header",
       headerAlign: "left",
-
+      align: "left",
       headerName: "Actions",
-      width: 215,
+      width: 195,
       cellClassName: "actions",
       getActions: ({ id }) => {
         const isInEditMode = rowModesModel[id]?.mode === GridRowModes.Edit;
+        const editedRow = initialRows.find((row) => row.id === id);
 
         if (isInEditMode) {
+          if (editedRow!.isNew) {
+            return [
+              <Stack direction="column" spacing={1} paddingY="10px">
+                <Button
+                  size="small"
+                  variant="outlined"
+                  color="primary"
+                  onClick={handleSaveClick(id)}
+                  sx={{ width: "30px", fontSize: "13px", fontWeight: 500 }}
+                >
+                  Add
+                </Button>
+                <Button
+                  size="small"
+                  variant="outlined"
+                  color="error"
+                  onClick={handleDiscardClick(id)}
+                  sx={{
+                    width: "145px",
+                    fontSize: "13px",
+                    fontWeight: 500,
+                  }}
+                >
+                  Discard Changes
+                </Button>
+              </Stack>,
+            ];
+          }
           return [
-            <Stack direction="column" spacing={1} paddingY="10px">
+            <Stack direction="row" spacing={1} paddingY="10px">
               <Button
                 size="small"
                 variant="outlined"
                 color="primary"
                 onClick={handleSaveClick(id)}
-                sx={{ width: "30px", fontSize: "13px", fontWeight: 500 }}
+                sx={{ fontSize: "13px", fontWeight: 500 }}
               >
-                Add
+                Update
               </Button>
               <Button
                 size="small"
                 variant="outlined"
                 color="error"
-                onClick={handleCancelClick(id)}
+                onClick={handleDiscardClick(id)}
                 sx={{
-                  width: "150px",
                   fontSize: "13px",
                   fontWeight: 500,
                 }}
               >
-                Discard Changes
+                Cancle
               </Button>
             </Stack>,
           ];
         }
 
         return [
-          <Stack direction="row" spacing={3}>
+          <Stack direction="row" spacing={1}>
             <Button
               size="small"
               variant="outlined"
@@ -451,36 +572,111 @@ const DataGridTable = () => {
   ];
 
   return (
-    <Container>
-      <Paper
-        sx={{
-          height: "auto",
-          width: "100%",
-          "& .super-app-theme--header": {
-            backgroundColor: "rgba(33, 150, 243, 0.08)",
-          },
-        }}
-      >
-        <DataGrid
-          rows={initialRows}
-          columns={columns}
-          checkboxSelection
-          disableRowSelectionOnClick
-          getRowHeight={() => "auto"}
-          editMode="row"
-          rowModesModel={rowModesModel}
-          onRowModesModelChange={handleRowModesModelChange}
-          onRowEditStop={handleRowEditStop}
-          processRowUpdate={processRowUpdate}
-          slots={{
-            toolbar: EditToolbar,
+    <>
+      <Container>
+        <Paper
+          sx={{
+            height: "auto",
+            width: "100%",
+            "& .super-app-theme--header": {
+              backgroundColor: "rgba(33, 150, 243, 0.08)",
+            },
           }}
-          slotProps={{
-            toolbar: { setRowModesModel },
-          }}
+        >
+          <DataGrid
+            rows={initialRows}
+            columns={columns}
+            checkboxSelection
+            disableRowSelectionOnClick
+            getRowHeight={() => "auto"}
+            editMode="row"
+            rowModesModel={rowModesModel}
+            onRowModesModelChange={handleRowModesModelChange}
+            onRowEditStop={handleRowEditStop}
+            processRowUpdate={processRowUpdate}
+            slots={{
+              toolbar: EditToolbar,
+            }}
+            slotProps={{
+              toolbar: { setRowModesModel },
+            }}
+            sx={{
+              root: {
+                "& .MuiDataGrid-row.Mui-selected": {
+                  boxShadow: "none",
+                },
+              },
+            }}
+          />
+        </Paper>
+      </Container>
+      {keepEditingPopup && (
+        <SingleButtonPopupMessage
+          open={keepEditingPopup}
+          title={"Mandatory fields are missing."}
+          handleClick={() => setKeepEditingPopup(false)}
+          buttonName="Keep Editing"
         />
-      </Paper>
-    </Container>
+      )}
+      {addedSuccessfullyPopup && (
+        <SingleButtonPopupMessage
+          open={addedSuccessfullyPopup}
+          title={"A new student added successfully."}
+          handleClick={() => setAddedSuccessfullyPopup(false)}
+          buttonName="Ok"
+        />
+      )}
+      {unableToAddPopup && (
+        <SingleButtonPopupMessage
+          open={unableToAddPopup}
+          title={"Unable to add a new student.Please try again later"}
+          handleClick={() => setUnableToAdd(false)}
+          buttonName="Try again"
+        />
+      )}
+      {editedSuccessfullyPopup && (
+        <SingleButtonPopupMessage
+          open={editedSuccessfullyPopup}
+          title={"Student detailes updated successfully."}
+          handleClick={() => setEditedSuccessfullyPopup(false)}
+          buttonName="Ok"
+        />
+      )}
+      {unableToEditPopup && (
+        <SingleButtonPopupMessage
+          open={unableToEditPopup}
+          title={"Cannot update student details.Please try again later"}
+          handleClick={() => setUnableToEdit(false)}
+          buttonName="Try again"
+        />
+      )}
+      {discardChangesPopup && (
+        <DoubleButtonPopupMessage
+          open={discardChangesPopup}
+          title={"Discard changes?"}
+          handleClickFirstButton={() => setDiscardChangesPopup(false)}
+          handleClickSecondButton={() => {
+            handleConfirmClick(currentRowId as GridRowId);
+            setDiscardChangesPopup(false);
+          }}
+          firstButtonName="Dismiss"
+          secondButtonName="Confirm"
+        />
+      )}
+      {deletePopup && (
+        <DoubleButtonPopupMessage
+          open={deletePopup}
+          title={"Are you sure you want to remove this student?"}
+          handleClickFirstButton={() => setDeletePopup(false)}
+          handleClickSecondButton={() => {
+            handleConfirmDeleteClick(currentRowId as GridRowId);
+            setDeletePopup(false);
+          }}
+          firstButtonName="Dismiss"
+          secondButtonName="Confirm"
+        />
+      )}
+    </>
   );
 };
 
