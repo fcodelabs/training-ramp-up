@@ -126,10 +126,10 @@ const DataGridTable = () => {
   const [agevalidateError, setAgeValidateError] = useState(false);
   const [keepEditingPopup, setKeepEditingPopup] = useState(false);
   const [addedSuccessfullyPopup, setAddedSuccessfullyPopup] = useState(false);
+  const [editedSuccessfullyPopup, setEditedSuccessfullyPopup] = useState(false);
   const [unableToAddPopup, setUnableToAdd] = useState(false);
+  const [unableToEditPopup, setUnableToEdit] = useState(false);
   const [discardChangesPopup, setDiscardChangesPopup] = useState(false);
-  const [isConfirmingDiscardChanges, setIsConfirmingDiscardChanges] =
-    useState(false);
   const [currentRowId, setCurrentRowId] = useState<GridRowId | null>(null);
 
   const [rowModesModel, setRowModesModel] = useState<GridRowModesModel>({});
@@ -155,7 +155,7 @@ const DataGridTable = () => {
     idReducer();
   };
 
-  const handleCancelClick = (id: GridRowId) => () => {
+  const handleDiscardClick = (id: GridRowId) => () => {
     setDiscardChangesPopup(true);
     setCurrentRowId(id);
   };
@@ -178,9 +178,8 @@ const DataGridTable = () => {
     const isAgeValid = newRow.age > 18;
 
     if (newRow.name === "" || newRow.gender === "" || newRow.address === "") {
-      initialRows.map((row) =>
-        row.id === newRow.id ? setKeepEditingPopup(true) : row
-      );
+      setKeepEditingPopup(true);
+
       return {};
     }
     if (!isPhoneNumberValid && !isAgeValid) {
@@ -202,9 +201,17 @@ const DataGridTable = () => {
           initialRows.map((row) => (row.id === newRow.id ? updatedRow : row))
         )
       );
-      setAddedSuccessfullyPopup(true);
+      if (newRow!.isNew) {
+        setAddedSuccessfullyPopup(true);
+      } else {
+        setEditedSuccessfullyPopup(true);
+      }
     } catch (error) {
-      setUnableToAdd(true);
+      if (newRow!.isNew) {
+        setUnableToAdd(true);
+      } else {
+        setUnableToEdit(true);
+      }
       console.error(error);
       return {};
     }
@@ -472,31 +479,59 @@ const DataGridTable = () => {
       cellClassName: "actions",
       getActions: ({ id }) => {
         const isInEditMode = rowModesModel[id]?.mode === GridRowModes.Edit;
+        const editedRow = initialRows.find((row) => row.id === id);
 
         if (isInEditMode) {
+          if (editedRow!.isNew) {
+            return [
+              <Stack direction="column" spacing={1} paddingY="10px">
+                <Button
+                  size="small"
+                  variant="outlined"
+                  color="primary"
+                  onClick={handleSaveClick(id)}
+                  sx={{ width: "30px", fontSize: "13px", fontWeight: 500 }}
+                >
+                  Add
+                </Button>
+                <Button
+                  size="small"
+                  variant="outlined"
+                  color="error"
+                  onClick={handleDiscardClick(id)}
+                  sx={{
+                    width: "150px",
+                    fontSize: "13px",
+                    fontWeight: 500,
+                  }}
+                >
+                  Discard Changes
+                </Button>
+              </Stack>,
+            ];
+          }
           return [
-            <Stack direction="column" spacing={1} paddingY="10px">
+            <Stack direction="row" spacing={2} paddingY="10px">
               <Button
                 size="small"
                 variant="outlined"
                 color="primary"
                 onClick={handleSaveClick(id)}
-                sx={{ width: "30px", fontSize: "13px", fontWeight: 500 }}
+                sx={{ fontSize: "13px", fontWeight: 500 }}
               >
-                Add
+                Update
               </Button>
               <Button
                 size="small"
                 variant="outlined"
                 color="error"
-                onClick={handleCancelClick(id)}
+                onClick={handleDiscardClick(id)}
                 sx={{
-                  width: "150px",
                   fontSize: "13px",
                   fontWeight: 500,
                 }}
               >
-                Discard Changes
+                Cancle
               </Button>
             </Stack>,
           ];
@@ -588,6 +623,22 @@ const DataGridTable = () => {
           open={unableToAddPopup}
           title={"Unable to add a new student.Please try again later"}
           handleClick={() => setUnableToAdd(false)}
+          buttonName="Try again"
+        />
+      )}
+      {editedSuccessfullyPopup && (
+        <SingleButtonPopupMessage
+          open={editedSuccessfullyPopup}
+          title={"Student detailes updated successfully."}
+          handleClick={() => setEditedSuccessfullyPopup(false)}
+          buttonName="Ok"
+        />
+      )}
+      {unableToEditPopup && (
+        <SingleButtonPopupMessage
+          open={unableToEditPopup}
+          title={"Cannot update student details.Please try again later"}
+          handleClick={() => setUnableToEdit(false)}
           buttonName="Try again"
         />
       )}
