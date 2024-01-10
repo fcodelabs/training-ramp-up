@@ -2,16 +2,6 @@ import { GridValidRowModel } from "@mui/x-data-grid";
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 
-export interface studentState {
-  id: number;
-  name: string;
-  gender: string;
-  address: string;
-  mobileno: string;
-  dateofbirth: Date;
-  age: number;
-}
-
 interface InitialState {
   students: GridValidRowModel[];
 }

@@ -32,6 +32,8 @@ import {
   GridRowsProp,
   GridToolbarContainer,
 } from "@mui/x-data-grid";
+import { ageCalculator, validatePhoneNumber } from "../../utility";
+import SingleButtonPopupMessage from "../SingleButtonPopupMessage/SingleButtonPopupMessage";
 
 let idValue = 0;
 
@@ -119,7 +121,11 @@ const DataGridTable = () => {
     (state: RootState) => state.student.students
   );
   const dispatch = useDispatch();
-
+  const [numbervalidateError, setNumberValidateError] = useState(false);
+  const [agevalidateError, setAgeValidateError] = useState(false);
+  const [keepEditingPopup, setKeepEditingPopup] = useState(false);
+  const [addedSuccessfullyPopup, setAddedSuccessfullyPopup] = useState(false);
+  const [unableToAddPopup, setUnableToAdd] = useState(false);
   const [rowModesModel, setRowModesModel] = useState<GridRowModesModel>({});
   const handleRowEditStop: GridEventListener<"rowEditStop"> = (
     params,
@@ -158,12 +164,40 @@ const DataGridTable = () => {
 
   const processRowUpdate = (newRow: GridRowModel) => {
     const updatedRow = { ...newRow, isNew: false };
+    const isPhoneNumberValid = validatePhoneNumber(newRow.mobileno);
+    const isAgeValid = newRow.age > 18;
 
-    dispatch(
-      updateStudent(
-        initialRows.map((row) => (row.id === newRow.id ? updatedRow : row))
-      )
-    );
+    if (newRow.name === "" || newRow.gender === "" || newRow.address === "") {
+      initialRows.map((row) =>
+        row.id === newRow.id ? setKeepEditingPopup(true) : row
+      );
+      return {};
+    }
+    if (!isPhoneNumberValid && !isAgeValid) {
+      setNumberValidateError(true);
+      setAgeValidateError(true);
+      return {};
+    }
+    if (!isPhoneNumberValid) {
+      setNumberValidateError(true);
+      return {};
+    }
+    if (!isAgeValid) {
+      setAgeValidateError(true);
+      return {};
+    }
+    try {
+      dispatch(
+        updateStudent(
+          initialRows.map((row) => (row.id === newRow.id ? updatedRow : row))
+        )
+      );
+      setAddedSuccessfullyPopup(true);
+    } catch (error) {
+      setUnableToAdd(true);
+      console.error(error);
+      return {};
+    }
     return updatedRow;
   };
 
@@ -298,11 +332,25 @@ const DataGridTable = () => {
               value: e.target.value,
             })
           }
-          sx={{
-            boxShadow: "0px 3px 1px -2px rgba(0, 0, 0, 0.2)",
-            border: "1px solid rgba(33, 150, 243, 1)",
-            borderRadius: "5px",
+          InputProps={{
+            sx: {
+              boxShadow: "0px 3px 1px -2px rgba(0, 0, 0, 0.2)",
+              border: numbervalidateError
+                ? ""
+                : "1px solid rgba(33, 150, 243, 1)", // Adjust the border as needed
+            },
           }}
+          sx={{
+            "& .MuiFormHelperText-root": {
+              fontSize: 10,
+              marginLeft: "0px",
+            },
+            marginTop: numbervalidateError ? "35px" : "0px",
+          }}
+          error={numbervalidateError}
+          helperText={
+            numbervalidateError ? "Please enter a valid phone number" : null
+          }
         />
       ),
     },
@@ -332,13 +380,18 @@ const DataGridTable = () => {
             >
               <DatePicker
                 value={dateValue}
-                onChange={(newValue) =>
+                onChange={(newValue) => {
                   params.api.setEditCellValue({
                     id: params.id,
                     field: params.field,
                     value: newValue,
-                  })
-                }
+                  });
+                  params.api.setEditCellValue({
+                    id: params.id,
+                    field: "age",
+                    value: ageCalculator(newValue),
+                  });
+                }}
                 slotProps={{
                   textField: {
                     size: "small",
@@ -365,27 +418,39 @@ const DataGridTable = () => {
       headerAlign: "left",
       align: "left",
       type: "number",
+      editable: true,
       sortable: false,
-      width: 80,
-      valueGetter: ({ row }) => {
-        try {
-          const dateOfBirth = new Date(row.dateofbirth);
-
-          const today = new Date();
-          const age =
-            today.getFullYear() -
-            dateOfBirth.getFullYear() -
-            (today.getMonth() < dateOfBirth.getMonth() ||
-            (today.getMonth() === dateOfBirth.getMonth() &&
-              today.getDate() < dateOfBirth.getDate())
-              ? 1
-              : 0);
-          return age;
-        } catch (error) {
-          return 0;
-        }
-      },
+      width: 100,
+      renderEditCell: (params: GridRenderCellParams<any, string>) => (
+        <TextField
+          size="small"
+          value={params.value as string}
+          error={agevalidateError}
+          helperText={
+            agevalidateError
+              ? "individual is below the minimum age allowed"
+              : null
+          }
+          InputProps={{
+            sx: {
+              boxShadow: "0px 3px 1px -2px rgba(0, 0, 0, 0.2)",
+              border: numbervalidateError
+                ? ""
+                : "1px solid rgba(33, 150, 243, 1)", // Adjust the border as needed
+            },
+          }}
+          sx={{
+            "& .MuiFormHelperText-root": {
+              fontSize: 9,
+              marginLeft: "0px",
+              width: "100%",
+            },
+            marginTop: agevalidateError ? "35px" : "0px",
+          }}
+        />
+      ),
     },
+
     {
       field: "actions",
       type: "actions",
@@ -454,36 +519,69 @@ const DataGridTable = () => {
   ];
 
   return (
-    <Container>
-      <Paper
-        sx={{
-          height: "auto",
-          width: "100%",
-          "& .super-app-theme--header": {
-            backgroundColor: "rgba(33, 150, 243, 0.08)",
-          },
-        }}
-      >
-        <DataGrid
-          rows={initialRows}
-          columns={columns}
-          checkboxSelection
-          disableRowSelectionOnClick
-          getRowHeight={() => "auto"}
-          editMode="row"
-          rowModesModel={rowModesModel}
-          onRowModesModelChange={handleRowModesModelChange}
-          onRowEditStop={handleRowEditStop}
-          processRowUpdate={processRowUpdate}
-          slots={{
-            toolbar: EditToolbar,
+    <>
+      <Container>
+        <Paper
+          sx={{
+            height: "auto",
+            width: "100%",
+            "& .super-app-theme--header": {
+              backgroundColor: "rgba(33, 150, 243, 0.08)",
+            },
           }}
-          slotProps={{
-            toolbar: { setRowModesModel },
-          }}
+        >
+          <DataGrid
+            rows={initialRows}
+            columns={columns}
+            checkboxSelection
+            disableRowSelectionOnClick
+            getRowHeight={() => "auto"}
+            editMode="row"
+            rowModesModel={rowModesModel}
+            onRowModesModelChange={handleRowModesModelChange}
+            onRowEditStop={handleRowEditStop}
+            processRowUpdate={processRowUpdate}
+            slots={{
+              toolbar: EditToolbar,
+            }}
+            slotProps={{
+              toolbar: { setRowModesModel },
+            }}
+            sx={{
+              root: {
+                "& .MuiDataGrid-row.Mui-selected": {
+                  boxShadow: "none",
+                },
+              },
+            }}
+          />
+        </Paper>
+      </Container>
+      {keepEditingPopup && (
+        <SingleButtonPopupMessage
+          open={keepEditingPopup}
+          title={"Mandatory fields are missing."}
+          handleClick={() => setKeepEditingPopup(false)}
+          buttonName="Keep Editing"
         />
-      </Paper>
-    </Container>
+      )}
+      {addedSuccessfullyPopup && (
+        <SingleButtonPopupMessage
+          open={addedSuccessfullyPopup}
+          title={"A new student added successfully."}
+          handleClick={() => setAddedSuccessfullyPopup(false)}
+          buttonName="Ok"
+        />
+      )}
+      {unableToAddPopup && (
+        <SingleButtonPopupMessage
+          open={unableToAddPopup}
+          title={"Unable to add a new student.Please try again later"}
+          handleClick={() => setUnableToAdd(false)}
+          buttonName="Try again"
+        />
+      )}
+    </>
   );
 };
 
