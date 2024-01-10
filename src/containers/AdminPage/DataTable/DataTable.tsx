@@ -40,6 +40,9 @@ import AddingFailedCard from '../Cards/AddingFailedCard';
 import LoadingErrorCard from '../Cards/LoadingErrorCard';
 import ConfirmRemoveCard from '../Cards/ConfirmRemoveCard';
 import RemoveSuccessCard from '../Cards/RemoveSuccessCard';
+import UpdateFailedCard from '../Cards/UpdateFailedCard';
+import UpdateSuccessCard from '../Cards/UpdateSuccessCard';
+import DiscardUpdateChangesCard from '../Cards/DiscardUpdateChangesCard';
 
 
 
@@ -221,9 +224,14 @@ export default function DataTable() {
 
     const [showSuccessModal, setShowSuccessModal] = useState(false);
     const [showDiscardModal, setShowDiscardModal] = useState(false);
+    const [showDiscardUpdateModal, setShowDiscardUpdateModal] = useState(false);
     const [showRemoveConfirmModal, setShowRemoveConfirmModal] = useState(false);
 
     const [showRemoveSuccessCard, setShowRemoveSuccessCard] = useState(false);
+    const [showUpdateSuccessModal, setShowUpdateSuccessModal] = useState(false);
+    const [updatedRowId, setUpdatedRowId] = useState<GridRowId | null>(null);
+    const [editingRowId, setEditingRowId] = useState<GridRowId | null>(null);
+
 
     const [selectedRowId, setSelectedRowId] = useState<GridRowId | null>(null);
 
@@ -250,13 +258,22 @@ export default function DataTable() {
     const handleEditClick = (id: GridRowId) => () => {
         setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.Edit } });
         setMode('Edit');
+        setEditingRowId(id);
+    };
+
+    const handleAddClick = (id: GridRowId) => () => {
+        setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.View } });
+        setMode('Add');
+        setShowSuccessModal(true);
     };
 
     const handleSaveClick = (id: GridRowId) => () => {
         setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.View } });
         setMode('Add');
-        setShowSuccessModal(true);
+        setShowUpdateSuccessModal(true);
+        setUpdatedRowId(id);
     };
+
 
     const handleDeleteClick = (id: GridRowId) => () => {
         setSelectedRowId(id);
@@ -297,6 +314,83 @@ export default function DataTable() {
             setMode('Add');
         }
     };
+
+    const handleCancelUpdateClick = (id: GridRowId) => () => {
+        // Check if there are changes in the row
+    const isRowModified = Object.keys(rowModesModel).some((key) => key === id.toString());
+
+    if (isRowModified) {
+        // If changes exist, show the discard changes modal
+        setShowDiscardUpdateModal(true);
+    } else {
+        // If no changes, proceed with canceling
+        cancelEdit(id);
+    }
+    };
+
+    const cancelEdit = (id: GridRowId) => {
+        setRowModesModel({
+            ...rowModesModel,
+            [id]: { mode: GridRowModes.View, ignoreModifications: true },
+        });
+    
+        const editedRow = rows.find((row) => row.id === id);
+        if (editedRow!.isNew) {
+            setRows(rows.filter((row) => row.id !== id));
+        }
+        setMode('Add');
+        setEditingRowId(null);
+    };
+
+    const handleConfirmDiscardUpdate = () => {
+        if (editingRowId !== null) {
+            // Revert changes made during editing process
+            setRowModesModel({
+                ...rowModesModel,
+                [editingRowId]: { mode: GridRowModes.View, ignoreModifications: true },
+            });
+    
+            // Find the original row data
+            const originalRow = rows.find((row) => row.id === parseInt(editingRowId.toString()));
+    
+            if (originalRow) {
+                // Update the row with the original data
+                setRows((oldRows) =>
+                    oldRows.map((row) => (row.id === parseInt(editingRowId.toString()) ? { ...row, ...originalRow } : row))
+                );
+            }
+    
+            setMode('Add');
+            setEditingRowId(null);
+            setShowDiscardUpdateModal(false);
+        }
+    };
+    
+    const handleConfirmDiscardChanges = () => {
+        // User confirmed discarding changes, remove the editing row
+        const editingRowId = Object.keys(rowModesModel)[0];
+    
+        if (editingRowId === editingRowId) {
+            handleConfirmDiscardUpdate();
+        } else {
+            // Handle discarding changes for non-editing rows
+            // You may customize this part according to your requirements
+            // ...
+    
+            // Reset the state and close the modal
+            setRowModesModel({});
+            setShowDiscardUpdateModal(false);
+        }
+    };
+
+    const handleDismissDiscardChanges = () => {
+        // User dismissed discarding changes, close the modal
+        setShowDiscardUpdateModal(false);
+        setEditingRowId(null);
+    };
+
+    
+    
 
     const handleConfirmDiscard = () => {
         // User confirmed discarding changes, remove the editing row
@@ -445,6 +539,7 @@ export default function DataTable() {
                     <TextField
                         size='small'
                         value={params.value as string}
+                        required={true}
                         onChange={(event) =>
                             params.api.setEditCellValue({
                                 id: params.id,
@@ -497,6 +592,7 @@ export default function DataTable() {
                             value={params.value as string}
                             onChange={handleChange}
                             error={!validatePhoneNumber(params.value as string)}
+                            required
                             sx={{
 
                                 '& .MuiOutlinedInput-notchedOutline': {
@@ -695,13 +791,13 @@ export default function DataTable() {
                         <div>
                             {mode === 'Add' ? (
                                 <div className='action-buttons'>
-                                    <StyledAddButton onClick={handleSaveClick(id)} size='small' variant="outlined">ADD</StyledAddButton>
+                                    <StyledAddButton onClick={handleAddClick(id)} size='small' variant="outlined">ADD</StyledAddButton>
                                     <StyledDiscardButton onClick={handleCancelClick(id)} size='small' variant="outlined">DISCARD CHANGES</StyledDiscardButton>
                                 </div>
                             ) : (
                                 <div className='action-edit-buttons'>
                                     <StyledAddButton onClick={handleSaveClick(id)} size='small' variant="outlined">UPDATE</StyledAddButton>
-                                    <StyledDiscardButton onClick={handleCancelClick(id)} size='small' variant="outlined">CANCEL</StyledDiscardButton>
+                                    <StyledDiscardButton onClick={handleCancelUpdateClick(id)} size='small' variant="outlined">CANCEL</StyledDiscardButton>
                                 </div>
                             )}
                         </div>
@@ -810,10 +906,37 @@ export default function DataTable() {
                             onConfirm={handleConfirmDiscard}
                             onDismiss={handleDismissDiscard}
                         />
+
                     </Paper>
                 </Modal>
             )}
 
+            {/* Modal for Discard Changes */}
+            {showDiscardUpdateModal && (
+                <Modal
+                    open={showDiscardUpdateModal}
+                    onClose={handleDismissDiscardChanges}
+                    aria-labelledby="discard-modal-title"
+                    aria-describedby="discard-modal-description"
+                >
+                    <Paper
+                        style={{
+                            position: 'absolute',
+                            top: '50%',
+                            left: '50%',
+                            transform: 'translate(-50%, -50%)',
+                            borderRadius: '12PX'
+
+                        }}
+                    >
+                        <DiscardChangesCard
+                            onConfirm={handleConfirmDiscardChanges}
+                            onDismiss={handleDismissDiscardChanges}
+                        />
+
+                    </Paper>
+                </Modal>
+            )}
             {/* Modal for Confirm Remove */}
             {showRemoveConfirmModal && (
                 <Modal
@@ -864,6 +987,27 @@ export default function DataTable() {
                         }}
                     >
                         <RemoveSuccessCard onClose={() => setShowRemoveSuccessCard(false)} />
+                    </Paper>
+                </Modal>
+            )}
+            {showUpdateSuccessModal && (
+                <Modal
+                    open={showUpdateSuccessModal}
+                    onClose={() => setShowUpdateSuccessModal(false)}
+                    aria-labelledby="update-success-modal-title"
+                    aria-describedby="update-success-modal-description"
+                >
+                    <Paper
+                        style={{
+                            position: 'absolute',
+                            top: '50%',
+                            left: '50%',
+                            transform: 'translate(-50%, -50%)',
+                            borderRadius: '12px',
+                        }}
+                    >
+                        <UpdateSuccessCard onClose={() => setShowUpdateSuccessModal(false)} />
+                        {/* You can customize the content of UpdateSuccessCard according to your design */}
                     </Paper>
                 </Modal>
             )}
