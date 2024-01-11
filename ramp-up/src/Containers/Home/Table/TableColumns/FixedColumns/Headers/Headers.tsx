@@ -1,13 +1,10 @@
+import React from 'react'
 
-const Header:React.FC<{text: any}> = ( {text} ) => {
+const Header: React.FC<{ text: string }> = ({ text }) => {
     const headerStyle = {
-        paddingRight: '50px', 
-    };
-    return (
-        <div style={headerStyle}>
-            {text}
-        </div>
-    );
+        paddingRight: '50px',
+    }
+    return <div style={headerStyle}>{text}</div>
 }
 
-export { Header };
+export { Header }
