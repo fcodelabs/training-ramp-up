@@ -1,61 +1,65 @@
-import React from 'react'
-import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import useMediaQuery from '@mui/material/useMediaQuery';
-import { useTheme } from '@mui/material/styles';
+import React from "react";
+import Button from "@mui/material/Button";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
 
+interface CustomDialogBoxProps {
+  open: boolean;
+  onClose: () => void;
+  dialogContent: string;
+  buttonLabel: string;
+  buttonAction: () => void;
+  secondary?: boolean;
+  secondaryButtonLabel?: string;
+  secondaryButtonAction?: () => void;
+}
 
-export default function DialogBox() {
-const [open, setOpen] = React.useState(false);
-const theme = useTheme();
-const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
-
-
-
-
-    const handleClickOpen = () => {
-        setOpen(true);
-      };
-    
-      const handleClose = () => {
-        setOpen(false);
-      };
-
-
-
+export default function DialogBox({
+  open,
+  onClose,
+  dialogContent,
+  buttonLabel,
+  buttonAction,
+  secondary,
+  secondaryButtonLabel,
+  secondaryButtonAction,
+}: CustomDialogBoxProps) {
   return (
     <React.Fragment>
-      <Button variant="outlined" onClick={handleClickOpen}>
-        Open responsive dialog
-      </Button>
       <Dialog
-        fullScreen={fullScreen}
         open={open}
-        onClose={handleClose}
-        aria-labelledby="responsive-dialog-title"
-       
+        onClose={onClose}
+        aria-describedby="alert-dialog-description"
       >
-        {/* <DialogTitle id="responsive-dialog-title">
-          {"Use Google's location service?"}
-        </DialogTitle> */}
-        <DialogContent sx={{ borderRadius: '10px' }}>
-           <DialogContentText>
-          Unable to retrieve table details. Please try again later.
-          </DialogContentText> 
-        </DialogContent> 
+        <DialogContent>
+          <DialogContentText
+            id="alert-dialog-description"
+            sx={{
+              color: "#000000",
+              width: "300px",
+              height: "8px",
+              padding: "8px 20px 8px 10px",
+            }}
+          >
+            {dialogContent}
+          </DialogContentText>
+        </DialogContent>
         <DialogActions>
-          <Button autoFocus onClick={handleClose}
-          style={{ color: '#9C27B0' }}>
-            DISMISS
-          </Button>
-          <Button onClick={handleClose} autoFocus>
-            CONFIRM
+          {secondary ? (
+            <Button
+              style={{ color: "#9C27B0" }}
+              onClick={secondaryButtonAction}
+            >
+              {secondaryButtonLabel}
+            </Button>
+          ) : null}
+          <Button onClick={buttonAction} autoFocus>
+            {buttonLabel}
           </Button>
         </DialogActions>
       </Dialog>
     </React.Fragment>
-  )
+  );
 }
