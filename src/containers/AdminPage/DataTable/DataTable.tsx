@@ -43,6 +43,7 @@ import RemoveSuccessCard from '../Cards/RemoveSuccessCard';
 import UpdateFailedCard from '../Cards/UpdateFailedCard';
 import UpdateSuccessCard from '../Cards/UpdateSuccessCard';
 import DiscardUpdateChangesCard from '../Cards/DiscardUpdateChangesCard';
+import { error } from 'console';
 
 
 
@@ -226,14 +227,24 @@ export default function DataTable() {
     const [showDiscardModal, setShowDiscardModal] = useState(false);
     const [showDiscardUpdateModal, setShowDiscardUpdateModal] = useState(false);
     const [showRemoveConfirmModal, setShowRemoveConfirmModal] = useState(false);
-
+    const [fieldMissingModal, setFieldMissingModal] = useState(false);
     const [showRemoveSuccessCard, setShowRemoveSuccessCard] = useState(false);
     const [showUpdateSuccessModal, setShowUpdateSuccessModal] = useState(false);
     const [updatedRowId, setUpdatedRowId] = useState<GridRowId | null>(null);
     const [editingRowId, setEditingRowId] = useState<GridRowId | null>(null);
 
+    const [attemptedToAdd, setAttemptedToAdd] = useState(false);
+
 
     const [selectedRowId, setSelectedRowId] = useState<GridRowId | null>(null);
+
+    const [editedFields, setEditedFields] = useState({
+        name: '',
+        gender: '',
+        address: '',
+        mobile: '',
+        dob: null, // Assuming dob is a date
+      });
 
     const handleConfirmRemove = (id: GridRowId | null) => {
         if (id) {
@@ -261,19 +272,84 @@ export default function DataTable() {
         setEditingRowId(id);
     };
 
+    // const handleAddClick = (id: GridRowId) => () => {
+    //     // Set attemptedToAdd to true to trigger error state on empty 'Name' field
+    //     //setAttemptedToAdd(true);
+    
+    //     // Validate the 'Name' field before adding a new row
+    //     const editedRow = rows.find((row) => row.id === id);
+    //     console.log('editedRow', editedRow);
+    //     console.log('editedRow.name', editedRow?.name);
+        
+    //     if (editedRow && !editedRow.name) {
+    //         // Display an error message or take any other appropriate action
+    //         setFieldMissingModal(true);
+    //         return;
+    //     }
+    
+    //     // If 'Name' field is not empty, proceed with adding the row
+    //     setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.View } });
+    //     setMode('Add');
+    //     setShowSuccessModal(true);
+    //     setAttemptedToAdd(false); // Reset attemptedToAdd after adding
+    // };
+
     const handleAddClick = (id: GridRowId) => () => {
+        // Set attemptedToAdd to true to trigger error state on empty fields
+        setAttemptedToAdd(true);
+    
+        // Validate all fields before adding a new row
+        if (
+            !editedFields.name.trim() ||
+            !editedFields.gender.trim() ||
+            !editedFields.address.trim() ||
+            !editedFields.mobile.trim() 
+            
+        ) {
+            // Display an error message or take any other appropriate action
+            setFieldMissingModal(true);
+            return;
+        }
+    
+        // If all fields are not empty, proceed with adding the row
         setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.View } });
         setMode('Add');
         setShowSuccessModal(true);
+        setAttemptedToAdd(false); // Reset attemptedToAdd after adding
+        setEditedFields({
+            name: '',
+            gender: '',
+            address: '',
+            mobile: '',
+            dob: null, // Assuming dob is a date
+        });
     };
-
+    
     const handleSaveClick = (id: GridRowId) => () => {
+        // Set attemptedToAdd to true to trigger error state on empty fields
+        setAttemptedToAdd(true);
+    
+        // Validate all fields before updating the row
+        if (
+            !editedFields.name.trim() ||
+            !editedFields.gender.trim() ||
+            !editedFields.address.trim() ||
+            !editedFields.mobile.trim() ||
+            !editedFields.dob
+        ) {
+            // Display an error message or take any other appropriate action
+            setFieldMissingModal(true);
+            return;
+        }
+    
         setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.View } });
         setMode('Add');
         setShowUpdateSuccessModal(true);
         setUpdatedRowId(id);
+        setAttemptedToAdd(false); // Reset attemptedToAdd after updating
     };
-
+    
+    
 
     const handleDeleteClick = (id: GridRowId) => () => {
         setSelectedRowId(id);
@@ -463,17 +539,26 @@ export default function DataTable() {
             headerClassName: 'custom-header',
             editable: true,
             renderEditCell(params: GridRenderCellParams<any, string>) {
+                const isNameEmpty = params.value === undefined || params.value === null || params.value.trim() === '';
+                console.log('isNameEmpty', isNameEmpty);
+                
                 return (
                     <TextField
                         size='small'
-                        value={params.value as string}
-                        onChange={(event) =>
+                        value={editedFields.name === '' ? (params.value as string) : editedFields.name}
+                        onChange={(event) => {
                             params.api.setEditCellValue({
                                 id: params.id,
                                 field: params.field,
                                 value: event.target.value,
-                            })
-                        }
+                            });
+                            setEditedFields((prevFields) => ({
+                                ...prevFields,
+                                name: event.target.value,
+                            }));
+                        }}
+                        error={isNameEmpty && attemptedToAdd} 
+                        
                         sx={{
                             '& .MuiOutlinedInput-notchedOutline': {
                                 borderColor: '#2196F3',
@@ -497,56 +582,27 @@ export default function DataTable() {
             disableColumnMenu: true,
             headerClassName: 'custom-header',
             editable: true,
-            renderEditCell: (params: GridRenderCellParams<any, string>) => (
-                <Select
-                    size="small"
-                    fullWidth
-                    value={params.value as string}
-                    onChange={(e) =>
-                        params.api.setEditCellValue({
-                            id: params.id,
-                            field: params.field,
-                            value: e.target.value,
-                        })
-                    }
-                    sx={{
-
-                        '& .MuiOutlinedInput-notchedOutline': {
-                            borderColor: '#2196F3',
-                            borderRadius: 0,
-                        },
-                        '&:hover .MuiOutlinedInput-notchedOutline': {
-                            borderColor: '#2196F3',
-                        },
-                    }}
-                >
-                    <MenuItem value={"Male"}>Male</MenuItem>
-                    <MenuItem value={"Female"}>Female</MenuItem>
-                    <MenuItem value={"Other"}>Other</MenuItem>
-                </Select>
-            ),
-        },
-        {
-            field: 'address',
-            headerName: 'Address',
-            width: 135,
-            sortable: false,
-            disableColumnMenu: true,
-            headerClassName: 'custom-header',
-            editable: true,
-            renderEditCell(params: GridRenderCellParams<any, string>) {
+            renderEditCell: (params: GridRenderCellParams<any, string>) => {
+                const isGenderEmpty = !params.value;
+        
                 return (
-                    <TextField
-                        size='small'
-                        value={params.value as string}
-                        required={true}
-                        onChange={(event) =>
+                    <Select
+                        size="small"
+                        fullWidth
+                        value={editedFields.gender === '' ? (params.value as string) : editedFields.gender}
+                        
+                        onChange={(e) => {
                             params.api.setEditCellValue({
                                 id: params.id,
                                 field: params.field,
-                                value: event.target.value,
-                            })
-                        }
+                                value: e.target.value,
+                            });
+                            setEditedFields((prevFields) => ({
+                                ...prevFields,
+                                gender: e.target.value,
+                            }));
+                            
+                        }}
                         sx={{
                             '& .MuiOutlinedInput-notchedOutline': {
                                 borderColor: '#2196F3',
@@ -556,6 +612,53 @@ export default function DataTable() {
                                 borderColor: '#2196F3',
                             },
                         }}
+                        error={isGenderEmpty && attemptedToAdd}
+                    >
+                        <MenuItem value={"Male"}>Male</MenuItem>
+                        <MenuItem value={"Female"}>Female</MenuItem>
+                        <MenuItem value={"Other"}>Other</MenuItem>
+                    </Select>
+                );
+            },
+        },
+        
+        {
+            field: 'address',
+            headerName: 'Address',
+            width: 135,
+            sortable: false,
+            disableColumnMenu: true,
+            headerClassName: 'custom-header',
+            editable: true,
+            renderEditCell(params: GridRenderCellParams<any, string>) {
+                const isAddressEmpty = !params.value;
+                return (
+                    <TextField
+                        size='small'
+                        value={editedFields.address === '' ? (params.value as string) : editedFields.address}
+                        required={true}
+                        
+                        onChange={(event) => {
+                            params.api.setEditCellValue({
+                                id: params.id,
+                                field: params.field,
+                                value: event.target.value,
+                            });
+                            setEditedFields((prevFields) => ({
+                                ...prevFields,
+                                address: event.target.value,
+                            }));
+                        }}
+                        sx={{
+                            '& .MuiOutlinedInput-notchedOutline': {
+                                borderColor: '#2196F3',
+                                borderRadius: 0,
+                            },
+                            '&:hover .MuiOutlinedInput-notchedOutline': {
+                                borderColor: '#2196F3',
+                            },
+                        }}
+                        error={isAddressEmpty && attemptedToAdd}
                     />
                 );
             },
@@ -569,6 +672,7 @@ export default function DataTable() {
             headerClassName: 'custom-header',
             editable: true,
             renderEditCell(params: GridRenderCellParams<any, string>) {
+                const isMobileEmpty = !params.value;
                 const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
                     const newValue = event.target.value;
 
@@ -582,6 +686,10 @@ export default function DataTable() {
                             field: params.field,
                             value: newValue,
                         });
+                        setEditedFields((prevFields) => ({
+                            ...prevFields,
+                            mobile: event.target.value,
+                        }));
                     }
                 };
 
@@ -589,9 +697,9 @@ export default function DataTable() {
                     <div style={{ display: 'flex', flexDirection: 'column' }}>
                         <TextField
                             size='small'
-                            value={params.value as string}
+                            value={editedFields.mobile === '' ? (params.value as string) : editedFields.mobile}
                             onChange={handleChange}
-                            error={!validatePhoneNumber(params.value as string)}
+                            error={!validatePhoneNumber(params.value as string) }
                             required
                             sx={{
 
@@ -640,6 +748,7 @@ export default function DataTable() {
             },
 
             renderEditCell: (params: GridRenderCellParams<any, dayjs.Dayjs | null>) => {
+                const isDateEmpty = !params.value;
                 const dateValue = params.value ? dayjs(params.value) : null;
 
                 const handleDateChange = (newValue: dayjs.Dayjs | null) => {
@@ -690,6 +799,7 @@ export default function DataTable() {
                                             justifyContent: "center",
                                             alignItems: "center",
                                         },
+                                        //error: isDateEmpty && attemptedToAdd,
                                     },
                                 }}
                             />
@@ -710,6 +820,7 @@ export default function DataTable() {
             headerClassName: 'custom-header',
             editable: false,
             renderCell: (params: GridRenderCellParams<any, string>) => {
+                const isAgeEmpty = !params.value;
                 const age = ageValues[params.row.id] !== undefined ? ageValues[params.row.id]?.toString() : '';
                 const isBelowMinimumAge = age !== undefined && parseInt(age, 10) < 16;
 
@@ -1008,6 +1119,27 @@ export default function DataTable() {
                     >
                         <UpdateSuccessCard onClose={() => setShowUpdateSuccessModal(false)} />
                         {/* You can customize the content of UpdateSuccessCard according to your design */}
+                    </Paper>
+                </Modal>
+            )}
+            {/* Modal for Field Missing */}
+            {fieldMissingModal && (
+                <Modal
+                    open={fieldMissingModal}
+                    onClose={() => setFieldMissingModal(false)}
+                    aria-labelledby="field-missing-modal-title"
+                    aria-describedby="field-missing-modal-description"
+                >
+                    <Paper
+                        style={{
+                            position: 'absolute',
+                            top: '50%',
+                            left: '50%',
+                            transform: 'translate(-50%, -50%)',
+                            borderRadius: '12px',
+                        }}
+                    >
+                        <FieldMissingCard onClick={() => setFieldMissingModal(false)} />
                     </Paper>
                 </Modal>
             )}
