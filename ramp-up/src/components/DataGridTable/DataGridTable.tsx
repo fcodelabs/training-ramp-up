@@ -32,7 +32,11 @@ import {
   GridRowsProp,
   GridToolbarContainer,
 } from "@mui/x-data-grid";
-import { ageCalculator, validatePhoneNumber } from "../../utility";
+import {
+  ageCalculator,
+  formatPhoneNumber,
+  validatePhoneNumber,
+} from "../../utility";
 import SingleButtonPopupMessage from "../SingleButtonPopupMessage/SingleButtonPopupMessage";
 import DoubleButtonPopupMessage from "../DoubleButtonPopupMessage/DoubleButtonPopupMessage";
 
@@ -165,6 +169,7 @@ const DataGridTable = () => {
     setDiscardChangesPopup(true);
     setCurrentRowId(id);
   };
+
   const handleConfirmClick = (id: GridRowId) => {
     setRowModesModel({
       ...rowModesModel,
@@ -234,10 +239,10 @@ const DataGridTable = () => {
       field: "id",
       type: "number",
       headerName: "ID",
-      headerClassName: "super-app-theme--header",
       headerAlign: "left",
       align: "left",
-      width: 80,
+      width: 60,
+      disableColumnMenu: true,
       sortable: false,
       valueFormatter: (params) => {
         const id = Number(params.value);
@@ -248,12 +253,12 @@ const DataGridTable = () => {
     {
       field: "name",
       headerName: "Name",
-      headerClassName: "super-app-theme--header",
       headerAlign: "left",
       align: "left",
       width: 100,
       sortable: true,
       editable: true,
+      disableColumnMenu: true,
 
       renderEditCell: (params: GridRenderCellParams<any, string>) => (
         <TextField
@@ -268,7 +273,13 @@ const DataGridTable = () => {
           }
           sx={{
             boxShadow: "0px 3px 1px -2px rgba(0, 0, 0, 0.2)",
-            border: "1px solid rgba(33, 150, 243, 1)",
+            "& .MuiOutlinedInput-root": {
+              borderRadius: 0,
+              border: "1px solid rgba(33, 150, 243, 1)",
+            },
+            "& .MuiFilledInput-root": {
+              borderRadius: 0,
+            },
             borderRadius: "5px",
           }}
         />
@@ -277,13 +288,13 @@ const DataGridTable = () => {
     {
       field: "gender",
       headerName: "Gender",
-      headerClassName: "super-app-theme--header",
       headerAlign: "left",
       align: "left",
       type: "singleSelect",
       valueOptions: ["male", "Female", "Other"],
       width: 120,
       sortable: false,
+      disableColumnMenu: true,
       editable: true,
       renderEditCell: (params: GridRenderCellParams<any, string>) => (
         <Select
@@ -299,8 +310,14 @@ const DataGridTable = () => {
           }
           sx={{
             boxShadow: "0px 3px 1px -2px rgba(0, 0, 0, 0.2)",
-            border: "1px solid rgba(33, 150, 243, 1)",
-            borderRadius: "5px",
+
+            "& .MuiSelect-select": {
+              border: "1px solid rgba(33, 150, 243, 1)",
+              borderRadius: 0,
+            },
+            "& .MuiOutlinedInput-notchedOutline": {
+              border: "none",
+            },
           }}
         >
           <MenuItem value={"Male"}>Male</MenuItem>
@@ -312,11 +329,11 @@ const DataGridTable = () => {
     {
       field: "address",
       headerName: "Address",
-      headerClassName: "super-app-theme--header",
       headerAlign: "left",
       align: "left",
       width: 150,
       sortable: false,
+      disableColumnMenu: true,
       editable: true,
       renderEditCell: (params: GridRenderCellParams<any, string>) => (
         <TextField
@@ -331,8 +348,13 @@ const DataGridTable = () => {
           }
           sx={{
             boxShadow: "0px 3px 1px -2px rgba(0, 0, 0, 0.2)",
-            border: "1px solid rgba(33, 150, 243, 1)",
-            borderRadius: "5px",
+            "& .MuiOutlinedInput-root": {
+              borderRadius: 0,
+              border: "1px solid rgba(33, 150, 243, 1)",
+            },
+            "& .MuiFilledInput-root": {
+              borderRadius: 0,
+            },
           }}
         />
       ),
@@ -340,12 +362,15 @@ const DataGridTable = () => {
     {
       field: "mobileno",
       headerName: "Mobile No:",
-      headerClassName: "super-app-theme--header",
       headerAlign: "left",
       align: "left",
       sortable: false,
+      disableColumnMenu: true,
       width: 150,
       editable: true,
+      valueFormatter: (params) => {
+        return formatPhoneNumber(params.value);
+      },
       renderEditCell: (params: GridRenderCellParams<any, string>) => (
         <TextField
           size="small"
@@ -360,15 +385,21 @@ const DataGridTable = () => {
           InputProps={{
             sx: {
               boxShadow: "0px 3px 1px -2px rgba(0, 0, 0, 0.2)",
-              border: numbervalidateError
-                ? ""
-                : "1px solid rgba(33, 150, 243, 1)", // Adjust the border as needed
             },
           }}
           sx={{
             "& .MuiFormHelperText-root": {
               fontSize: 10,
               marginLeft: "0px",
+            },
+            "& .MuiOutlinedInput-root": {
+              borderRadius: 0,
+              border: numbervalidateError
+                ? ""
+                : "1px solid rgba(33, 150, 243, 1)",
+            },
+            "& .MuiFilledInput-root": {
+              borderRadius: 0,
             },
             marginTop: numbervalidateError ? "35px" : "0px",
           }}
@@ -382,7 +413,6 @@ const DataGridTable = () => {
     {
       field: "dateofbirth",
       headerName: "Date of Birth",
-      headerClassName: "super-app-theme--header",
       headerAlign: "left",
       align: "left",
       type: "date",
@@ -391,6 +421,7 @@ const DataGridTable = () => {
         return date.format("ddd MMM DD YYYY");
       },
       sortable: true,
+      disableColumnMenu: true,
       editable: true,
       width: 205,
       renderEditCell: (
@@ -422,11 +453,18 @@ const DataGridTable = () => {
                     size: "small",
                     sx: {
                       boxShadow: "0px 3px 1px -2px rgba(0, 0, 0, 0.2)",
-                      border: "1px solid rgba(33, 150, 243, 1)",
+
                       borderRadius: "5px",
                       alignContent: "center",
                       justifyContent: "center",
                       alignItems: "center",
+                      "& .MuiOutlinedInput-root": {
+                        borderRadius: 0,
+                        border: "1px solid rgba(33, 150, 243, 1)",
+                      },
+                      "& .MuiFilledInput-root": {
+                        borderRadius: 0,
+                      },
                     },
                   },
                 }}
@@ -439,11 +477,11 @@ const DataGridTable = () => {
     {
       field: "age",
       headerName: "Age",
-      headerClassName: "super-app-theme--header",
       headerAlign: "left",
       align: "left",
       type: "number",
       editable: true,
+      disableColumnMenu: true,
       sortable: false,
       width: 100,
       renderEditCell: (params: GridRenderCellParams<any, string>) => (
@@ -459,9 +497,6 @@ const DataGridTable = () => {
           InputProps={{
             sx: {
               boxShadow: "0px 3px 1px -2px rgba(0, 0, 0, 0.2)",
-              border: numbervalidateError
-                ? ""
-                : "1px solid rgba(33, 150, 243, 1)", // Adjust the border as needed
             },
           }}
           sx={{
@@ -470,7 +505,16 @@ const DataGridTable = () => {
               marginLeft: "0px",
               width: "100%",
             },
-            marginTop: agevalidateError ? "35px" : "0px",
+            "& .MuiOutlinedInput-root": {
+              border: numbervalidateError
+                ? ""
+                : "1px solid rgba(33, 150, 243, 1)",
+              borderRadius: 0,
+            },
+            "& .MuiFilledInput-root": {
+              borderRadius: 0,
+            },
+            marginTop: agevalidateError ? "33px" : "0px",
           }}
         />
       ),
@@ -479,11 +523,10 @@ const DataGridTable = () => {
     {
       field: "actions",
       type: "actions",
-      headerClassName: "super-app-theme--header",
       headerAlign: "left",
       align: "left",
       headerName: "Actions",
-      width: 195,
+      width: 215,
       cellClassName: "actions",
       getActions: ({ id }) => {
         const isInEditMode = rowModesModel[id]?.mode === GridRowModes.Edit;
@@ -578,9 +621,6 @@ const DataGridTable = () => {
           sx={{
             height: "auto",
             width: "100%",
-            "& .super-app-theme--header": {
-              backgroundColor: "rgba(33, 150, 243, 0.08)",
-            },
           }}
         >
           <DataGrid
@@ -601,12 +641,39 @@ const DataGridTable = () => {
               toolbar: { setRowModesModel },
             }}
             sx={{
-              root: {
-                "& .MuiDataGrid-row.Mui-selected": {
-                  boxShadow: "none",
+              "& .MuiDataGrid-row--editing": {
+                boxShadow: "none",
+              },
+              "& .MuiDataGrid-columnHeader": {
+                backgroundColor: "rgba(33, 150, 243, 0.08)",
+              },
+              "& .MuiDataGrid-columnHeader:focus-within": {
+                outline: "none !important",
+              },
+              "& .MuiDataGrid-columnHeader .MuiDataGrid-iconButtonContainer": {
+                width: "auto",
+                visibility: "visible",
+              },
+              "& .MuiDataGrid-columnHeader:not(.MuiDataGrid-columnHeader--sorted) .MuiDataGrid-sortIcon":
+                {
+                  opacity: 0.5,
+                },
+              "& .MuiDataGrid-columnHeaderTitleContainer": {
+                justifyContent: "space-between",
+              },
+              "& .MuiDataGrid-cell:focus-within": {
+                outline: "none !important",
+              },
+            }}
+            initialState={{
+              pagination: {
+                paginationModel: {
+                  page: 0,
+                  pageSize: 5,
                 },
               },
             }}
+            pageSizeOptions={[5, 10]}
           />
         </Paper>
       </Container>

@@ -11,7 +11,7 @@ const Header = () => {
             component="div"
             sx={{
               flexGrow: 1,
-              fontFamily: "public sans",
+              fontFamily: "Roboto",
               fontWeight: 590,
               color: "rgba(30, 136, 229, 1)",
             }}
@@ -23,7 +23,7 @@ const Header = () => {
             color="primary"
             variant="outlined"
             sx={{
-              fontFamily: "public sans",
+              fontFamily: "Roboto",
               fontWeight: 600,
               color: "rgba(30, 136, 229, 1)",
             }}
