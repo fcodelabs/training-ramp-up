@@ -32,11 +32,9 @@ import {
   GridRowsProp,
   GridToolbarContainer,
 } from "@mui/x-data-grid";
-import {
-  ageCalculator,
-  formatPhoneNumber,
-  validatePhoneNumber,
-} from "../../utility";
+import { formatPhoneNumber } from "../../utility/formatPhoneNumber";
+import { ageCalculator } from "../../utility/ageCalculator";
+import { validatePhoneNumber } from "../../utility/validatePhoneNumber";
 import SingleButtonPopupMessage from "../SingleButtonPopupMessage/SingleButtonPopupMessage";
 import DoubleButtonPopupMessage from "../DoubleButtonPopupMessage/DoubleButtonPopupMessage";
 

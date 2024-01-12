@@ -1,7 +1,7 @@
 import { GridValidRowModel } from "@mui/x-data-grid";
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
-import { ageCalculator } from "../../utility";
+import { ageCalculator } from "../../utility/ageCalculator";
 
 interface IinitialState {
   students: GridValidRowModel[];
