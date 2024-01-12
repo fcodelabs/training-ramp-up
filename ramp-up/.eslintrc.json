@@ -7,8 +7,7 @@
     "extends": [
         "eslint:recommended",
         "plugin:@typescript-eslint/recommended",
-        "plugin:react/recommended",
-        "prettier/@typescript-eslint"
+        "plugin:react/recommended"
     ],
     "parser": "@typescript-eslint/parser",
     "parserOptions": {
@@ -17,8 +16,7 @@
     },
     "plugins": [
         "@typescript-eslint",
-        "react",
-        "prettier"
+        "react"
     ],
     "settings": {
         "react": {

@@ -59,6 +59,9 @@ export const StyledDataGrid = styled(DataGrid)(() => ({
     '& .MuiDataGrid-cell:focus-within': {
         outline: 'none !important',
     },
+    '& .MuiDataGrid-row--editing':{
+        boxShadow: "none !important" 
+    },
 
     '& .MuiDataGrid-cell': {
         justifyContent: 'flex-start !important',
