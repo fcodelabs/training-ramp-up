@@ -37,7 +37,7 @@ const StyledTypography = styled(Typography)`
 `;
 const StyledConfirmButton = styled(Button)`
     &&& {
-        width: 58px;
+        width: auto;
         height: 24px;
         padding: 6px 8px;
         border-radius: 4px;
