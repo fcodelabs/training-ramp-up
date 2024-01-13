@@ -37,6 +37,7 @@ import { ageCalculator } from "../../utility/ageCalculator";
 import { validatePhoneNumber } from "../../utility/validatePhoneNumber";
 import SingleButtonPopupMessage from "../SingleButtonPopupMessage/SingleButtonPopupMessage";
 import DoubleButtonPopupMessage from "../DoubleButtonPopupMessage/DoubleButtonPopupMessage";
+import { dataGridStyles } from "../../styles/dataGridStyles";
 
 let idValue = 0;
 
@@ -269,17 +270,7 @@ const DataGridTable = () => {
               value: e.target.value,
             })
           }
-          sx={{
-            boxShadow: "0px 3px 1px -2px rgba(0, 0, 0, 0.2)",
-            "& .MuiOutlinedInput-root": {
-              borderRadius: 0,
-              border: "1px solid rgba(33, 150, 243, 1)",
-            },
-            "& .MuiFilledInput-root": {
-              borderRadius: 0,
-            },
-            borderRadius: "5px",
-          }}
+          sx={dataGridStyles.textFieldStyles}
         />
       ),
     },
@@ -306,17 +297,7 @@ const DataGridTable = () => {
               value: e.target.value,
             })
           }
-          sx={{
-            boxShadow: "0px 3px 1px -2px rgba(0, 0, 0, 0.2)",
-
-            "& .MuiSelect-select": {
-              border: "1px solid rgba(33, 150, 243, 1)",
-              borderRadius: 0,
-            },
-            "& .MuiOutlinedInput-notchedOutline": {
-              border: "none",
-            },
-          }}
+          sx={dataGridStyles.genderFieldStyles}
         >
           <MenuItem value={"Male"}>Male</MenuItem>
           <MenuItem value={"Female"}>Female</MenuItem>
@@ -344,16 +325,7 @@ const DataGridTable = () => {
               value: e.target.value,
             })
           }
-          sx={{
-            boxShadow: "0px 3px 1px -2px rgba(0, 0, 0, 0.2)",
-            "& .MuiOutlinedInput-root": {
-              borderRadius: 0,
-              border: "1px solid rgba(33, 150, 243, 1)",
-            },
-            "& .MuiFilledInput-root": {
-              borderRadius: 0,
-            },
-          }}
+          sx={dataGridStyles.textFieldStyles}
         />
       ),
     },
@@ -386,18 +358,12 @@ const DataGridTable = () => {
             },
           }}
           sx={{
-            "& .MuiFormHelperText-root": {
-              fontSize: 10,
-              marginLeft: "0px",
-            },
+            ...dataGridStyles.mobileFieldStyles,
             "& .MuiOutlinedInput-root": {
               borderRadius: 0,
               border: numbervalidateError
                 ? ""
                 : "1px solid rgba(33, 150, 243, 1)",
-            },
-            "& .MuiFilledInput-root": {
-              borderRadius: 0,
             },
             marginTop: numbervalidateError ? "35px" : "0px",
           }}
@@ -449,21 +415,7 @@ const DataGridTable = () => {
                 slotProps={{
                   textField: {
                     size: "small",
-                    sx: {
-                      boxShadow: "0px 3px 1px -2px rgba(0, 0, 0, 0.2)",
-
-                      borderRadius: "5px",
-                      alignContent: "center",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      "& .MuiOutlinedInput-root": {
-                        borderRadius: 0,
-                        border: "1px solid rgba(33, 150, 243, 1)",
-                      },
-                      "& .MuiFilledInput-root": {
-                        borderRadius: 0,
-                      },
-                    },
+                    sx: dataGridStyles.birthdayFieldStyles,
                   },
                 }}
               />
@@ -498,18 +450,11 @@ const DataGridTable = () => {
             },
           }}
           sx={{
-            "& .MuiFormHelperText-root": {
-              fontSize: 9,
-              marginLeft: "0px",
-              width: "100%",
-            },
+            ...dataGridStyles.ageFieldStyles,
             "& .MuiOutlinedInput-root": {
               border: numbervalidateError
                 ? ""
                 : "1px solid rgba(33, 150, 243, 1)",
-              borderRadius: 0,
-            },
-            "& .MuiFilledInput-root": {
               borderRadius: 0,
             },
             marginTop: agevalidateError ? "33px" : "0px",
@@ -638,40 +583,16 @@ const DataGridTable = () => {
             slotProps={{
               toolbar: { setRowModesModel },
             }}
-            sx={{
-              "& .MuiDataGrid-row--editing": {
-                boxShadow: "none",
-              },
-              "& .MuiDataGrid-columnHeader": {
-                backgroundColor: "rgba(33, 150, 243, 0.08)",
-              },
-              "& .MuiDataGrid-columnHeader:focus-within": {
-                outline: "none !important",
-              },
-              "& .MuiDataGrid-columnHeader .MuiDataGrid-iconButtonContainer": {
-                width: "auto",
-                visibility: "visible",
-              },
-              "& .MuiDataGrid-columnHeader:not(.MuiDataGrid-columnHeader--sorted) .MuiDataGrid-sortIcon":
-                {
-                  opacity: 0.5,
-                },
-              "& .MuiDataGrid-columnHeaderTitleContainer": {
-                justifyContent: "space-between",
-              },
-              "& .MuiDataGrid-cell:focus-within": {
-                outline: "none !important",
-              },
-            }}
+            sx={dataGridStyles.gridStyles}
             initialState={{
               pagination: {
                 paginationModel: {
                   page: 0,
-                  pageSize: 5,
+                  pageSize: 10,
                 },
               },
             }}
-            pageSizeOptions={[5, 10]}
+            pageSizeOptions={[10, 25, 50]}
           />
         </Paper>
       </Container>

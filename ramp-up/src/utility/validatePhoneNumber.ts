@@ -1,7 +1,7 @@
 export const validatePhoneNumber = (phoneNumber: string) => {
   if (
     phoneNumber.startsWith("+") &&
-    phoneNumber.length === 12 &&
+    phoneNumber.length >= 12 &&
     phoneNumber.slice(1).match(/^\d+$/)
   ) {
     return true;

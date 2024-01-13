@@ -1,4 +1,5 @@
 import { AppBar, Box, Button, Toolbar, Typography } from "@mui/material";
+import { headerStyles } from "../../styles/headerStyles";
 
 const Header = () => {
   return (
@@ -9,12 +10,7 @@ const Header = () => {
             color="primary"
             variant="h6"
             component="div"
-            sx={{
-              flexGrow: 1,
-              fontFamily: "Roboto",
-              fontWeight: 590,
-              color: "rgba(30, 136, 229, 1)",
-            }}
+            sx={headerStyles.titleStyles}
           >
             Ramp Up Project
           </Typography>
@@ -22,11 +18,7 @@ const Header = () => {
             size="small"
             color="primary"
             variant="outlined"
-            sx={{
-              fontFamily: "Roboto",
-              fontWeight: 600,
-              color: "rgba(30, 136, 229, 1)",
-            }}
+            sx={headerStyles.buttonStyles}
           >
             Login
           </Button>
