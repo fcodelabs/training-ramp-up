@@ -15,7 +15,14 @@ const SingleButtonPopupMessage = ({
 }: IProps) => {
   return (
     <>
-      <Dialog open={open}>
+      <Dialog
+        open={open}
+        sx={{
+          "& .MuiDialog-paper": {
+            minWidth: "325px",
+          },
+        }}
+      >
         <DialogTitle sx={{ fontSize: "16px", fontWeight: 400 }}>
           {title}
         </DialogTitle>

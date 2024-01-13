@@ -32,9 +32,12 @@ import {
   GridRowsProp,
   GridToolbarContainer,
 } from "@mui/x-data-grid";
-import { ageCalculator, validatePhoneNumber } from "../../utility";
+import { formatPhoneNumber } from "../../utility/formatPhoneNumber";
+import { ageCalculator } from "../../utility/ageCalculator";
+import { validatePhoneNumber } from "../../utility/validatePhoneNumber";
 import SingleButtonPopupMessage from "../SingleButtonPopupMessage/SingleButtonPopupMessage";
 import DoubleButtonPopupMessage from "../DoubleButtonPopupMessage/DoubleButtonPopupMessage";
+import { dataGridStyles } from "../../styles/dataGridStyles";
 
 let idValue = 0;
 
@@ -165,6 +168,7 @@ const DataGridTable = () => {
     setDiscardChangesPopup(true);
     setCurrentRowId(id);
   };
+
   const handleConfirmClick = (id: GridRowId) => {
     setRowModesModel({
       ...rowModesModel,
@@ -234,10 +238,10 @@ const DataGridTable = () => {
       field: "id",
       type: "number",
       headerName: "ID",
-      headerClassName: "super-app-theme--header",
       headerAlign: "left",
       align: "left",
-      width: 80,
+      width: 60,
+      disableColumnMenu: true,
       sortable: false,
       valueFormatter: (params) => {
         const id = Number(params.value);
@@ -248,12 +252,12 @@ const DataGridTable = () => {
     {
       field: "name",
       headerName: "Name",
-      headerClassName: "super-app-theme--header",
       headerAlign: "left",
       align: "left",
       width: 100,
       sortable: true,
       editable: true,
+      disableColumnMenu: true,
 
       renderEditCell: (params: GridRenderCellParams<any, string>) => (
         <TextField
@@ -266,24 +270,20 @@ const DataGridTable = () => {
               value: e.target.value,
             })
           }
-          sx={{
-            boxShadow: "0px 3px 1px -2px rgba(0, 0, 0, 0.2)",
-            border: "1px solid rgba(33, 150, 243, 1)",
-            borderRadius: "5px",
-          }}
+          sx={dataGridStyles.textFieldStyles}
         />
       ),
     },
     {
       field: "gender",
       headerName: "Gender",
-      headerClassName: "super-app-theme--header",
       headerAlign: "left",
       align: "left",
       type: "singleSelect",
       valueOptions: ["male", "Female", "Other"],
       width: 120,
       sortable: false,
+      disableColumnMenu: true,
       editable: true,
       renderEditCell: (params: GridRenderCellParams<any, string>) => (
         <Select
@@ -297,11 +297,7 @@ const DataGridTable = () => {
               value: e.target.value,
             })
           }
-          sx={{
-            boxShadow: "0px 3px 1px -2px rgba(0, 0, 0, 0.2)",
-            border: "1px solid rgba(33, 150, 243, 1)",
-            borderRadius: "5px",
-          }}
+          sx={dataGridStyles.genderFieldStyles}
         >
           <MenuItem value={"Male"}>Male</MenuItem>
           <MenuItem value={"Female"}>Female</MenuItem>
@@ -312,11 +308,11 @@ const DataGridTable = () => {
     {
       field: "address",
       headerName: "Address",
-      headerClassName: "super-app-theme--header",
       headerAlign: "left",
       align: "left",
       width: 150,
       sortable: false,
+      disableColumnMenu: true,
       editable: true,
       renderEditCell: (params: GridRenderCellParams<any, string>) => (
         <TextField
@@ -329,23 +325,22 @@ const DataGridTable = () => {
               value: e.target.value,
             })
           }
-          sx={{
-            boxShadow: "0px 3px 1px -2px rgba(0, 0, 0, 0.2)",
-            border: "1px solid rgba(33, 150, 243, 1)",
-            borderRadius: "5px",
-          }}
+          sx={dataGridStyles.textFieldStyles}
         />
       ),
     },
     {
       field: "mobileno",
       headerName: "Mobile No:",
-      headerClassName: "super-app-theme--header",
       headerAlign: "left",
       align: "left",
       sortable: false,
+      disableColumnMenu: true,
       width: 150,
       editable: true,
+      valueFormatter: (params) => {
+        return formatPhoneNumber(params.value);
+      },
       renderEditCell: (params: GridRenderCellParams<any, string>) => (
         <TextField
           size="small"
@@ -360,15 +355,15 @@ const DataGridTable = () => {
           InputProps={{
             sx: {
               boxShadow: "0px 3px 1px -2px rgba(0, 0, 0, 0.2)",
-              border: numbervalidateError
-                ? ""
-                : "1px solid rgba(33, 150, 243, 1)", // Adjust the border as needed
             },
           }}
           sx={{
-            "& .MuiFormHelperText-root": {
-              fontSize: 10,
-              marginLeft: "0px",
+            ...dataGridStyles.mobileFieldStyles,
+            "& .MuiOutlinedInput-root": {
+              borderRadius: 0,
+              border: numbervalidateError
+                ? ""
+                : "1px solid rgba(33, 150, 243, 1)",
             },
             marginTop: numbervalidateError ? "35px" : "0px",
           }}
@@ -382,7 +377,6 @@ const DataGridTable = () => {
     {
       field: "dateofbirth",
       headerName: "Date of Birth",
-      headerClassName: "super-app-theme--header",
       headerAlign: "left",
       align: "left",
       type: "date",
@@ -391,6 +385,7 @@ const DataGridTable = () => {
         return date.format("ddd MMM DD YYYY");
       },
       sortable: true,
+      disableColumnMenu: true,
       editable: true,
       width: 205,
       renderEditCell: (
@@ -420,14 +415,7 @@ const DataGridTable = () => {
                 slotProps={{
                   textField: {
                     size: "small",
-                    sx: {
-                      boxShadow: "0px 3px 1px -2px rgba(0, 0, 0, 0.2)",
-                      border: "1px solid rgba(33, 150, 243, 1)",
-                      borderRadius: "5px",
-                      alignContent: "center",
-                      justifyContent: "center",
-                      alignItems: "center",
-                    },
+                    sx: dataGridStyles.birthdayFieldStyles,
                   },
                 }}
               />
@@ -439,11 +427,11 @@ const DataGridTable = () => {
     {
       field: "age",
       headerName: "Age",
-      headerClassName: "super-app-theme--header",
       headerAlign: "left",
       align: "left",
       type: "number",
       editable: true,
+      disableColumnMenu: true,
       sortable: false,
       width: 100,
       renderEditCell: (params: GridRenderCellParams<any, string>) => (
@@ -459,18 +447,17 @@ const DataGridTable = () => {
           InputProps={{
             sx: {
               boxShadow: "0px 3px 1px -2px rgba(0, 0, 0, 0.2)",
-              border: numbervalidateError
-                ? ""
-                : "1px solid rgba(33, 150, 243, 1)", // Adjust the border as needed
             },
           }}
           sx={{
-            "& .MuiFormHelperText-root": {
-              fontSize: 9,
-              marginLeft: "0px",
-              width: "100%",
+            ...dataGridStyles.ageFieldStyles,
+            "& .MuiOutlinedInput-root": {
+              border: numbervalidateError
+                ? ""
+                : "1px solid rgba(33, 150, 243, 1)",
+              borderRadius: 0,
             },
-            marginTop: agevalidateError ? "35px" : "0px",
+            marginTop: agevalidateError ? "33px" : "0px",
           }}
         />
       ),
@@ -479,11 +466,10 @@ const DataGridTable = () => {
     {
       field: "actions",
       type: "actions",
-      headerClassName: "super-app-theme--header",
       headerAlign: "left",
       align: "left",
       headerName: "Actions",
-      width: 195,
+      width: 215,
       cellClassName: "actions",
       getActions: ({ id }) => {
         const isInEditMode = rowModesModel[id]?.mode === GridRowModes.Edit;
@@ -578,9 +564,6 @@ const DataGridTable = () => {
           sx={{
             height: "auto",
             width: "100%",
-            "& .super-app-theme--header": {
-              backgroundColor: "rgba(33, 150, 243, 0.08)",
-            },
           }}
         >
           <DataGrid
@@ -600,13 +583,16 @@ const DataGridTable = () => {
             slotProps={{
               toolbar: { setRowModesModel },
             }}
-            sx={{
-              root: {
-                "& .MuiDataGrid-row.Mui-selected": {
-                  boxShadow: "none",
+            sx={dataGridStyles.gridStyles}
+            initialState={{
+              pagination: {
+                paginationModel: {
+                  page: 0,
+                  pageSize: 10,
                 },
               },
             }}
+            pageSizeOptions={[10, 25, 50]}
           />
         </Paper>
       </Container>
