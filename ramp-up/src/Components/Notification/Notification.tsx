@@ -91,6 +91,20 @@ const NotificationPopup: React.FC<ErrorPopupProps> = ({
         )
     }
 
+    const AddUpdateErrorButton: React.FC = () => {
+        return (
+            <>
+                <StyledButton
+                    variant="outlined"
+                    color="primary"
+                    onClick={onSubmit}
+                >
+                    try again
+                </StyledButton>
+            </>
+        )
+    }
+
     if (type === 'TABLE_ERROR') {
         errorMessage =
             'Unable to retrieve table details. Please try again later.'
@@ -118,12 +132,12 @@ const NotificationPopup: React.FC<ErrorPopupProps> = ({
     } else if (type === 'FAIL_SAVE_NEW_USER') {
         //done
         errorMessage = 'Unable to add the new student. Please try again later'
-        button = <SingleButton text="Try Again" />
+        button = <AddUpdateErrorButton  />
     } else if (type === 'FAIL_UPDATE_USER') {
         //done
         errorMessage =
             'Cannnot update the student details. Please try again later'
-        button = <SingleButton text="Try Again" />
+        button = <AddUpdateErrorButton  />
     } else if (type === 'DELETE_USER') {
         errorMessage = 'Are you sure you want to remove this student?'
         button = <ButtonSet />

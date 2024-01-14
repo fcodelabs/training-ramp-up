@@ -30,8 +30,7 @@ export const FixedColumns: GridColDef[] = [
         field: 'name',
         headerName: 'Name',
         type: 'string',
-        flex: 1,
-        minWidth: 100,
+        width: 165,
         editable: true,
         sortingOrder: ['desc', 'asc'],
         renderHeader: () => {
@@ -65,8 +64,7 @@ export const FixedColumns: GridColDef[] = [
         field: 'gender',
         headerName: 'Gender',
         type: 'singleSelect',
-        flex: 1,
-        minWidth: 100,
+        width: 165,
         valueOptions: genders,
         sortable: false,
         editable: true,
@@ -102,8 +100,7 @@ export const FixedColumns: GridColDef[] = [
         field: 'address',
         headerName: 'Address',
         type: 'string',
-        flex: 1,
-        minWidth: 100,
+        minWidth: 165,
         sortable: false,
         editable: true,
         renderEditCell: (params) => {
@@ -133,8 +130,8 @@ export const FixedColumns: GridColDef[] = [
     {
         field: 'mobile',
         headerName: 'Mobile No.',
-        flex: 1,
-        minWidth: 100,
+        type: 'string',
+        width: 165,
         sortable: false,
         editable: true,
         renderEditCell: (params) => {
@@ -167,8 +164,7 @@ export const FixedColumns: GridColDef[] = [
         field: 'birthday',
         headerName: 'Date of Birth',
         type: 'string',
-        flex: 1,
-        minWidth: 100,
+        minWidth: 165,
         editable: true,
         sortingOrder: ['desc', 'asc'],
         renderHeader: () => {
@@ -204,8 +200,8 @@ export const FixedColumns: GridColDef[] = [
         field: 'age',
         headerName: 'Age',
         type: 'number',
-        flex: 0.5,
-        minWidth: 50,
+        flex:1,
+        width: 75,
         sortable: false,
         editable: true,
         renderHeader() {
@@ -234,5 +230,6 @@ export const FixedColumns: GridColDef[] = [
                 />
             )
         },
+
     },
 ]

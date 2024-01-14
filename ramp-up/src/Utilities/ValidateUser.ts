@@ -3,8 +3,8 @@ import parsePhoneNumber from 'libphonenumber-js'
 
 const validateUser = (user: GridRowModel, requiredFields: string[]) => {
     console.log('validateUser', user)
+
     try {
-        // throw new Error("Error in validating user") ;
         if (requiredFields.includes('name') && !validateName(user.name)) {
             return false
         }
@@ -52,6 +52,7 @@ const validateAddress = (address: Date | string | number) => {
     }
     return true
 }
+
 const validateMobile = (inputValue: Date | string | number) => {
     try {
         const phoneNumberObj = parsePhoneNumber(String(inputValue))

@@ -4,6 +4,10 @@ import styled from 'styled-components'
 
 const AppbarWrapper = styled.div`
     display: flex;
+    position: fixed;
+    width: 100%;
+    z-index: 1;
+    background-color: white;
     flex-direction: raw;
     align-items: center;
     justify-content: space-between;

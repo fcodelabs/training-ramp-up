@@ -69,6 +69,7 @@ const EditableCell: React.FC<EditableCellProps> = ({
             <StyledTextFieldWrapper
                 error={error}
                 fullWidth
+                disabled
                 type="number"
                 value={value || 0}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
@@ -101,7 +102,7 @@ const EditableCell: React.FC<EditableCellProps> = ({
                 placeholder=""
                 value={value || ''}
                 onChange={(e) => handleChange(e.target.value)}
-                helperText={error && 'This field is required'}
+                helperText = {error && "please enter a valid phone number"}
             ></StyledTextFieldWrapper>
         )
     }
@@ -116,7 +117,6 @@ const EditableCell: React.FC<EditableCellProps> = ({
                 type="date"
                 value={dateObject ? dateObject.toISOString().slice(0, 10) : ''}
                 onChange={(e) => handleDateChange(e.target.value)}
-                helperText={error && 'This field is required'}
             />
         )
     }
@@ -155,7 +155,6 @@ const EditableCell: React.FC<EditableCellProps> = ({
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                 handleChange(e.target.value)
             }
-            helperText={error && 'This field is required'}
         />
     )
 }

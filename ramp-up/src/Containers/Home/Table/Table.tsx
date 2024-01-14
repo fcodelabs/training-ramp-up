@@ -78,7 +78,7 @@ const Table = () => {
 
     const handleSaveClick = (params: GridRenderEditCellParams) => () => {
         const editedRow = initialRows.find((row) => row.id === params.id)!
-
+        const isNew = params.row.isNew;
         try {
             if (
                 validateUser(
@@ -95,7 +95,7 @@ const Table = () => {
                     ...rowModesModel,
                     [params.id]: { mode: GridRowModes.View },
                 })
-                if (editedRow.isNew) {
+                if (isNew) {
                     setNotification({
                         open: true,
                         onConfirm: handleCloseNotification,
@@ -115,11 +115,13 @@ const Table = () => {
                 })
                 setNotification({
                     open: true,
-                    onConfirm: () => {},
+                    onConfirm:handleCloseNotification,
                     type: 'MISSING_FIELDS',
                 })
             }
         } catch (error) {
+            console.log(isNew)
+
             setRows(
                 rows.map((row) =>
                     row.id === params.id ? { ...row, error: true } : row
@@ -129,10 +131,14 @@ const Table = () => {
                 ...rowModesModel,
                 [params.id]: { mode: GridRowModes.View },
             })
-            if (editedRow.isNew) {
+            const errorComfirm = () => {
+                setRows(rows.filter((row) => row.id !== params.id))
+                dispatch(discardUser(Number(params.id)))
+            }
+            if (isNew) {
                 setNotification({
                     open: true,
-                    onConfirm: () => {},
+                    onConfirm: errorComfirm,
                     type: 'FAIL_SAVE_NEW_USER',
                 })
             } else {
@@ -198,7 +204,7 @@ const Table = () => {
                 age: '',
                 action: '',
                 isNew: true,
-                error: true,
+                error: false,
             },
             ...oldRows,
         ])

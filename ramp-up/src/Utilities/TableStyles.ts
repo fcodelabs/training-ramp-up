@@ -1,6 +1,6 @@
 import { TextField } from '@mui/material'
 import { DataGrid } from '@mui/x-data-grid'
-import PhoneInput from 'react-phone-number-input'
+// import PhoneInput from 'react-phone-number-input'
 import styled from 'styled-components'
 
 export const genders = ['Male', 'female', 'other']
@@ -9,7 +9,7 @@ export const Container = styled.div`
     display: flex;
     flex-direction: column;
     width: 80%;
-    height: 70%;
+    height: auto;
     border: 1px solid #e0e0e0;
     border-radius: 5px;
 `
@@ -82,12 +82,22 @@ interface Props {
 }
 
 export const StyledTextFieldWrapper = styled(TextField)<Props>(({ error }) => ({
-    variant: 'outlined',
+    variant: 'standard',
+    color: 'black',
+    borderRadius:0,
     textAlign: 'end',
+    outline: 'none',
     '& .MuiOutlinedInput-root': {
         '& fieldset': {
-            borderColor: error ? 'red' : 'rgba(33, 150, 243, 0.7)',
+            borderColor: error ? '#BD0203' : 'rgba(33, 150, 243, 0.7)',
+            borderRadius: 0
         },
+    },
+    
+    "& .MuiInputBase-root.Mui-disabled": {
+        "& > fieldset": {
+            borderColor: error ? '#BD0203' : 'rgba(33, 150, 243, 0.7)',
+        }
     },
     '& .MuiFormHelperText-root': {
         marginLeft: 0,
@@ -111,22 +121,22 @@ export const StyledFormHelperText = styled.div({
     color: '#d32f2f',
 })
 
-export const StyledPhoneInput = styled(PhoneInput)<Props>(({ error }) => ({
-    display: 'flex',
-    width: '99%',
-    '& .PhoneInputCountry': {
-        display: 'none',
-    },
-    '& .PhoneInputInput': {
-        height: '52.5px',
-        border: error
-            ? '0.9px solid #ce1515'
-            : '0.9px solid rgba(33, 150, 243, 0.7)',
-        borderRadius: '5px',
-        '&:focus': {
-            outline: error
-                ? '0.9px solid #ce1515'
-                : '0.9px solid rgba(33, 150, 243, 0.7)',
-        },
-    },
-}))
+// const StyledPhoneInput = styled(PhoneInput)<Props>(({ error }) => ({
+//     display: 'flex',
+//     width: '99%',
+//     '& .PhoneInputCountry': {
+//         display: 'none',
+//     },
+//     '& .PhoneInputInput': {
+//         height: '52.5px',
+//         border: error
+//             ? '0.9px solid #ce1515'
+//             : '0.9px solid rgba(33, 150, 243, 0.7)',
+//         borderRadius: '5px',
+//         '&:focus': {
+//             outline: error
+//                 ? '0.9px solid #ce1515'
+//                 : '0.9px solid rgba(33, 150, 243, 0.7)',
+//         },
+//     },
+// }))
