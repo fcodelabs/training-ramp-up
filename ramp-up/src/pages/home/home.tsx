@@ -1,5 +1,5 @@
 import React from "react";
-import { AppBar, Toolbar, Button, Card, CardContent, CardHeader } from "@mui/material";
+import { AppBar, Toolbar, Button, Card} from "@mui/material";
 import { styled } from '@mui/material/styles';
 import DataTable from "./DataGrid/DataTable";
 
@@ -73,23 +73,6 @@ const styles ={
         fontFeatureSettings: "'clig' off, 'liga' off",
         color: "var(--text-primary, rgba(0, 0, 0, 0.87))"
     },
-    addNewDiv:{
-        padding: "16px",
-        display: "flex",
-        justifyContent: "flex-end",
-        alignItems: "center",
-        gap: "16px",
-        alignSelf: "stretch",
-  },
-  addNewButton:{
-    fontWeight:500,
-    letterSpacing: "0.4px",
-    fontSize: "14px",
-    fontFamily: "Roboto,sans-serif",
-    fontStyle: "normal",
-    lineHeight: "24px",
-    backgroundColor: "#2196F3",
-},
 }
 
 
@@ -117,11 +100,6 @@ function Home() {
         <Card sx={styles.card}>
             <div style={styles.cardTitle}>
             User Details
-            </div>
-            <div style={styles.addNewDiv}>
-                <Button variant="contained" sx={styles.addNewButton}>
-                Add new
-                </Button>
             </div>
             <DataTable/>
         </Card>
