@@ -1,8 +1,10 @@
-import { configureStore } from '@reduxjs/toolkit';
-
+import { configureStore } from '@reduxjs/toolkit'
+import dataGridSlice from '../slice/dataGridSlice'
 
 const store = configureStore({
-    reducer:{},
-});
+  reducer: {
+    dataGrid: dataGridSlice,
+  },
+})
 
-export default store;
+export default store

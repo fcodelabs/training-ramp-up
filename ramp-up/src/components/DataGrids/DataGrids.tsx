@@ -1,8 +1,13 @@
-import React from "react";
-import { useState } from "react";
-import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
+import * as React from 'react'
+//import { useSelector, useDispatch } from 'react-redux';
 
+import { useState } from 'react'
+import Box from '@mui/material/Box'
+import Button from '@mui/material/Button'
+
+import { MenuItem, Select, TextField } from '@mui/material'
+
+import DialogBox from '../DialogBox/DialogBox'
 import {
   GridRowsProp,
   GridRowModesModel,
@@ -10,176 +15,330 @@ import {
   DataGrid,
   GridColDef,
   GridToolbarContainer,
+  GridRenderCellParams,
+  GridEventListener,
   GridRowId,
   GridRowModel,
-  GridRenderCellParams,
-} from "@mui/x-data-grid";
-import { MenuItem, Select, TextField } from "@mui/material";
+  GridRowEditStopReasons,
+} from '@mui/x-data-grid'
 
-import DialogBox from "../DialogBox/DialogBox";
+import { format } from 'date-fns'
 
-const initialRows: IRowData[] = [
+const initialRows: GridRowsProp = [
   {
     id: 1,
-    name: "Jon",
-    gender: "",
-    address: "",
-    mobileNo: "",
-    dob: "",
-    age: 14,
+    name: 'Henry',
+    age: 25,
+    gender: 'Male',
+    address: 'Nuwaraeliya',
+    mobileNo: '0712222220',
+    dob: new Date('1990-01-01'),
   },
   {
     id: 2,
-    name: "Cersei",
-    gender: "",
-    address: "",
-    mobileNo: "",
-    dob: "",
-    age: 31,
+    name: 'John',
+    age: 56,
+    gender: 'Male',
+    address: 'Gamp',
+    mobileNo: '0712222220',
+    dob: new Date('1990-01-01'),
   },
   {
     id: 3,
-    name: "Jaime",
-    gender: "",
-    address: "",
-    mobileNo: "",
-    dob: "",
-    age: 31,
+    name: 'Mark',
+    age: 18,
+    gender: 'Male',
+    address: 'Col',
+    mobileNo: '0712222220',
+    dob: new Date('mon 1990-01-01'),
   },
   {
     id: 4,
-    name: "Arya",
-    gender: "",
-    address: "",
-    mobileNo: "",
-    dob: "",
-    age: 11,
+    name: 'Fred',
+    age: 5,
+    gender: 'Male',
+    address: 'Kand',
+    mobileNo: '0712222220',
+    dob: new Date('1990-01-01'),
   },
-  {
-    id: 5,
-    name: "Daenerys",
-    gender: "",
-    address: "",
-    mobileNo: "",
-    dob: "",
-    age: 25,
-  },
-  {
-    id: 6,
-    name: "Neth",
-    gender: "",
-    address: "",
-    mobileNo: "",
-    dob: "",
-    age: 150,
-  },
-  {
-    id: 7,
-    name: "Ferrara",
-    gender: "",
-    address: "",
-    mobileNo: "",
-    dob: "",
-    age: 44,
-  },
-  {
-    id: 8,
-    name: "Rossini",
-    gender: "",
-    address: "",
-    mobileNo: "",
-    dob: "",
-    age: 36,
-  },
-  {
-    id: 9,
-    name: "Harvey",
-    gender: "",
-    address: "",
-    mobileNo: "",
-    dob: "",
-    age: 65,
-  },
-];
-interface IEditToolbarProps {
-  setRows: (newRows: (oldRows: GridRowsProp) => GridRowsProp) => void;
-  setRowModesModel: (
-    newModel: (oldModel: GridRowModesModel) => GridRowModesModel
-  ) => void;
-  rowModesModel: GridRowModesModel;
-  setEditMode: React.Dispatch<React.SetStateAction<boolean>>;
-}
-
+]
 interface IRowData {
-  id: number;
-  name: string;
-  gender: string;
-  address: string;
-  mobileNo: string;
-  dob: string;
-  age: number;
-  isNew?: boolean;
+  id: number
+  name: string
+  gender: string
+  address: string
+  mobileNo: string
+  dob: string
+  age: number
+  isNew?: boolean
 }
 
 export default function DataGrids() {
-  const [rows, setRows] = React.useState<IRowData[]>(initialRows);
+  const [rows, setRows] = React.useState(initialRows)
   const [rowModesModel, setRowModesModel] = React.useState<GridRowModesModel>(
-    {}
-  );
-
-  const [openSaveDialog, setOpenSaveDialog] = React.useState(false);
-  const [openDiscardDialog, setOpenDiscardDialog] = React.useState(false);
-  const [isEditOperation, setIsEditOperation] = React.useState<boolean>(false);
-  const [removeDialogOpen, setRemoveDialogOpen] = React.useState(false);
+    {},
+  )
+  const [removeDialogOpen, setRemoveDialogOpen] = React.useState(false)
   const [rowToRemoveId, setRowToRemoveId] = React.useState<GridRowId | null>(
-    null
-  );
-  const [studentRemoved, setStudentRemoved] = React.useState(false);
-  const [mobNumberError, setmobNumberError] = useState<string | null>(null);
-  const [isAnyRowInEditMode, setIsAnyRowInEditMode] = useState(false);
+    null,
+  )
+  const [studentRemoved, setStudentRemoved] = React.useState(false)
+
+  const [updateDialogOpen, setUpdateDialogOpen] = React.useState(false)
+
+  const [addDialogOpen, setAddDialogOpen] = React.useState(false)
+  const [addDialogErrorOpen, setAddDialogErrorOpen] = React.useState(false)
+
+  const [discardDialogOpen, setDiscardDialogOpen] = React.useState(false)
+
+  const [mobNumberError, setmobNumberError] = useState<string | null>(null)
+
+  interface EditToolbarProps {
+    setRows: (newRows: (oldRows: GridRowsProp) => GridRowsProp) => void
+    setRowModesModel: (
+      newModel: (oldModel: GridRowModesModel) => GridRowModesModel,
+    ) => void
+  }
+
+  function EditToolbar(props: EditToolbarProps) {
+    const { setRows, setRowModesModel } = props
+
+    const handleNewClick = () => {
+      const newId = Math.max(...rows.map((row) => row.id), 0) + 1
+
+      const newRow = {
+        id: newId,
+        name: '',
+        gender: '',
+        address: '',
+        mobileNo: null,
+        dob: null,
+        age: null,
+        isNew: true,
+        Action: 'Edit',
+      }
+      setRowModesModel((prevRowModesModel) => ({
+        ...prevRowModesModel,
+        [newId]: { mode: GridRowModes.Edit, fieldToFocus: 'name' },
+      }))
+
+      setRows((prevRows) => [newRow, ...prevRows])
+
+      //  setRows((oldRows) => [...oldRows, { id:newId, name: '', age: '', isNew: true }]);
+      //   setRowModesModel((oldModel) => ({
+      //     ...oldModel,
+      //     [newId]: { mode: GridRowModes.Edit, fieldToFocus: 'name' },
+      //   }));
+    }
+
+    return (
+      <div
+        style={{
+          display: 'flex',
+          padding: '6px 16px 6px 16px',
+          justifyContent: 'flex-end',
+        }}
+      >
+        <GridToolbarContainer>
+          <Button
+            color="primary"
+            variant="contained"
+            size="medium"
+            onClick={handleNewClick}
+          >
+            ADD NEW
+          </Button>
+        </GridToolbarContainer>
+      </div>
+    )
+  }
+
+  const handleRowEditStop: GridEventListener<'rowEditStop'> = (
+    params,
+    event,
+  ) => {
+    if (params.reason === GridRowEditStopReasons.rowFocusOut) {
+      event.defaultMuiPrevented = true
+    }
+  }
+
+  const handleEditClick = (id: GridRowId) => () => {
+    setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.Edit } })
+  }
+
+  const handleUpdateClick = (id: GridRowId) => () => {
+    setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.View } })
+    setUpdateDialogOpen(true)
+  }
+
+  const handleUpdateDialogDismiss = () => {
+    setUpdateDialogOpen(false)
+  }
+
+  const handleSaveClick = (id: GridRowId) => () => {
+    const editedRow = rows.find((row) => row.id === id)
+    if (
+      !editedRow ||
+      !editedRow.name ||
+      !editedRow.gender ||
+      !editedRow.address ||
+      !editedRow.mobileNo ||
+      !editedRow.dob
+    ) {
+      setAddDialogErrorOpen(true)
+      return
+    }
+
+    setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.View } })
+    setAddDialogOpen(true)
+  }
+
+  const handleAddDialogDismiss = () => {
+    setAddDialogOpen(false)
+  }
+
+  const handleDeleteClick = (id: GridRowId) => () => {
+    // setRows(rows.filter((row) => row.id !== id));
+    setRowToRemoveId(id)
+    setRemoveDialogOpen(true)
+  }
+
+  const handleRemoveDialogConfirm = () => {
+    if (rowToRemoveId !== null) {
+      setRows(rows.filter((row) => row.id !== rowToRemoveId))
+      setStudentRemoved(true)
+    }
+    setRemoveDialogOpen(false)
+  }
+
+  const handleRemoveDialogDismiss = () => {
+    setRemoveDialogOpen(false)
+    setRowToRemoveId(null)
+  }
+
+  const handleCancelClick = (id: GridRowId) => () => {
+    setRowModesModel({
+      ...rowModesModel,
+      [id]: { mode: GridRowModes.View, ignoreModifications: true },
+    })
+
+    const editedRow = rows.find((row) => row.id === id)
+
+    if (editedRow!.isNew) {
+      // setRows(rows.filter((row) => row.id !== id));
+      // Show the discard dialog only for existing rows, not for new rows
+      setRowToRemoveId(id)
+      setDiscardDialogOpen(true)
+    }
+  }
+
+  const handleDiscardDialogConfirm = () => {
+    if (rowToRemoveId !== null) {
+      setRows(rows.filter((row) => row.id !== rowToRemoveId))
+      setDiscardDialogOpen(false)
+      setStudentRemoved(true)
+    }
+  }
+
+  const handleDiscardDialogDismiss = () => {
+    setDiscardDialogOpen(false)
+    setRowToRemoveId(null)
+  }
+
+  const handleAddDialogErrorDismiss = () => {
+    setAddDialogErrorOpen(false)
+  }
+
+  const processRowUpdate = (newRow: GridRowModel) => {
+    const updatedRow = { ...newRow, isNew: false }
+    setRows(rows.map((row) => (row.id === newRow.id ? updatedRow : row)))
+    return updatedRow
+  }
+
+  const handleRowModesModelChange = (newRowModesModel: GridRowModesModel) => {
+    setRowModesModel(newRowModesModel)
+  }
+
+  //   const renderEditCell = (params: any) => (
+  //     <TextField
+  //       size="small"
+  //       variant="outlined"
+  //       InputLabelProps={{ shrink: false }}
+
+  //       value={params.value as string}
+  //       onChange={(e) =>
+  //         params.api.setEditCellValue({
+  //           id: params.id,
+  //           field: params.field,
+  //           value: e.target.value,
+  //         })
+  //       }
+  //       sx={{
+  //         borderRadius: "0px",
+  //         border: "1px solid rgba(33,150,243,1)",
+  //         boxShadow: "0px 3px 1px -2px rgba(0,0,0,0.2)",
+  //         ...(params.field === 'name' && { border: "1px solid rgba(33,150,243,1) " }),
+  //         ...(params.field === 'gender' && { border: "1px solid rgba(33,150,243,1)" }),
+  //         ...(params.field === 'address' && { border: "1px solid rgba(33,150,243,1)" }),
+  //         ...(params.field === 'mobileno' && { border: "1px solid rgba(33,150,243,1)" }),
+  //         ...(params.field === 'dob' && { border: "1px solid rgba(33,150,243,1)" }),
+  //         ...(params.field === 'age' && { border: "1px solid rgba(33,150,243,1)" }),
+  //       }}
+  //     />
+  //   );
+
+  const calculateAge = (dob: string | Date) => {
+    const currentDate = new Date()
+    const birthDate = new Date(dob)
+    let age = currentDate.getFullYear() - birthDate.getFullYear()
+
+    // Adjust age if birthday hasn't occurred yet this year
+    if (
+      currentDate.getMonth() < birthDate.getMonth() ||
+      (currentDate.getMonth() === birthDate.getMonth() &&
+        currentDate.getDate() < birthDate.getDate())
+    ) {
+      age--
+    }
+
+    return age
+  }
 
   const handleMobileNoChange = (
     value: string,
-    params: GridRenderCellParams<IRowData>
+    params: GridRenderCellParams<IRowData>,
   ) => {
-    const mobNumberRegex = /^\+?\d+$/;
+    const mobNumberRegex = /^\+?\d+$/
 
-    if (
-      (value.length < 10 || value.length > 10) &&
-      mobNumberRegex.test(value)
-    ) {
-      setmobNumberError(null);
+    if (value.length === 10 && mobNumberRegex.test(value)) {
+      setmobNumberError(null)
 
-      const formattedNumber = value.replace(
-        /(\d{3})(\d{3})(\d{4})/,
-        "+$1 - $2 - $3"
-      );
+      const formattedNumber = `+${value.slice(0, 3)} - ${value.slice(3, 6)} - ${value.slice(6)}`
 
       params.api.setEditCellValue({
         id: params.id,
         field: params.field!,
         value: formattedNumber,
-      });
+      })
     } else {
-      setmobNumberError("Please enter a valid Mobile number");
+      setmobNumberError('Please enter a valid Mobile number')
     }
-  };
+  }
 
   const columns: GridColDef[] = [
     {
-      field: "id",
-      headerName: "ID",
-      headerClassName: "user-details",
+      field: 'id',
+      headerName: 'ID',
       width: 137,
       sortable: false,
+      headerClassName: 'user-details',
     },
-
     {
-      field: "name",
-      headerName: "Name",
-      headerClassName: "user-details",
+      field: 'name',
+      headerName: 'Name',
       width: 135,
       editable: true,
+      headerClassName: 'user-details',
 
       renderEditCell: (params) => (
         <TextField
@@ -196,58 +355,66 @@ export default function DataGrids() {
             })
           }
           sx={{
-            // borderRadius: "0px",
-            border: "1px solid rgba(33,150,243,1)",
-            boxShadow: "0px 3px 1px -2px rgba(0,0,0,0.2)",
+            borderRadius: '0px',
+            border: '1px solid rgba(33,150,243,1)',
+            boxShadow: '0px 3px 1px -2px rgba(0,0,0,0.2)',
           }}
         />
       ),
     },
 
     {
-      field: "gender",
-      headerName: "Gender",
-      headerClassName: "user-details",
-      sortable: false,
+      field: 'gender',
+      headerName: 'Gender',
+      headerClassName: 'user-details',
       width: 137,
+      sortable: false,
       editable: true,
+
       renderEditCell: (params) => {
         const isInEditMode =
-          rowModesModel[params.id]?.mode === GridRowModes.Edit;
+          rowModesModel[params.id]?.mode === GridRowModes.Edit
         if (isInEditMode) {
           return (
             <>
               <Select
-                value={(params.value as string) || ""}
+                value={(params.value as string) || ''}
                 onChange={(e) => {
                   params.api.setEditCellValue({
                     id: params.id,
-                    field: "gender",
+                    field: 'gender',
                     value: e.target.value,
-                  });
+                  })
                 }}
                 displayEmpty
-                inputProps={{ "aria-label": "Without label" }}
+                inputProps={{ 'aria-label': 'Without label' }}
                 size="small"
                 fullWidth
+                sx={{
+                  borderRadius: '0px',
+                  border: '1px solid rgba(33,150,243,1)',
+                  boxShadow: '0px 3px 1px -2px rgba(0,0,0,0.2)',
+                }}
               >
-                <MenuItem value={"male"}>Male</MenuItem>
-                <MenuItem value={"female"}>Female</MenuItem>
-                <MenuItem value={"other"}>Other</MenuItem>
+                <MenuItem value={'male'}>Male</MenuItem>
+                <MenuItem value={'female'}>Female</MenuItem>
+                <MenuItem value={'other'}>Other</MenuItem>
               </Select>
             </>
-          );
+          )
         }
       },
     },
     {
-      field: "address",
-      headerName: "Address",
-      headerClassName: "user-details",
+      field: 'address',
+      headerName: 'Address',
       sortable: false,
       width: 137,
+      headerClassName: 'user-details',
+      align: 'left',
+      headerAlign: 'left',
       editable: true,
-
+      // renderEditCell
       renderEditCell: (params) => (
         <TextField
           size="small"
@@ -262,21 +429,21 @@ export default function DataGrids() {
             })
           }
           sx={{
-            borderRadius: "0px",
-            border: "1px solid rgba(33,150,243,1)",
-            boxShadow: "0px 3px 1px -2px rgba(0,0,0,0.2)",
+            borderRadius: '0px',
+            border: '1px solid rgba(33,150,243,1)',
+            boxShadow: '0px 3px 1px -2px rgba(0,0,0,0.2)',
           }}
         />
       ),
     },
     {
-      field: "mobileNo",
-      headerName: "Mobile No:",
-      headerClassName: "user-details",
+      field: 'mobileno',
+      headerName: 'Mobile No',
       sortable: false,
-      type: "string",
-      headerAlign: "left",
       width: 135,
+      headerClassName: 'user-details',
+      align: 'left',
+      headerAlign: 'left',
       editable: true,
 
       renderEditCell: (params) => (
@@ -288,15 +455,17 @@ export default function DataGrids() {
             value={params.value as string}
             onChange={(e) => handleMobileNoChange(e.target.value, params)}
             sx={{
-              borderRadius: "5px",
+              borderRadius: '5px',
               border: mobNumberError
-                ? "2px solid red"
-                : "1px solid rgba(33,150,243,1)",
-              boxShadow: "0px 3px 1px -2px rgba(0,0,0,0.2)",
+                ? '2px solid red'
+                : '1px solid rgba(33,150,243,1)',
+              boxShadow: '0px 3px 1px -2px rgba(0,0,0,0.2)',
             }}
           />
           {mobNumberError && (
-            <div style={{ color: "red", fontSize: "12px" }}>
+            <div
+              style={{ color: 'red', fontSize: '9px', whiteSpace: 'pre-wrap' }}
+            >
               {mobNumberError}
             </div>
           )}
@@ -304,19 +473,19 @@ export default function DataGrids() {
       ),
     },
     {
-      field: "dob",
-      headerName: "Date of Birth",
-      headerClassName: "user-details",
-      headerAlign: "left",
-      type: "date",
+      field: 'dob',
+      headerName: 'Date of Birth',
+      headerClassName: 'user-details',
+      headerAlign: 'left',
+      type: 'date',
       width: 175,
       editable: true,
       valueGetter: (params) => {
-        return params.row.dob ? new Date(params.row.dob) : null;
+        return params.row.dob ? new Date(params.row.dob) : null
       },
       renderEditCell: (params) => {
         const isInEditMode =
-          rowModesModel[params.id]?.mode === GridRowModes.Edit;
+          rowModesModel[params.id]?.mode === GridRowModes.Edit
 
         if (isInEditMode) {
           return (
@@ -324,349 +493,203 @@ export default function DataGrids() {
               variant="outlined"
               size="small"
               InputLabelProps={{ shrink: false }}
-              value={params.row.dob ? params.row.dob.split("T")[0] : ""}
+              value={
+                params.row.dob instanceof Date
+                  ? format(params.row.dob, 'yyyy-MM-dd')
+                  : ''
+              }
               type="date"
               fullWidth
-              onChange={(e) =>
+              onChange={(e) => {
+                const selectedDate = new Date(e.target.value)
                 params.api.setEditCellValue({
                   id: params.id,
-                  field: "dob",
-                  value: e.target.value,
+                  field: 'dob',
+                  value: selectedDate,
                 })
-              }
+              }}
               sx={{
-                borderRadius: "0px",
-                border: "1px solid rgba(33,150,243,1)",
-                boxShadow: "0px 3px 1px -2px rgba(0,0,0,0.2)",
+                borderRadius: '0px',
+                border: '1px solid rgba(33,150,243,1)',
+                boxShadow: '0px 3px 1px -2px rgba(0,0,0,0.2)',
               }}
             />
-          );
+          )
         }
-      },
-      renderCell: (params) => {
-        const dob = params.row.dob;
-        if (dob) {
-          const formattedDate = new Date(dob).toLocaleDateString();
-          return formattedDate;
-        }
-        return null;
+        return (
+          <div>
+            {params.row.dob instanceof Date
+              ? format(params.row.dob, 'dddd yyyy MMMM dd')
+              : ''}
+          </div>
+        )
       },
     },
-    // ...
-
     {
-      field: "age",
-      headerName: "Age",
-      headerClassName: "user-details",
-      sortable: false,
-      headerAlign: "left",
+      field: 'age',
+      headerName: 'Age',
+      type: 'number',
       width: 101,
-      editable: true,
+      sortable: false,
+      headerClassName: 'user-details',
+      align: 'left',
+      headerAlign: 'left',
+      editable: false,
+      valueGetter: (params) => calculateAge(params.row.dob),
       renderEditCell: (params) => {
-        const isInEditMode =
-          rowModesModel[params.id]?.mode === GridRowModes.Edit;
+        const age = calculateAge(params.row.dob)
 
-        const age =
-          params.value !== null && params.value !== undefined
-            ? params.value.toString()
-            : "";
-
-        const dob = params.row.dob;
-        if (dob) {
-          const today = new Date();
-          const birthDate = new Date(dob);
-          const age = today.getFullYear() - birthDate.getFullYear();
-        }
-
-        const showErrorMessage = age !== "" && age < 18;
-
-        if (isInEditMode) {
-          return (
-            <div>
-              <TextField
-                variant="outlined"
-                size="small"
-                InputLabelProps={{ shrink: false }}
-                error={showErrorMessage}
-                value={age !== undefined ? age.toString() : ""}
-              />
-            </div>
-          );
-        }
-      },
-      renderCell: (params) => {
-        const dob = params.row.dob;
-        if (dob) {
-          const today = new Date();
-          const birthDate = new Date(dob);
-          const age = today.getFullYear() - birthDate.getFullYear();
-          if (age < 18) {
-            return (
-              <TextField
-                variant="outlined"
-                size="small"
-                InputLabelProps={{ shrink: false }}
-                value={age !== undefined ? age.toString() : ""}
-              />
-            );
-          }
-          return age;
-        }
-        return null;
+        return (
+          <TextField
+            size="small"
+            variant="outlined"
+            InputLabelProps={{ shrink: false }}
+            value={age.toString()}
+            sx={{
+              borderRadius: '0px',
+              border:
+                age >= 18 ? '1px solid rgba(33,150,243,1)' : '1px solid red',
+              boxShadow: '0px 3px 1px -2px rgba(0,0,0,0.2)',
+            }}
+          />
+        )
       },
     },
 
     {
-      field: "action",
-      headerName: "Action",
-      type: "actions",
-      headerClassName: "user-details",
-      headerAlign: "left",
-      sortable: false,
+      field: 'actions',
+      type: 'actions',
+      headerName: 'Actions',
+      headerClassName: 'user-details',
       width: 190,
-
-      getActions: ({ id }) => {
-        const isInEditMode = rowModesModel[id]?.mode === GridRowModes.Edit;
-
+      cellClassName: 'actions',
+      getActions: ({ id, row }) => {
+        const isInEditMode = rowModesModel[id]?.mode === GridRowModes.Edit
         if (isInEditMode) {
+          if (row.isNew) {
+            return [
+              <div
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  marginTop: '25px',
+                  gap: '5px',
+                }}
+              >
+                <Button
+                  variant="outlined"
+                  size="small"
+                  style={{ width: 'auto' }}
+                  onClick={handleSaveClick(id)}
+                >
+                  Add
+                </Button>
+                <Button
+                  variant="outlined"
+                  size="small"
+                  color="error"
+                  style={{ width: 'auto' }}
+                  onClick={handleCancelClick(id)}
+                >
+                  Discard Changes
+                </Button>
+                ,
+              </div>,
+            ]
+          } else {
+            return [
+              <div
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  marginTop: '25px',
+                  gap: '5px',
+                }}
+              >
+                <Button
+                  variant="outlined"
+                  size="small"
+                  style={{ width: 'auto' }}
+                  onClick={handleUpdateClick(id)}
+                >
+                  Update
+                </Button>
+                <Button
+                  variant="outlined"
+                  size="small"
+                  color="error"
+                  style={{ width: 'auto' }}
+                  onClick={handleCancelClick(id)}
+                >
+                  Discard Changes
+                </Button>
+                ,
+              </div>,
+            ]
+          }
+        } else {
           return [
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                marginTop: "25px",
-                gap: "5px",
-              }}
+            <Button
+              variant="outlined"
+              size="small"
+              onClick={handleEditClick(id)}
             >
-              <Button
-                variant="outlined"
-                size="small"
-                style={{ width: "auto" }}
-                onClick={handleSaveClick(id)}
-              >
-                Add
-              </Button>
-              <Button
-                variant="outlined"
-                size="small"
-                color="error"
-                style={{ width: "auto" }}
-                onClick={handleCancelClick(id)}
-              >
-                Discard Changes
-              </Button>
-              ,
-            </div>,
-          ];
+              Edit
+            </Button>,
+
+            <Button
+              variant="outlined"
+              size="small"
+              color="error"
+              onClick={handleDeleteClick(id)}
+            >
+              Remove
+            </Button>,
+          ]
         }
-
-        return [
-          <Button variant="outlined" size="small" onClick={handleEditClick(id)}>
-            Edit
-          </Button>,
-
-          <Button
-            variant="outlined"
-            size="small"
-            color="error"
-            onClick={handleDeleteClick(id)}
-          >
-            Remove
-          </Button>,
-        ];
       },
     },
-  ];
-
-  const handleEditClick = (id: GridRowId) => () => {
-    setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.Edit } });
-  };
-
-  const handleSaveClick = (id: GridRowId) => () => {
-    const editedRowIndex = rows.findIndex((row) => row.id === id);
-    if (editedRowIndex !== -1) {
-      const updatedRows = [...rows];
-      updatedRows[editedRowIndex] = { ...rows[editedRowIndex], isNew: false };
-      setRows(updatedRows);
-    }
-
-    setIsEditOperation(rowModesModel[id]?.mode === GridRowModes.Edit);
-    setOpenSaveDialog(true);
-    setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.View } });
-
-    setRows((oldRows) => {
-      const editedRow = oldRows.find((row) => row.id === id);
-      const updatedRows = oldRows.filter((row) => row.id !== id);
-      return [...updatedRows, editedRow!];
-      //return updatedRows;
-    });
-  };
-  const handleCloseSaveDialog = () => {
-    // Close the Save dialog and reset the state
-    setOpenSaveDialog(false);
-    setIsEditOperation(false); // Reset the edit operation state
-  };
-
-  const handleDeleteClick = (id: GridRowId) => () => {
-    // setRows(rows.filter((row) => row.id !== id));
-    setRowToRemoveId(id);
-    setRemoveDialogOpen(true);
-  };
-
-  const handleRemoveDialogConfirm = () => {
-    if (rowToRemoveId !== null) {
-      setRows(rows.filter((row) => row.id !== rowToRemoveId));
-      setStudentRemoved(true);
-    }
-    setRemoveDialogOpen(false);
-  };
-
-  const handleRemoveDialogDismiss = () => {
-    setRemoveDialogOpen(false);
-    setRowToRemoveId(null);
-  };
-
-  const handleCancelClick = (id: GridRowId) => () => {
-    setOpenDiscardDialog(true);
-    setRowModesModel({
-      ...rowModesModel,
-      [id]: { mode: GridRowModes.View, ignoreModifications: true },
-    });
-
-    const editedRow = rows.find((row) => row.id === id);
-    if (editedRow!.isNew) {
-      setRows(rows.filter((row) => row.id !== id));
-    }
-  };
-
-  const handleCloseDiscardDialog = () => {
-    // Close the Discard dialog and reset the state
-    setOpenDiscardDialog(false);
-  };
-
-  const processRowUpdate = (newRow: GridRowModel) => {
-    const updatedRow = { ...newRow, isNew: false } as IRowData;
-    setRows((oldRows) =>
-      oldRows.map((row) => (row.id === newRow.id ? updatedRow : row))
-    );
-    // setRows(rows.map((row) => (row.id === newRow.id ? updatedRow : row)));
-    return updatedRow;
-  };
-
-  const handleRowModesModelChange = (newRowModesModel: GridRowModesModel) => {
-    setRowModesModel(newRowModesModel);
-
-    const inEditMode = Object.values(newRowModesModel).some(
-      (rowMode) => rowMode.mode === GridRowModes.Edit
-    );
-    setIsAnyRowInEditMode(inEditMode);
-  };
-
-  function EditToolbar(props: IEditToolbarProps) {
-    const { setRows, setRowModesModel } = props;
-
-    const handleAddNew = () => {
-      const newId = Math.max(...rows.map((row) => row.id)) + 1;
-
-      const newRow = {
-        id: newId,
-        name: "",
-        gender: "",
-        address: "",
-        mobileNo: null,
-        dob: null,
-        age: null,
-        Action: "Edit",
-      };
-
-      setRowModesModel((prevRowModesModel) => ({
-        ...prevRowModesModel,
-        [newId]: { mode: GridRowModes.Edit, fieldToFocus: "name" },
-      }));
-
-      setRows((prevRows) => [newRow, ...prevRows]);
-    };
-
-    return (
-      <div
-        style={{
-          display: "flex",
-          padding: "6px 16px 6px 16px",
-          justifyContent: "flex-end",
-        }}
-      >
-        <GridToolbarContainer>
-          <Button variant="contained" size="medium" onClick={handleAddNew}>
-            ADD NEW
-          </Button>
-        </GridToolbarContainer>
-      </div>
-    );
-  }
+  ]
 
   return (
     <div
       style={{
-        minWidth: "1500px",
-        justifyContent: "center",
+        minWidth: '1500px',
+        justifyContent: 'center',
       }}
     >
       <Box
         sx={{
-          height: "fit-content",
-          width: "80%",
-          margin: "auto",
-          display: "flex",
-          flexDirection: "column",
-
-          "& .user-details": {
-            backgroundColor: "rgba(33, 150, 243, 0.08)",
+          height: 'fit-content',
+          width: '80%',
+          margin: 'auto',
+          display: 'flex',
+          flexDirection: 'column',
+          '& .actions': {
+            color: 'text.secondary',
+          },
+          '& .textPrimary': {
+            color: 'text.primary',
+          },
+          '& .user-details': {
+            backgroundColor: 'rgba(33, 150, 243, 0.08)',
           },
         }}
       >
         <div
           style={{
-            display: "flex",
-            flexDirection: "column",
-            gap: "4px",
-            padding: "16px",
-            fontSize: "24px",
-            fontWeight: "400",
-            fontFamily: "Roboto,sans-serif",
-            lineHeight: "32.02px",
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '4px',
+            padding: '16px',
+            fontSize: '24px',
+            fontWeight: '400',
+            fontFamily: 'Roboto,sans-serif',
+            lineHeight: '32.02px',
           }}
         >
           User Details
         </div>
-
-        {openSaveDialog && (
-          <DialogBox
-            open={openSaveDialog}
-            onClose={handleCloseSaveDialog}
-            dialogContent={
-              isEditOperation
-                ? "Student Details updated successfully"
-                : "A new student added successfully"
-            }
-            buttonLabel="OK"
-            buttonAction={handleCloseSaveDialog}
-          />
-        )}
-
-        {openDiscardDialog && (
-          <DialogBox
-            open={openDiscardDialog}
-            onClose={handleCloseDiscardDialog}
-            dialogContent="Discard changes?"
-            buttonLabel="CONFIRM"
-            buttonAction={() => {
-              handleCloseDiscardDialog();
-            }}
-            secondary={true}
-            secondaryButtonLabel="DISMISS"
-            secondaryButtonAction={handleCloseDiscardDialog}
-          />
-        )}
 
         {removeDialogOpen && (
           <DialogBox
@@ -681,27 +704,63 @@ export default function DataGrids() {
           />
         )}
 
+        {updateDialogOpen && (
+          <DialogBox
+            open={updateDialogOpen}
+            onClose={handleUpdateDialogDismiss}
+            dialogContent="Student Details updated successfully"
+            buttonLabel="OK"
+            buttonAction={handleUpdateDialogDismiss}
+          />
+        )}
+
+        {addDialogOpen && (
+          <DialogBox
+            open={addDialogOpen}
+            onClose={handleAddDialogDismiss}
+            dialogContent="A new student added successfully"
+            buttonLabel="OK"
+            buttonAction={handleAddDialogDismiss}
+          />
+        )}
+
+        {addDialogErrorOpen && (
+          <DialogBox
+            open={addDialogErrorOpen}
+            onClose={handleAddDialogErrorDismiss}
+            dialogContent="Mandatory fields missing"
+            buttonLabel="KEEP EDITING"
+            buttonAction={handleAddDialogErrorDismiss}
+          />
+        )}
+
+        {discardDialogOpen && (
+          <DialogBox
+            open={discardDialogOpen}
+            onClose={handleDiscardDialogDismiss}
+            dialogContent="Discard changes?"
+            buttonLabel="CONFIRM"
+            buttonAction={handleDiscardDialogConfirm}
+            secondary={true}
+            secondaryButtonLabel="DISMISS"
+            secondaryButtonAction={handleDiscardDialogDismiss}
+          />
+        )}
+
         <DataGrid
           rows={rows}
           columns={columns}
           editMode="row"
           rowModesModel={rowModesModel}
           onRowModesModelChange={handleRowModesModelChange}
+          onRowEditStop={handleRowEditStop}
           processRowUpdate={processRowUpdate}
-          initialState={{
-            pagination: {
-              paginationModel: {
-                pageSize: 5,
-              },
-            },
-          }}
           slots={{
             toolbar: EditToolbar,
           }}
           slotProps={{
-            toolbar: { setRows, setRowModesModel, rowModesModel },
+            toolbar: { setRows, setRowModesModel },
           }}
-          pageSizeOptions={[5, 10, 15]}
           checkboxSelection
           disableRowSelectionOnClick
           getRowId={(row) => row.id}
@@ -709,5 +768,5 @@ export default function DataGrids() {
         />
       </Box>
     </div>
-  );
+  )
 }

@@ -1,19 +1,19 @@
-import React from "react";
-import Button from "@mui/material/Button";
-import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
-import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
+import React from 'react'
+import Button from '@mui/material/Button'
+import Dialog from '@mui/material/Dialog'
+import DialogActions from '@mui/material/DialogActions'
+import DialogContent from '@mui/material/DialogContent'
+import DialogContentText from '@mui/material/DialogContentText'
 
 interface CustomDialogBoxProps {
-  open: boolean;
-  onClose: () => void;
-  dialogContent: string;
-  buttonLabel: string;
-  buttonAction: () => void;
-  secondary?: boolean;
-  secondaryButtonLabel?: string;
-  secondaryButtonAction?: () => void;
+  open: boolean
+  onClose: () => void
+  dialogContent: string
+  buttonLabel: string
+  buttonAction: () => void
+  secondary?: boolean | null
+  secondaryButtonLabel?: string | null
+  secondaryButtonAction?: () => void
 }
 
 export default function DialogBox({
@@ -37,10 +37,10 @@ export default function DialogBox({
           <DialogContentText
             id="alert-dialog-description"
             sx={{
-              color: "#000000",
-              width: "300px",
-              height: "8px",
-              padding: "8px 20px 8px 10px",
+              color: '#000000',
+              width: '300px',
+              height: '8px',
+              padding: '8px 20px 8px 10px',
             }}
           >
             {dialogContent}
@@ -49,7 +49,7 @@ export default function DialogBox({
         <DialogActions>
           {secondary ? (
             <Button
-              style={{ color: "#9C27B0" }}
+              style={{ color: '#9C27B0' }}
               onClick={secondaryButtonAction}
             >
               {secondaryButtonLabel}
@@ -61,5 +61,5 @@ export default function DialogBox({
         </DialogActions>
       </Dialog>
     </React.Fragment>
-  );
+  )
 }

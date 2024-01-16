@@ -5,6 +5,6 @@ import DataGrids from '../../components/DataGrids/DataGrids'
 export default function Grid() {
   return (
     // <div><TopBar/></div>
-    <DataGrids/>
+    <DataGrids />
   )
 }
