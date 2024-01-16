@@ -40,6 +40,16 @@ const initialState: initialDataType = {
             birthday: randomCreatedDate(),
             age: 30,
         },
+        {
+            id: 3,
+            uid: 3,
+            name: 'sahasaka',
+            gender: 'Male',
+            address: 'kksassaf,ksksd,sdsa',
+            mobile: '0716272787',
+            birthday: randomCreatedDate(),
+            age: 30,
+        },
     ],
 }
 
