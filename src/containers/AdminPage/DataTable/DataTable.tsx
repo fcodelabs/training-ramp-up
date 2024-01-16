@@ -5,10 +5,10 @@ import styled from 'styled-components';
 import "@fontsource/roboto";
 import { Box } from '@mui/material';
 import Typography from '@mui/material/Typography';
+import generateId from '../../../utility/generateId';
+import { useSelector, useDispatch } from 'react-redux';
+import { RootState } from '../../../redux/store';
 
-const generateId = () => {
-    return Math.floor(Math.random() * 1000);
-};
 
 const handleEdit = () => {
     console.log('edit');
@@ -79,7 +79,7 @@ const StyledAddButton = styled(Button)`
 
 const StyledDataTableBox = styled(Box)`
   &&& {
-    width: 1152px;
+    width: auto;
     height: auto;
     border-radius: 4px;
     background: #FFFFFF;
@@ -120,26 +120,20 @@ const columns: GridColDef[] = [
     },
 ];
 
-const rows = [
-    { id: generateId(), name: 'Snow', age: 35, gender: 'Male', address: 'Delhi', mobile: '1234567890', dob: 'Sun Dec 03 2000' },
-    { id: generateId(), name: 'Lannister', age: 42, gender: 'Male', address: 'Delhi', mobile: '1234567890', dob: 'Sun Dec 03 2000' },
-    { id: generateId(), name: 'Sersi', age: 45, gender: 'Male', address: 'Delhi', mobile: '1234567890', dob: 'Sun Dec 03 2000' },
-    { id: generateId(), name: 'Stark', age: 16, gender: 'Male', address: 'Delhi', mobile: '1234567890', dob: 'Sun Dec 03 2000' },
-    { id: generateId(), name: 'Targaryen', age: null, gender: 'Male', address: 'Delhi', mobile: '1234567890', dob: 'Sun Dec 03 2000' },
-    { id: generateId(), name: 'Melisandre', age: 150, gender: 'Male', address: 'Delhi', mobile: '1234567890', dob: 'Sun Dec 03 2000' },
+// const rows = [
+    // { id: generateId(), name: 'Snow', age: 35, gender: 'Male', address: 'Delhi', mobile: '1234567890', dob: 'Sun Dec 03 2000' },
+    // { id: generateId(), name: 'Lannister', age: 42, gender: 'Male', address: 'Delhi', mobile: '1234567890', dob: 'Sun Dec 03 2000' },
+    // { id: generateId(), name: 'Sersi', age: 45, gender: 'Male', address: 'Delhi', mobile: '1234567890', dob: 'Sun Dec 03 2000' },
+    // { id: generateId(), name: 'Stark', age: 16, gender: 'Male', address: 'Delhi', mobile: '1234567890', dob: 'Sun Dec 03 2000' },
+    // { id: generateId(), name: 'Targaryen', age: null, gender: 'Male', address: 'Delhi', mobile: '1234567890', dob: 'Sun Dec 03 2000' },
+    // { id: generateId(), name: 'Melisandre', age: 150, gender: 'Male', address: 'Delhi', mobile: '1234567890', dob: 'Sun Dec 03 2000' },
 
-];
+// ];
 
 export default function DataTable() {
+    const rows = useSelector((state: RootState) => state.student.students);
     return (
-        <StyledDataTableBox sx={{
-            '& .custom-header': {
-                backgroundColor: '#2196F330'
-            },
-            '& .MuiDataGrid-root .MuiDataGrid-columnHeaderCheckbox': {
-                backgroundColor: '#2196F330'
-            },
-        }}>
+        <StyledDataTableBox>
             <StyledGridTitle variant="h4">User Details</StyledGridTitle>
             <StyledButtonBox>
                 <StyledAddButton variant="contained">ADD NEW</StyledAddButton>
@@ -152,12 +146,22 @@ export default function DataTable() {
                     '&.MuiDataGrid-root': {
                         border: 'none',
                     },
-                    '& .custom-header': {
-                        backgroundColor: '#2196F330'
+
+                    "& .MuiDataGrid-columnHeaders": {
+                        fontWeight: 400,
+                        borderRadius: "var(--none, 0px)",
+                        borderBottom: "1px solid var(--divider, rgba(0, 0, 0, 0.12))",
+                        borderLeft: "var(--none, 0px) solid var(--divider, rgba(0, 0, 0, 0.12))",
+                        borderRight: "var(--none, 0px) solid var(--divider, rgba(0, 0, 0, 0.12))",
+                        borderTop: "var(--none, 0px) solid var(--divider, rgba(0, 0, 0, 0.12))",
+                        background: "var(--primary-selected, rgba(33, 150, 243, 0.08))",
                     },
-                    '& .MuiDataGrid-root .MuiDataGrid-columnHeaderCheckbox': {
-                        backgroundColor: '#2196F330'
+                    "& .MuiDataGrid-sortIcon": {
+                        opacity: 'inherit !important',
                     },
+                    "& .MuiDataGrid-iconButtonContainer": {
+                        visibility: 'visible',
+                    }
                 }}
                 rows={rows}
                 columns={columns}
