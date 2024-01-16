@@ -400,6 +400,7 @@ const DataGridTable = () => {
             >
               <DatePicker
                 value={dateValue}
+                disableFuture
                 onChange={(newValue) => {
                   params.api.setEditCellValue({
                     id: params.id,
@@ -468,7 +469,7 @@ const DataGridTable = () => {
       type: "actions",
       headerAlign: "left",
       align: "left",
-      headerName: "Actions",
+      headerName: "Action",
       width: 215,
       cellClassName: "actions",
       getActions: ({ id }) => {
@@ -525,7 +526,7 @@ const DataGridTable = () => {
                   fontWeight: 500,
                 }}
               >
-                Cancle
+                Cancel
               </Button>
             </Stack>,
           ];
