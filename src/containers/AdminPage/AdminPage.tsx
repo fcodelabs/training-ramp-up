@@ -46,18 +46,29 @@ const StyledDataBox = styled(Box)`
         display: flex;
         justify-content: center;
         align-items: center;
-        height: 100vh;
-        width: 100vw;
+        height: 100%;
+        width: 100%;
+        margin-top: 80px;
+        margin-bottom: 50px;
         
+    }
+    `;
+
+const StyledMainDiv = styled.div`
+    &&& {
+        display: flex;
+        flex-direction: column;
         
+        height: 100%;
+        width: 100%;
     }
     `;
 
 
 function AdminPage() {
     return (
-        <div>
 
+        <StyledMainDiv>
             <StyledHeaderBox>
                 <StyledTypography variant='h5' >Ramp Up Project</StyledTypography>
                 <StyledLoginButton variant="outlined">LOGIN</StyledLoginButton>
@@ -66,7 +77,7 @@ function AdminPage() {
                 <DataTable />
             </StyledDataBox>
 
-        </div>
+        </StyledMainDiv>
     );
 };
 

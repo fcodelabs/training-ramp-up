@@ -9,6 +9,7 @@ interface IStudent {
     address: string;
     mobile: string;
     dob: Date;
+    isNew?: boolean;
 }
 
 interface IStudentState {
@@ -28,13 +29,13 @@ const studentSlice = createSlice({
                 dob: new Date(),
                 age: 20,
             },
-            { id: generateId(), name: 'Lannister', age: 42, gender: 'Male', address: 'Delhi', mobile: '1234567890', dob: 'Sun Dec 03 2000' },
-            { id: generateId(), name: 'Snow', age: 35, gender: 'Male', address: 'Kolkata', mobile: '1234567890', dob: 'Sun Dec 03 2000' },
-            { id: generateId(), name: 'Lannister', age: 42, gender: 'Male', address: 'Punjab', mobile: '1234567890', dob: 'Sun Dec 03 2000' },
-            { id: generateId(), name: 'Sersi', age: 45, gender: 'Female', address: 'Goa', mobile: '1234567890', dob: 'Sun Dec 03 2000' },
-            { id: generateId(), name: 'Stark', age: 16, gender: 'Male', address: 'Maduray', mobile: '1234567890', dob: 'Sun Dec 03 2000' },
-            { id: generateId(), name: 'Daenerys', age: 20, gender: 'Female', address: 'Gujaraat', mobile: '1234567890', dob: 'Sun Dec 03 2000' },
-            { id: generateId(), name: 'Melisandre', age: 150, gender: 'Female', address: 'Chennai', mobile: '1234567890', dob: 'Sun Dec 03 2000' },
+            { id: generateId(), name: 'Lannister', age: 42, gender: 'Male', address: 'Delhi', mobile: '1234567890', dob: new Date(), isNew: false },
+            // { id: generateId(), name: 'Snow', age: 35, gender: 'Male', address: 'Kolkata', mobile: '1234567890', dob: 'Sun Dec 03 2000', isNew: false },
+            // { id: generateId(), name: 'Lannister', age: 42, gender: 'Male', address: 'Punjab', mobile: '1234567890', dob: 'Sun Dec 03 2000' , isNew: false},
+            // { id: generateId(), name: 'Sersi', age: 45, gender: 'Female', address: 'Goa', mobile: '1234567890', dob: 'Sun Dec 03 2000', isNew: false },
+            // { id: generateId(), name: 'Stark', age: 16, gender: 'Male', address: 'Maduray', mobile: '1234567890', dob: 'Sun Dec 03 2000', isNew: false },
+            // { id: generateId(), name: 'Daenerys', age: 20, gender: 'Female', address: 'Gujaraat', mobile: '1234567890', dob: 'Sun Dec 03 2000', isNew: false },
+            // { id: generateId(), name: 'Melisandre', age: 150, gender: 'Female', address: 'Chennai', mobile: '1234567890', dob: 'Sun Dec 03 2000', isNew: false },
         ]
     } as IStudentState,
     reducers: {
