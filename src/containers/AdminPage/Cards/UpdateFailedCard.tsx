@@ -37,7 +37,7 @@ const StyledTypography = styled(Typography)`
 `;
 const StyledConfirmButton = styled(Button)`
     &&& {
-        width: auto;
+        width: 58px;
         height: 24px;
         padding: 6px 8px;
         border-radius: 4px;
@@ -60,26 +60,26 @@ const StyledButtonBox = styled(Box)`
     }
 `;
 
-interface IFieldMissingCardProps {
-    onClick: () => void;
+interface IAddingSuccessCardProps {
+    onClose: () => void;
 }
 
-const FieldMissingCard: React.FC<IFieldMissingCardProps> = ({onClick}) => {
+const UpdateFailedCard: React.FC<IAddingSuccessCardProps> = ({ onClose }) => {
     return (
     
 
   <StyledDialogBox>
     <StyledTypographyBox>
     <StyledTypography>
-    Mandatory fields missing.
+    Cannot update student details. Please try again later.
     </StyledTypography>
     </StyledTypographyBox>
     <StyledButtonBox>
         
-        <StyledConfirmButton variant="text" onClick={onClick}>KEEP EDITING</StyledConfirmButton>
+        <StyledConfirmButton variant="text" onClick={onClose}>TRY AGAIN</StyledConfirmButton>
     </StyledButtonBox>
   </StyledDialogBox>
     );   
 };
 
-export default FieldMissingCard;
+export default UpdateFailedCard;
