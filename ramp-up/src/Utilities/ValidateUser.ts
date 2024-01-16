@@ -1,79 +1,93 @@
-import { GridRowModel } from "@mui/x-data-grid";
-import parsePhoneNumber from 'libphonenumber-js';
+import { GridRowModel } from '@mui/x-data-grid'
+import parsePhoneNumber from 'libphonenumber-js'
 
 const validateUser = (user: GridRowModel, requiredFields: string[]) => {
-    try{
-        // throw new Error("Error in validating user") ;
-    if (requiredFields.includes('name') && !validateName(user.name)) {
-        return false;
-    }
-    if (requiredFields.includes('age') && !validateAge(user.age)) {
-        return false;
-    }
-    if (requiredFields.includes('mobile') && !validateMobile(user.mobile)) {
-        return false;
-    }
-    if (requiredFields.includes('address') && !validateAddress(user.address)) {
-        return false;
-    }
-    if (requiredFields.includes('birthday') && !validateBirthday(user.birthday)) {
-        return false;
-    }}
-    catch(error){
-        throw new Error("Error in validating user") ;
+    console.log('validateUser', user)
+
+    try {
+        if (requiredFields.includes('name') && !validateName(user.name)) {
+            return false
+        }
+        if (requiredFields.includes('age') && !validateAge(user.age)) {
+            return false
+        }
+        if (requiredFields.includes('mobile') && !validateMobile(user.mobile)) {
+            return false
+        }
+        if (
+            requiredFields.includes('address') &&
+            !validateAddress(user.address)
+        ) {
+            return false
+        }
+        if (
+            requiredFields.includes('birthday') &&
+            !validateBirthday(user.birthday)
+        ) {
+            return false
+        }
+    } catch (error) {
+        throw new Error('Error in validating user')
     }
     return true
-};
+}
 
-const validateName = (name: string) => {
+const validateName = (name: Date | string | number) => {
     if (name === '') {
-        return false;
+        return false
     }
-    return true;
+    return true
 }
 
-const validateAge = (age: number) => {
-    if (age < 18) {
-        return false;
+const validateAge = (age: number | string | Date) => {
+    if (Number(age) < 18) {
+        return false
     }
-    return true;
+    return true
 }
 
-
-const validateAddress = (address: string) => {
+const validateAddress = (address: Date | string | number) => {
     if (address === '') {
-        return false;
+        return false
     }
-    return true;
-
+    return true
 }
-const validateMobile = (inputValue: string) => {
+
+const validateMobile = (inputValue: Date | string | number) => {
     try {
-        const phoneNumberObj = parsePhoneNumber(inputValue);
-        return (phoneNumberObj!.isValid());
+        const phoneNumberObj = parsePhoneNumber(String(inputValue))
+        return phoneNumberObj!.isValid()
     } catch (error) {
-        if (inputValue === undefined || inputValue === null || inputValue === '') {
-            return false;
+        if (
+            inputValue === undefined ||
+            inputValue === null ||
+            inputValue === ''
+        ) {
+            return false
         }
-        if (inputValue.length === 10 && inputValue.startsWith('0')  && /^\d+$/.test(inputValue)) {
-            return true;
+        if (
+            String(inputValue).length === 10 &&
+            String(inputValue).startsWith('0') &&
+            /^\d+$/.test(String(inputValue))
+        ) {
+            return true
         }
-        return false;
+        return false
     }
-};
-
-const validateBirthday = (birthday: Date) => {
-    if (birthday === null) {
-        return false;
-    }
-    return true;
 }
 
+const validateBirthday = (birthday: Date | string | number) => {
+    if (birthday === null) {
+        return false
+    }
+    return true
+}
 
-
-
-
-
-
-
-export { validateUser, validateName, validateAge, validateMobile, validateAddress, validateBirthday };
+export {
+    validateUser,
+    validateName,
+    validateAge,
+    validateMobile,
+    validateAddress,
+    validateBirthday,
+}
