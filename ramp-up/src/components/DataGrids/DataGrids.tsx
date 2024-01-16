@@ -93,6 +93,8 @@ export default function DataGrids() {
 
   const [mobNumberError, setmobNumberError] = useState<string | null>(null)
 
+  const[calculatedAge,setCalculatedAge]=React.useState(0)
+
   interface EditToolbarProps {
     setRows: (newRows: (oldRows: GridRowsProp) => GridRowsProp) => void
     setRowModesModel: (
@@ -287,12 +289,16 @@ export default function DataGrids() {
   //     />
   //   );
 
-  const calculateAge = (dob: string | Date) => {
-    const currentDate = new Date()
-    const birthDate = new Date(dob)
-    let age = currentDate.getFullYear() - birthDate.getFullYear()
 
-        return age
+  const calculateAge = (dob: string | Date) => {
+    if (dob) {
+      const currentDate = new Date()
+      const birthDate = new Date(dob)
+
+      let age = currentDate.getFullYear() - birthDate.getFullYear()
+      return age
+    }
+    return 0
   }
 
   const handleMobileNoChange = (
@@ -498,6 +504,7 @@ export default function DataGrids() {
                   field: 'dob',
                   value: selectedDate,
                 })
+                setCalculatedAge(calculateAge(selectedDate))
               }}
               sx={{
                 borderRadius: '0px',
@@ -529,13 +536,14 @@ export default function DataGrids() {
       valueGetter: (params) => calculateAge(params.row.dob),
       renderEditCell: (params) => {
         const age = calculateAge(params.row.dob)
+        console.log(params.row.dob)
 
         return (
           <TextField
             size="small"
             variant="outlined"
             InputLabelProps={{ shrink: false }}
-            value={age.toString()}
+            value={calculatedAge}
             sx={{
               borderRadius: '0px',
               border:
