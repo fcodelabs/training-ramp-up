@@ -38,6 +38,8 @@ import DiscardChangesCard from '../Cards/DiscardChangesCard';
 import AddingSuccessCard from '../Cards/AddingSuccessCard';
 import AddingFailedCard from '../Cards/AddingFailedCard';
 import LoadingErrorCard from '../Cards/LoadingErrorCard';
+import ConfirmRemoveCard from '../Cards/ConfirmRemoveCard';
+import RemoveSuccessCard from '../Cards/RemoveSuccessCard';
 
 
 
@@ -219,7 +221,24 @@ export default function DataTable() {
 
     const [showSuccessModal, setShowSuccessModal] = useState(false);
     const [showDiscardModal, setShowDiscardModal] = useState(false);
+    const [showRemoveConfirmModal, setShowRemoveConfirmModal] = useState(false);
 
+    const [showRemoveSuccessCard, setShowRemoveSuccessCard] = useState(false);
+
+    const [selectedRowId, setSelectedRowId] = useState<GridRowId | null>(null);
+
+    const handleConfirmRemove = (id: GridRowId | null) => {
+        if (id) {
+            setRows(rows.filter((row) => row.id !== id));
+            setShowRemoveConfirmModal(false);
+            setSelectedRowId(null);
+            // Show the RemoveSuccessCard
+            setShowRemoveSuccessCard(true);
+
+        }
+
+
+    };
 
 
     const handleRowEditStop: GridEventListener<'rowEditStop'> = (params, event) => {
@@ -240,7 +259,8 @@ export default function DataTable() {
     };
 
     const handleDeleteClick = (id: GridRowId) => () => {
-        setRows(rows.filter((row) => row.id !== id));
+        setSelectedRowId(id);
+        setShowRemoveConfirmModal(true);
     };
 
     // const handleCancelClick = (id: GridRowId) => () => {
@@ -767,9 +787,9 @@ export default function DataTable() {
                     <AddingSuccessCard onClose={() => setShowSuccessModal(false)} />
                 </Paper>
             </Modal>
-                
-                {/* Modal for Discard Changes */}
-                {showDiscardModal && (
+
+            {/* Modal for Discard Changes */}
+            {showDiscardModal && (
                 <Modal
                     open={showDiscardModal}
                     onClose={handleDismissDiscard}
@@ -783,13 +803,67 @@ export default function DataTable() {
                             left: '50%',
                             transform: 'translate(-50%, -50%)',
                             borderRadius: '12PX'
-                            
+
                         }}
                     >
                         <DiscardChangesCard
                             onConfirm={handleConfirmDiscard}
                             onDismiss={handleDismissDiscard}
                         />
+                    </Paper>
+                </Modal>
+            )}
+
+            {/* Modal for Confirm Remove */}
+            {showRemoveConfirmModal && (
+                <Modal
+                    open={showRemoveConfirmModal}
+                    onClose={() => {
+                        setShowRemoveConfirmModal(false);
+                        setSelectedRowId(null);
+                    }}
+                    aria-labelledby="discard-modal-title"
+                    aria-describedby="discard-modal-description"
+                >
+                    <Paper
+                        style={{
+                            position: 'absolute',
+                            top: '50%',
+                            left: '50%',
+                            transform: 'translate(-50%, -50%)',
+                            borderRadius: '12PX'
+
+                        }}
+                    >
+                        <ConfirmRemoveCard
+                            onConfirm={() => handleConfirmRemove(selectedRowId)}
+                            onDismiss={() => {
+                                setShowRemoveConfirmModal(false);
+                                setSelectedRowId(null);
+                            }}
+                        />
+                    </Paper>
+                </Modal>
+            )}
+
+            {/* Modal for Remove Success */}
+            {showRemoveSuccessCard && (
+                <Modal
+                    open={showRemoveSuccessCard}
+                    onClose={() => setShowRemoveSuccessCard(false)}
+                    aria-labelledby="remove-success-modal-title"
+                    aria-describedby="remove-success-modal-description"
+                >
+                    <Paper
+                        style={{
+                            position: 'absolute',
+                            top: '50%',
+                            left: '50%',
+                            transform: 'translate(-50%, -50%)',
+                            borderRadius: '12px',
+                        }}
+                    >
+                        <RemoveSuccessCard onClose={() => setShowRemoveSuccessCard(false)} />
                     </Paper>
                 </Modal>
             )}

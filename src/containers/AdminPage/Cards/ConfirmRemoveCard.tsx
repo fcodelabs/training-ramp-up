@@ -35,6 +35,23 @@ const StyledTypography = styled(Typography)`
     
     }
 `;
+
+const StyledDismissButton = styled(Button)`
+    &&& {
+        width: 58px;
+        height: 24px;
+        padding: 6px 8px;
+        border-radius: 4px;
+        color:#9C27B0;
+        font-family: Roboto;
+        font-weight: 500;
+        font-size: 14px;
+        line-height: 24px;
+        Letter-spacing: 0.4px;
+        gap: 8px;
+    }
+`;
+
 const StyledConfirmButton = styled(Button)`
     &&& {
         width: 58px;
@@ -60,26 +77,27 @@ const StyledButtonBox = styled(Box)`
     }
 `;
 
-interface IFieldMissingCardProps {
-    onClick: () => void;
+interface IDiscardChangesCardProps {
+    onConfirm: () => void;
+    onDismiss: () => void;
 }
 
-const FieldMissingCard: React.FC<IFieldMissingCardProps> = ({onClick}) => {
+const ConfirmRemoveCard: React.FC<IDiscardChangesCardProps>  = ({ onConfirm, onDismiss }) => {
     return (
     
 
   <StyledDialogBox>
     <StyledTypographyBox>
     <StyledTypography>
-    Mandatory fields missing.
+    Are you sure you want to remove this student?
     </StyledTypography>
     </StyledTypographyBox>
     <StyledButtonBox>
-        
-        <StyledConfirmButton variant="text" onClick={onClick}>KEEP EDITING</StyledConfirmButton>
+        <StyledDismissButton variant="text" onClick={onDismiss}>DISSMISS</StyledDismissButton>
+        <StyledConfirmButton variant="text" onClick={onConfirm}>CONFIRM</StyledConfirmButton>
     </StyledButtonBox>
   </StyledDialogBox>
     );   
 };
 
-export default FieldMissingCard;
+export default ConfirmRemoveCard;
