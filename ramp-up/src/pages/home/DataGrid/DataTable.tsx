@@ -45,7 +45,7 @@ const styles = {
     fontFeatureSettings:"'clig' off, 'liga' off",
   },
   addNewDiv:{
-    padding: "16px",
+    padding: "8px",
     display: "flex",
     justifyContent: "flex-end",
     alignItems: "center",
@@ -84,6 +84,7 @@ const theme = createTheme({
         },
       },
     },
+    
 });
 
 const StyledDatePicker = styled(DatePicker)<IStyledProps>(({ missing }) => ({
@@ -156,9 +157,13 @@ const StyledSelect = styled(Select)<IStyledProps>(({ missing }) => ({
 }));
 
 const StyledDataGrid = styled(DataGrid)((theme) => ({
-  '&.MuiDataGrid-root .MuiDataGrid-cell:focus': {
-    outline: 'none important!',
-},
+  "& .MuiDataGrid-columnHeader:focus-within, & .MuiDataGrid-columnHeader:focus":
+  {
+    outline: "none !important",
+  },
+  "& .MuiDataGrid-cell:focus-within, & .MuiDataGrid-cell:focus": {
+    outline: "none !important",
+  },
     "& .MuiDataGrid-columnHeaderTitle": {
         fontWeight: 400, 
     },
@@ -251,7 +256,8 @@ function DataTable(){
       type: 'number', 
       headerName: 'ID',
       sortable: false,
-      width:100 
+      align:'left',
+      headerAlign:'left',
     },
 
     { 
@@ -441,6 +447,8 @@ function DataTable(){
                     
                 }}
                 format="ddd MMM DD YYYY" 
+                maxDate={dayjs()}
+                // maxDate={new Date()}
               />
             </LocalizationProvider>
         );
@@ -481,7 +489,7 @@ function DataTable(){
       {
         field: 'actions',
         type: 'actions',
-        headerName: 'Actions',
+        headerName: 'Action',
         width: 200,
         cellClassName: 'actions',
         getActions: (params ) => {
@@ -685,10 +693,7 @@ function DataTable(){
         sx={{ '&, [class^=MuiDataGrid-root]': {
                    border: 'none' 
                   },
-
-              '&.MuiDataGrid-root .MuiDataGrid-cell:focus': {
-                    outline: 'none important!',
-                  },
+                 
               '& .MuiDataGrid-sortIcon': {
                 marginLeft: '20px', // Adjust as needed
               },
