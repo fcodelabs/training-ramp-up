@@ -7,13 +7,21 @@ export class StudentService {
   private studentRepository = AppDataSource.getRepository(Student);
 
   async getAllStudents() {
-    return this.studentRepository.find();
+    const students = await this.studentRepository.find();
+    if (!students) {
+      throw new Error("No student found");
+    }
+    return students;
   }
 
   async getStudentById(id: number) {
-    return this.studentRepository.findOne({
+    const student = await this.studentRepository.findOne({
       where: { id },
     });
+    if (!student) {
+      throw new Error("Student not found");
+    }
+    return student;
   }
 
   async createStudent(
@@ -43,9 +51,15 @@ export class StudentService {
     if (!studentToRemove) {
       throw new Error("Student not found");
     }
-
     await this.studentRepository.remove(studentToRemove);
-
     return "Student has been removed";
+  }
+
+  async updateStudent(id: number, student: Student) {
+    const updatedStudent = await this.studentRepository.update(id, student);
+    if (!updatedStudent.affected) {
+      throw new Error("Student not found");
+    }
+    return updatedStudent;
   }
 }
