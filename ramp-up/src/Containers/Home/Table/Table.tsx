@@ -1,5 +1,5 @@
 import Button from "@mui/material/Button";
-import React from "react";
+import React, { useEffect } from "react";
 import { useState } from "react";
 import {
   GridRowsProp,
@@ -28,12 +28,18 @@ import {
 } from "../../../Utilities/TableStyles";
 import GridActionsColumn from "./TableColumns/ActionColumn/ActionColumn";
 import { validateUser } from "../../../Utilities/ValidateUser";
-import { addUser, discardUser } from "../../../Redux/user/userSlice";
+import {
+  addUser,
+  discardUser,
+  fetchUsers,
+  setUsers,
+  updateRow,
+  updateUser,
+} from "../../../Redux/user/userSlice";
 import generateNewId from "../../../Utilities/generateRandomId";
 
 const Table = () => {
-  const initialRows: GridRowsProp = useAppSelector((state) => state.user.rows);
-  const [rows, setRows] = useState(initialRows);
+  const rows: GridRowsProp = useAppSelector((state) => state.user.rows);
   const [rowModesModel, setRowModesModel] = useState<GridRowModesModel>({});
   const [notification, setNotification] = useState({
     open: false,
@@ -57,7 +63,7 @@ const Table = () => {
   };
   const processRowUpdate = (newRow: GridRowModel) => {
     const updatedRow = { ...newRow, isNew: false };
-    setRows(rows.map((row) => (row.id === newRow.id ? updatedRow : row)));
+    dispatch(updateRow(newRow));
     return updatedRow;
   };
 
@@ -77,7 +83,7 @@ const Table = () => {
   };
 
   const handleSaveClick = (params: GridRenderEditCellParams) => () => {
-    const editedRow = initialRows.find((row) => row.id === params.id)!;
+    const editedRow = rows.find((row) => row.id === params.id)!;
     const isNew = params.row.isNew;
     try {
       if (
@@ -86,11 +92,11 @@ const Table = () => {
           emptyColumns.map((column) => column.field)
         )
       ) {
-        setRows(
-          rows.map((row) =>
-            row.id === params.id ? { ...row, error: false } : row
-          )
-        );
+        // setRows(
+        //   rows.map((row) =>
+        //     row.id === params.id ? { ...row, error: false } : row
+        //   )
+        // );
         setRowModesModel({
           ...rowModesModel,
           [params.id]: { mode: GridRowModes.View },
@@ -122,17 +128,17 @@ const Table = () => {
     } catch (error) {
       console.log(isNew);
 
-      setRows(
-        rows.map((row) =>
-          row.id === params.id ? { ...row, error: true } : row
-        )
-      );
+      //   setRows(
+      //     rows.map((row) =>
+      //       row.id === params.id ? { ...row, error: true } : row
+      //     )
+      //   );
       setRowModesModel({
         ...rowModesModel,
         [params.id]: { mode: GridRowModes.View },
       });
       const errorComfirm = () => {
-        setRows(rows.filter((row) => row.id !== params.id));
+        // setRows(rows.filter((row) => row.id !== params.id));
         dispatch(discardUser(Number(params.id)));
       };
       if (isNew) {
@@ -153,7 +159,6 @@ const Table = () => {
 
   const handleDeleteClick = (id: GridRowId) => () => {
     const confirmDelete = () => {
-      setRows(rows.filter((row) => row.id !== id));
       dispatch(discardUser(Number(id)));
       handleCloseNotification();
       setNotification({
@@ -177,7 +182,6 @@ const Table = () => {
         [id]: { mode: GridRowModes.View, ignoreModifications: true },
       });
       if (rows.find((row) => row.id === id)!.isNew) {
-        setRows(rows.filter((row) => row.id !== id));
         dispatch(discardUser(Number(id)));
       }
       handleCloseNotification();
@@ -192,35 +196,26 @@ const Table = () => {
 
   const handleAddClick = () => {
     const id = generateNewId(rows);
-    setRows((oldRows) => [
-      {
-        id,
-        name: "",
-        gender: "",
-        address: "",
-        mobile: "",
-        birthday: "",
-        age: "",
-        action: "",
-        isNew: true,
-        error: false,
-      },
-      ...oldRows,
-    ]);
     dispatch(
-      addUser({
-        id: id,
-        name: "",
-        gender: "",
-        address: "",
-        mobile: "",
-        birthday: new Date(),
-        age: Number(),
-      })
+      setUsers([
+        {
+          id,
+          name: "",
+          gender: "",
+          address: "",
+          mobile: "",
+          birthday: "",
+          age: "",
+          action: "",
+          isNew: true,
+        },
+        ...rows,
+      ])
     );
+
     setRowModesModel((oldModel) => ({
       ...oldModel,
-      [id]: { mode: GridRowModes.Edit, fieldToFocus: "uid" },
+      [id]: { mode: GridRowModes.Edit, fieldToFocus: "id" },
     }));
   };
 
@@ -245,6 +240,10 @@ const Table = () => {
       ),
     },
   ];
+
+  useEffect(() => {
+    dispatch(fetchUsers());
+  }, []);
 
   return (
     <Container>
