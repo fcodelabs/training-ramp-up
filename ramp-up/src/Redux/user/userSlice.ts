@@ -3,7 +3,6 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
 type User = {
     id: number
-    uid: number
     name: string
     gender: string
     address: string
@@ -22,7 +21,6 @@ const initialState: initialDataType = {
     rows: [
         {
             id: 1,
-            uid: 1,
             name: 'thambara',
             gender: 'Male',
             address: 'kk,ksksd,sdsa',
@@ -32,7 +30,6 @@ const initialState: initialDataType = {
         },
         {
             id: 2,
-            uid: 2,
             name: 'sahass',
             gender: 'Male',
             address: 'kk,ksksd,sdsa',
@@ -42,7 +39,6 @@ const initialState: initialDataType = {
         },
         {
             id: 3,
-            uid: 3,
             name: 'sahasaka',
             gender: 'Male',
             address: 'kksassaf,ksksd,sdsa',
@@ -60,6 +56,9 @@ const userSlice = createSlice({
         fetchUsers: (state) => {
             state.isLoading = false
         },
+        setUsers: (state, action: PayloadAction<User[]>) => {
+            state.rows = action.payload
+        },
         fetchUsersFailure: (state) => {
             state.isLoading = true
         },
@@ -68,20 +67,20 @@ const userSlice = createSlice({
         },
         discardUser: (state, action: PayloadAction<number>) => {
             state.rows = state.rows.filter(
-                (user) => user.uid !== action.payload
+                (user) => user.id !== action.payload
             )
         },
         saveUser: (state, action: PayloadAction<User>) => {
             state.rows = state.rows.map((user) =>
-                user.uid === action.payload.uid ? action.payload : user
+                user.id === action.payload.id ? action.payload : user
             )
         },
         updateUser: (
             state,
-            action: PayloadAction<{ uid: number; updates: Partial<User> }>
+            action: PayloadAction<{ id: number; updates: Partial<User> }>
         ) => {
             state.rows = state.rows.map((user) =>
-                user.uid === action.payload.uid
+                user.id === action.payload.id
                     ? { ...user, ...action.payload.updates }
                     : user
             )
@@ -91,6 +90,7 @@ const userSlice = createSlice({
 
 export const {
     fetchUsers,
+    setUsers,
     fetchUsersFailure,
     addUser,
     discardUser,

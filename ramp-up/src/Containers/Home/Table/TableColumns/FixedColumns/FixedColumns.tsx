@@ -18,7 +18,7 @@ const genders = ['Male', 'female', 'other']
 
 export const FixedColumns: GridColDef[] = [
     {
-        field: 'uid',
+        field: 'id',
         headerName: 'ID',
         type: 'number',
         width: 10,

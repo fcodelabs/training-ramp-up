@@ -27,7 +27,7 @@ const EditableCell: React.FC<EditableCellProps> = ({
 
     const handleChange = (newValue: string) => {
         const update = {
-            uid: Number(params.id),
+            id: Number(params.id),
             updates: {
                 [field]: newValue,
             },
@@ -55,7 +55,7 @@ const EditableCell: React.FC<EditableCellProps> = ({
             value: Number(age) <= 0 ? 0 : age,
         })
         const updateAge = {
-            uid: Number(params.id),
+            id: Number(params.id),
             updates: {
                 age: Number(age),
                 Birthday: newDateObject!,
