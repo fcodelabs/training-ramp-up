@@ -3,12 +3,19 @@ import * as bodyParser from "body-parser";
 import { Request, Response } from "express";
 import { AppDataSource } from "./data-source";
 import { Routes } from "./routes";
-import { Student } from "./entity/Student";
+import cors = require('cors');
 
 AppDataSource.initialize()
   .then(async () => {
     const app = express();
     app.use(bodyParser.json());
+    app.use(bodyParser.urlencoded({ extended: true }));
+    app.use(cors({
+      origin: '*',
+      methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+      credentials: true,
+
+    }))
 
     Routes.forEach((route) => {
       (app as any)[route.method](
@@ -35,17 +42,4 @@ AppDataSource.initialize()
     app.listen(3000);
 
     console.log("Express server has started on port 3000. ");
-
-    AppDataSource.getRepository(Student)
-      .save({
-        name: "John Doe",
-        gender: "Male",
-        address: "No. 1, Galle Road, Colombo 03",
-        mobile: "0716272786",
-        birthday: new Date("1990-01-01"),
-        age: 30,
-      })
-      .then((student) => console.log("Student has been saved: ", student))
-      .catch((error) => console.log(error))
   })
-  .catch((error) => console.log(error));

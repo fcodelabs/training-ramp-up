@@ -18,13 +18,27 @@ const genders = ['Male', 'female', 'other']
 
 export const FixedColumns: GridColDef[] = [
     {
-        field: 'uid',
+        field: 'id',
         headerName: 'ID',
         type: 'number',
-        width: 10,
+        flex: 0.2,
         editable: false,
         sortable: false,
-        renderHeader: () => <div style={{ paddingRight: '50px' }}>ID</div>,
+        renderHeader: () => <Header text='ID'/>,
+        renderCell: (params) => {
+            if (params.row.error)
+                return (
+                    <div>
+                        {' '}
+                        <Skeleton
+                            animation="wave"
+                            height={20}
+                            width={50}
+                        />{' '}
+                    </div>
+                )
+            return <div>{params.value}</div>
+        },
     },
     {
         field: 'name',
@@ -32,6 +46,7 @@ export const FixedColumns: GridColDef[] = [
         type: 'string',
         width: 165,
         editable: true,
+        sortable:true,
         sortingOrder: ['desc', 'asc'],
         renderHeader: () => {
             return <Header text="name" />
