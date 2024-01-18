@@ -1,33 +1,7 @@
 import { takeLatest, put, call, takeLeading } from "redux-saga/effects";
 import { setUsers, fetchUsers, fetchUsersFailure, addUser,setUserError, discardUser } from "./userSlice";
 import { GridValidRowModel } from "@mui/x-data-grid";
-const url = process.env.REACT_APP_API_URL;
-
-const fetchUsersAsync = async () => {
-  const response = await fetch(`${url}/students`);
-  const data = await response.json();
-  return data;
-};
-
-const addUsersAsync = async (user: GridValidRowModel) => {
-  const response = await fetch(`${url}/students`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(user),
-  })
-  const data = await response.json();
-  return data;
-};
-
-const deleteUserAsync = async (id: number) => {
-  const response = await fetch(`${url}/students/${id}`, {
-    method: "DELETE",
-  });
-  const data = await response.json();
-  return data;
-}
+import { fetchUsersAsync, addUsersAsync, deleteUserAsync } from "../../services/userServices";
 
 function* fetchStudents() {
   try {
@@ -46,7 +20,7 @@ function* addNewUser(action: any) {
     );
     yield put(addUser(student));
   } catch (error: any) {
-    put(setUserError(action.payload.id));
+    yield put(setUserError(action.payload.id));
     return error;
   }
 }

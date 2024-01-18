@@ -189,7 +189,7 @@ const Table = () => {
           age: "",
           action: "",
           isNew: true,
-          error: true,
+          error: false,
         },
         ...rows,
       ])
