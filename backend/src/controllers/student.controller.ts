@@ -56,3 +56,26 @@ export const updateStudent = async (
     res.status(500).json({ error: 'internal server error' });
   }
 };
+
+export const removeStudent = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const { id } = req.params;
+    const studentRepo = AppDataSource.getRepository(Student);
+    const selectedStudent = await studentRepo.findOne({
+      where: { id: parseInt(id) }
+    });
+
+    if (selectedStudent == null) {
+      res.status(404).json({ error: 'student not found' });
+    } else {
+      await studentRepo.remove(selectedStudent);
+      res.status(204).end();
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'internal server error' });
+  }
+};
