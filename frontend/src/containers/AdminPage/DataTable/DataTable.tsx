@@ -157,7 +157,7 @@ const StyledDataTableBox = styled(Box)`
         align-items: flex-start; 
         gap: 8px; 
     }
-    padding: 10px;
+    
     
   }
 `;
@@ -752,6 +752,7 @@ export default function DataTable() {
                             <DatePicker
                                 value={dateValue}
                                 onChange={handleDateChange}
+                                maxDate={dayjs()}
                                 slotProps={{
                                     textField: {
                                         size: "small",
@@ -914,7 +915,7 @@ export default function DataTable() {
                         borderRight: "var(--none, 0px) solid var(--divider, rgba(0, 0, 0, 0.12))",
                         borderTop: "var(--none, 0px) solid var(--divider, rgba(0, 0, 0, 0.12))",
                         background: "var(--primary-selected, rgba(33, 150, 243, 0.08))",
-                        alignItems: 'space-between !important'
+                        // alignItems: 'space-between !important'
                     },
                     "& .MuiDataGrid-sortIcon": {
                         opacity: 'inherit !important',
