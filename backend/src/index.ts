@@ -1,5 +1,7 @@
 // src/index.js
 import express, { Express, Request, Response } from "express";
+import { createConnection } from "typeorm";
+
 import dotenv from "dotenv";
 
 dotenv.config();
@@ -7,25 +9,28 @@ dotenv.config();
 const app: Express = express();
 const port = process.env.PORT || 8000;
 
-app.get("/", (req: Request, res: Response) => {
-  res.send("Express + TypeScript Server");
-});
+const startServer = async () => {
+  try {
+    await createConnection({
+      type: "postgres",
+      host: "localhost",
+      port: 5432,
+      username: "postgres",
+      password: "epcm",
+      database: "ramp-up",
+      synchronize: true,
+      entities: ["src/models/**/*.ts"],
+    });
+    console.log("Database connected!");
+  } catch (error) {
+    throw new Error("Error while connecting to the database");
+    console.log(error);
+   
+  }
 
-app.listen(port, () => {
-  console.log(`[server]: Server is running at http://localhost:${port}`);
-});
+  app.listen(port, () => {
+    console.log(`Server listening on port ${port}`);
+  });
+}
 
-const { Client } = require("pg");
-
-const client = new Client({
-  user: "postgres",
-  host: "localhost",
-  database: "ramp-up",
-  password: "epcm",
-  port: 5432,
-});
-
-client.connect(function(err: Error) {
-  if (err) throw err;
-  console.log("Connected!");
-});
+startServer();
