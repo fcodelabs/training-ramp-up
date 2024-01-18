@@ -17,3 +17,42 @@ export const createStudent = async (
     res.status(500).json({ error: 'internal server error' });
   }
 };
+
+export const getAllStudents = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const studentRepo = AppDataSource.getRepository(Student);
+    const allStudents = await studentRepo.find();
+    console.log(allStudents);
+    res.status(201).json(allStudents);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'internal server error' });
+  }
+};
+
+export const updateStudent = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const { id } = req.params;
+    const studentRepo = AppDataSource.getRepository(Student);
+    const selectedStudent = await studentRepo.findOne({
+      where: { id: parseInt(id) }
+    });
+
+    if (selectedStudent == null) {
+      res.status(404).json({ error: 'student not found' });
+    } else {
+      studentRepo.merge(selectedStudent, req.body);
+      const updatedStudent = await studentRepo.save(selectedStudent);
+      res.status(201).json(updatedStudent);
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'internal server error' });
+  }
+};
