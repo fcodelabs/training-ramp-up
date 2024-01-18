@@ -29,12 +29,10 @@ import {
 import GridActionsColumn from "./TableColumns/ActionColumn/ActionColumn";
 import { validateUser } from "../../../Utilities/ValidateUser";
 import {
-  addUser,
   discardUser,
   fetchUsers,
   setUsers,
   updateRow,
-  updateUser,
 } from "../../../Redux/user/userSlice";
 import generateNewId from "../../../Utilities/generateRandomId";
 
@@ -224,7 +222,7 @@ const Table = () => {
     {
       field: "actions",
       type: "actions",
-      headerName: "Actions",
+      headerName: "Action",
       flex: 1,
       minWidth: 200,
       cellClassName: "actions",
@@ -253,13 +251,6 @@ const Table = () => {
           Add new
         </Button>
       </ButtonWrapper>
-      {rows.length === 0 ? (
-        <StyledDataGrid
-          rows={emptyRows}
-          columns={emptyColumns}
-          checkboxSelection
-        />
-      ) : (
         <StyledDataGrid
           apiRef={apiRef}
           rows={rows}
@@ -273,8 +264,6 @@ const Table = () => {
           getRowHeight={getRowHeight}
           disableColumnMenu
         />
-      )}
-
       <ErrorPopup
         open={notification.open}
         onClose={handleCloseNotification}

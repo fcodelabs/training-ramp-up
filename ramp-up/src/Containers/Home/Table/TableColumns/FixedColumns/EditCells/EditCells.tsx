@@ -109,6 +109,8 @@ const EditableCell: React.FC<EditableCellProps> = ({
 
     if (field === 'birthday') {
         const dateObject = params.value ? new Date(params.value) : new Date()
+        const today = new Date().toISOString().slice(0, 10);
+
         console.log(dateObject)
         return (
             <StyledTextFieldWrapper
@@ -117,6 +119,11 @@ const EditableCell: React.FC<EditableCellProps> = ({
                 type="date"
                 value={dateObject ? dateObject.toISOString().slice(0, 10) : ''}
                 onChange={(e) => handleDateChange(e.target.value)}
+                InputProps={{
+                    inputProps: {
+                      max: today,
+                    },
+                  }}
             />
         )
     }
@@ -138,6 +145,7 @@ const EditableCell: React.FC<EditableCellProps> = ({
                         key={option}
                         value={option}
                         defaultValue={option[0]}
+                        style={{justifyContent:"flex-end"}}
                     >
                         {option}
                     </MenuItem>
