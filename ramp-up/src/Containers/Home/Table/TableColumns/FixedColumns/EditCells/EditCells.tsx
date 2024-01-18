@@ -107,7 +107,6 @@ const EditableCell: React.FC<EditableCellProps> = ({
     const dateObject = params.value ? new Date(params.value) : new Date();
     const today = new Date().toISOString().slice(0, 10);
 
-    console.log(dateObject);
     return (
       <StyledTextFieldWrapper
         error={error}

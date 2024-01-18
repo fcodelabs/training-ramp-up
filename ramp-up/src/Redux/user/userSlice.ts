@@ -81,6 +81,11 @@ const userSlice = createSlice({
         user.id === action.payload.id ? { ...user, ...action.payload } : user
       );
     },
+    setUserError: (state, action: PayloadAction<number>) => {
+      state.rows = state.rows.map((user) =>
+        user.id === action.payload ? { ...user, error: true } : user
+      );
+    }
   },
 });
 
@@ -91,6 +96,7 @@ export const {
   addUser,
   discardUser,
   updateUser,
+  setUserError
 } = userSlice.actions;
 
 export default userSlice.reducer;

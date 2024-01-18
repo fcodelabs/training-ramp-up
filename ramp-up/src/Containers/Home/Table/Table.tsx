@@ -12,6 +12,7 @@ import {
   GridRowEditStopReasons,
   useGridApiRef,
   GridRenderEditCellParams,
+  GridValidRowModel,
 } from "@mui/x-data-grid";
 import { FixedColumns } from "./TableColumns/FixedColumns/FixedColumns";
 import ErrorPopup from "../../../Components/Notification/Notification";
@@ -33,10 +34,9 @@ import {
   updateUser,
 } from "../../../Redux/user/userSlice";
 import generateNewId from "../../../Utilities/generateRandomId";
-import { on } from "events";
 
 const Table = () => {
-  const rows: GridRowsProp = useAppSelector((state) => state.user.rows);
+  const rows: GridValidRowModel[] = useAppSelector((state) => state.user.rows);
   const [rowModesModel, setRowModesModel] = useState<GridRowModesModel>({});
   const [notification, setNotification] = useState({
     open: false,
@@ -60,7 +60,7 @@ const Table = () => {
   };
   const processRowUpdate = (newRow: GridRowModel) => {
     const updatedRow = { ...newRow, isNew: false };
-    dispatch(updateUser(newRow));
+    dispatch(updateUser(updatedRow));
     return updatedRow;
   };
 
@@ -81,59 +81,37 @@ const Table = () => {
 
   const handleSaveClick = (params: GridRenderEditCellParams) => () => {
     const editedRow = rows.find((row) => row.id === params.id)!;
-    const isNew = params.row.isNew;
-    try {
-      if (
-        validateUser(
-          editedRow,
-          emptyColumns.map((column) => column.field)
-        )
-      ) {
-        setRowModesModel({
-          ...rowModesModel,
-          [params.id]: { mode: GridRowModes.View },
-        });
-        if (isNew) {
-          dispatch(addUser(editedRow));
 
-          setNotification({
-            open: true,
-            onConfirm: handleCloseNotification,
-            type: "SAVE_NEW_USER",
-          });
-        } else {
-          setNotification({
-            open: true,
-            onConfirm: handleCloseNotification,
-            type: "SAVE_USER",
-          });
-        }
-      } else {
-        setRowModesModel({
-          ...rowModesModel,
-          [params.id]: { mode: GridRowModes.Edit },
-        });
-        setNotification({
-          open: true,
-          onConfirm: handleCloseNotification,
-          type: "MISSING_FIELDS",
-        });
-      }
-    } catch (error) {
-      //   setRows(
-      //     rows.map((row) =>
-      //       row.id === params.id ? { ...row, error: true } : row
-      //     )
-      //   );
+    if (
+      validateUser(
+        editedRow,
+        emptyColumns.map((column) => column.field)
+      )
+    ) {
+      dispatch(addUser(editedRow));
       setRowModesModel({
         ...rowModesModel,
         [params.id]: { mode: GridRowModes.View },
       });
       const errorComfirm = () => {
-        // setRows(rows.filter((row) => row.id !== params.id));
         dispatch(discardUser(Number(params.id)));
       };
-      if (isNew) {
+      const error = rows.find((row) => row.id === params.id)!.error;
+      const isNew = rows.find((row) => row.id === params.id)!.isNew;
+      console.log(rows);
+      if (isNew && !error) {
+        setNotification({
+          open: true,
+          onConfirm: handleCloseNotification,
+          type: "SAVE_NEW_USER",
+        });
+      } else if (!isNew && !error) {
+        setNotification({
+          open: true,
+          onConfirm: handleCloseNotification,
+          type: "SAVE_USER",
+        });
+      } else if (isNew && error) {
         setNotification({
           open: true,
           onConfirm: errorComfirm,
@@ -146,7 +124,18 @@ const Table = () => {
           type: "FAIL_UPDATE_USER",
         });
       }
+    } else {
+      setRowModesModel({
+        ...rowModesModel,
+        [params.id]: { mode: GridRowModes.Edit },
+      });
+      setNotification({
+        open: true,
+        onConfirm: handleCloseNotification,
+        type: "MISSING_FIELDS",
+      });
     }
+
   };
 
   const handleDeleteClick = (id: GridRowId) => () => {
@@ -200,7 +189,7 @@ const Table = () => {
           age: "",
           action: "",
           isNew: true,
-          error: false,
+          error: true,
         },
         ...rows,
       ])
@@ -233,6 +222,10 @@ const Table = () => {
       ),
     },
   ];
+
+  useEffect(() => {
+      console.log(rows);
+  }, [rows]);
 
   useEffect(() => {
     dispatch(fetchUsers());

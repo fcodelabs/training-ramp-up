@@ -2,7 +2,6 @@ import { GridRowModel } from '@mui/x-data-grid'
 import parsePhoneNumber from 'libphonenumber-js'
 
 const validateUser = (user: GridRowModel, requiredFields: string[]) => {
-    console.log('validateUser', user)
 
     try {
         if (requiredFields.includes('name') && !validateName(user.name)) {
