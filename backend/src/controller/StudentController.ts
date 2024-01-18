@@ -32,8 +32,9 @@ export class StudentController {
   }
 
   async add(request: Request, response: Response, next: NextFunction) {
-    const { name, gender, address, mobile, birthday, age } = request.body;
+    const { id, name, gender, address, mobile, birthday, age } = request.body;
     const student = this.studentRepository.create({
+      id,
       name,
       gender,
       address,

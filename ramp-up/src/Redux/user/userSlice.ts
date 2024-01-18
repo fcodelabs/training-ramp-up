@@ -1,16 +1,6 @@
 import { GridValidRowModel } from "@mui/x-data-grid";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-type User = {
-  id: number;
-  name: string;
-  gender: string;
-  address: string;
-  mobile: string;
-  birthday: Date;
-  age: number;
-};
-
 type initialDataType = {
   isLoading: boolean;
   rows: GridValidRowModel[];
@@ -18,7 +8,52 @@ type initialDataType = {
 
 const initialState: initialDataType = {
   isLoading: false,
-  rows: [],
+  rows: [
+    {
+      id: 1,
+      name: "",
+      gender: "",
+      address: "",
+      mobile: "",
+      birthday: "",
+      age: "",
+      action: "",
+      error: true,
+    },
+    {
+      id: 2,
+      name: "",
+      gender: "",
+      address: "",
+      mobile: "",
+      birthday: "",
+      age: "",
+      action: "",
+      error: true,
+    },
+    {
+      id: 3,
+      name: "",
+      gender: "",
+      address: "",
+      mobile: "",
+      birthday: "",
+      age: "",
+      action: "",
+      error: true,
+    },
+    {
+      id: 4,
+      name: "",
+      gender: "",
+      address: "",
+      mobile: "",
+      birthday: "",
+      age: "",
+      action: "",
+      error: true,
+    },
+  ],
 };
 
 const userSlice = createSlice({
@@ -26,38 +61,24 @@ const userSlice = createSlice({
   initialState,
   reducers: {
     fetchUsers: (state) => {
-      state.isLoading = false;
+      //middleware
+    },
+    addUser: (state, action: PayloadAction<GridValidRowModel>) => {
+      //middleware
     },
     setUsers: (state, action: PayloadAction<GridValidRowModel[]>) => {
       state.rows = action.payload;
+      state.isLoading = false;
     },
     fetchUsersFailure: (state) => {
       state.isLoading = true;
     },
-    addUser: (state, action: PayloadAction<GridValidRowModel>) => {
-      state.rows.push(action.payload);
-    },
     discardUser: (state, action: PayloadAction<number>) => {
       state.rows = state.rows.filter((user) => user.id !== action.payload);
     },
-    saveUser: (state, action: PayloadAction<User>) => {
+    updateUser: (state, action: PayloadAction<GridValidRowModel>) => {
       state.rows = state.rows.map((user) =>
-        user.id === action.payload.id ? action.payload : user
-      );
-    },
-    updateUser: (
-      state,
-      action: PayloadAction<{ id: number; updates: Partial<GridValidRowModel> }>
-    ) => {
-      state.rows = state.rows.map((user) =>
-        user.id === action.payload.id
-          ? { ...user, ...action.payload.updates }
-          : user
-      );
-    },
-    updateRow: (state, action: PayloadAction<GridValidRowModel>) => {
-      state.rows = state.rows.map((user) =>
-        user.id === action.payload.id ? action.payload : user
+        user.id === action.payload.id ? { ...user, ...action.payload } : user
       );
     },
   },
@@ -69,9 +90,7 @@ export const {
   fetchUsersFailure,
   addUser,
   discardUser,
-  saveUser,
   updateUser,
-  updateRow,
 } = userSlice.actions;
 
 export default userSlice.reducer;

@@ -14,7 +14,7 @@ import {
 import formatDate from "../../../../../Utilities/formatDate";
 import { Skeleton } from "@mui/material";
 
-const genders = ["Male", "female", "other"];
+const genders = ["Male", "Female", "Other"];
 
 export const FixedColumns: GridColDef[] = [
   {
@@ -25,16 +25,6 @@ export const FixedColumns: GridColDef[] = [
     editable: false,
     sortable: false,
     renderHeader: () => <Header text="ID" />,
-    renderCell: (params) => {
-      if (params.row.error)
-        return (
-          <div>
-            {" "}
-            <Skeleton animation="wave" height={20} width={50} />{" "}
-          </div>
-        );
-      return <div>{params.value}</div>;
-    },
   },
   {
     field: "name",
@@ -94,9 +84,6 @@ export const FixedColumns: GridColDef[] = [
             <Skeleton animation="wave" height={20} width={100} />{" "}
           </div>
         );
-    },
-    valueGetter(params) {
-      return params.value || "Male";
     },
   },
   {

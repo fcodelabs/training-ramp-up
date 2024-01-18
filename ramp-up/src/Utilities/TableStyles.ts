@@ -1,4 +1,4 @@
-import { TextField } from '@mui/material'
+import { MenuItem, TextField } from '@mui/material'
 import { DataGrid } from '@mui/x-data-grid'
 // import PhoneInput from 'react-phone-number-input'
 import styled from 'styled-components'
@@ -80,6 +80,10 @@ export const StyledDataGrid = styled(DataGrid)(() => ({
 interface Props {
     error: boolean
 }
+
+export const StyledMenuItem = styled(MenuItem)({
+    justifyContent:"flex-end"
+})
 
 export const StyledTextFieldWrapper = styled(TextField)<Props>(({ error }) => ({
     variant: 'standard',

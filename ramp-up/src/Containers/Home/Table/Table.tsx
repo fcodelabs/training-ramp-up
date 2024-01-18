@@ -16,10 +16,7 @@ import {
 import { FixedColumns } from "./TableColumns/FixedColumns/FixedColumns";
 import ErrorPopup from "../../../Components/Notification/Notification";
 import { useAppSelector, useAppDispatch } from "../../../Redux/hooks";
-import {
-  emptyColumns,
-  emptyRows,
-} from "../../../Components/TableSkeletons/TableSkeletons";
+import { emptyColumns } from "../../../Components/TableSkeletons/TableSkeletons";
 import {
   Container,
   ButtonWrapper,
@@ -32,9 +29,11 @@ import {
   discardUser,
   fetchUsers,
   setUsers,
-  updateRow,
+  addUser,
+  updateUser,
 } from "../../../Redux/user/userSlice";
 import generateNewId from "../../../Utilities/generateRandomId";
+import { on } from "events";
 
 const Table = () => {
   const rows: GridRowsProp = useAppSelector((state) => state.user.rows);
@@ -61,7 +60,7 @@ const Table = () => {
   };
   const processRowUpdate = (newRow: GridRowModel) => {
     const updatedRow = { ...newRow, isNew: false };
-    dispatch(updateRow(newRow));
+    dispatch(updateUser(newRow));
     return updatedRow;
   };
 
@@ -90,16 +89,13 @@ const Table = () => {
           emptyColumns.map((column) => column.field)
         )
       ) {
-        // setRows(
-        //   rows.map((row) =>
-        //     row.id === params.id ? { ...row, error: false } : row
-        //   )
-        // );
         setRowModesModel({
           ...rowModesModel,
           [params.id]: { mode: GridRowModes.View },
         });
         if (isNew) {
+          dispatch(addUser(editedRow));
+
           setNotification({
             open: true,
             onConfirm: handleCloseNotification,
@@ -124,8 +120,6 @@ const Table = () => {
         });
       }
     } catch (error) {
-      console.log(isNew);
-
       //   setRows(
       //     rows.map((row) =>
       //       row.id === params.id ? { ...row, error: true } : row
@@ -199,13 +193,14 @@ const Table = () => {
         {
           id,
           name: "",
-          gender: "",
+          gender: "Male",
           address: "",
           mobile: "",
           birthday: "",
           age: "",
           action: "",
           isNew: true,
+          error: false,
         },
         ...rows,
       ])
@@ -251,19 +246,19 @@ const Table = () => {
           Add new
         </Button>
       </ButtonWrapper>
-        <StyledDataGrid
-          apiRef={apiRef}
-          rows={rows}
-          columns={columns}
-          editMode="row"
-          rowModesModel={rowModesModel}
-          checkboxSelection
-          onRowModesModelChange={handleRowModesModelChange}
-          onRowEditStop={handleRowEditStop}
-          processRowUpdate={processRowUpdate}
-          getRowHeight={getRowHeight}
-          disableColumnMenu
-        />
+      <StyledDataGrid
+        apiRef={apiRef}
+        rows={rows}
+        columns={columns}
+        editMode="row"
+        rowModesModel={rowModesModel}
+        checkboxSelection
+        onRowModesModelChange={handleRowModesModelChange}
+        onRowEditStop={handleRowEditStop}
+        processRowUpdate={processRowUpdate}
+        getRowHeight={getRowHeight}
+        disableColumnMenu
+      />
       <ErrorPopup
         open={notification.open}
         onClose={handleCloseNotification}
