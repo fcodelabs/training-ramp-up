@@ -1,6 +1,6 @@
 import 'reflect-metadata';
 import { DataSource } from 'typeorm';
-import { student } from './models/student';
+import { Student } from './models/student';
 import dotenv from 'dotenv';
 dotenv.config();
 
@@ -11,7 +11,7 @@ const AppDataSource = new DataSource({
   password: process.env.DB_PASSWD,
   host: process.env.DB_HOST,
   port: Number(process.env.DB_PORT),
-  entities: [student],
+  entities: [Student],
   synchronize: true,
   logging: false
 });
