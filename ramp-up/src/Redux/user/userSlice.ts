@@ -1,4 +1,4 @@
-import { GridRowsProp, GridValidRowModel } from "@mui/x-data-grid";
+import { GridValidRowModel } from "@mui/x-data-grid";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 type User = {
