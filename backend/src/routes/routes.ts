@@ -1,4 +1,4 @@
-import { StudentController } from "./controller/StudentController";
+import { StudentController } from "../controller/studentController";
 
 export const Routes = [
   {

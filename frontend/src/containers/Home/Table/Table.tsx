@@ -15,25 +15,25 @@ import {
   GridValidRowModel,
 } from "@mui/x-data-grid";
 import { FixedColumns } from "./TableColumns/FixedColumns/FixedColumns";
-import ErrorPopup from "../../../Components/Notification/Notification";
-import { useAppSelector, useAppDispatch } from "../../../Redux/hooks";
-import { emptyColumns } from "../../../Components/TableSkeletons/TableSkeletons";
+import ErrorPopup from "../../../components/Notification/Notification";
+import { useAppSelector, useAppDispatch } from "../../../redux/hooks";
+import { emptyColumns } from "../../../components/TableSkeletons/TableSkeletons";
 import {
   Container,
   ButtonWrapper,
   StyledDataGrid,
   Title,
-} from "../../../Utilities/TableStyles";
+} from "../../../utilities/TableStyles";
 import GridActionsColumn from "./TableColumns/ActionColumn/ActionColumn";
-import { validateUser } from "../../../Utilities/ValidateUser";
+import { validateUser } from "../../../utilities/validateUser";
 import {
   discardUser,
   fetchUsers,
   setUsers,
   addUser,
   updateUser,
-} from "../../../Redux/user/userSlice";
-import generateNewId from "../../../Utilities/generateRandomId";
+} from "../../../redux/user/userSlice";
+import generateNewId from "../../../utilities/generateRandomId";
 
 const Table = () => {
   const rows: GridValidRowModel[] = useAppSelector((state) => state.user.rows);
@@ -135,7 +135,6 @@ const Table = () => {
         type: "MISSING_FIELDS",
       });
     }
-
   };
 
   const handleDeleteClick = (id: GridRowId) => () => {
@@ -224,7 +223,7 @@ const Table = () => {
   ];
 
   useEffect(() => {
-      console.log(rows);
+    console.log(rows);
   }, [rows]);
 
   useEffect(() => {

@@ -1,6 +1,6 @@
 import React from "react";
 import { GridColDef } from "@mui/x-data-grid";
-import { formatMobileDisplay } from "../../../../../Utilities/formatMobileText";
+import { formatMobileDisplay } from "../../../../../utilities/formatMobileText";
 import "react-phone-number-input/style.css";
 import EditableCell from "./EditCells/EditCells";
 import { Header } from "./Headers/Headers";
@@ -10,8 +10,8 @@ import {
   validateBirthday,
   validateMobile,
   validateName,
-} from "../../../../../Utilities/ValidateUser";
-import formatDate from "../../../../../Utilities/formatDate";
+} from "../../../../../utilities/validateUser";
+import formatDate from "../../../../../utilities/formatDate";
 import { Skeleton } from "@mui/material";
 
 const genders = ["Male", "Female", "Other"];

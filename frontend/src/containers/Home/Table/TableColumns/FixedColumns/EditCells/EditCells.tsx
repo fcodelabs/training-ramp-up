@@ -1,10 +1,10 @@
 import React from "react";
-import { StyledMenuItem } from "../../../../../../Utilities/TableStyles";
-import { StyledTextFieldWrapper } from "../../../../../../Utilities/TableStyles";
-import { useAppDispatch } from "../../../../../../Redux/hooks";
-import { updateUser } from "../../../../../../Redux/user/userSlice";
+import { StyledMenuItem } from "../../../../../../utilities/TableStyles";
+import { StyledTextFieldWrapper } from "../../../../../../utilities/TableStyles";
+import { useAppDispatch } from "../../../../../../redux/hooks";
+import { updateUser } from "../../../../../../redux/user/userSlice";
 import { Typography } from "@mui/material";
-import calculateAge from "../../../../../../Utilities/calculateAge";
+import calculateAge from "../../../../../../utilities/calculateAge";
 import { GridRenderEditCellParams } from "@mui/x-data-grid";
 
 interface EditableCellProps {

@@ -1,6 +1,6 @@
 // src/services/UserService.ts
 
-import { AppDataSource } from "../data-source";
+import { AppDataSource } from "../config/data-source";
 import { Student } from "../entity/Student";
 
 export class StudentService {
@@ -25,6 +25,7 @@ export class StudentService {
   }
 
   async createStudent(
+    id: number,
     name: string,
     gender: string,
     address: string,
@@ -33,6 +34,7 @@ export class StudentService {
     age: number
   ) {
     const student = this.studentRepository.create({
+      id,
       name,
       gender,
       address,

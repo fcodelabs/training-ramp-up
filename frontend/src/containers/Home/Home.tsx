@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import Appbar from '../../Components/Appbar/Appbar'
+import Appbar from '../../components/Appbar/Appbar'
 import Table from './Table/Table'
 
 export const HomeWarpper = styled.div`

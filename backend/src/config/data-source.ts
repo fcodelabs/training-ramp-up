@@ -1,6 +1,6 @@
 import "reflect-metadata";
 import { DataSource } from "typeorm";
-import { Student } from "./entity/Student";
+import { Student } from "../entity/Student";
 import * as dotenv from "dotenv";
 dotenv.config();
 

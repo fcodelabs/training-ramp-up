@@ -9,6 +9,7 @@ function* fetchStudents() {
     yield put(setUsers(students));
   } catch (error: any) {
     yield put(fetchUsersFailure(error));
+     
   }
 }
 
@@ -36,7 +37,7 @@ function* deleteUser(action: any) {
 
 export function* userSaga() {
   yield takeLatest(fetchUsers, fetchStudents);
-  yield takeLeading(addUser, addNewUser);
+  yield takeLatest(addUser, addNewUser);
   yield takeLeading(discardUser, deleteUser);
 }
 
