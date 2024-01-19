@@ -1,23 +1,28 @@
-import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, BaseEntity, PrimaryColumn } from "typeorm";
 
-@Entity()
-export class Student {
-  @PrimaryGeneratedColumn()
-  id: number | undefined;
-
-  @Column()
-  name: string | undefined;
-
-  @Column()
-  gender: string | undefined;
+@Entity('student')
+export class Student extends BaseEntity {
+  
+  
+  @PrimaryColumn()
+  id!: number;
 
   @Column()
-  mobile: string | undefined;
+  name!: string;
 
   @Column()
-  dob: Date | undefined;
+  gender!: string;
+
+  @Column()
+  address!: string;
+
+  @Column()
+  mobile!: string;
+
+  @Column({type:'date'})
+  dob!: string;
   
   @Column()
-  age: number | undefined;
-  
+  age!: number;
+
 }
