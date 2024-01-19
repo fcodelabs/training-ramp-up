@@ -1,6 +1,7 @@
 import { Student } from "../models/Student";
 import { Request, Response } from "express";
 import { AppDataSource } from "../index";
+import { Console } from "console";
 
 const StudentService = {
   addNewStudentService: async (req: Request, res: Response) => {
@@ -48,6 +49,7 @@ const StudentService = {
       const student = await studentRepository.findOne({
         where: { id: parseInt(req.params.id) },
       });
+      console.log(student);
       if (student) {
         studentRepository.merge(student, req.body);
         const results = await studentRepository.save(student);
@@ -67,6 +69,7 @@ const StudentService = {
       const student = await studentRepository.findOne({
         where: { id: parseInt(req.params.id) },
       });
+      console.log(student);
       if (student) {
         const results = await studentRepository.remove(student);
         return res.status(200).json(results);
