@@ -3,10 +3,13 @@ import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
-import { updateStudent } from "../../redux/slice/studentSlice";
+import {
+  fetchAllStudents,
+  updateStudent,
+} from "../../redux/slice/studentSlice";
 import {
   Button,
   Container,
@@ -137,6 +140,11 @@ const DataGridTable = () => {
   const [currentRowId, setCurrentRowId] = useState<GridRowId | null>(null);
 
   const [rowModesModel, setRowModesModel] = useState<GridRowModesModel>({});
+
+  useEffect(() => {
+    dispatch(fetchAllStudents());
+  }, []);
+
   const handleRowEditStop: GridEventListener<"rowEditStop"> = (
     params,
     event
@@ -381,7 +389,7 @@ const DataGridTable = () => {
       align: "left",
       type: "date",
       valueFormatter: (params) => {
-        const date = dayjs(new Date(params.value));
+        const date = dayjs(params.value);
         return date.format("ddd MMM DD YYYY");
       },
       sortable: true,

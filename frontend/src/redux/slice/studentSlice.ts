@@ -4,64 +4,66 @@ import type { PayloadAction } from "@reduxjs/toolkit";
 import { ageCalculator } from "../../utility/ageCalculator";
 
 interface IinitialState {
+  isLoading: boolean;
   students: GridValidRowModel[];
 }
 
 const initialState: IinitialState = {
+  isLoading: false,
   students: [
     {
       id: 1,
-      name: "Snow",
-      gender: "Male",
-      address: "Matara",
-      mobileno: "0714668617",
-      dateofbirth: new Date(1998, 11, 4),
-      age: ageCalculator(new Date(1998, 11, 4)),
+      name: "",
+      gender: "",
+      address: "",
+      mobileno: "",
+      dateofbirth: "",
+      age: "",
     },
     {
       id: 2,
-      name: "Emily",
-      gender: "Female",
-      address: "Colombo",
-      mobileno: "0771234567",
-      dateofbirth: new Date(2003, 5, 21),
-      age: ageCalculator(new Date(2003, 5, 21)),
+      name: "",
+      gender: "",
+      address: "",
+      mobileno: "",
+      dateofbirth: "",
+      age: "",
     },
     {
       id: 3,
-      name: "David",
-      gender: "Male",
-      address: "Kandy",
-      mobileno: "0754321987",
-      dateofbirth: new Date(2001, 8, 17),
-      age: ageCalculator(new Date(2001, 8, 17)),
+      name: "",
+      gender: "",
+      address: "",
+      mobileno: "",
+      dateofbirth: "",
+      age: "",
     },
     {
       id: 4,
-      name: "Olivia",
-      gender: "Female",
-      address: "Galle",
-      mobileno: "0789654321",
-      dateofbirth: new Date(2004, 2, 9),
-      age: ageCalculator(new Date(2004, 2, 9)),
+      name: "",
+      gender: "",
+      address: "",
+      mobileno: "",
+      dateofbirth: "",
+      age: "",
     },
     {
       id: 5,
-      name: "Noah",
-      gender: "Male",
-      address: "Jaffna",
-      mobileno: "0765432109",
-      dateofbirth: new Date(2002, 10, 30),
-      age: ageCalculator(new Date(2002, 10, 30)),
+      name: "",
+      gender: "",
+      address: "",
+      mobileno: "",
+      dateofbirth: "",
+      age: "",
     },
     {
       id: 6,
-      name: "Amelia",
-      gender: "Female",
-      address: "Nuwara Eliya",
-      mobileno: "0723456789",
-      dateofbirth: new Date(2005, 7, 15),
-      age: ageCalculator(new Date(2005, 7, 15)),
+      name: "",
+      gender: "",
+      address: "",
+      mobileno: "",
+      dateofbirth: "",
+      age: "",
     },
   ],
 };
@@ -72,13 +74,34 @@ export const studentSlice = createSlice({
   reducers: {
     updateStudent: (state, action: PayloadAction<GridValidRowModel[]>) => {
       state.students = action.payload;
+      state.isLoading = false;
     },
-    addTempStudent: (state, action: PayloadAction<GridValidRowModel>) => {
-      state.students.push(action.payload);
+    fetchStudentsError: (state) => {
+      state.isLoading = true;
+      console.log("error found");
+    },
+    fetchAllStudents: (state) => {
+      //get all students
+    },
+    addStudent: (state) => {
+      //add a new student to the database
+    },
+    removeStudent: (state) => {
+      //remove a student from the db
+    },
+    editStudent: (state) => {
+      //edit a student in the db
     },
   },
 });
 
-export const { updateStudent, addTempStudent } = studentSlice.actions;
+export const {
+  updateStudent,
+  fetchAllStudents,
+  fetchStudentsError,
+  addStudent,
+  removeStudent,
+  editStudent,
+} = studentSlice.actions;
 
 export default studentSlice.reducer;
