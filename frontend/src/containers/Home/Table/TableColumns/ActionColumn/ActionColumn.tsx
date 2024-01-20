@@ -2,6 +2,7 @@ import * as React from 'react'
 import Button from '@mui/material/Button'
 import { GridActionsCellItem, GridRenderEditCellParams } from '@mui/x-data-grid'
 import styled from 'styled-components'
+import { Box } from '@mui/material'
 
 interface Props {
     params: GridRenderEditCellParams
@@ -58,7 +59,7 @@ const GridActionsColumn: React.FC<Props> = ({
     }
 
     return (
-        <>
+        <Box>
             <GridActionsCellItem
                 icon={
                     <Button variant="outlined" size="small">
@@ -80,7 +81,7 @@ const GridActionsColumn: React.FC<Props> = ({
                 onClick={handleDeleteClick}
                 color="inherit"
             />
-        </>
+        </Box>
     )
 }
 

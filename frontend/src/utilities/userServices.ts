@@ -19,7 +19,7 @@ export const fetchUsersAsync = async () => {
     return data;
   };
   
- export  const deleteUserAsync = async (id: number) => {
+ export const deleteUserAsync = async (id: number) => {
     const response = await fetch(`${url}/students/${id}`, {
       method: "DELETE",
     });

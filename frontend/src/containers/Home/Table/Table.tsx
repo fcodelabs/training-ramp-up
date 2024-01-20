@@ -2,7 +2,6 @@ import Button from "@mui/material/Button";
 import React, { useEffect } from "react";
 import { useState } from "react";
 import {
-  GridRowsProp,
   GridRowModesModel,
   GridRowModes,
   GridColDef,
@@ -10,20 +9,14 @@ import {
   GridRowId,
   GridRowModel,
   GridRowEditStopReasons,
-  useGridApiRef,
   GridRenderEditCellParams,
   GridValidRowModel,
+  DataGrid,
 } from "@mui/x-data-grid";
 import { FixedColumns } from "./TableColumns/FixedColumns/FixedColumns";
 import ErrorPopup from "../../../components/Notification/Notification";
 import { useAppSelector, useAppDispatch } from "../../../redux/hooks";
 import { emptyColumns } from "../../../components/TableSkeletons/TableSkeletons";
-import {
-  Container,
-  ButtonWrapper,
-  StyledDataGrid,
-  Title,
-} from "../../../utilities/TableStyles";
 import GridActionsColumn from "./TableColumns/ActionColumn/ActionColumn";
 import { validateUser } from "../../../utilities/validateUser";
 import {
@@ -33,7 +26,79 @@ import {
   addUser,
   updateUser,
 } from "../../../redux/user/userSlice";
-import generateNewId from "../../../utilities/generateRandomId";
+import { generateNewId } from "../../../utilities/index";
+import styled from "styled-components";
+
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 80%;
+  height: auto;
+  border: 1px solid #e0e0e0;
+  border-radius: 5px;
+`;
+
+const Title = styled.div`
+  display: flex;
+  flex-direction: row;
+  padding: 5px 15px 5px 15px;
+  font-size: 24px;
+  font-weight: 500;
+  font-style: normal;
+  justify-content: flex-start;
+
+  @media screen and (max-width: 768px) {
+    justify-content: center;
+  }
+`;
+
+const ButtonWrapper = styled.div`
+  padding: 5px 15px 15px 15px;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+
+  @media screen and (max-width: 768px) {
+    justify-content: center;
+  }
+`;
+
+const StyledDataGrid = styled(DataGrid)(() => ({
+  "& .MuiDataGrid-sortIcon": {
+    opacity: "1 !important",
+    visibility: "visible",
+  },
+  "& .MuiDataGrid-iconButtonContainer": {
+    visibility: "visible",
+  },
+  "&. MuiDataGrid-root-MuiDataGrid-menuIcon": {
+    display: "none !important",
+  },
+  "& .MuiDataGrid-columnSeparator": {
+    display: "none !important",
+  },
+  "& .MuiDataGrid-columnHeader": {
+    backgroundColor: "rgba(33, 150, 243, 0.1) !important",
+  },
+  "& .MuiDataGrid-cell:focus-within": {
+    outline: "none !important",
+  },
+  "& .MuiDataGrid-row--editing": {
+    boxShadow: "none !important",
+  },
+
+  "& .MuiDataGrid-cell": {
+    justifyContent: "flex-start !important",
+  },
+  "& .MuiDataGrid-columnHeaderTitleContainer": {
+    justifyContent: "flex-start !important",
+  },
+  "& .MuiDataGrid-cell.MuiDataGrid-cell--editing": {
+    alignItems: "flex-start !important",
+    paddingTop: "21px !important",
+  },
+}));
+
 
 const Table = () => {
   const rows: GridValidRowModel[] = useAppSelector((state) => state.user.rows);
@@ -44,7 +109,6 @@ const Table = () => {
     type: "",
   });
   const dispatch = useAppDispatch();
-  const apiRef = useGridApiRef();
 
   const handleCloseNotification = () => {
     setNotification({ open: false, onConfirm: () => {}, type: "" });
@@ -239,7 +303,6 @@ const Table = () => {
         </Button>
       </ButtonWrapper>
       <StyledDataGrid
-        apiRef={apiRef}
         rows={rows}
         columns={columns}
         editMode="row"

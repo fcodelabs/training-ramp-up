@@ -1,9 +1,9 @@
 import { takeLatest, put, call, takeLeading } from "redux-saga/effects";
 import { setUsers, fetchUsers, fetchUsersFailure, addUser,setUserError, discardUser } from "./userSlice";
 import { GridValidRowModel } from "@mui/x-data-grid";
-import { fetchUsersAsync, addUsersAsync, deleteUserAsync } from "../../services/userServices";
+import { fetchUsersAsync, addUsersAsync, deleteUserAsync } from "../../utilities/userServices";
 
-function* fetchStudents() {
+function* watchFetchStudents() {
   try {
     const students: GridValidRowModel[] = yield call(fetchUsersAsync);
     yield put(setUsers(students));
@@ -13,7 +13,7 @@ function* fetchStudents() {
   }
 }
 
-function* addNewUser(action: any) {
+function* watchAddNewUser(action: any) {
   try {
     const student: GridValidRowModel = yield call(
       addUsersAsync,
@@ -26,7 +26,7 @@ function* addNewUser(action: any) {
   }
 }
 
-function* deleteUser(action: any) {
+function* watchDeleteUser(action: any) {
   try {
     yield call(deleteUserAsync, action.payload);
   } catch (error: any) {
@@ -36,8 +36,8 @@ function* deleteUser(action: any) {
 
 
 export function* userSaga() {
-  yield takeLatest(fetchUsers, fetchStudents);
-  yield takeLatest(addUser, addNewUser);
-  yield takeLeading(discardUser, deleteUser);
+  yield takeLatest(fetchUsers, watchFetchStudents);
+  yield takeLatest(addUser, watchAddNewUser);
+  yield takeLeading(discardUser, watchDeleteUser);
 }
 

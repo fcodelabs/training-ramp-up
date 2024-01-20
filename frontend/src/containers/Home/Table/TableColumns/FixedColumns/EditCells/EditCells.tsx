@@ -1,11 +1,42 @@
 import React from "react";
-import { StyledMenuItem } from "../../../../../../utilities/TableStyles";
-import { StyledTextFieldWrapper } from "../../../../../../utilities/TableStyles";
 import { useAppDispatch } from "../../../../../../redux/hooks";
 import { updateUser } from "../../../../../../redux/user/userSlice";
-import { Typography } from "@mui/material";
-import calculateAge from "../../../../../../utilities/calculateAge";
+import { MenuItem, TextField, Typography } from "@mui/material";
+import { calculateAge } from "../../../../../../utilities/index";
 import { GridRenderEditCellParams } from "@mui/x-data-grid";
+import styled from "styled-components";
+
+interface Props {
+  error: boolean;
+}
+
+export const StyledTextFieldWrapper = styled(TextField)<Props>(({ error }) => ({
+  variant: "standard",
+  color: "black",
+  borderRadius: 0,
+  textAlign: "end",
+  outline: "none",
+  "& .MuiOutlinedInput-root": {
+    "& fieldset": {
+      borderColor: error ? "#BD0203" : "rgba(33, 150, 243, 0.7)",
+      borderRadius: 0,
+    },
+  },
+
+  "& .MuiInputBase-root.Mui-disabled": {
+    "& > fieldset": {
+      borderColor: error ? "#BD0203" : "rgba(33, 150, 243, 0.7)",
+    },
+  },
+  "& .MuiFormHelperText-root": {
+    marginLeft: 0,
+    fontSize: 8,
+  },
+}));
+
+const StyledMenuItem = styled(MenuItem)({
+  justifyContent:"flex-end"
+})
 
 interface EditableCellProps {
   params: GridRenderEditCellParams;
@@ -55,7 +86,7 @@ const EditableCell: React.FC<EditableCellProps> = ({
     const updateAge = {
       id: Number(params.id),
       age: Number(age),
-      birthday: newDateObject!,
+      birthday: newDateObject.toISOString().slice(0, 10),
     };
     dispatch(updateUser(updateAge));
   };
