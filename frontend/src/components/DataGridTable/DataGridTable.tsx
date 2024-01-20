@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 import {
+  addStudent,
   fetchAllStudents,
   updateStudent,
 } from "../../redux/slice/studentSlice";
@@ -34,6 +35,7 @@ import {
   GridRowModesModel,
   GridRowsProp,
   GridToolbarContainer,
+  GridValidRowModel,
 } from "@mui/x-data-grid";
 import { formatPhoneNumber } from "../../utility/formatPhoneNumber";
 import { ageCalculator } from "../../utility/ageCalculator";
@@ -80,7 +82,7 @@ function EditToolbar(props: IEditToolbarProps) {
           gender: "",
           address: "",
           mobileno: "",
-          dateofbirth: dayjs(new Date()),
+          dateofbirth: dayjs(new Date()).toISOString().slice(0, 10),
           age: "",
           isNew: true,
         },
@@ -191,7 +193,17 @@ const DataGridTable = () => {
   };
 
   const processRowUpdate = (newRow: GridRowModel) => {
-    const updatedRow = { ...newRow, isNew: false };
+    const student: GridValidRowModel = {
+      id: newRow.id,
+      name: newRow.name,
+      gender: newRow.gender,
+      address: newRow.address,
+      mobileno: newRow.mobileno,
+      dateofbirth: newRow.dateofbirth.toISOString().slice(0, 10),
+      age: newRow.age,
+    };
+
+    const updatedRow = { ...student, isNew: false };
     const isPhoneNumberValid = validatePhoneNumber(newRow.mobileno);
     const isAgeValid = newRow.age > 18;
 
@@ -213,7 +225,11 @@ const DataGridTable = () => {
       setAgeValidateError(true);
       return {};
     }
+
     try {
+      if (newRow!.isNew) {
+        dispatch(addStudent(student));
+      }
       dispatch(
         updateStudent(
           initialRows.map((row) => (row.id === newRow.id ? updatedRow : row))

@@ -1,14 +1,15 @@
 import { GridValidRowModel } from "@mui/x-data-grid";
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
-import { ageCalculator } from "../../utility/ageCalculator";
 
 interface IinitialState {
+  userAddingError: boolean;
   isLoading: boolean;
   students: GridValidRowModel[];
 }
 
 const initialState: IinitialState = {
+  userAddingError: false,
   isLoading: false,
   students: [
     {
@@ -75,16 +76,20 @@ export const studentSlice = createSlice({
     updateStudent: (state, action: PayloadAction<GridValidRowModel[]>) => {
       state.students = action.payload;
       state.isLoading = false;
-    },
-    fetchStudentsError: (state) => {
-      state.isLoading = true;
-      console.log("error found");
+      state.userAddingError = false;
     },
     fetchAllStudents: (state) => {
       //get all students
     },
-    addStudent: (state) => {
+    fetchStudentsError: (state) => {
+      state.isLoading = true;
+    },
+    addStudent: (state, action: PayloadAction<GridValidRowModel>) => {
       //add a new student to the database
+    },
+    addStudentError: (state) => {
+      state.userAddingError = true;
+      state.isLoading = true;
     },
     removeStudent: (state) => {
       //remove a student from the db
@@ -100,6 +105,7 @@ export const {
   fetchAllStudents,
   fetchStudentsError,
   addStudent,
+  addStudentError,
   removeStudent,
   editStudent,
 } = studentSlice.actions;

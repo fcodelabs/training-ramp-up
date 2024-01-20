@@ -2,12 +2,15 @@ import { takeLatest, put, call, takeLeading } from "redux-saga/effects";
 import { GridValidRowModel } from "@mui/x-data-grid";
 import axios from "axios";
 import {
+  addStudent,
+  addStudentError,
   fetchAllStudents,
   fetchStudentsError,
   updateStudent,
 } from "../slice/studentSlice";
+import { PayloadAction } from "@reduxjs/toolkit";
 
-function* watchGetAllStudents() {
+function* watchGetAllStudents(): Generator<any, any, any> {
   try {
     const { data } = yield call(
       axios.get<GridValidRowModel[]>,
@@ -20,18 +23,32 @@ function* watchGetAllStudents() {
   }
 }
 
-// function* watchAddNewUser(action: any) {
-//   try {
-//     const student: GridValidRowModel = yield call(
-//       addUsersAsync,
-//       action.payload
-//     );
-//     yield put(addUser(student));
-//   } catch (error: any) {
-//     yield put(setUserError(action.payload.id));
-//     return error;
-//   }
-// }
+function* watchAddNewStudent(
+  action: PayloadAction<GridValidRowModel>
+): Generator<any, any, any> {
+  console.log("done.....");
+  console.log(action.payload);
+  const newStudent = {
+    id: action.payload.id,
+    name: action.payload.name,
+    gender: action.payload.gender,
+    address: action.payload.address,
+    mobileno: action.payload.mobileno,
+    dateofbirth: action.payload.dateofbirth,
+    age: action.payload.age,
+  };
+  console.log(newStudent);
+  try {
+    const { data } = yield call(
+      axios.post<GridValidRowModel[]>,
+      "http://localhost:5000/students/newStudent",
+      newStudent
+    );
+  } catch (error: any) {
+    yield put(addStudentError());
+    return error;
+  }
+}
 
 // function* watchDeleteUser(action: any) {
 //   try {
@@ -41,8 +58,8 @@ function* watchGetAllStudents() {
 //   }
 // }
 
-export function* userSaga() {
+export function* userSaga(): Generator<any, any, any> {
   yield takeLatest(fetchAllStudents, watchGetAllStudents);
-  //   yield takeLatest(addUser, watchAddNewUser);
+  yield takeLatest(addStudent.type, watchAddNewStudent);
   //   yield takeLeading(discardUser, watchDeleteUser);
 }
