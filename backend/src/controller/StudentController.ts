@@ -1,14 +1,12 @@
-
 import { NextFunction, Request, Response } from "express";
-import { AppDataSource } from "../data-source";
-import { Student } from "../entity/Student";
+import { StudentService } from "../services/studentService";
 
 export class StudentController {
-  private studentRepository = AppDataSource.getRepository(Student);
+  private studentService = new StudentService();
 
-  async all(request: Request, response: Response, next: NextFunction) {
-    await this.studentRepository
-      .find()
+  async all(request: Request, response: Response ) {
+    await this.studentService
+      .getAllStudents()
       .then((students) => {
         return response.status(200).send(students);
       })
@@ -17,12 +15,10 @@ export class StudentController {
       });
   }
 
-  async one(request: Request, response: Response, next: NextFunction) {
+  async one(request: Request, response: Response ) {
     const id = parseInt(request.params.id);
-    await this.studentRepository
-      .findOne({
-        where: { id },
-      })
+    await this.studentService
+      .getStudentById(id)
       .then((student) => {
         return response.status(200).send(student);
       })
@@ -31,18 +27,10 @@ export class StudentController {
       });
   }
 
-  async add(request: Request, response: Response, next: NextFunction) {
-    const { name, gender, address, mobile, birthday, age } = request.body;
-    const student = this.studentRepository.create({
-      name,
-      gender,
-      address,
-      mobile,
-      birthday,
-      age,
-    });
-    await this.studentRepository
-      .save(student)
+  async add(request: Request, response: Response ) {
+    const { id, name, gender, address, mobile, birthday, age } = request.body;
+    await this.studentService
+      .createStudent(id, name, gender, address, mobile, birthday, age)
       .then((student) => {
         return response.status(200).send(student);
       })
@@ -51,11 +39,11 @@ export class StudentController {
       });
   }
 
-  async update(request: Request, response: Response, next: NextFunction) {
+  async update(request: Request, response: Response ) {
     const id = parseInt(request.params.id);
     const student = request.body;
-    await this.studentRepository
-      .update(id, student)
+    await this.studentService
+      .updateStudent(id, student)
       .then((student) => {
         return response.status(200).send(student);
       })
@@ -64,10 +52,10 @@ export class StudentController {
       });
   }
 
-  async remove(request: Request, response: Response, next: NextFunction) {
+  async remove(request: Request, response: Response ) {
     const id = parseInt(request.params.id);
-    await this.studentRepository
-      .delete(id)
+    await this.studentService
+      .removeStudent(id)
       .then((student) => {
         return response.status(200).send(student);
       })
