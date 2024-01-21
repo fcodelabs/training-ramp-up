@@ -2,7 +2,7 @@ import axios from 'axios';
 import { GridValidRowModel } from "@mui/x-data-grid";
 
 const url = process.env.REACT_APP_API_URL;
-
+const userId = localStorage.getItem("userId");
 export const fetchUsersAsync = async () => {
   try {
     const response = await axios.get(`${url}/students`);
@@ -15,7 +15,7 @@ export const fetchUsersAsync = async () => {
 
 export const addUsersAsync = async (user: GridValidRowModel) => {
   try {
-    const response = await axios.post(`${url}/students`, user, {
+    const response = await axios.post(`${url}/students/${userId}`, user, {
       headers: {
         "Content-Type": "application/json",
       },
@@ -29,7 +29,7 @@ export const addUsersAsync = async (user: GridValidRowModel) => {
 
 export const updateUserAsync = async (user: GridValidRowModel) => {
   try {
-    const response = await axios.put(`${url}/students/${user.id}`, user, {
+    const response = await axios.put(`${url}/students/${user.id}/${userId}`, user, {
       headers: {
         "Content-Type": "application/json",
       },
@@ -43,7 +43,7 @@ export const updateUserAsync = async (user: GridValidRowModel) => {
 
 export const deleteUserAsync = async (id: number) => {
   try {
-    const response = await axios.delete(`${url}/students/${id}`);
+    const response = await axios.delete(`${url}/students/${id}/${userId}`);
     return response.data;
   } catch (error) {
     console.error(error);

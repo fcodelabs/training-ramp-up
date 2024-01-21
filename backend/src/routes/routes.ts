@@ -15,19 +15,19 @@ export const Routes = [
   },
   {
     method: "post",
-    route: "/students",
+    route: "/students/:userId",
     controller: StudentController,
     action: "add",
   },
   {
     method: "put",
-    route: "/students/:id",
+    route: "/students/:id/:userId",
     controller: StudentController,
     action: "update",
   },
   {
     method: "delete",
-    route: "/students/:id",
+    route: "/students/:id/:userId",
     controller: StudentController,
     action: "remove",
   },

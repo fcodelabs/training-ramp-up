@@ -1,8 +1,8 @@
-import React, { useEffect } from "react";
+import React from "react";
 import styled from "styled-components";
 import Appbar from "../../components/Appbar/Appbar";
 import Table from "./Table/Table";
-import { Socket, io } from "socket.io-client";
+
 
 export const HomeWarpper = styled.div`
   display: flex;
