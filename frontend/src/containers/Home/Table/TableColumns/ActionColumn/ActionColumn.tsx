@@ -21,6 +21,7 @@ const EditButtonWrapper = styled.div`
   height: 80%;
   flex-direction: column;
   justify-content: space-around;
+  padding: 0 0px 0 -5px;
   align-items: flex-start;
 `;
 
@@ -29,7 +30,8 @@ const ButtonWrapper = styled.div`
   width: 90%;
   flex-direction: row;
   justify-content: space-around;
-  align-items: start;
+  align-items: flex-start;
+  margin: 0 0 0 -4px;
 `;
 
 const GridActionsColumn: React.FC<Props> = ({

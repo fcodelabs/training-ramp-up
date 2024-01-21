@@ -1,4 +1,3 @@
-// src/services/UserService.ts
 
 import { AppDataSource } from "../config/data-source";
 import { Student } from "../entity/Student";

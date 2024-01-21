@@ -110,7 +110,6 @@ const Table = () => {
     type: "",
   });
   const dispatch = useAppDispatch();
-
   const handleCloseNotification = () => {
     setNotification({ open: false, onConfirm: () => {}, type: "" });
   };
@@ -224,8 +223,6 @@ const Table = () => {
     }));
   };
 
-
-
   const columns: GridColDef[] = [
     ...FixedColumns,
     {
@@ -250,12 +247,10 @@ const Table = () => {
 
   useEffect(() => {
     const socket: Socket = io(`${url}`);
-
-  
     socket.on("connect", () => {
       console.log("Connected to Socket.IO server");
-      const userId = "123456789";
-      socket.emit("authenticate", userId);
+
+      socket.emit("authenticate", localStorage.getItem("userId"));
     });
 
     socket.on("added_successfully", (id) => {
