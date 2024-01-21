@@ -14,7 +14,7 @@ import {
   DataGrid,
 } from "@mui/x-data-grid";
 import { FixedColumns } from "./TableColumns/FixedColumns/FixedColumns";
-import ErrorPopup from "../../../components/Notification/Notification";
+import PopupNotification from "../../../components/Notification/Notification";
 import { useAppSelector, useAppDispatch } from "../../../redux/hooks";
 import { emptyColumns } from "../../../components/TableSkeletons/TableSkeletons";
 import GridActionsColumn from "./TableColumns/ActionColumn/ActionColumn";
@@ -29,6 +29,7 @@ import {
 import { generateNewId } from "../../../utilities/index";
 import styled from "styled-components";
 import { Socket, io } from "socket.io-client";
+const url = process.env.REACT_APP_API_URL;
 
 const Container = styled.div`
   display: flex;
@@ -100,7 +101,6 @@ const StyledDataGrid = styled(DataGrid)(() => ({
   },
 }));
 
-
 const Table = () => {
   const rows: GridValidRowModel[] = useAppSelector((state) => state.user.rows);
   const [rowModesModel, setRowModesModel] = useState<GridRowModesModel>({});
@@ -140,7 +140,7 @@ const Table = () => {
   const handleEditClick = (id: GridRowId) => () => {
     setRowModesModel({
       ...rowModesModel,
-      [id]: { mode: GridRowModes.Edit },
+      [id]: { mode: GridRowModes.Edit, fieldToFocus: "id" },
     });
   };
 
@@ -157,45 +157,10 @@ const Table = () => {
         ...rowModesModel,
         [params.id]: { mode: GridRowModes.View },
       });
-      const errorComfirm = () => {
-        dispatch(discardUser(Number(params.id)));
-      };
-      const error = rows.find((row) => row.id === params.id)!.error;
-      const isNew = rows.find((row) => row.id === params.id)!.isNew;
 
-      console.log(rows);
-      if (isNew && !error) {
-        dispatch(addUser(editedRow));
-        setNotification({
-          open: true,
-          onConfirm: handleCloseNotification,
-          type: "SAVE_NEW_USER",
-        });
-      } else if (!isNew && !error) {
-        dispatch(addUser(editedRow));
-        setNotification({
-          open: true,
-          onConfirm: handleCloseNotification,
-          type: "SAVE_USER",
-        });
-      } else if (isNew && error) {
-        setNotification({
-          open: true,
-          onConfirm: errorComfirm,
-          type: "FAIL_SAVE_NEW_USER",
-        });
-      } else {
-        setNotification({
-          open: true,
-          onConfirm: () => {},
-          type: "FAIL_UPDATE_USER",
-        });
-      }
+      dispatch(addUser(editedRow));
+
     } else {
-      setRowModesModel({
-        ...rowModesModel,
-        [params.id]: { mode: GridRowModes.Edit },
-      });
       setNotification({
         open: true,
         onConfirm: handleCloseNotification,
@@ -208,13 +173,7 @@ const Table = () => {
     const confirmDelete = () => {
       dispatch(discardUser(Number(id)));
       handleCloseNotification();
-      setNotification({
-        open: true,
-        onConfirm: handleCloseNotification,
-        type: "DELETE_USER_SUCCESS",
-      });
     };
-
     setNotification({
       open: true,
       onConfirm: confirmDelete,
@@ -224,13 +183,11 @@ const Table = () => {
 
   const handleCancelClick = (id: GridRowId) => () => {
     const comfirmDiscard = () => {
+      dispatch(fetchUsers());
       setRowModesModel({
         ...rowModesModel,
-        [id]: { mode: GridRowModes.View, ignoreModifications: true },
+        [id]: { mode: GridRowModes.View },
       });
-      if (rows.find((row) => row.id === id)!.isNew) {
-        dispatch(discardUser(Number(id)));
-      }
       handleCloseNotification();
     };
 
@@ -267,6 +224,8 @@ const Table = () => {
     }));
   };
 
+
+
   const columns: GridColDef[] = [
     ...FixedColumns,
     {
@@ -290,29 +249,84 @@ const Table = () => {
   ];
 
   useEffect(() => {
-    console.log(rows);
-  }, [rows]);
+    const socket: Socket = io(`${url}`);
+
+  
+    socket.on("connect", () => {
+      console.log("Connected to Socket.IO server");
+      const userId = "123456789";
+      socket.emit("authenticate", userId);
+    });
+
+    socket.on("added_successfully", (id) => {
+      setNotification({
+        open: true,
+        onConfirm: handleCloseNotification,
+        type: "SAVE_NEW_USER",
+      });
+      socket.emit("messageReceived", "Message received successfully");
+    });
+
+    socket.on("add_unsuccessfull", (id) => {
+      const handleUnsuccessfull = () => {
+        setRowModesModel((oldModel) => ({
+          ...oldModel,
+          [id]: { mode: GridRowModes.Edit, fieldToFocus: "id" },
+        }));
+    
+        handleCloseNotification();
+      }
+      setNotification({
+        open: true,
+        onConfirm: handleUnsuccessfull,
+        type: "FAIL_SAVE_NEW_USER",
+      });
+      socket.emit("messageReceived", "Message received successfully");
+    });
+
+    socket.on("updated_successfully", (id) => {
+      setNotification({
+        open: true,
+        onConfirm: handleCloseNotification,
+        type: "SAVE_USER",
+      });
+      socket.emit("messageReceived", "Message received successfully");
+    });
+
+    socket.on("update_unsuccessfull", (id) => {
+      const handleUnsuccessfull = () => {
+        setRowModesModel((oldModel) => ({
+          ...oldModel,
+          [id]: { mode: GridRowModes.Edit, fieldToFocus: "id" },
+        }));
+    
+        handleCloseNotification();
+      }
+      setNotification({
+        open: true,
+        onConfirm: handleUnsuccessfull,
+        type: "FAIL_UPDATE_USER",
+      });
+      socket.emit("messageReceived", "Message received successfully");
+    });
+
+    socket.on("deleted_successfully", (id) => {
+      setNotification({
+        open: true,
+        onConfirm: handleCloseNotification,
+        type: "DELETE_USER_SUCCESS",
+      });
+      socket.emit("messageReceived", "Message received successfully");
+    });
+
+    return () => {
+      socket.disconnect();
+    };
+  }, []);
 
   useEffect(() => {
     dispatch(fetchUsers());
-      const socket: Socket = io("http://localhost:5000");
-  
-      socket.on("connect", () => {
-        console.log("Connected to Socket.IO server");
-        const userId = "123456789";
-        socket.emit("authenticate", userId);
-      });
-  
-      socket.on("privateMessage", (message) => {
-        console.log("Received private message:", message);
-  
-        socket.emit("messageReceived", "Message received successfully");
-      });
-  
-      return () => {
-        socket.disconnect();
-      };
-    }, []);
+  }, [dispatch]);
 
   return (
     <Container>
@@ -334,7 +348,7 @@ const Table = () => {
         getRowHeight={getRowHeight}
         disableColumnMenu
       />
-      <ErrorPopup
+      <PopupNotification
         open={notification.open}
         onClose={handleCloseNotification}
         type={notification.type}

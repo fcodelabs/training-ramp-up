@@ -58,8 +58,9 @@ export class StudentService {
     return "Student has been removed";
   }
 
-  async updateStudent(id: number, student: Student) {
-    const updatedStudent = await this.studentRepository.update(id, student);
+  async updateStudent(studentId: number, student: any) {
+
+    const updatedStudent = await this.studentRepository.update(studentId, student);
     if (!updatedStudent.affected) {
       throw new Error("Student not found");
     }

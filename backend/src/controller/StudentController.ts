@@ -25,7 +25,6 @@ export class StudentController {
     await this.studentService
       .getStudentById(id)
       .then((student) => {
-        sendMessage(this.io, this.userId, "added"); // Change this line
         return response.status(200).send(student);
       })
       .catch((error) => {
@@ -38,23 +37,35 @@ export class StudentController {
     await this.studentService
       .createStudent(id, name, gender, address, mobile, birthday, age)
       .then((student) => {
-        sendMessage(this.io, this.userId, "added"); // Change this line
+        sendMessage(this.io, this.userId, "added_successfully", id);
         return response.status(200).send(student);
       })
       .catch((error) => {
+        sendMessage(this.io, this.userId, "add_unsuccessfull", id);
         return response.status(500).send(error);
       });
   }
 
   async update(request: Request, response: Response) {
-    const id = parseInt(request.params.id);
-    const student = request.body;
+    const studentId = Number(request.params.id);
+    const { id, name, gender, address, mobile, birthday, age } = request.body;
+    const student = {
+      id,
+      name,
+      gender,
+      address,
+      mobile,
+      birthday,
+      age,
+    };
     await this.studentService
-      .updateStudent(id, student)
+      .updateStudent(studentId, student)
       .then((student) => {
+        sendMessage(this.io, this.userId, "updated_successfully", studentId);
         return response.status(200).send(student);
       })
       .catch((error) => {
+        sendMessage(this.io, this.userId, "update_unsuccessfull", studentId);
         return response.status(500).send(error);
       });
   }
@@ -64,20 +75,21 @@ export class StudentController {
     await this.studentService
       .removeStudent(id)
       .then((student) => {
-        sendMessage(this.io, this.userId, "deleted"); // Change this line
+        sendMessage(this.io, this.userId, "deleted_successfully", id); 
         return response.status(200).send(student);
       })
       .catch((error) => {
+        sendMessage(this.io, this.userId, "delete_successfull", id); 
         return response.status(500).send(error);
       });
   }
 }
 
-async function sendMessage(io: Server, userId: string, message: string) {
+async function sendMessage(io: Server, userId: string, message: string, studentId: number) {
   const socketId = userSockets.get(userId);
   if (socketId) {
-    io.to(socketId).emit("privateMessage", socketId);
+    io.to(socketId).emit(message, studentId);
   } else {
-    console.warn("User not found:", socketId);
+    console.warn("User not found:", userId);
   }
 }

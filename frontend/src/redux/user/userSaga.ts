@@ -12,6 +12,7 @@ import {
   fetchUsersAsync,
   addUsersAsync,
   deleteUserAsync,
+  updateUserAsync,
 } from "../../utilities/userServices";
 
 function* watchFetchStudents() {
@@ -25,10 +26,12 @@ function* watchFetchStudents() {
 
 function* watchAddNewUser(action: any) {
   try {
-    const student: GridValidRowModel = yield call(
-      addUsersAsync,
-      action.payload
-    );
+    let student: GridValidRowModel;
+    if (action.payload.isNew) {
+      student = yield call(addUsersAsync, action.payload);
+    } else {
+      student = yield call(updateUserAsync, action.payload);
+    }
     yield put(addUser(student));
   } catch (error: any) {
     yield put(setUserError(action.payload.id));
