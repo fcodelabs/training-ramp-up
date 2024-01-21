@@ -1,12 +1,20 @@
-import { takeLatest, put, call, takeLeading } from "redux-saga/effects";
-import { GridValidRowModel } from "@mui/x-data-grid";
+import {
+  takeLatest,
+  put,
+  call,
+  takeLeading,
+  takeEvery,
+} from "redux-saga/effects";
+import { GridRowId, GridValidRowModel } from "@mui/x-data-grid";
 import axios from "axios";
 import {
   addStudent,
   addStudentError,
+  editStudent,
   fetchAllStudents,
   fetchStudentsError,
   updateStudent,
+  updateStudentError,
 } from "../slice/studentSlice";
 import { PayloadAction } from "@reduxjs/toolkit";
 
@@ -39,13 +47,34 @@ function* watchAddNewStudent(
   };
   console.log(newStudent);
   try {
-    const { data } = yield call(
-      axios.post<GridValidRowModel[]>,
+    yield call(
+      axios.post<GridValidRowModel>,
       "http://localhost:5000/students/newStudent",
       newStudent
     );
   } catch (error: any) {
     yield put(addStudentError());
+    return error;
+  }
+}
+
+function* watchUpdateStudent(action: PayloadAction<GridValidRowModel>) {
+  const updatedStudent = {
+    name: action.payload.name,
+    gender: action.payload.gender,
+    address: action.payload.address,
+    mobileno: action.payload.mobileno,
+    dateofbirth: action.payload.dateofbirth,
+    age: action.payload.age,
+  };
+  try {
+    yield call(
+      axios.put<GridValidRowModel>,
+      `http://localhost:5000/students/updateStudent/${action.payload.id}`,
+      updatedStudent
+    );
+  } catch (error: any) {
+    yield put(updateStudentError(error));
     return error;
   }
 }
@@ -61,5 +90,6 @@ function* watchAddNewStudent(
 export function* userSaga(): Generator<any, any, any> {
   yield takeLatest(fetchAllStudents, watchGetAllStudents);
   yield takeLatest(addStudent.type, watchAddNewStudent);
+  yield takeLeading(editStudent.type, watchUpdateStudent);
   //   yield takeLeading(discardUser, watchDeleteUser);
 }

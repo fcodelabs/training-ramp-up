@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 import {
   addStudent,
+  editStudent,
   fetchAllStudents,
   updateStudent,
 } from "../../redux/slice/studentSlice";
@@ -193,15 +194,26 @@ const DataGridTable = () => {
   };
 
   const processRowUpdate = (newRow: GridRowModel) => {
-    const student: GridValidRowModel = {
-      id: newRow.id,
-      name: newRow.name,
-      gender: newRow.gender,
-      address: newRow.address,
-      mobileno: newRow.mobileno,
-      dateofbirth: newRow.dateofbirth.toISOString().slice(0, 10),
-      age: newRow.age,
-    };
+    const student: GridValidRowModel =
+      "isNew" in newRow
+        ? {
+            id: newRow.id,
+            name: newRow.name,
+            gender: newRow.gender,
+            address: newRow.address,
+            mobileno: newRow.mobileno,
+            dateofbirth: newRow.dateofbirth.toISOString().slice(0, 10),
+            age: newRow.age,
+          }
+        : {
+            id: newRow.id,
+            name: newRow.name,
+            gender: newRow.gender,
+            address: newRow.address,
+            mobileno: newRow.mobileno,
+            dateofbirth: newRow.dateofbirth,
+            age: newRow.age,
+          };
 
     const updatedRow = { ...student, isNew: false };
     const isPhoneNumberValid = validatePhoneNumber(newRow.mobileno);
@@ -227,8 +239,11 @@ const DataGridTable = () => {
     }
 
     try {
-      if (newRow!.isNew) {
+      if ("isNew" in newRow) {
         dispatch(addStudent(student));
+      } else {
+        console.log("here");
+        dispatch(editStudent(student));
       }
       dispatch(
         updateStudent(
@@ -403,7 +418,7 @@ const DataGridTable = () => {
       headerName: "Date of Birth",
       headerAlign: "left",
       align: "left",
-      type: "date",
+      type: "string",
       valueFormatter: (params) => {
         const date = dayjs(params.value);
         return date.format("ddd MMM DD YYYY");
@@ -602,6 +617,7 @@ const DataGridTable = () => {
             onRowModesModelChange={handleRowModesModelChange}
             onRowEditStop={handleRowEditStop}
             processRowUpdate={processRowUpdate}
+            onProcessRowUpdateError={(error) => console.error(error)}
             slots={{
               toolbar: EditToolbar,
             }}

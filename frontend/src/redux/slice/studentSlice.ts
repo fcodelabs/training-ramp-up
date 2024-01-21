@@ -4,12 +4,14 @@ import type { PayloadAction } from "@reduxjs/toolkit";
 
 interface IinitialState {
   userAddingError: boolean;
+  userUpdatingError: boolean;
   isLoading: boolean;
   students: GridValidRowModel[];
 }
 
 const initialState: IinitialState = {
   userAddingError: false,
+  userUpdatingError: false,
   isLoading: false,
   students: [
     {
@@ -77,6 +79,7 @@ export const studentSlice = createSlice({
       state.students = action.payload;
       state.isLoading = false;
       state.userAddingError = false;
+      state.userUpdatingError = false;
     },
     fetchAllStudents: (state) => {
       //get all students
@@ -94,8 +97,12 @@ export const studentSlice = createSlice({
     removeStudent: (state) => {
       //remove a student from the db
     },
-    editStudent: (state) => {
+    editStudent: (state, action: PayloadAction<GridValidRowModel>) => {
       //edit a student in the db
+    },
+    updateStudentError: (state) => {
+      state.isLoading = true;
+      state.userUpdatingError = true;
     },
   },
 });
@@ -108,6 +115,7 @@ export const {
   addStudentError,
   removeStudent,
   editStudent,
+  updateStudentError,
 } = studentSlice.actions;
 
 export default studentSlice.reducer;
