@@ -42,7 +42,8 @@ export class StudentService {
       birthday,
       age,
     });
-    return this.studentRepository.save(student);
+    const response = await this.studentRepository.save(student);
+    return response;
   }
 
   async removeStudent(id: number) {

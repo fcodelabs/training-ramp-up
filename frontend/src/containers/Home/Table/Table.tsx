@@ -28,6 +28,7 @@ import {
 } from "../../../redux/user/userSlice";
 import { generateNewId } from "../../../utilities/index";
 import styled from "styled-components";
+import { io } from "socket.io-client";
 
 const Container = styled.div`
   display: flex;
@@ -152,7 +153,6 @@ const Table = () => {
         emptyColumns.map((column) => column.field)
       )
     ) {
-      dispatch(addUser(editedRow));
       setRowModesModel({
         ...rowModesModel,
         [params.id]: { mode: GridRowModes.View },
@@ -162,14 +162,17 @@ const Table = () => {
       };
       const error = rows.find((row) => row.id === params.id)!.error;
       const isNew = rows.find((row) => row.id === params.id)!.isNew;
+
       console.log(rows);
       if (isNew && !error) {
+        dispatch(addUser(editedRow));
         setNotification({
           open: true,
           onConfirm: handleCloseNotification,
           type: "SAVE_NEW_USER",
         });
       } else if (!isNew && !error) {
+        dispatch(addUser(editedRow));
         setNotification({
           open: true,
           onConfirm: handleCloseNotification,
