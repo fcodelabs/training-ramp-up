@@ -11,6 +11,9 @@ import {
   editStudent,
   fetchAllStudents,
   removeStudent,
+  setIsLoading,
+  setUserAddingError,
+  setUserUpdatingError,
   updateStudent,
 } from "../../redux/slice/studentSlice";
 import {
@@ -44,9 +47,8 @@ import {
 import { formatPhoneNumber } from "../../utility/formatPhoneNumber";
 import { ageCalculator } from "../../utility/ageCalculator";
 import { validatePhoneNumber } from "../../utility/validatePhoneNumber";
-import SingleButtonPopupMessage from "../SingleButtonPopupMessage/SingleButtonPopupMessage";
-import DoubleButtonPopupMessage from "../DoubleButtonPopupMessage/DoubleButtonPopupMessage";
 import { dataGridStyles } from "../../styles/dataGridStyles";
+import PopupMessage from "../PopupMessage/PopupMessage";
 
 let idValue = 0;
 
@@ -136,14 +138,21 @@ const DataGridTable = () => {
   const tableState: boolean = useSelector(
     (state: RootState) => state.student.isLoading
   );
+  const studentAddingError: boolean = useSelector(
+    (state: RootState) => state.student.userAddingError
+  );
+  const studentUpdatingError: boolean = useSelector(
+    (state: RootState) => state.student.userUpdatingError
+  );
+  // const studentRemovingError: boolean = useSelector(
+  //   (state: RootState) => state.student.removeStudentError
+  // );
   const dispatch = useDispatch();
   const [numbervalidateError, setNumberValidateError] = useState(false);
   const [agevalidateError, setAgeValidateError] = useState(false);
   const [keepEditingPopup, setKeepEditingPopup] = useState(false);
   const [addedSuccessfullyPopup, setAddedSuccessfullyPopup] = useState(false);
   const [editedSuccessfullyPopup, setEditedSuccessfullyPopup] = useState(false);
-  const [unableToAddPopup, setUnableToAdd] = useState(false);
-  const [unableToEditPopup, setUnableToEdit] = useState(false);
   const [discardChangesPopup, setDiscardChangesPopup] = useState(false);
   const [deletePopup, setDeletePopup] = useState(false);
   const [currentRowId, setCurrentRowId] = useState<GridRowId | null>(null);
@@ -213,10 +222,12 @@ const DataGridTable = () => {
           : newRow.dateofbirth.toISOString().slice(0, 10),
       age: newRow.age,
     };
-
     const updatedRow = {
       ...newRow,
-      dateofbirth: newRow.dateofbirth.toISOString(),
+      dateofbirth:
+        typeof newRow.dateofbirth === "string"
+          ? newRow.dateofbirth
+          : newRow.dateofbirth.toISOString(),
       isNew: false,
     };
     const isPhoneNumberValid = validatePhoneNumber(newRow.mobileno);
@@ -260,11 +271,6 @@ const DataGridTable = () => {
         setEditedSuccessfullyPopup(true);
       }
     } catch (error) {
-      if (newRow!.isNew) {
-        setUnableToAdd(true);
-      } else {
-        setUnableToEdit(true);
-      }
       console.error(error);
       return {};
     }
@@ -708,47 +714,53 @@ const DataGridTable = () => {
         </Paper>
       </Container>
       {keepEditingPopup && (
-        <SingleButtonPopupMessage
+        <PopupMessage
           open={keepEditingPopup}
           title={"Mandatory fields are missing."}
-          handleClick={() => setKeepEditingPopup(false)}
-          buttonName="Keep Editing"
+          handleClickSecondButton={() => setKeepEditingPopup(false)}
+          secondButtonName="Keep Editing"
         />
       )}
       {addedSuccessfullyPopup && (
-        <SingleButtonPopupMessage
+        <PopupMessage
           open={addedSuccessfullyPopup}
           title={"A new student added successfully."}
-          handleClick={() => setAddedSuccessfullyPopup(false)}
-          buttonName="Ok"
+          handleClickSecondButton={() => setAddedSuccessfullyPopup(false)}
+          secondButtonName="Ok"
         />
       )}
-      {unableToAddPopup && (
-        <SingleButtonPopupMessage
-          open={unableToAddPopup}
+      {studentAddingError && (
+        <PopupMessage
+          open={studentAddingError}
           title={"Unable to add a new student.Please try again later"}
-          handleClick={() => setUnableToAdd(false)}
-          buttonName="Try again"
+          handleClickSecondButton={() => {
+            dispatch(setIsLoading(false));
+            dispatch(setUserAddingError(false));
+          }}
+          secondButtonName="Try again"
         />
       )}
       {editedSuccessfullyPopup && (
-        <SingleButtonPopupMessage
+        <PopupMessage
           open={editedSuccessfullyPopup}
           title={"Student detailes updated successfully."}
-          handleClick={() => setEditedSuccessfullyPopup(false)}
-          buttonName="Ok"
+          handleClickSecondButton={() => setEditedSuccessfullyPopup(false)}
+          secondButtonName="Ok"
         />
       )}
-      {unableToEditPopup && (
-        <SingleButtonPopupMessage
-          open={unableToEditPopup}
+      {studentUpdatingError && (
+        <PopupMessage
+          open={studentUpdatingError}
           title={"Cannot update student details.Please try again later"}
-          handleClick={() => setUnableToEdit(false)}
-          buttonName="Try again"
+          handleClickSecondButton={() => {
+            dispatch(setIsLoading(false));
+            dispatch(setUserUpdatingError(false));
+          }}
+          secondButtonName="Try again"
         />
       )}
       {discardChangesPopup && (
-        <DoubleButtonPopupMessage
+        <PopupMessage
           open={discardChangesPopup}
           title={"Discard changes?"}
           handleClickFirstButton={() => setDiscardChangesPopup(false)}
@@ -761,7 +773,7 @@ const DataGridTable = () => {
         />
       )}
       {deletePopup && (
-        <DoubleButtonPopupMessage
+        <PopupMessage
           open={deletePopup}
           title={"Are you sure you want to remove this student?"}
           handleClickFirstButton={() => setDeletePopup(false)}

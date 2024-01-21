@@ -93,15 +93,15 @@ export const studentSlice = createSlice({
       //add a new student to the database
     },
     addStudentError: (state) => {
-      state.userAddingError = true;
       state.isLoading = true;
+      state.userAddingError = true;
     },
     removeStudent: (state, action: PayloadAction<GridRowId>) => {
       //remove a student from the db
     },
     removeStudentError: (state) => {
-      state.removeStudentError = true;
       state.isLoading = true;
+      state.removeStudentError = true;
     },
     editStudent: (state, action: PayloadAction<GridValidRowModel>) => {
       //edit a student in the db
@@ -109,6 +109,18 @@ export const studentSlice = createSlice({
     updateStudentError: (state) => {
       state.isLoading = true;
       state.userUpdatingError = true;
+    },
+    setIsLoading: (state, action: PayloadAction<boolean>) => {
+      state.isLoading = action.payload;
+    },
+    setUserAddingError: (state, action: PayloadAction<boolean>) => {
+      state.userAddingError = action.payload;
+    },
+    setRemoveStudentError: (state, action: PayloadAction<boolean>) => {
+      state.removeStudentError = action.payload;
+    },
+    setUserUpdatingError: (state, action: PayloadAction<boolean>) => {
+      state.userUpdatingError = action.payload;
     },
   },
 });
@@ -123,6 +135,10 @@ export const {
   removeStudentError,
   editStudent,
   updateStudentError,
+  setIsLoading,
+  setUserAddingError,
+  setRemoveStudentError,
+  setUserUpdatingError,
 } = studentSlice.actions;
 
 export default studentSlice.reducer;
