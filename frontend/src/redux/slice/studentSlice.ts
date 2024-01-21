@@ -1,10 +1,11 @@
-import { GridValidRowModel } from "@mui/x-data-grid";
+import { GridRowId, GridValidRowModel } from "@mui/x-data-grid";
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 
 interface IinitialState {
   userAddingError: boolean;
   userUpdatingError: boolean;
+  removeStudentError: boolean;
   isLoading: boolean;
   students: GridValidRowModel[];
 }
@@ -12,7 +13,8 @@ interface IinitialState {
 const initialState: IinitialState = {
   userAddingError: false,
   userUpdatingError: false,
-  isLoading: false,
+  removeStudentError: false,
+  isLoading: true,
   students: [
     {
       id: 1,
@@ -76,16 +78,16 @@ export const studentSlice = createSlice({
   initialState,
   reducers: {
     updateStudent: (state, action: PayloadAction<GridValidRowModel[]>) => {
-      state.students = action.payload;
       state.isLoading = false;
       state.userAddingError = false;
       state.userUpdatingError = false;
+      state.students = action.payload;
     },
     fetchAllStudents: (state) => {
       //get all students
     },
     fetchStudentsError: (state) => {
-      state.isLoading = true;
+      state.isLoading = false;
     },
     addStudent: (state, action: PayloadAction<GridValidRowModel>) => {
       //add a new student to the database
@@ -94,8 +96,12 @@ export const studentSlice = createSlice({
       state.userAddingError = true;
       state.isLoading = true;
     },
-    removeStudent: (state) => {
+    removeStudent: (state, action: PayloadAction<GridRowId>) => {
       //remove a student from the db
+    },
+    removeStudentError: (state) => {
+      state.removeStudentError = true;
+      state.isLoading = true;
     },
     editStudent: (state, action: PayloadAction<GridValidRowModel>) => {
       //edit a student in the db
@@ -114,6 +120,7 @@ export const {
   addStudent,
   addStudentError,
   removeStudent,
+  removeStudentError,
   editStudent,
   updateStudentError,
 } = studentSlice.actions;

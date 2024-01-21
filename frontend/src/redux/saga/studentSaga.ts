@@ -13,6 +13,8 @@ import {
   editStudent,
   fetchAllStudents,
   fetchStudentsError,
+  removeStudent,
+  removeStudentError,
   updateStudent,
   updateStudentError,
 } from "../slice/studentSlice";
@@ -34,8 +36,6 @@ function* watchGetAllStudents(): Generator<any, any, any> {
 function* watchAddNewStudent(
   action: PayloadAction<GridValidRowModel>
 ): Generator<any, any, any> {
-  console.log("done.....");
-  console.log(action.payload);
   const newStudent = {
     id: action.payload.id,
     name: action.payload.name,
@@ -45,7 +45,6 @@ function* watchAddNewStudent(
     dateofbirth: action.payload.dateofbirth,
     age: action.payload.age,
   };
-  console.log(newStudent);
   try {
     yield call(
       axios.post<GridValidRowModel>,
@@ -79,17 +78,21 @@ function* watchUpdateStudent(action: PayloadAction<GridValidRowModel>) {
   }
 }
 
-// function* watchDeleteUser(action: any) {
-//   try {
-//     yield call(deleteUserAsync, action.payload);
-//   } catch (error: any) {
-//     return error;
-//   }
-// }
+function* watchRemoveStudent(action: PayloadAction<GridRowId>) {
+  try {
+    yield call(
+      axios.delete,
+      `http://localhost:5000/students/removeStudent/${action.payload}`
+    );
+  } catch (error: any) {
+    yield put(removeStudentError(error));
+    return error;
+  }
+}
 
 export function* userSaga(): Generator<any, any, any> {
   yield takeLatest(fetchAllStudents, watchGetAllStudents);
   yield takeLatest(addStudent.type, watchAddNewStudent);
   yield takeLeading(editStudent.type, watchUpdateStudent);
-  //   yield takeLeading(discardUser, watchDeleteUser);
+  yield takeLeading(removeStudent, watchRemoveStudent);
 }

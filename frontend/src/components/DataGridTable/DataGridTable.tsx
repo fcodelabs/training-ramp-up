@@ -10,15 +10,18 @@ import {
   addStudent,
   editStudent,
   fetchAllStudents,
+  removeStudent,
   updateStudent,
 } from "../../redux/slice/studentSlice";
 import {
+  Box,
   Button,
   Container,
   Grid,
   MenuItem,
   Paper,
   Select,
+  Skeleton,
   Stack,
   TextField,
   Typography,
@@ -130,6 +133,9 @@ const DataGridTable = () => {
   const initialRows: GridRowsProp = useSelector(
     (state: RootState) => state.student.students
   );
+  const tableState: boolean = useSelector(
+    (state: RootState) => state.student.isLoading
+  );
   const dispatch = useDispatch();
   const [numbervalidateError, setNumberValidateError] = useState(false);
   const [agevalidateError, setAgeValidateError] = useState(false);
@@ -146,7 +152,7 @@ const DataGridTable = () => {
 
   useEffect(() => {
     dispatch(fetchAllStudents());
-  }, []);
+  }, [dispatch]);
 
   const handleRowEditStop: GridEventListener<"rowEditStop"> = (
     params,
@@ -172,6 +178,7 @@ const DataGridTable = () => {
 
   const handleConfirmDeleteClick = (id: GridRowId) => {
     dispatch(updateStudent(initialRows.filter((row) => row.id !== id)));
+    dispatch(removeStudent(id));
     idReducer();
   };
 
@@ -194,28 +201,24 @@ const DataGridTable = () => {
   };
 
   const processRowUpdate = (newRow: GridRowModel) => {
-    const student: GridValidRowModel =
-      "isNew" in newRow
-        ? {
-            id: newRow.id,
-            name: newRow.name,
-            gender: newRow.gender,
-            address: newRow.address,
-            mobileno: newRow.mobileno,
-            dateofbirth: newRow.dateofbirth.toISOString().slice(0, 10),
-            age: newRow.age,
-          }
-        : {
-            id: newRow.id,
-            name: newRow.name,
-            gender: newRow.gender,
-            address: newRow.address,
-            mobileno: newRow.mobileno,
-            dateofbirth: newRow.dateofbirth,
-            age: newRow.age,
-          };
+    const student: GridValidRowModel = {
+      id: newRow.id,
+      name: newRow.name,
+      gender: newRow.gender,
+      address: newRow.address,
+      mobileno: newRow.mobileno,
+      dateofbirth:
+        typeof newRow.dateofbirth === "string"
+          ? newRow.dateofbirth
+          : newRow.dateofbirth.toISOString().slice(0, 10),
+      age: newRow.age,
+    };
 
-    const updatedRow = { ...student, isNew: false };
+    const updatedRow = {
+      ...newRow,
+      dateofbirth: newRow.dateofbirth.toISOString(),
+      isNew: false,
+    };
     const isPhoneNumberValid = validatePhoneNumber(newRow.mobileno);
     const isAgeValid = newRow.age > 18;
 
@@ -242,7 +245,6 @@ const DataGridTable = () => {
       if ("isNew" in newRow) {
         dispatch(addStudent(student));
       } else {
-        console.log("here");
         dispatch(editStudent(student));
       }
       dispatch(
@@ -282,6 +284,16 @@ const DataGridTable = () => {
       width: 60,
       disableColumnMenu: true,
       sortable: false,
+      renderCell: (params) => {
+        if (tableState) {
+          return (
+            <Box>
+              <Skeleton animation="wave" height={15} width={30} />
+            </Box>
+          );
+        }
+        return params.value;
+      },
       valueFormatter: (params) => {
         const id = Number(params.value);
         const formattedId = id.toString().padStart(2, "0");
@@ -297,7 +309,16 @@ const DataGridTable = () => {
       sortable: true,
       editable: true,
       disableColumnMenu: true,
-
+      renderCell: (params) => {
+        if (tableState) {
+          return (
+            <Box>
+              <Skeleton animation="wave" height={15} width={50} />
+            </Box>
+          );
+        }
+        return params.value;
+      },
       renderEditCell: (params: GridRenderCellParams<any, string>) => (
         <TextField
           size="small"
@@ -324,6 +345,16 @@ const DataGridTable = () => {
       sortable: false,
       disableColumnMenu: true,
       editable: true,
+      renderCell: (params) => {
+        if (tableState) {
+          return (
+            <Box>
+              <Skeleton animation="wave" height={15} width={50} />
+            </Box>
+          );
+        }
+        return params.value;
+      },
       renderEditCell: (params: GridRenderCellParams<any, string>) => (
         <Select
           size="small"
@@ -353,6 +384,16 @@ const DataGridTable = () => {
       sortable: false,
       disableColumnMenu: true,
       editable: true,
+      renderCell: (params) => {
+        if (tableState) {
+          return (
+            <Box>
+              <Skeleton animation="wave" height={15} width={60} />
+            </Box>
+          );
+        }
+        return params.value;
+      },
       renderEditCell: (params: GridRenderCellParams<any, string>) => (
         <TextField
           size="small"
@@ -379,6 +420,16 @@ const DataGridTable = () => {
       editable: true,
       valueFormatter: (params) => {
         return formatPhoneNumber(params.value);
+      },
+      renderCell: (params) => {
+        if (tableState) {
+          return (
+            <Box>
+              <Skeleton animation="wave" height={15} width={80} />
+            </Box>
+          );
+        }
+        return params.value;
       },
       renderEditCell: (params: GridRenderCellParams<any, string>) => (
         <TextField
@@ -418,7 +469,7 @@ const DataGridTable = () => {
       headerName: "Date of Birth",
       headerAlign: "left",
       align: "left",
-      type: "string",
+      type: "date",
       valueFormatter: (params) => {
         const date = dayjs(params.value);
         return date.format("ddd MMM DD YYYY");
@@ -427,6 +478,15 @@ const DataGridTable = () => {
       disableColumnMenu: true,
       editable: true,
       width: 205,
+      renderCell: (params) => {
+        if (tableState) {
+          return (
+            <Box>
+              <Skeleton animation="wave" height={15} width={100} />
+            </Box>
+          );
+        }
+      },
       renderEditCell: (
         params: GridRenderCellParams<any, dayjs.Dayjs | null>
       ) => {
@@ -474,6 +534,16 @@ const DataGridTable = () => {
       disableColumnMenu: true,
       sortable: false,
       width: 100,
+      renderCell: (params) => {
+        if (tableState) {
+          return (
+            <Box>
+              <Skeleton animation="wave" height={15} width={50} />
+            </Box>
+          );
+        }
+        return params.value;
+      },
       renderEditCell: (params: GridRenderCellParams<any, string>) => (
         <TextField
           size="small"
