@@ -6,11 +6,10 @@
     ],
     "plugins": ["@typescript-eslint", "prettier"],
     "parserOptions": {
-      "ecmaVersion": 2022,
-      "sourceType": "module",
-      "project": "./backend/tsconfig.json"
+      "ecmaVersion": 2018,
+      "sourceType": "module"
     },
     "rules": {
-      "prettier/prettier": ["error", {}, { "usePrettierrc": true }]
+     
     }
   }
