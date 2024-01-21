@@ -28,7 +28,7 @@ import {
 } from "../../../redux/user/userSlice";
 import { generateNewId } from "../../../utilities/index";
 import styled from "styled-components";
-import { io } from "socket.io-client";
+import { Socket, io } from "socket.io-client";
 
 const Container = styled.div`
   display: flex;
@@ -295,7 +295,24 @@ const Table = () => {
 
   useEffect(() => {
     dispatch(fetchUsers());
-  }, []);
+      const socket: Socket = io("http://localhost:5000");
+  
+      socket.on("connect", () => {
+        console.log("Connected to Socket.IO server");
+        const userId = "123456789";
+        socket.emit("authenticate", userId);
+      });
+  
+      socket.on("privateMessage", (message) => {
+        console.log("Received private message:", message);
+  
+        socket.emit("messageReceived", "Message received successfully");
+      });
+  
+      return () => {
+        socket.disconnect();
+      };
+    }, []);
 
   return (
     <Container>

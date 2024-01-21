@@ -25,26 +25,7 @@ export const ContainerWrapper = styled.div`
 `;
 
 export default function Home() {
-  useEffect(() => {
-    const socket: Socket = io("http://localhost:5000");
 
-    socket.on("connect", () => {
-      console.log("Connected to Socket.IO server");
-      const userId = "123456789";
-      socket.emit("authenticate", userId);
-    });
-
-    socket.on("privateMessage", (message) => {
-      console.log("Received private message:", message);
-
-      // Emit a confirmation to the server
-      socket.emit("messageReceived", "Message received successfully");
-    });
-
-    return () => {
-      socket.disconnect();
-    };
-  }, []);
 
   return (
     <HomeWarpper>
