@@ -14,7 +14,7 @@ import {
 import formatDate from '../../../../../Utilities/formatDate'
 import { Skeleton } from '@mui/material'
 
-const genders = ['Male', 'female', 'other']
+const genders = ['Male', 'Female', 'Other']
 
 export const FixedColumns: GridColDef[] = [
     {
@@ -34,7 +34,7 @@ export const FixedColumns: GridColDef[] = [
         editable: true,
         sortingOrder: ['desc', 'asc'],
         renderHeader: () => {
-            return <Header text="name" />
+            return <Header text="Name" />
         },
         renderEditCell: (params) => {
             return (
@@ -168,7 +168,7 @@ export const FixedColumns: GridColDef[] = [
         editable: true,
         sortingOrder: ['desc', 'asc'],
         renderHeader: () => {
-            return <Header text="Birthday" />
+            return <Header text="Date of Birth" />
         },
         renderCell: (params) => {
             const formattedDate = formatDate(params.value)
