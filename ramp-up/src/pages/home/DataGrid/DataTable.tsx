@@ -379,6 +379,7 @@ function DataTable(){
               style: styles.validateError,
             }}
             onChange={(event) => {
+              console.log(event.target.value);
               params.api.setEditCellValue({ 
                 id: params.id, 
                 field: params.field, 
