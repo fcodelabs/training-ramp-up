@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import dayjs from "dayjs";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -8,13 +9,18 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 import {
   addStudent,
+  addStudentError,
   editStudent,
   fetchAllStudents,
   removeStudent,
+  removeStudentError,
   setIsLoading,
+  setRemoveStudentError,
   setUserAddingError,
+  setUserFetchingError,
   setUserUpdatingError,
   updateStudent,
+  updateStudentError,
 } from "../../redux/slice/studentSlice";
 import {
   Box,
@@ -49,6 +55,8 @@ import { ageCalculator } from "../../utility/ageCalculator";
 import { validatePhoneNumber } from "../../utility/validatePhoneNumber";
 import { dataGridStyles } from "../../styles/dataGridStyles";
 import PopupMessage from "../PopupMessage/PopupMessage";
+import io from "socket.io-client";
+const socket = io("http://localhost:5000");
 
 let idValue = 0;
 
@@ -144,24 +152,61 @@ const DataGridTable = () => {
   const studentUpdatingError: boolean = useSelector(
     (state: RootState) => state.student.userUpdatingError
   );
-  // const studentRemovingError: boolean = useSelector(
-  //   (state: RootState) => state.student.removeStudentError
-  // );
+  const studentRemovingError: boolean = useSelector(
+    (state: RootState) => state.student.removeStudentError
+  );
+  const fetchStudentsError: boolean = useSelector(
+    (state: RootState) => state.student.userFetchingError
+  );
   const dispatch = useDispatch();
   const [numbervalidateError, setNumberValidateError] = useState(false);
   const [agevalidateError, setAgeValidateError] = useState(false);
   const [keepEditingPopup, setKeepEditingPopup] = useState(false);
   const [addedSuccessfullyPopup, setAddedSuccessfullyPopup] = useState(false);
   const [editedSuccessfullyPopup, setEditedSuccessfullyPopup] = useState(false);
+  const [removedSuccessfullyPopup, setRemovedSuccessfullyPopup] =
+    useState(false);
   const [discardChangesPopup, setDiscardChangesPopup] = useState(false);
   const [deletePopup, setDeletePopup] = useState(false);
   const [currentRowId, setCurrentRowId] = useState<GridRowId | null>(null);
-
   const [rowModesModel, setRowModesModel] = useState<GridRowModesModel>({});
 
   useEffect(() => {
     dispatch(fetchAllStudents());
   }, [dispatch]);
+
+  useEffect(() => {
+    socket.on("get_all_students", (data) => {
+      console.log("getAll: ", data);
+    });
+    socket.on("create_new_student", (data) => {
+      if (data === 201) {
+        setAddedSuccessfullyPopup(true);
+        dispatch(fetchAllStudents());
+      }
+      if (data === 500) {
+        dispatch(addStudentError());
+      }
+    });
+    socket.on("update_student", (data) => {
+      if (data === 201) {
+        setEditedSuccessfullyPopup(true);
+        dispatch(fetchAllStudents());
+      }
+      if (data === 500) {
+        dispatch(updateStudentError());
+      }
+    });
+    socket.on("remove_student", (data) => {
+      if (data === 204) {
+        setRemovedSuccessfullyPopup(true);
+        dispatch(fetchAllStudents());
+      }
+      if (data === 500) {
+        dispatch(removeStudentError());
+      }
+    });
+  }, []);
 
   const handleRowEditStop: GridEventListener<"rowEditStop"> = (
     params,
@@ -265,11 +310,11 @@ const DataGridTable = () => {
       );
       setAgeValidateError(false);
       setNumberValidateError(false);
-      if (newRow!.isNew) {
-        setAddedSuccessfullyPopup(true);
-      } else {
-        setEditedSuccessfullyPopup(true);
-      }
+      // if (newRow!.isNew) {
+      //   setAddedSuccessfullyPopup(true);
+      // } else {
+      //   setEditedSuccessfullyPopup(true);
+      // }
     } catch (error) {
       console.error(error);
       return {};
@@ -729,6 +774,17 @@ const DataGridTable = () => {
           secondButtonName="Ok"
         />
       )}
+      {fetchStudentsError && (
+        <PopupMessage
+          open={fetchStudentsError}
+          title={"Unable fetch students details.Please try again later"}
+          handleClickSecondButton={() => {
+            // dispatch(setIsLoading(false));
+            dispatch(setUserFetchingError(false));
+          }}
+          secondButtonName="Try again"
+        />
+      )}
       {studentAddingError && (
         <PopupMessage
           open={studentAddingError}
@@ -748,6 +804,14 @@ const DataGridTable = () => {
           secondButtonName="Ok"
         />
       )}
+      {removedSuccessfullyPopup && (
+        <PopupMessage
+          open={removedSuccessfullyPopup}
+          title={"Student removed successfully."}
+          handleClickSecondButton={() => setRemovedSuccessfullyPopup(false)}
+          secondButtonName="Ok"
+        />
+      )}
       {studentUpdatingError && (
         <PopupMessage
           open={studentUpdatingError}
@@ -755,6 +819,17 @@ const DataGridTable = () => {
           handleClickSecondButton={() => {
             dispatch(setIsLoading(false));
             dispatch(setUserUpdatingError(false));
+          }}
+          secondButtonName="Try again"
+        />
+      )}
+      {studentRemovingError && (
+        <PopupMessage
+          open={studentRemovingError}
+          title={"Cannot Remove the student.Please try again later"}
+          handleClickSecondButton={() => {
+            dispatch(setIsLoading(false));
+            dispatch(setRemoveStudentError(false));
           }}
           secondButtonName="Try again"
         />

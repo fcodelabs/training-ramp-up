@@ -23,6 +23,7 @@ function* watchGetAllStudents(): Generator<any, any, any> {
     yield put(updateStudent(data));
   } catch (error: any) {
     yield put(fetchStudentsError(error));
+    yield put(fetchAllStudents());
     console.log(error);
   }
 }
@@ -47,6 +48,7 @@ function* watchAddNewStudent(
     );
   } catch (error: any) {
     yield put(addStudentError());
+    yield put(fetchAllStudents());
     return error;
   }
 }
@@ -68,6 +70,7 @@ function* watchUpdateStudent(action: PayloadAction<GridValidRowModel>) {
     );
   } catch (error: any) {
     yield put(updateStudentError(error));
+    yield put(fetchAllStudents());
     return error;
   }
 }
@@ -80,6 +83,7 @@ function* watchRemoveStudent(action: PayloadAction<GridRowId>) {
     );
   } catch (error: any) {
     yield put(removeStudentError(error));
+    yield put(fetchAllStudents());
     return error;
   }
 }
