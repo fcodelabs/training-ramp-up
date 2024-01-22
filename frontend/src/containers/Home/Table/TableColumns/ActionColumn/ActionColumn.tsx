@@ -1,11 +1,9 @@
 import * as React from "react";
 import Button from "@mui/material/Button";
 import {
-  GridActionsCellItem,
   GridRenderEditCellParams,
 } from "@mui/x-data-grid";
 import styled from "styled-components";
-import { Box } from "@mui/material";
 
 interface Props {
   params: GridRenderEditCellParams;

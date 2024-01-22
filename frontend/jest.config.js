@@ -10,7 +10,7 @@ module.exports = {
     '\\.(css|less)$': 'identity-obj-proxy',
   },
   coverageReporters: ["lcov", "text", "html"],
-  collectCoverageFrom: ["src/**/*.tsx", "src/**/*.ts"],
+  collectCoverageFrom: ["src/components/**/*.tsx", "src/components/**/*.ts"],
   coverageDirectory: "<rootDir>/coverage",
   setupFilesAfterEnv: ['<rootDir>/node_modules/@testing-library/jest-dom'],
 };
