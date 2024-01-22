@@ -1,7 +1,7 @@
 import { configureStore } from "@reduxjs/toolkit";
 import studentSlice from "./student/slice";
 import createSagaMiddleware from "redux-saga";
-import studentSaga from "./student/saga";
+import { studentSaga } from "./student/saga";
 
 const sagaMiddleware = createSagaMiddleware();
 export const store = configureStore({

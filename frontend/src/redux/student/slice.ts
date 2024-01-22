@@ -58,6 +58,33 @@ const studentSlice = createSlice({
       state.loading = false;
       state.error = action.payload;
     },
+    addStudentSuccess: (state) => {
+      state.loading = false;
+      state.error = null;
+      // Optionally, you can update the state with the newly added student if needed. need to change the saga !!!!! important
+    },
+    addStudentFailure: (state, action: PayloadAction<string>) => {
+      state.loading = false;
+      state.error = action.payload;
+    },
+    editStudentSuccess: (state) => {
+      state.loading = false;
+      state.error = null;
+      // Optionally, you can update the state with the edited student if needed.
+    },
+    editStudentFailure: (state, action: PayloadAction<string>) => {
+      state.loading = false;
+      state.error = action.payload;
+    },
+    deleteStudentSuccess: (state) => {
+      state.loading = false;
+      state.error = null;
+      // Optionally, you can update the state by removing the deleted student if needed.
+    },
+    deleteStudentFailure: (state, action: PayloadAction<string>) => {
+      state.loading = false;
+      state.error = action.payload;
+    },
     // addStudent: (state, action) => {
     //   state.students.push(action.payload);
     // },
@@ -72,7 +99,16 @@ const studentSlice = createSlice({
 // export const { addStudent, removeStudent } = studentSlice.actions;
 // export const studentReducer = studentSlice.reducer;
 
-export const { setLoading, getAllStudentsSuccess, getAllStudentsFailure } =
-  studentSlice.actions;
+export const {
+  setLoading,
+  getAllStudentsSuccess,
+  getAllStudentsFailure,
+  addStudentSuccess,
+  addStudentFailure,
+  editStudentSuccess,
+  editStudentFailure,
+  deleteStudentSuccess,
+  deleteStudentFailure,
+} = studentSlice.actions;
 
 export default studentSlice.reducer;
