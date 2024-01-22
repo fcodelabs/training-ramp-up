@@ -16,42 +16,42 @@ type initialDataType = {
     isLoading: boolean
     rows: User[]
 }
-
 const initialState: initialDataType = {
     isLoading: false,
     rows: [
         {
             id: 1,
             uid: 1,
-            name: 'thambara',
+            name: 'UserA',
             gender: 'Male',
-            address: 'kk,ksksd,sdsa',
-            mobile: '0716272786',
+            address: '123 Main St, Cityville, Country',
+            mobile: '1234567890',
             birthday: randomCreatedDate(),
-            age: 20,
+            age: 25,
         },
         {
             id: 2,
             uid: 2,
-            name: 'sahass',
-            gender: 'Male',
-            address: 'kk,ksksd,sdsa',
-            mobile: '0716272787',
+            name: 'UserB',
+            gender: 'Female',
+            address: '456 Oak St, Townsville, Country',
+            mobile: '9876543210',
             birthday: randomCreatedDate(),
             age: 30,
         },
         {
             id: 3,
             uid: 3,
-            name: 'sahasaka',
-            gender: 'Male',
-            address: 'kksassaf,ksksd,sdsa',
-            mobile: '0716272787',
+            name: 'UserC',
+            gender: 'Other',
+            address: '789 Pine St, Villageton, Country',
+            mobile: '5551234567',
             birthday: randomCreatedDate(),
-            age: 30,
+            age: 22,
         },
     ],
 }
+
 
 const userSlice = createSlice({
     name: 'user',
