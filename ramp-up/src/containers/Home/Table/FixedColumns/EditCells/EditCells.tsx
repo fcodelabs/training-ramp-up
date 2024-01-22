@@ -1,11 +1,40 @@
 import React from "react";
-import { MenuItem } from "@mui/material";
-import { StyledTextFieldWrapper } from "../../../../../../Utilities/TableStyles";
-import { useAppDispatch } from "../../../../../../Redux/hooks";
-import { updateUser } from "../../../../../../Redux/user/userSlice";
+import { MenuItem, TextField } from "@mui/material";
+import { useAppDispatch } from "../../../../../redux/hooks";
+import { updateUser } from "../../../../../redux/user/userSlice";
 import { Typography } from "@mui/material";
-import calculateAge from "../../../../../../Utilities/calculateAge";
+import { calculateAge } from "../../../../../utilities/index";
 import { GridRenderEditCellParams } from "@mui/x-data-grid";
+import styled from "styled-components";
+
+interface Props {
+  error: boolean;
+}
+
+export const StyledTextFieldWrapper = styled(TextField)<Props>(({ error }) => ({
+  variant: "standard",
+  color: "black",
+  borderRadius: 0,
+  textAlign: "end",
+  outline: "none",
+  "& .MuiOutlinedInput-root": {
+    "& fieldset": {
+      borderColor: error ? "#BD0203" : "rgba(33, 150, 243, 0.7)",
+      borderRadius: 0,
+    },
+  },
+
+  "& .MuiInputBase-root.Mui-disabled": {
+    "& > fieldset": {
+      borderColor: error ? "#BD0203" : "rgba(33, 150, 243, 0.7)",
+    },
+  },
+  "& .MuiFormHelperText-root": {
+    marginLeft: 0,
+    fontSize: 8,
+  },
+}));
+
 
 interface EditableCellProps {
   params: GridRenderEditCellParams;
