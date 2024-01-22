@@ -71,11 +71,6 @@ const userSlice = createSlice({
                 (user) => user.uid !== action.payload
             )
         },
-        saveUser: (state, action: PayloadAction<User>) => {
-            state.rows = state.rows.map((user) =>
-                user.uid === action.payload.uid ? action.payload : user
-            )
-        },
         updateUser: (
             state,
             action: PayloadAction<{ uid: number; updates: Partial<User> }>
@@ -94,7 +89,6 @@ export const {
     fetchUsersFailure,
     addUser,
     discardUser,
-    saveUser,
     updateUser,
 } = userSlice.actions
 
