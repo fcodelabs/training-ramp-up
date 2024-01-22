@@ -23,6 +23,7 @@ function* watchGetAllStudents(): Generator<any, any, any> {
     yield put(updateStudent(data));
   } catch (error: any) {
     yield put(fetchStudentsError(error));
+    yield put(fetchAllStudents());
     console.log(error);
   }
 }

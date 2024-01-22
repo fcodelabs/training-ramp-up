@@ -17,6 +17,7 @@ import {
   setIsLoading,
   setRemoveStudentError,
   setUserAddingError,
+  setUserFetchingError,
   setUserUpdatingError,
   updateStudent,
   updateStudentError,
@@ -153,6 +154,9 @@ const DataGridTable = () => {
   );
   const studentRemovingError: boolean = useSelector(
     (state: RootState) => state.student.removeStudentError
+  );
+  const fetchStudentsError: boolean = useSelector(
+    (state: RootState) => state.student.userFetchingError
   );
   const dispatch = useDispatch();
   const [numbervalidateError, setNumberValidateError] = useState(false);
@@ -768,6 +772,17 @@ const DataGridTable = () => {
           title={"A new student added successfully."}
           handleClickSecondButton={() => setAddedSuccessfullyPopup(false)}
           secondButtonName="Ok"
+        />
+      )}
+      {fetchStudentsError && (
+        <PopupMessage
+          open={fetchStudentsError}
+          title={"Unable fetch students details.Please try again later"}
+          handleClickSecondButton={() => {
+            // dispatch(setIsLoading(false));
+            dispatch(setUserFetchingError(false));
+          }}
+          secondButtonName="Try again"
         />
       )}
       {studentAddingError && (
