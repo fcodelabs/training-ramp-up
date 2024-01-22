@@ -13,10 +13,10 @@ import {
   GridValidRowModel,
   DataGrid,
 } from "@mui/x-data-grid";
+import { Columns } from "../../../utilities/index";
 import { FixedColumns } from "./TableColumns/FixedColumns/FixedColumns";
 import PopupNotification from "../../../components/Notification/Notification";
 import { useAppSelector, useAppDispatch } from "../../../redux/hooks";
-import { emptyColumns } from "../../../components/TableSkeletons/TableSkeletons";
 import GridActionsColumn from "./TableColumns/ActionColumn/ActionColumn";
 import { validateUser } from "../../../utilities/validateUser";
 import {
@@ -149,7 +149,7 @@ const Table = () => {
     if (
       validateUser(
         editedRow,
-        emptyColumns.map((column) => column.field)
+        Columns
       )
     ) {
       setRowModesModel({
