@@ -39,7 +39,7 @@ export default function DialogBox({
             sx={{
               color: '#000000',
               width: '300px',
-              height: '8px',
+              height: '20px',
               padding: '8px 20px 8px 10px',
             }}
           >
