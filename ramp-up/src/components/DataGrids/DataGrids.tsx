@@ -1,5 +1,4 @@
 import * as React from 'react'
-//import { useSelector, useDispatch } from 'react-redux';
 
 import { useState } from 'react'
 import Box from '@mui/material/Box'
@@ -23,6 +22,9 @@ import {
 } from '@mui/x-data-grid'
 
 import { format } from 'date-fns'
+
+import { useDispatch } from 'react-redux'
+import { addRow, updateRow, deleteRow } from '../../redux/slice/dataGridSlice'
 
 const initialRows: GridRowsProp = [
   {
@@ -93,13 +95,43 @@ export default function DataGrids() {
 
   const [mobNumberError, setmobNumberError] = useState<string | null>(null)
 
-  const[calculatedAge,setCalculatedAge]=React.useState(0)
+  const [ageError, setAgeError] = React.useState<string | null>(null)
+
+  const [mandatoryFieldError, setMandatoryFieldError] = React.useState<
+    string | null
+  >(null)
+
+  //const [calculatedAge, setCalculatedAge] = React.useState(0)
+
+  //const mobileNoRef = React.useRef<HTMLInputElement>(null)
+
+  const dispatch = useDispatch()
+
+  const nameRef = React.useRef<HTMLInputElement>(null)
+  const genderRef = React.useRef<HTMLInputElement>(null)
+  const addressRef = React.useRef<HTMLInputElement>(null)
+  const mobileNoRef = React.useRef<HTMLInputElement>(null)
+  const bodRef = React.useRef<HTMLInputElement>(null)
+  const ageRef = React.useRef<HTMLInputElement>(null)
 
   interface EditToolbarProps {
     setRows: (newRows: (oldRows: GridRowsProp) => GridRowsProp) => void
     setRowModesModel: (
       newModel: (oldModel: GridRowModesModel) => GridRowModesModel,
     ) => void
+  }
+
+  const calculateAge = (dob: string | Date) => {
+    if (!dob) {
+      return null
+    }
+
+    const currentDate = new Date()
+    const birthDate = new Date(dob)
+    let age = currentDate.getFullYear() - birthDate.getFullYear()
+
+ 
+    return age
   }
 
   function EditToolbar(props: EditToolbarProps) {
@@ -125,33 +157,48 @@ export default function DataGrids() {
       }))
 
       setRows((prevRows) => [newRow, ...prevRows])
-
-      //  setRows((oldRows) => [...oldRows, { id:newId, name: '', age: '', isNew: true }]);
-      //   setRowModesModel((oldModel) => ({
-      //     ...oldModel,
-      //     [newId]: { mode: GridRowModes.Edit, fieldToFocus: 'name' },
-      //   }));
     }
 
     return (
-      <div
-        style={{
-          display: 'flex',
-          padding: '6px 16px 6px 16px',
-          justifyContent: 'flex-end',
-        }}
-      >
-        <GridToolbarContainer>
-          <Button
-            color="primary"
-            variant="contained"
-            size="medium"
-            onClick={handleNewClick}
+      <GridToolbarContainer>
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+          }}
+        >
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'flex-start',
+              gap: '4px',
+              padding: '16px',
+              fontSize: '24px',
+              fontWeight: '400',
+              fontFamily: 'Roboto,sans-serif',
+              lineHeight: '32.02px',
+            }}
           >
-            ADD NEW
-          </Button>
-        </GridToolbarContainer>
-      </div>
+            User Details
+          </div>
+          <div
+            style={{
+              padding: '6px 16px 6px 1000px',
+              display: 'flex',
+              justifyContent: 'flex-end',
+            }}
+          >
+            <Button
+              style={{ backgroundColor: '#2196F3' }}
+              variant="contained"
+              size="medium"
+              onClick={handleNewClick}
+            >
+              ADD NEW
+            </Button>
+          </div>
+        </div>
+      </GridToolbarContainer>
     )
   }
 
@@ -169,8 +216,12 @@ export default function DataGrids() {
   }
 
   const handleUpdateClick = (id: GridRowId) => () => {
-    setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.View } })
-    setUpdateDialogOpen(true)
+    const updatedRow = rows.find((row) => row.id === id)
+    if (updatedRow) {
+      dispatch(updateRow({ id, updatedRow }))
+      setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.View } })
+      setUpdateDialogOpen(true)
+    }
   }
 
   const handleUpdateDialogDismiss = () => {
@@ -178,20 +229,62 @@ export default function DataGrids() {
   }
 
   const handleSaveClick = (id: GridRowId) => () => {
-    const editedRow = rows.find((row) => row.id === id)
+    const editedRow = rows.find((row) => row.id === id) as IRowData
+
+    const isNameFieldEmpty =
+      nameRef.current && nameRef.current?.querySelector('input')?.value === ''
+
+    const isGenderFieldEmpty =
+      genderRef.current &&
+      genderRef.current?.querySelector('input')?.value === ''
+
+    const isAddressFieldEmpty =
+      addressRef.current &&
+      addressRef.current?.querySelector('input')?.value === ''
+
+    const isMobileFieldEmpty =
+      mobileNoRef.current &&
+      mobileNoRef.current?.querySelector('input')?.value === ''
+
+    const isMobileNoLengthValid =
+      mobileNoRef.current?.querySelector('input')?.value.length === 10
+
+    const isDOBFieldEmpty =
+      bodRef.current && bodRef.current?.querySelector('input')?.value === ''
+
+    const isAgeValid =
+      ageRef.current &&
+      parseInt(ageRef.current?.querySelector('input')?.value || '0', 10) < 18
+
     if (
-      !editedRow ||
-      !editedRow.name ||
-      !editedRow.gender ||
-      !editedRow.address ||
-      !editedRow.mobileNo ||
-      !editedRow.dob
+      isNameFieldEmpty ||
+      isGenderFieldEmpty ||
+      isAddressFieldEmpty ||
+      isMobileFieldEmpty ||
+      isDOBFieldEmpty ||
+      isMobileNoLengthValid ||
+      isAgeValid
     ) {
-      setAddDialogErrorOpen(true)
+      setMandatoryFieldError('Mandatory fields are missing')
       return
     }
 
-    setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.View } })
+    setMandatoryFieldError(null)
+    const newRow = { ...editedRow, isNew: false }
+
+    setRows((prevRows) => {
+      // Remove any existing rows with the same id before adding the new row
+      const filteredRows = prevRows.filter((row) => row.id !== id)
+      return [...filteredRows, newRow]
+    })
+
+    setRowModesModel((prevModel) => ({
+      ...prevModel,
+      [id]: { mode: GridRowModes.View },
+    }))
+
+    dispatch(addRow(editedRow))
+    //setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.View } })
     setAddDialogOpen(true)
   }
 
@@ -201,6 +294,8 @@ export default function DataGrids() {
 
   const handleDeleteClick = (id: GridRowId) => () => {
     // setRows(rows.filter((row) => row.id !== id));
+    const rowId = typeof id === 'string' ? parseInt(id, 10) : id
+    dispatch(deleteRow(rowId))
     setRowToRemoveId(id)
     setRemoveDialogOpen(true)
   }
@@ -261,72 +356,51 @@ export default function DataGrids() {
     setRowModesModel(newRowModesModel)
   }
 
-  //   const renderEditCell = (params: any) => (
-  //     <TextField
-  //       size="small"
-  //       variant="outlined"
-  //       InputLabelProps={{ shrink: false }}
-
-  //       value={params.value as string}
-  //       onChange={(e) =>
-  //         params.api.setEditCellValue({
-  //           id: params.id,
-  //           field: params.field,
-  //           value: e.target.value,
-  //         })
-  //       }
-  //       sx={{
-  //         borderRadius: "0px",
-  //         border: "1px solid rgba(33,150,243,1)",
-  //         boxShadow: "0px 3px 1px -2px rgba(0,0,0,0.2)",
-  //         ...(params.field === 'name' && { border: "1px solid rgba(33,150,243,1) " }),
-  //         ...(params.field === 'gender' && { border: "1px solid rgba(33,150,243,1)" }),
-  //         ...(params.field === 'address' && { border: "1px solid rgba(33,150,243,1)" }),
-  //         ...(params.field === 'mobileno' && { border: "1px solid rgba(33,150,243,1)" }),
-  //         ...(params.field === 'dob' && { border: "1px solid rgba(33,150,243,1)" }),
-  //         ...(params.field === 'age' && { border: "1px solid rgba(33,150,243,1)" }),
-  //       }}
-  //     />
-  //   );
-
-
-  const calculateAge = (dob: string | Date) => {
-    if (dob) {
-      const currentDate = new Date()
-      const birthDate = new Date(dob)
-
-      let age = currentDate.getFullYear() - birthDate.getFullYear()
-      return age
-    }
-    return 0
-  }
+  
 
   const handleMobileNoChange = (
     value: string,
     params: GridRenderCellParams<IRowData>,
   ) => {
-    const mobNumberRegex = /^\+?\d+$/
+    const validCharactersRegex = /^[0-9+\- ]*$/
 
-    if (value.length === 10 && mobNumberRegex.test(value)) {
-      setmobNumberError(null)
+    if (validCharactersRegex.test(value) || value === '') {
+      const numericValue = value.replace(/[^0-9]/g, '')
 
-      const formattedNumber = `+${value.slice(0, 3)} - ${value.slice(3, 6)} - ${value.slice(6)}`
+      const formattedNumber = `+${numericValue.slice(0, 3)}-${numericValue.slice(3, 6)}-${numericValue.slice(6)}`
 
       params.api.setEditCellValue({
         id: params.id,
         field: params.field!,
         value: formattedNumber,
       })
+
+      // Check if the entered value has 10 digits
+      if (numericValue.length === 10) {
+        setmobNumberError(null) // No error
+      } else {
+        setmobNumberError('Please enter a valid phone number')
+      }
     } else {
-      setmobNumberError('Please enter a valid Mobile number')
+      setmobNumberError('Please enter a valid phone number')
     }
   }
 
   const columns: GridColDef[] = [
     {
+      field: '__check__',
+      headerName: 'Checkbox',
+      headerClassName: 'user-details',
+      width: 37,
+      sortable: false,
+      headerAlign: 'center',
+      align: 'center',
+      disableColumnMenu: true,
+    },
+    {
       field: 'id',
       headerName: 'ID',
-      width: 137,
+      width: 100,
       sortable: false,
       headerClassName: 'user-details',
     },
@@ -335,6 +409,7 @@ export default function DataGrids() {
       headerName: 'Name',
       width: 135,
       editable: true,
+      sortable: true,
       headerClassName: 'user-details',
 
       renderEditCell: (params) => (
@@ -364,7 +439,7 @@ export default function DataGrids() {
       field: 'gender',
       headerName: 'Gender',
       headerClassName: 'user-details',
-      width: 137,
+      width: 105,
       sortable: false,
       editable: true,
 
@@ -411,7 +486,6 @@ export default function DataGrids() {
       align: 'left',
       headerAlign: 'left',
       editable: true,
-      // renderEditCell
       renderEditCell: (params) => (
         <TextField
           size="small"
@@ -443,53 +517,93 @@ export default function DataGrids() {
       headerAlign: 'left',
       editable: true,
 
-      renderEditCell: (params) => (
-        <div>
-          <TextField
-            size="small"
-            variant="outlined"
-            InputLabelProps={{ shrink: false }}
-            value={params.value as string}
-            onChange={(e) => handleMobileNoChange(e.target.value, params)}
-            sx={{
-              borderRadius: '5px',
-              border: mobNumberError
-                ? '2px solid red'
-                : '1px solid rgba(33,150,243,1)',
-              boxShadow: '0px 3px 1px -2px rgba(0,0,0,0.2)',
-            }}
-          />
-          {mobNumberError && (
-            <div
-              style={{ color: 'red', fontSize: '9px', whiteSpace: 'pre-wrap' }}
-            >
-              {mobNumberError}
-            </div>
-          )}
-        </div>
-      ),
+      //   renderEditCell: (params) => (
+      //     <div>
+      //       <TextField
+      //         size="small"
+      //         variant="outlined"
+      //         InputLabelProps={{ shrink: false }}
+      //         value={params.value as string}
+      //         onChange={(e) => handleMobileNoChange(e.target.value, params)}
+      //         sx={{
+      //           borderRadius: '5px',
+      //           border: mobNumberError
+      //             ? '2px solid red'
+      //             : '1px solid rgba(33,150,243,1)',
+      //           boxShadow: '0px 3px 1px -2px rgba(0,0,0,0.2)',
+      //         }}
+      //       />
+      //       {mobNumberError && (
+      //         <div
+      //           style={{ color: 'red', fontSize: '9px', whiteSpace: 'pre-wrap' }}
+      //         >
+      //           {mobNumberError}
+      //         </div>
+      //       )}
+      //     </div>
+      //   ),
+      renderEditCell: (params) => {
+        const mobileno = params.row?.mobileno || ''
+        const hasError = mobNumberError !== null
+
+        return (
+          <div>
+            <TextField
+              ref={mobileNoRef}
+              size="small"
+              variant="outlined"
+              InputLabelProps={{ shrink: false }}
+              value={mobileno}
+              onChange={(e) => handleMobileNoChange(e.target.value, params)}
+              sx={{
+                borderRadius: '5px',
+                border: hasError
+                  ? '2px solid red'
+                  : '1px solid rgba(33,150,243,1)',
+                boxShadow: '0px 3px 1px -2px rgba(0,0,0,0.2)',
+              }}
+            />
+            {hasError && (
+              <div
+                style={{
+                  color: 'red',
+                  fontSize: '9px',
+                  whiteSpace: 'pre-wrap',
+                }}
+              >
+                {mobNumberError}
+              </div>
+            )}
+          </div>
+        )
+      },
     },
     {
       field: 'dob',
       headerName: 'Date of Birth',
       headerClassName: 'user-details',
       headerAlign: 'left',
-      type: 'date',
+      type: 'string',
       width: 175,
       editable: true,
+      sortable: true,
       valueGetter: (params) => {
-        return params.row.dob ? new Date(params.row.dob) : null
+        return params.row.dob ? format(params.row.dob, 'EEE MMM dd yyyy') : null
       },
       renderEditCell: (params) => {
         const isInEditMode =
           rowModesModel[params.id]?.mode === GridRowModes.Edit
 
         if (isInEditMode) {
+          const currentDate = new Date()
           return (
             <TextField
               variant="outlined"
               size="small"
               InputLabelProps={{ shrink: false }}
+              inputProps={{
+                max: format(currentDate, 'yyyy-MM-dd'),
+              }}
               value={
                 params.row.dob instanceof Date
                   ? format(params.row.dob, 'yyyy-MM-dd')
@@ -504,7 +618,6 @@ export default function DataGrids() {
                   field: 'dob',
                   value: selectedDate,
                 })
-                setCalculatedAge(calculateAge(selectedDate))
               }}
               sx={{
                 borderRadius: '0px',
@@ -523,6 +636,7 @@ export default function DataGrids() {
         )
       },
     },
+
     {
       field: 'age',
       headerName: 'Age',
@@ -532,35 +646,58 @@ export default function DataGrids() {
       headerClassName: 'user-details',
       align: 'left',
       headerAlign: 'left',
-      editable: false,
-      valueGetter: (params) => calculateAge(params.row.dob),
+      editable: true,
+      valueGetter: (params) => {
+        const age = calculateAge(params.row.dob)
+        return age !== null ? age.toString() : ''
+      },
       renderEditCell: (params) => {
         const age = calculateAge(params.row.dob)
-        console.log(params.row.dob)
+        const hasError = ageError !== null
+
+        if (age && age < 18) {
+          setAgeError('Individual is below the minimum age allowed')
+        } else {
+          setAgeError('')
+        }
 
         return (
-          <TextField
-            size="small"
-            variant="outlined"
-            InputLabelProps={{ shrink: false }}
-            value={calculatedAge}
-            sx={{
-              borderRadius: '0px',
-              border:
-                age >= 18 ? '1px solid rgba(33,150,243,1)' : '1px solid red',
-              boxShadow: '0px 3px 1px -2px rgba(0,0,0,0.2)',
-            }}
-          />
+          <div>
+            <TextField
+              size="small"
+              variant="outlined"
+              InputLabelProps={{ shrink: false }}
+              value={age}
+              sx={{
+                borderRadius: '0px',
+                border: ageError
+                  ? '2px solid red'
+                  : '1px solid rgba(33,150,243,1)',
+                boxShadow: '0px 3px 1px -2px rgba(0,0,0,0.2)',
+              }}
+            />
+            {hasError && (
+              <div
+                style={{
+                  color: 'red',
+                  fontSize: '9px',
+                  whiteSpace: 'pre-wrap',
+                }}
+              >
+                {ageError}
+              </div>
+            )}
+          </div>
         )
       },
     },
 
     {
-      field: 'actions',
+      field: 'action',
       type: 'actions',
-      headerName: 'Actions',
+      headerName: 'Action',
       headerClassName: 'user-details',
-      width: 190,
+      width: 195,
       cellClassName: 'actions',
       getActions: ({ id, row }) => {
         const isInEditMode = rowModesModel[id]?.mode === GridRowModes.Edit
@@ -571,40 +708,37 @@ export default function DataGrids() {
                 style={{
                   display: 'flex',
                   flexDirection: 'column',
-                  marginTop: '25px',
+                  marginTop: '5px',
                   gap: '5px',
                 }}
               >
-                <Button
-                  variant="outlined"
-                  size="small"
-                  style={{ width: 'auto' }}
-                  onClick={handleSaveClick(id)}
-                >
-                  Add
-                </Button>
-                <Button
-                  variant="outlined"
-                  size="small"
-                  color="error"
-                  style={{ width: 'auto' }}
-                  onClick={handleCancelClick(id)}
-                >
-                  Discard Changes
-                </Button>
-                ,
+                <div>
+                  <Button
+                    variant="outlined"
+                    size="small"
+                    style={{ minWidth: 'auto' }}
+                    onClick={handleSaveClick(id)}
+                  >
+                    Add
+                  </Button>
+                </div>
+                <div>
+                  {' '}
+                  <Button
+                    variant="outlined"
+                    size="small"
+                    color="error"
+                    style={{ width: 'auto' }}
+                    onClick={handleCancelClick(id)}
+                  >
+                    Discard Changes
+                  </Button>
+                </div>
               </div>,
             ]
           } else {
             return [
-              <div
-                style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  marginTop: '25px',
-                  gap: '5px',
-                }}
-              >
+              <div>
                 <Button
                   variant="outlined"
                   size="small"
@@ -620,9 +754,8 @@ export default function DataGrids() {
                   style={{ width: 'auto' }}
                   onClick={handleCancelClick(id)}
                 >
-                  Discard Changes
+                  Cancel
                 </Button>
-                ,
               </div>,
             ]
           }
@@ -660,8 +793,9 @@ export default function DataGrids() {
       <Box
         sx={{
           height: 'fit-content',
-          width: '80%',
+          width: 'fit-content',
           margin: 'auto',
+          padding: '136px 144px 136px 144px',
           display: 'flex',
           flexDirection: 'column',
           '& .actions': {
@@ -675,21 +809,6 @@ export default function DataGrids() {
           },
         }}
       >
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '4px',
-            padding: '16px',
-            fontSize: '24px',
-            fontWeight: '400',
-            fontFamily: 'Roboto,sans-serif',
-            lineHeight: '32.02px',
-          }}
-        >
-          User Details
-        </div>
-
         {removeDialogOpen && (
           <DialogBox
             open={removeDialogOpen}
@@ -746,13 +865,21 @@ export default function DataGrids() {
           />
         )}
 
+        {mandatoryFieldError && (
+          <DialogBox
+            open={true}
+            onClose={() => setMandatoryFieldError(null)}
+            dialogContent={mandatoryFieldError}
+            buttonLabel="KEEP EDITING"
+            buttonAction={() => setMandatoryFieldError(null)}
+          />
+        )}
+
         <DataGrid
           rows={rows}
           columns={columns}
           editMode="row"
           rowModesModel={rowModesModel}
-          onRowModesModelChange={handleRowModesModelChange}
-          onRowEditStop={handleRowEditStop}
           processRowUpdate={processRowUpdate}
           slots={{
             toolbar: EditToolbar,
@@ -764,6 +891,14 @@ export default function DataGrids() {
           disableRowSelectionOnClick
           getRowId={(row) => row.id}
           getRowHeight={(params) => (params.id in rowModesModel ? 80 : 48)}
+          initialState={{
+            sorting: {
+              // sortModel: [
+              //   { field: 'name', sort: 'asc' },
+              //   { field: 'dob', sort: 'desc' },
+              // ],
+            },
+          }}
         />
       </Box>
     </div>
