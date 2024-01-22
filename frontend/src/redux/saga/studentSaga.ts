@@ -47,6 +47,7 @@ function* watchAddNewStudent(
     );
   } catch (error: any) {
     yield put(addStudentError());
+    yield put(fetchAllStudents());
     return error;
   }
 }
@@ -68,6 +69,7 @@ function* watchUpdateStudent(action: PayloadAction<GridValidRowModel>) {
     );
   } catch (error: any) {
     yield put(updateStudentError(error));
+    yield put(fetchAllStudents());
     return error;
   }
 }
@@ -80,6 +82,7 @@ function* watchRemoveStudent(action: PayloadAction<GridRowId>) {
     );
   } catch (error: any) {
     yield put(removeStudentError(error));
+    yield put(fetchAllStudents());
     return error;
   }
 }
