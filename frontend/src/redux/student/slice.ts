@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import generateId from "../../utility/generateId";
 import calculateAge from "../../utility/calculateAge";
 import dayjs from "dayjs";
@@ -16,6 +16,8 @@ interface IStudent {
 
 interface IStudentState {
   students: IStudent[];
+  loading: boolean;
+  error: string | null;
 }
 
 const studentSlice = createSlice({
@@ -44,16 +46,33 @@ const studentSlice = createSlice({
     ],
   } as IStudentState,
   reducers: {
-    addStudent: (state, action) => {
-      state.students.push(action.payload);
+    setLoading: (state, action: PayloadAction<boolean>) => {
+      state.loading = action.payload;
     },
-    removeStudent: (state, action) => {
-      state.students = state.students.filter(
-        (student) => student.id !== action.payload
-      );
+    getAllStudentsSuccess: (state, action: PayloadAction<IStudent[]>) => {
+      state.students = action.payload;
+      state.loading = false;
+      state.error = null;
     },
+    getAllStudentsFailure: (state, action: PayloadAction<string>) => {
+      state.loading = false;
+      state.error = action.payload;
+    },
+    // addStudent: (state, action) => {
+    //   state.students.push(action.payload);
+    // },
+    // removeStudent: (state, action) => {
+    //   state.students = state.students.filter(
+    //     (student) => student.id !== action.payload
+    //   );
+    // },
   },
 });
 
-export const { addStudent, removeStudent } = studentSlice.actions;
-export const studentReducer = studentSlice.reducer;
+// export const { addStudent, removeStudent } = studentSlice.actions;
+// export const studentReducer = studentSlice.reducer;
+
+export const { setLoading, getAllStudentsSuccess, getAllStudentsFailure } =
+  studentSlice.actions;
+
+export default studentSlice.reducer;

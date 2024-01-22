@@ -5,13 +5,10 @@ import {
   GridRowModes,
   DataGrid,
   GridColDef,
-  GridToolbarContainer,
-  GridActionsCellItem,
   GridEventListener,
   GridRowId,
   GridRowModel,
   GridRowEditStopReasons,
-  GridRowSpacingParams,
   GridRenderCellParams,
 } from "@mui/x-data-grid";
 import Button from "@mui/material/Button";
@@ -205,6 +202,7 @@ export default function DataTable() {
 
   const [mode, setMode] = useState<"Add" | "Edit">("Add"); // Track the mode (Add or Edit)
 
+  // states to maintain showing the models/notification cards
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [showDiscardModal, setShowDiscardModal] = useState(false);
   const [showDiscardUpdateModal, setShowDiscardUpdateModal] = useState(false);
@@ -212,19 +210,21 @@ export default function DataTable() {
   const [fieldMissingModal, setFieldMissingModal] = useState(false);
   const [showRemoveSuccessCard, setShowRemoveSuccessCard] = useState(false);
   const [showUpdateSuccessModal, setShowUpdateSuccessModal] = useState(false);
+
   const [updatedRowId, setUpdatedRowId] = useState<GridRowId | null>(null);
   const [editingRowId, setEditingRowId] = useState<GridRowId | null>(null);
 
-  const [attemptedToAdd, setAttemptedToAdd] = useState(false);
+  const [attemptedToAdd, setAttemptedToAdd] = useState(false); // track add button press
 
   const [selectedRowId, setSelectedRowId] = useState<GridRowId | null>(null);
 
   const [editedFields, setEditedFields] = useState({
+    // state to maintain fields are empty or not
     name: "",
     gender: "",
     address: "",
     mobile: "",
-    dob: dayjs(new Date()), // Assuming dob is a date
+    dob: dayjs(new Date()),
   });
 
   const handleConfirmRemove = (id: GridRowId | null) => {
@@ -277,14 +277,10 @@ export default function DataTable() {
       dayjs(editedFields.dob).isSame(dayjs(new Date()), "day") ||
       !(ageValues[id] !== undefined && (ageValues[id], 10) < 18)
     ) {
-      // Display an error message or take any other appropriate action
+      // Display an error message
       setFieldMissingModal(true);
-      console.log("hello 3-1, agevalue", ageValues[id]);
-      console.log("hello 3, editedFields", editedFields);
       return;
     }
-    console.log(dayjs(new Date()));
-    console.log("hello 4, editedFields", editedFields);
 
     // If all fields are not empty, proceed with adding the row
     setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.View } });
@@ -308,7 +304,7 @@ export default function DataTable() {
       gender: "",
       address: "",
       mobile: "",
-      dob: dayjs(new Date()), // Assuming dob is a date
+      dob: dayjs(new Date()),
     });
   };
 
@@ -326,7 +322,6 @@ export default function DataTable() {
       !(ageValues[id] !== undefined && (ageValues[id], 10) < 18)
     ) {
       // Display an error message or take any other appropriate action
-      console.log("hello 3, editedFields", editedFields);
       setFieldMissingModal(true);
       return;
     }
@@ -342,7 +337,7 @@ export default function DataTable() {
       gender: "",
       address: "",
       mobile: "",
-      dob: dayjs(new Date()), // Assuming dob is a date
+      dob: dayjs(new Date()),
     });
     dispatch(
       addStudent({
@@ -450,23 +445,14 @@ export default function DataTable() {
   const handleConfirmDiscardChanges = () => {
     // User confirmed discarding changes, remove the editing row
     const tempeditingRowId = Object.keys(rowModesModel)[0];
-    console.log("hello 1");
-    console.log("tempeditingRowId", typeof tempeditingRowId);
-    console.log("editingRowId", typeof editingRowId);
 
     if (editingRowId?.toString() === tempeditingRowId) {
       setMode("Add");
-      console.log("mode", mode);
       handleConfirmDiscardUpdate();
     } else {
       // Handle discarding changes for non-editing rows
-      // You may customize this part according to your requirements
-      // ...
-
       // Reset the state and close the modal
-      console.log("hello 2");
       setMode("Add");
-      console.log(" hello 4, mode", mode);
       setRowModesModel({});
       setShowDiscardUpdateModal(false);
     }
@@ -1097,10 +1083,6 @@ export default function DataTable() {
               borderRadius: "12PX",
             }}
           >
-            {/* <DiscardChangesCard
-              onConfirm={handleConfirmDiscard}
-              onDismiss={handleDismissDiscard}
-            /> */}
             <MessageCard
               message="Discard changes?"
               primaryButton={{ text: "DISMISS", onClick: handleDismissDiscard }}
@@ -1115,7 +1097,7 @@ export default function DataTable() {
         </Modal>
       )}
 
-      {/* Modal for Discard Changes */}
+      {/* Modal for Discard uPdate Changes */}
       {showDiscardUpdateModal && (
         <Modal
           open={showDiscardUpdateModal}
@@ -1132,10 +1114,6 @@ export default function DataTable() {
               borderRadius: "12PX",
             }}
           >
-            {/* <DiscardChangesCard
-              onConfirm={handleConfirmDiscardChanges}
-              onDismiss={handleDismissDiscardChanges}
-            /> */}
             <MessageCard
               message="Discard changes?"
               primaryButton={{
@@ -1172,13 +1150,6 @@ export default function DataTable() {
               borderRadius: "12PX",
             }}
           >
-            {/* <ConfirmRemoveCard
-              onConfirm={() => handleConfirmRemove(selectedRowId)}
-              onDismiss={() => {
-                setShowRemoveConfirmModal(false);
-                setSelectedRowId(null);
-              }}
-            /> */}
             <MessageCard
               message="Are you sure you want to remove this student?"
               primaryButton={{
@@ -1218,9 +1189,6 @@ export default function DataTable() {
               borderRadius: "12px",
             }}
           >
-            {/* <RemoveSuccessCard
-              onClose={() => setShowRemoveSuccessCard(false)}
-            /> */}
             <MessageCard
               message="The student removed successfully."
               primaryButton={{
@@ -1248,9 +1216,6 @@ export default function DataTable() {
               borderRadius: "12px",
             }}
           >
-            {/* <UpdateSuccessCard
-              onClose={() => setShowUpdateSuccessModal(false)}
-            /> */}
             <MessageCard
               message="Student Details updated successfully."
               primaryButton={{
@@ -1280,7 +1245,6 @@ export default function DataTable() {
               borderRadius: "12px",
             }}
           >
-            {/* <FieldMissingCard onClick={() => setFieldMissingModal(false)} /> */}
             <MessageCard
               message="Mandatory fields missing."
               primaryButton={{
