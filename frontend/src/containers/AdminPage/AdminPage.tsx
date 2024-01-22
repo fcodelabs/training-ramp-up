@@ -1,11 +1,12 @@
-import React from 'react';
-import DataTable from './DataTable/DataTable';
-import { Button, Typography, Box } from '@mui/material';
-import styled from 'styled-components';
+import React from "react";
+import DataTable from "./DataTable/DataTable";
+import { Button, Typography, Box } from "@mui/material";
+import styled from "styled-components";
 import "@fontsource/roboto";
 
 const StyledHeaderBox = styled(Box)`
   &&& {
+    width: auto;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -16,15 +17,15 @@ const StyledHeaderBox = styled(Box)`
 `;
 
 const StyledLoginButton = styled(Button)`
-&&&{
-    border-color: #2196F380;
-    color: #2196F3;
+  &&& {
+    border-color: #2196f380;
+    color: #2196f3;
     font-family: Roboto;
     font-weight: 500;
     font-size: 13px;
     line-height: 22px;
-    Letter-spacing: 0.46px;
-    }
+    letter-spacing: 0.46px;
+  }
 `;
 
 const StyledTypography = styled(Typography)`
@@ -37,48 +38,43 @@ const StyledTypography = styled(Typography)`
     line-height: 32px;
     letter-spacing: 0px;
     text-align: left;
-    color: #1E88E5;
+    color: #1e88e5;
   }
 `;
 
 const StyledDataBox = styled(Box)`
-    &&& {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100%;
-        width: 100%;
-        margin-top: 80px;
-        margin-bottom: 50px;
-        
-    }
-    `;
+  &&& {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    margin-top: 80px;
+    margin-bottom: 50px;
+  }
+`;
 
 const StyledMainDiv = styled.div`
-    &&& {
-        display: flex;
-        flex-direction: column;
-        
-        height: 100%;
-        width: 100%;
-    }
-    `;
+  &&& {
+    display: flex;
+    flex-direction: column;
 
+    height: 100%;
+    width: 100%;
+  }
+`;
 
 function AdminPage() {
-    return (
-
-        <StyledMainDiv>
-            <StyledHeaderBox>
-                <StyledTypography variant='h5' >Ramp Up Project</StyledTypography>
-                <StyledLoginButton variant="outlined">LOGIN</StyledLoginButton>
-            </StyledHeaderBox>
-            <StyledDataBox>
-                <DataTable />
-            </StyledDataBox>
-
-        </StyledMainDiv>
-    );
-};
+  return (
+    <StyledMainDiv>
+      <StyledHeaderBox>
+        <StyledTypography variant="h5">Ramp Up Project</StyledTypography>
+        <StyledLoginButton variant="outlined">LOGIN</StyledLoginButton>
+      </StyledHeaderBox>
+      <StyledDataBox>
+        <DataTable />
+      </StyledDataBox>
+    </StyledMainDiv>
+  );
+}
 
 export default AdminPage;

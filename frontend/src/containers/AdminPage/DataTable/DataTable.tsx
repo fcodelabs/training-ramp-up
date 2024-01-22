@@ -120,8 +120,10 @@ const StyledAddNewButton = styled(Button)`
 
 const StyledDataTableBox = styled(Box)`
   &&& {
-    width: auto;
+    width: 100%;
     height: auto;
+    margin-left: 175px;
+    margin-right: 175px;
     border-radius: 4px;
     background: #ffffff;
     box-shadow: 0px 2px 1px -1px #00000033, 0px 1px 1px 0px #00000024,
@@ -245,6 +247,18 @@ export default function DataTable() {
   };
 
   const handleEditClick = (id: GridRowId) => () => {
+    const editedRow = rows.find((row) => row.id === id);
+
+    if (editedRow) {
+      setEditedFields({
+        name: editedRow.name,
+        gender: editedRow.gender,
+        address: editedRow.address,
+        mobile: editedRow.mobile,
+        dob: dayjs(editedRow.dob),
+      });
+    }
+
     setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.Edit } });
     setMode("Edit");
     setEditingRowId(id);
@@ -259,12 +273,18 @@ export default function DataTable() {
       !editedFields.name.trim() ||
       !editedFields.gender.trim() ||
       !editedFields.address.trim() ||
-      !editedFields.mobile.trim()
+      !editedFields.mobile.trim() ||
+      dayjs(editedFields.dob).isSame(dayjs(new Date()), "day") ||
+      !(ageValues[id] !== undefined && (ageValues[id], 10) < 18)
     ) {
       // Display an error message or take any other appropriate action
       setFieldMissingModal(true);
+      console.log("hello 3-1, agevalue", ageValues[id]);
+      console.log("hello 3, editedFields", editedFields);
       return;
     }
+    console.log(dayjs(new Date()));
+    console.log("hello 4, editedFields", editedFields);
 
     // If all fields are not empty, proceed with adding the row
     setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.View } });
@@ -278,7 +298,8 @@ export default function DataTable() {
         gender: editedFields.gender,
         address: editedFields.address,
         mobile: editedFields.mobile,
-        dob: editedFields.dob,
+        dob: editedFields.dob.toISOString(),
+        age: ageValues[id],
       })
     );
 
@@ -300,9 +321,12 @@ export default function DataTable() {
       !editedFields.name.trim() ||
       !editedFields.gender.trim() ||
       !editedFields.address.trim() ||
-      !editedFields.mobile.trim()
+      !editedFields.mobile.trim() ||
+      dayjs(editedFields.dob).isSame(dayjs(new Date()), "day") ||
+      !(ageValues[id] !== undefined && (ageValues[id], 10) < 18)
     ) {
       // Display an error message or take any other appropriate action
+      console.log("hello 3, editedFields", editedFields);
       setFieldMissingModal(true);
       return;
     }
@@ -312,6 +336,14 @@ export default function DataTable() {
     setShowUpdateSuccessModal(true);
     setUpdatedRowId(id);
     setAttemptedToAdd(false); // Reset attemptedToAdd after updating
+    console.log("editedFields", editedFields);
+    setEditedFields({
+      name: "",
+      gender: "",
+      address: "",
+      mobile: "",
+      dob: dayjs(new Date()), // Assuming dob is a date
+    });
     dispatch(
       addStudent({
         id: generateId(),
@@ -319,7 +351,8 @@ export default function DataTable() {
         gender: editedFields.gender,
         address: editedFields.address,
         mobile: editedFields.mobile,
-        dob: editedFields.dob,
+        dob: editedFields.dob.toISOString(),
+        age: ageValues[id],
       })
     );
   };
@@ -809,6 +842,7 @@ export default function DataTable() {
       editable: false,
       renderCell: (params: GridRenderCellParams<any, string>) => {
         const isAgeEmpty = !params.value;
+        const isDateEmpty = !params.value;
         const age =
           ageValues[params.row.id] !== undefined
             ? ageValues[params.row.id]?.toString()
@@ -836,7 +870,7 @@ export default function DataTable() {
                     age: event.target.value,
                   }));
                 }}
-                error={isBelowMinimumAge}
+                error={isBelowMinimumAge || (isDateEmpty && attemptedToAdd)}
                 helperText={
                   isBelowMinimumAge
                     ? "Individual is below the minimum age allowed"
@@ -996,6 +1030,7 @@ export default function DataTable() {
           ".MuiDataGrid-iconButtonContainer": {
             marginLeft: "50px !important",
           },
+          width: "auto",
         }}
         rows={rows}
         columns={columns}

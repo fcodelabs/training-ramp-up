@@ -1,5 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import generateId from "../../utility/generateId";
+import calculateAge from "../../utility/calculateAge";
+import dayjs from "dayjs";
 
 interface IStudent {
   id: number;
@@ -23,20 +25,20 @@ const studentSlice = createSlice({
       {
         id: generateId(),
         name: "jon",
-        gender: "male",
+        gender: "Male",
         address: "Mumbai",
-        mobile: "1234567890",
-        dob: new Date(),
-        age: 20,
+        mobile: "0711397391",
+        dob: new Date("2000-07-08"),
+        age: calculateAge(new Date("2000-07-08")),
       },
       {
         id: generateId(),
         name: "Lannister",
-        age: 42,
-        gender: "Male",
+        age: calculateAge(new Date("1998-04-23")),
+        gender: "Female",
         address: "Delhi",
-        mobile: "1234567890",
-        dob: new Date(),
+        mobile: "0703864608",
+        dob: new Date("1998-04-23"),
         isNew: false,
       },
     ],
