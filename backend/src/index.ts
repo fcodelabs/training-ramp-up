@@ -5,16 +5,24 @@ import { DataSource } from "typeorm";
 import studentRoute from "./routes/studentRoute";
 
 import dotenv from "dotenv";
-import router from "./routes/studentRoute";
 import { Student } from "./models/Student";
+
+const { createServer } = require("node:http");
+const { Server } = require("socket.io");
 
 dotenv.config();
 
 const app: Express = express();
 const port = process.env.PORT || 8000;
+const server = createServer(app);
+const io = new Server(server);
+
+io.on("connection", (socket: any) => {
+  console.log("a user connected");
+});
 
 export const AppDataSource = new DataSource({
-  type:"postgres",
+  type: "postgres",
   host: process.env.LOCALHOST,
   port: 5432,
   username: process.env.DB_USERNAME,
@@ -22,8 +30,7 @@ export const AppDataSource = new DataSource({
   database: process.env.DATABASE,
   synchronize: true,
   logging: true,
-  entities: [Student]
-  
+  entities: [Student],
 });
 
 AppDataSource.initialize()

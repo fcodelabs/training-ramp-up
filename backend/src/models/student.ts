@@ -1,9 +1,13 @@
-import { Entity, PrimaryGeneratedColumn, Column, BaseEntity, PrimaryColumn } from "typeorm";
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  BaseEntity,
+  PrimaryColumn,
+} from "typeorm";
 
-@Entity('student')
+@Entity("student")
 export class Student extends BaseEntity {
-  
-  
   @PrimaryColumn()
   id!: number;
 
@@ -19,10 +23,9 @@ export class Student extends BaseEntity {
   @Column()
   mobile!: string;
 
-  @Column({type:'date'})
+  @Column({ type: "date" })
   dob!: string;
-  
+
   @Column()
   age!: number;
-
 }
