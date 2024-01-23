@@ -15,7 +15,7 @@ import {
   updateUserAsync,
 } from "../../utilities/userServices";
 
-function* watchFetchStudents() {
+export function* watchFetchUsers() {
   try {
     const students: GridValidRowModel[] = yield call(fetchUsersAsync);
     yield put(setUsers(students));
@@ -24,7 +24,7 @@ function* watchFetchStudents() {
   }
 }
 
-function* watchAddNewUser(action: any) {
+export function* watchAddNewUser(action: any) {
   try {
     let student: GridValidRowModel;
     if (action.payload.isNew) {
@@ -39,7 +39,7 @@ function* watchAddNewUser(action: any) {
   }
 }
 
-function* watchDeleteUser(action: any) {
+export function* watchDeleteUser(action: any) {
   try {
     yield call(deleteUserAsync, action.payload);
   } catch (error: any) {
@@ -48,7 +48,7 @@ function* watchDeleteUser(action: any) {
 }
 
 export function* userSaga() {
-  yield takeLeading(fetchUsers, watchFetchStudents);
+  yield takeLeading(fetchUsers, watchFetchUsers);
   yield takeLeading(addUser, watchAddNewUser);
   yield takeLeading(discardUser, watchDeleteUser);
 }

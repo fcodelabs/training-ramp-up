@@ -6,7 +6,7 @@ type initialDataType = {
   rows: GridValidRowModel[];
 };
 
-const initialState: initialDataType = {
+export const initialState: initialDataType = {
   isLoading: false,
   rows: [
     {
