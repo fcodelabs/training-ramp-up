@@ -14,7 +14,7 @@ interface Props {
   handleDeleteClick: () => void;
 }
 
-const EditButtonWrapper = styled.div`
+const AddDiscardButtonWrapper = styled.div`
   display: flex;
   height: 80%;
   flex-direction: column;
@@ -23,7 +23,7 @@ const EditButtonWrapper = styled.div`
   align-items: flex-start;
 `;
 
-const ButtonWrapper = styled.div`
+const EditRemoveButtonWrapper = styled.div`
   display: flex;
   width: 90%;
   flex-direction: row;
@@ -32,7 +32,7 @@ const ButtonWrapper = styled.div`
   margin: 0 0 0 -4px;
 `;
 
-const GridActionsColumn: React.FC<Props> = ({
+export const GridActionsColumn: React.FC<Props> = ({
   params,
   isInEditMode,
   handleSaveClick,
@@ -43,7 +43,7 @@ const GridActionsColumn: React.FC<Props> = ({
   if (isInEditMode) {
     const isNew = params.row.isNew;
     return (
-      <EditButtonWrapper>
+      <AddDiscardButtonWrapper>
         <div>
           <Button variant="outlined" size="small" onClick={handleSaveClick}>
             <div>{isNew ? "Add" : "Update"}</div>
@@ -60,12 +60,12 @@ const GridActionsColumn: React.FC<Props> = ({
             Discard Changes
           </Button>
         </div>
-      </EditButtonWrapper>
+      </AddDiscardButtonWrapper>
     );
   }
 
   return (
-    <ButtonWrapper>
+    <EditRemoveButtonWrapper>
       <div>
         <Button variant="outlined" size="small" onClick={handleEditClick}>
           Edit
@@ -81,8 +81,8 @@ const GridActionsColumn: React.FC<Props> = ({
           Remove
         </Button>
       </div>
-    </ButtonWrapper>
+    </EditRemoveButtonWrapper>
   );
 };
 
-export default GridActionsColumn;
+

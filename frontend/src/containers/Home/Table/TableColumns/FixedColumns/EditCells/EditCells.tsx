@@ -1,6 +1,6 @@
 import React from "react";
 import { useAppDispatch } from "../../../../../../redux/hooks";
-import { updateUser } from "../../../../../../redux/user/userSlice";
+import { updateUser } from "../../../../../../redux/user/slice";
 import { MenuItem, TextField, Typography } from "@mui/material";
 import { calculateAge } from "../../../../../../utilities/index";
 import { GridRenderEditCellParams } from "@mui/x-data-grid";
@@ -35,8 +35,8 @@ export const StyledTextFieldWrapper = styled(TextField)<Props>(({ error }) => ({
 }));
 
 const StyledMenuItem = styled(MenuItem)({
-  justifyContent:"flex-end"
-})
+  justifyContent: "flex-end",
+});
 
 interface EditableCellProps {
   params: GridRenderEditCellParams;
@@ -128,7 +128,7 @@ const EditableCell: React.FC<EditableCellProps> = ({
         type="string"
         placeholder=""
         value={value || ""}
-        onChange={(e) => handleChange(e.target.value)}
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChange(e.target.value)}
         helperText={error && "please enter a valid phone number"}
       ></StyledTextFieldWrapper>
     );
@@ -144,7 +144,7 @@ const EditableCell: React.FC<EditableCellProps> = ({
         fullWidth
         type="date"
         value={dateObject ? dateObject.toISOString().slice(0, 10) : ""}
-        onChange={(e) => handleDateChange(e.target.value)}
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleDateChange(e.target.value)}
         InputProps={{
           inputProps: {
             max: today,

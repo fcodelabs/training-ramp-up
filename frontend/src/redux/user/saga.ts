@@ -6,7 +6,7 @@ import {
   addUser,
   setUserError,
   discardUser,
-} from "./userSlice";
+} from "./slice";
 import { GridValidRowModel } from "@mui/x-data-grid";
 import {
   fetchUsersAsync,

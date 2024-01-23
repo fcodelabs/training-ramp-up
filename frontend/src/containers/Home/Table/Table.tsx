@@ -12,12 +12,13 @@ import {
   GridRenderEditCellParams,
   GridValidRowModel,
   DataGrid,
+  GridRenderCellParams,
 } from "@mui/x-data-grid";
 import { Columns } from "../../../utilities/index";
 import { FixedColumns } from "./TableColumns/FixedColumns/FixedColumns";
 import PopupNotification from "../../../components/Notification/Notification";
 import { useAppSelector, useAppDispatch } from "../../../redux/hooks";
-import GridActionsColumn from "./TableColumns/ActionColumn/ActionColumn";
+import { GridActionsColumn } from "./TableColumns/ActionColumn/ActionColumn";
 import { validateUser } from "../../../utilities/validateUser";
 import {
   discardUser,
@@ -25,7 +26,7 @@ import {
   setUsers,
   addUser,
   updateUser,
-} from "../../../redux/user/userSlice";
+} from "../../../redux/user/slice";
 import { generateNewId } from "../../../utilities/index";
 import styled from "styled-components";
 import { Socket, io } from "socket.io-client";
@@ -146,19 +147,13 @@ const Table = () => {
   const handleSaveClick = (params: GridRenderEditCellParams) => () => {
     const editedRow = rows.find((row) => row.id === params.id)!;
 
-    if (
-      validateUser(
-        editedRow,
-        Columns
-      )
-    ) {
+    if (validateUser(editedRow, Columns)) {
       setRowModesModel({
         ...rowModesModel,
         [params.id]: { mode: GridRowModes.View },
       });
 
       dispatch(addUser(editedRow));
-
     } else {
       setNotification({
         open: true,
@@ -232,7 +227,7 @@ const Table = () => {
       flex: 1,
       minWidth: 200,
       cellClassName: "actions",
-      renderCell: (params) => (
+      renderCell: (params: GridRenderCellParams) => (
         <GridActionsColumn
           params={params}
           isInEditMode={rowModesModel[params.id]?.mode === GridRowModes.Edit}
@@ -268,9 +263,9 @@ const Table = () => {
           ...oldModel,
           [id]: { mode: GridRowModes.Edit, fieldToFocus: "id" },
         }));
-    
+
         handleCloseNotification();
-      }
+      };
       setNotification({
         open: true,
         onConfirm: handleUnsuccessfull,
@@ -294,9 +289,9 @@ const Table = () => {
           ...oldModel,
           [id]: { mode: GridRowModes.Edit, fieldToFocus: "id" },
         }));
-    
+
         handleCloseNotification();
-      }
+      };
       setNotification({
         open: true,
         onConfirm: handleUnsuccessfull,
