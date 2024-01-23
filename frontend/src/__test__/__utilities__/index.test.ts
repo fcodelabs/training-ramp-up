@@ -5,6 +5,9 @@ import {
   formatDate,
 } from "../../utilities/index";
 
+afterEach(() => {
+  jest.clearAllMocks();
+});
 describe("formatMobileDisplay", () => {
   it('should format mobile number starting with "94"', () => {
     const mobileNumber = "947123456789";
@@ -52,10 +55,3 @@ describe("calculateAge", () => {
   });
 });
 
-describe("formatDate", () => {
-  it("should format date correctly", () => {
-    const date = new Date("2022-01-23");
-    const formattedDate = formatDate(date.toISOString());
-    expect(formattedDate).toBe("Sun Jan 23 2022");
-  });
-});

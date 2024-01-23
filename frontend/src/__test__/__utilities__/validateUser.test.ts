@@ -1,5 +1,9 @@
 import { validateUser,validateName, validateAge, validateMobile, validateAddress, validateBirthday } from '../../utilities/validateUser';
 
+afterEach(() => {
+    jest.clearAllMocks();
+})
+
 describe('validateUser', () => {
   it('should return true for a valid user', () => {
     const user = {
@@ -82,7 +86,7 @@ describe('validateUser', () => {
         age: 25,
         mobile: '123-456-7890',
         address: '123 Main St',
-        birthday: '',
+        birthday: null,
         };
     
         const requiredFields = ['birthday'];

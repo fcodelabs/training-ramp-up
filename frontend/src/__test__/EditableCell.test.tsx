@@ -116,93 +116,91 @@ describe("EditableCell", () => {
 
     expect(screen.getByText(/enter a valid phone number/i)).toBeInTheDocument();
   });
-});
 
-test("address field renders as text area", () => {
-  const handleChangeMock = jest.fn();
-  const addressParams: any = {
-    id: 1,
-    field: "address",
-    value: "123 Main St",
-    api: {
-      setEditCellValue: jest.fn(),
-    },
-  };
+  test("address field renders as text area", () => {
+    const handleChangeMock = jest.fn();
+    const addressParams: any = {
+      id: 1,
+      field: "address",
+      value: "123 Main St",
+      api: {
+        setEditCellValue: jest.fn(),
+      },
+    };
 
-  render(
-    <Provider store={store}>
-      <ThemeProvider theme={theme}>
-        <EditableCell
-          params={addressParams}
-          field="address"
-          value={addressParams.value}
-          validate={() => true}
-        />
-      </ThemeProvider>
-    </Provider>
-  );
+    render(
+      <Provider store={store}>
+        <ThemeProvider theme={theme}>
+          <EditableCell
+            params={addressParams}
+            field="address"
+            value={addressParams.value}
+            validate={() => true}
+          />
+        </ThemeProvider>
+      </Provider>
+    );
 
-  const addressTextArea = screen.getByRole("textbox");
-  fireEvent.change(addressTextArea, { target: { value: "456 Oak St" } });
-  expect(addressTextArea).toBeInTheDocument();
-});
+    const addressTextArea = screen.getByRole("textbox");
+    fireEvent.change(addressTextArea, { target: { value: "456 Oak St" } });
+    expect(addressTextArea).toBeInTheDocument();
+  });
 
-test("birthday field renders correctly", () => {
-  const handleChangeMock = jest.fn();
-  const birthdayParams: any = {
-    id: 1,
-    field: "birthday",
-    value: "1990-05-15",
-    api: {
-      setEditCellValue: jest.fn(),
-    },
-  };
+  test("birthday field renders correctly", () => {
+    const handleChangeMock = jest.fn();
+    const birthdayParams: any = {
+      id: 1,
+      field: "birthday",
+      value: "1990-05-15",
+      api: {
+        setEditCellValue: jest.fn(),
+      },
+    };
 
-  render(
-    <Provider store={store}>
-      <ThemeProvider theme={theme}>
-        <EditableCell
-          params={birthdayParams}
-          field="birthday"
-          value={birthdayParams.value}
-          validate={validateBirthday}
-        />
-      </ThemeProvider>
-    </Provider>
-  );
+    render(
+      <Provider store={store}>
+        <ThemeProvider theme={theme}>
+          <EditableCell
+            params={birthdayParams}
+            field="birthday"
+            value={birthdayParams.value}
+            validate={validateBirthday}
+          />
+        </ThemeProvider>
+      </Provider>
+    );
 
-  const birthdayInput = screen.getByDisplayValue("1990-05-15");
-  expect(birthdayInput).toBeInTheDocument();
-});
+    const birthdayInput = screen.getByDisplayValue("1990-05-15");
+    expect(birthdayInput).toBeInTheDocument();
+  });
 
-//test for options genders list
+  test("test for genders column", () => {
+    const options = ["Male", "Female", "Other"];
+    const handleChangeMock = jest.fn();
+    const genderParams: any = {
+      id: 1,
+      field: "gender",
+      value: "Male",
+      api: {
+        setEditCellValue: jest.fn(),
+      },
+    };
 
-test("test for genders column", () => {
-  const options = ["Male", "Female", "Other"];
-  const handleChangeMock = jest.fn();
-  const genderParams: any = {
-    id: 1,
-    field: "gender",
-    value: "Male",
-    api: {
-      setEditCellValue: jest.fn(),
-    },
-  };
+    render(
+      <Provider store={store}>
+        <ThemeProvider theme={theme}>
+          <EditableCell
+            params={genderParams}
+            field="gender"
+            options={options}
+            value={genderParams.value}
+            validate={validateBirthday}
+          />
+        </ThemeProvider>
+      </Provider>
+    );
 
-  render(
-    <Provider store={store}>
-      <ThemeProvider theme={theme}>
-        <EditableCell
-          params={genderParams}
-          field="gender"
-          options={options}
-          value={genderParams.value}
-          validate={validateBirthday}
-        />
-      </ThemeProvider>
-    </Provider>
-  );
-
-  const genderInput = screen.getByDisplayValue("Male");
-  expect(genderInput).toBeInTheDocument();
+    const genderInput = screen.getByDisplayValue("Male");
+    expect(genderInput).toBeInTheDocument();
+  });
 });
