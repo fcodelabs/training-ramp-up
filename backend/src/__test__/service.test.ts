@@ -6,10 +6,6 @@ import { Student } from "../entity/student";
 
 jest.mock("../config/data-source");
 
-// Mock the AppDataSource getRepository method
-const mockGetRepository = jest.fn();
-
-// Mock the repository methods
 const mockFind = jest.fn();
 const mockFindOne = jest.fn();
 const mockCreate = jest.fn();
@@ -21,7 +17,6 @@ beforeEach(() => {
   // Reset mocks and create fresh instances for each test
   jest.clearAllMocks();
 
-  // Mock the AppDataSource getRepository method to return the mock repository methods
   (AppDataSource.getRepository as jest.Mock).mockImplementation(() => ({
     find: mockFind,
     findOne: mockFindOne,

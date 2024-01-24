@@ -1,8 +1,6 @@
-import { Request, Response } from "express";
+import { Request } from "express";
 import { StudentController } from "../controller/studentController";
 import { StudentService } from "../services/studentService";
-import { getSocketInstance } from "../services/socketService";
-import { Student } from "../entity/student";
 
 jest.mock("../services/studentService");
 jest.mock("../services/socketService");
