@@ -1,5 +1,6 @@
 import { Box, Button, Typography } from "@mui/material";
 import Modal from "@mui/material/Modal";
+import React from "react";
 
 const styles = {
   dismiss: {

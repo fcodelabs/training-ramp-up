@@ -8,14 +8,14 @@ import { RootState } from "../../../redux/store";
 import ErrorModal from "../../../components/ErrorModal/ErrorModal";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
-import { addStudent, removeStudent } from "../../../redux/slices/studentSlice";
 import { useDispatch } from "react-redux";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import dayjs from "dayjs";
-import convertDate from "../../../utility/convertDate";
-import validateMobile from "../../../utility/validateMobile";
+import { INewStudent } from "../../../redux/sagas/studentSaga";
+import { addStudentRequest, getStudentsRequest, editStudentRequest, deleteStudentRequest } from "../../../redux/slices/studentSlice";
+import {formatMobile, convertDate, validateMobile} from "../../../utility/index";
 import {
   GridRowModel,
   GridRowId,
@@ -108,11 +108,14 @@ const StyledDatePicker = styled(DatePicker)<IStyledProps>(({ missing }) => ({
     "&.Mui-focused fieldset": {
       borderColor: "transparent",
     },
+    "&.Mui-error fieldset": {
+      borderColor: "transparent", // Add this rule
+    },
   },
-  "& .MuiPickersDay-daySelected": {
-    // Styles for the selected date text
-    color: "red", // Change the color to your desired value
-  },
+  // "& .MuiPickersDay-daySelected": {
+  //   // Styles for the selected date text
+  //   color: "red", // Change the color to your desired value
+  // },
 }));
 
 const StyledTextField = styled(TextField)<IStyledProps>(({ missing }) => ({
@@ -208,7 +211,7 @@ function DataTable() {
   const data = useSelector((state: RootState) => state.student.students);
 
   const [rows, setRows] = useState(
-    data.map((item) => ({ ...item, isNew: false })),
+    data.map((item) => ({ ...item, isNew: false, sortId: item.id })),
   );
   const [rowModesModel, setRowModesModel] = React.useState<GridRowModesModel>(
     {},
@@ -219,8 +222,12 @@ function DataTable() {
   const [add, setAdd] = useState(false);
 
   useEffect(() => {
-    setRows(data.map((item) => ({ ...item, isNew: false })));
-  }, [data]);
+    setRows(data.map((item) => ({ ...item, isNew: false, sortId: item.id })));
+  }, [data, dispatch]);
+
+  useEffect(() => {
+    dispatch(getStudentsRequest());
+  }, [dispatch]);
 
   const showErrorModel =
     (
@@ -250,9 +257,10 @@ function DataTable() {
     const { setRows, setRowModesModel } = props;
 
     const handleClick = () => {
-      const id = rows.length > 0 ? rows.length + 1 : 1;
+      const sortId = 0;
+      const id = rows.length > 0 ? Math.max(...rows.map(row => row.id)) + 1 : 1;
       setRows((oldRows) => [
-        {
+        { sortId,
           id,
           age: null,
           mobile: "",
@@ -310,6 +318,7 @@ function DataTable() {
             missing={missing}
             value={params.value as string}
             onChange={(event) => {
+
               params.api.setEditCellValue({
                 id: params.id,
                 field: params.field,
@@ -487,12 +496,13 @@ function DataTable() {
       width: 175,
       type: "date",
       editable: true,
+      valueGetter: (params) => new Date(params.value),
       renderCell: (params) => (
         <span>{new Date(params.value).toDateString()}</span>
       ),
       renderEditCell: (params) => {
         let missing = false;
-        if (params.value === "" && add) {
+        if (isNaN(new Date(params.value).getTime()) && add) {
           missing = true;
         }
         return (
@@ -502,16 +512,16 @@ function DataTable() {
               sx={{
                 width: "168px",
 
-                "&MuiOutlinedInput-input": {
-                  color: "var(--text-primary, rgba(0, 0, 0, 0.87))",
-                  fontFeatureSettings: "'clig' off, 'liga' off",
-                  fontFamily: "Roboto",
-                  fontSize: "14px",
-                  fontStyle: "normal",
-                  fontWeight: 400,
-                  letterSpacing: "0.17px",
-                  lineHeight: "143%",
-                },
+                // "&MuiOutlinedInput-input": {
+                //   color: "var(--text-primary, rgba(0, 0, 0, 0.87))",
+                //   fontFeatureSettings: "'clig' off, 'liga' off",
+                //   fontFamily: "Roboto",
+                //   fontSize: "14px",
+                //   fontStyle: "normal",
+                //   fontWeight: 400,
+                //   letterSpacing: "0.17px",
+                //   lineHeight: "143%",
+                // },
                 "& .MuiFormHelperText-root ": {
                   display: "none",
                 },
@@ -726,6 +736,7 @@ function DataTable() {
 
   const handleDiscardChanges = (id: GridRowId) => () => {
     setRows((oldRows) => oldRows.filter((row) => row.id !== id));
+    setAdd(false);
     setErrorModal(null);
   };
   const handleCancelClick = (id: GridRowId) => () => {
@@ -736,7 +747,7 @@ function DataTable() {
 
   const handleRemoveClick = (id: GridRowId) => () => {
     try {
-      dispatch(removeStudent(id));
+      dispatch(deleteStudentRequest(id as number));
       showErrorModel(
         false,
         "The student removed successfully",
@@ -762,22 +773,29 @@ function DataTable() {
         "keep editing",
       )();
     } else {
+      setAdd(false);
       handleSaveClick(row.id)();
     }
   };
 
   const processRowUpdate = (newRow: GridRowModel) => {
     const mobile = newRow.mobile;
-    const mobileWithoutPlus = mobile.replace(/^\+/, "");
-    const formattedMobile = mobileWithoutPlus.replace(
-      /(\d{3})(\d{3})(\d{4})/,
-      "$1-$2-$3",
-    );
+    const formattedMobile = formatMobile(mobile);
     const updatedRow = {
       ...newRow,
       isNew: false,
       mobile: formattedMobile,
     } as GridRowModel;
+
+    const studentData: INewStudent = {
+      name: newRow.name,
+      age: newRow.age,
+      gender: newRow.gender,
+      address: newRow.address,
+      mobile: updatedRow.mobile,
+      dob: new Date(newRow.dob),
+    };
+    
     if (cancel) {
       const prevRow = {
         ...data.find((row) => row.id === newRow.id),
@@ -787,8 +805,8 @@ function DataTable() {
       return Promise.resolve(prevRow);
     } else
       try {
-        dispatch(addStudent(updatedRow));
         if (newRow.isNew) {
+          dispatch(addStudentRequest(studentData));
           showErrorModel(
             false,
             "A new student added successfully",
@@ -796,6 +814,7 @@ function DataTable() {
             "ok",
           )();
         } else {
+          dispatch(editStudentRequest({student:studentData, id: newRow.id}));
           showErrorModel(
             false,
             "Student details updated successfully",
@@ -864,7 +883,7 @@ function DataTable() {
           },
 
           "& .MuiDataGrid-sortIcon": {
-            marginLeft: "20px", // Adjust as needed
+            marginLeft: "20px", 
           },
         }}
         rows={rows}
@@ -874,7 +893,6 @@ function DataTable() {
             rowModesModel[params.id]?.mode === GridRowModes.Edit;
 
           if (isInEditMode) {
-            console.log(params.id);
             return 100;
           } else {
             return "auto";
@@ -905,6 +923,12 @@ function DataTable() {
         onCellClick={(params, event) => {
           event.stopPropagation();
         }}
+        sortModel={[
+          {
+            field: 'sortId', 
+            sort: 'asc', 
+          },
+        ]}
       />
     </Box>
   );
