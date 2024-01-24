@@ -1,126 +1,176 @@
-import React from 'react';
-import { render, fireEvent } from '@testing-library/react';
-import NotificationPopup from '../components/Notification/Notification';
+import React from "react";
+import { render, fireEvent } from "@testing-library/react";
+import NotificationPopup from "../components/Notification/Notification";
+import { NotificationTypes, NotificationTexts } from "../utilities";
 
-// Mock the onSubmit and onClose functions
-const mockSubmit = jest.fn();
-const mockClose = jest.fn();
-const defaultProps = {
-    open: true,
-    onClose: mockClose,
-    type: 'TABLE_ERROR',
-    onSubmit: mockSubmit,
-  };
-
-const renderComponent = (props: any) => {
-  return render(<NotificationPopup {...props} />);
-};
-
-describe('NotificationPopup', () => {
-  afterEach(() => {
-    jest.clearAllMocks();
-  });
-
-  it('renders with TABLE_ERROR type', () => {
-    const { getByText } = renderComponent({
-      ...defaultProps});
-
-    expect(getByText('Unable to retrieve table details. Please try again later.')).toBeInTheDocument();
-    expect(getByText('Dismiss')).toBeInTheDocument();
-    expect(getByText('Confirm')).toBeInTheDocument();
-  });
-
-  it('renders with ADD_USER type', () => {
-    const { getByText } = renderComponent({
-      ...defaultProps,
-      type: 'ADD_USER',
-    });
-
-    expect(getByText('A new student added successfully')).toBeInTheDocument();
-    expect(getByText('Confirm')).toBeInTheDocument();
-  });
-
-  it('renders with SAVE_USER type', () => {
-    const { getByText } = renderComponent({
-      ...defaultProps,
-      type: 'SAVE_USER',
-    });
-
-    expect(getByText('Student details updated successfully')).toBeInTheDocument();
-    expect(getByText('Confirm')).toBeInTheDocument();
-  });
-
-  it('renders with MISSING_FIELDS type', () => {
-    const { getByText } = renderComponent({
-      ...defaultProps,
-      type: 'MISSING_FIELDS',
-    });
-
-    expect(getByText('Mandatory fields missing.')).toBeInTheDocument();
-    expect(getByText('keep editing')).toBeInTheDocument();
-  });
-
-  it('renders with DISCARD_CHANGES type', () => {
-    const { getByText } = renderComponent({
-      ...defaultProps,
-      type: 'DISCARD_CHANGES',
-    });
-
-    expect(getByText('Discard changes?')).toBeInTheDocument();
-    expect(getByText('Dismiss')).toBeInTheDocument();
-    expect(getByText('Confirm')).toBeInTheDocument();
-  });
-
-  it('renders with SAVE_NEW_USER type', () => {
-    const { getByText } = renderComponent({
-      ...defaultProps,
-      type: 'SAVE_NEW_USER',
-    });
-
-    expect(getByText('A new student added successfully')).toBeInTheDocument();
-    expect(getByText('ok')).toBeInTheDocument();
-  });
-
-  it('renders with FAIL_SAVE_NEW_USER type', () => {
-    const { getByText } = renderComponent({
-      ...defaultProps,
-      type: 'FAIL_SAVE_NEW_USER',
-    });
-
-    expect(getByText('Unable to add the new student. Please try again later')).toBeInTheDocument();
-    expect(getByText('try again')).toBeInTheDocument();
-  });
-
-  it('renders with DELETE_USER type', () => {
-    const { getByText } = renderComponent({
-      ...defaultProps,
-      type: 'DELETE_USER',
-    });
-
-    expect(getByText('Are you sure you want to remove this student?')).toBeInTheDocument();
-    expect(getByText('Dismiss')).toBeInTheDocument();
-    expect(getByText('Confirm')).toBeInTheDocument();
-  });
-
-  it('renders with DELETE_USER_SUCCESS type', () => {
-    const { getByText } = renderComponent({
-      ...defaultProps,
-      type: 'DELETE_USER_SUCCESS',
-    });
-
-    expect(getByText('Student deleted successfully')).toBeInTheDocument();
-    expect(getByText('ok')).toBeInTheDocument();
-  });
-
-   it('renders with FAIL_UPDATE_USER type', () => {
-    const { getByText } = renderComponent({
-      ...defaultProps,
-      type: 'FAIL_UPDATE_USER',
-    });
-
-    expect(getByText('Cannnot update the student details. Please try again later')).toBeInTheDocument();
-    expect(getByText('try again')).toBeInTheDocument();
-   });
-
-  // Add more test cases as needed
+afterEach(() => {
+  jest.clearAllMocks();
 });
+const onCloseMock = jest.fn();
+const onSubmitMock = jest.fn();
+
+describe("NotificationPopup", () => {
+  test("renders correctly with loading", () => {
+    const { getByText } = render(
+      <NotificationPopup
+        open={true}
+        onClose={onCloseMock}
+        onSubmit={onSubmitMock}
+        type={NotificationTypes.LOADING_DATA}
+      />
+    );
+    expect(
+      getByText(NotificationTexts[NotificationTypes.LOADING_DATA])
+    ).toBeInTheDocument();
+    fireEvent.click(getByText("ok"));
+    expect(onCloseMock).toHaveBeenCalled();
+  });
+
+  test("renders correctly with add function", () => {
+    const { getByText } = render(
+      <NotificationPopup
+        open={true}
+        onClose={onCloseMock}
+        onSubmit={onSubmitMock}
+        type={NotificationTypes.ADD_USER}
+      />
+    );
+    expect(
+      getByText(NotificationTexts[NotificationTypes.ADD_USER])
+    ).toBeInTheDocument();
+    fireEvent.click(getByText("Confirm"));
+    expect(onCloseMock).toHaveBeenCalled();
+  });
+
+  test("renders correctly with update function", () => {
+    const { getByText } = render(
+      <NotificationPopup
+        open={true}
+        onClose={onCloseMock}
+        onSubmit={onSubmitMock}
+        type={NotificationTypes.SAVE_USER}
+      />
+    );
+    expect(
+      getByText(NotificationTexts[NotificationTypes.SAVE_USER])
+    ).toBeInTheDocument();
+    fireEvent.click(getByText("Confirm"));
+    expect(onCloseMock).toHaveBeenCalled();
+  });
+
+  test("renders correctly with missing fields", () => {
+    const { getByText } = render(
+      <NotificationPopup
+        open={true}
+        onClose={onCloseMock}
+        onSubmit={onSubmitMock}
+        type={NotificationTypes.MISSING_FIELDS}
+      />
+    );
+    expect(
+      getByText(NotificationTexts[NotificationTypes.MISSING_FIELDS])
+    ).toBeInTheDocument();
+    fireEvent.click(getByText("keep editing"));
+    expect(onCloseMock).toHaveBeenCalled();
+  });
+
+  test("renders correctly with discard changes", () => {
+    const { getByText } = render(
+      <NotificationPopup
+        open={true}
+        onClose={onCloseMock}
+        onSubmit={onSubmitMock}
+        type={NotificationTypes.DISCARD_CHANGES}
+      />
+    );
+    expect(
+      getByText(NotificationTexts[NotificationTypes.DISCARD_CHANGES])
+    ).toBeInTheDocument();
+    fireEvent.click(getByText("Dismiss"));
+    expect(onCloseMock).toHaveBeenCalled();
+    fireEvent.click(getByText("Confirm"));
+    expect(onSubmitMock).toHaveBeenCalled();
+  });
+
+  test("renders correctly with delete", () => {
+    const { getByText } = render(
+      <NotificationPopup
+        open={true}
+        onClose={onCloseMock}
+        onSubmit={onSubmitMock}
+        type={NotificationTypes.DELETE_USER}
+      />
+    );
+    expect(
+      getByText(NotificationTexts[NotificationTypes.DELETE_USER])
+    ).toBeInTheDocument();
+    fireEvent.click(getByText("Dismiss"));
+    expect(onCloseMock).toHaveBeenCalled();
+    fireEvent.click(getByText("Confirm"));
+    expect(onSubmitMock).toHaveBeenCalled();
+  });
+
+  test("renders correctly with delete user success", () => {
+    const { getByText } = render(
+      <NotificationPopup
+        open={true}
+        onClose={onCloseMock}
+        onSubmit={onSubmitMock}
+        type={NotificationTypes.DELETE_USER_SUCCESS}
+      />
+    );
+    expect(
+      getByText(NotificationTexts[NotificationTypes.DELETE_USER_SUCCESS])
+    ).toBeInTheDocument();
+    fireEvent.click(getByText("ok"));
+    expect(onCloseMock).toHaveBeenCalled();
+  })
+
+  test("renders correctly with save new user", () => {
+    const { getByText } = render(
+      <NotificationPopup
+        open={true}
+        onClose={onCloseMock}
+        onSubmit={onSubmitMock}
+        type={NotificationTypes.SAVE_NEW_USER}
+      />
+    );
+    expect(
+      getByText(NotificationTexts[NotificationTypes.SAVE_NEW_USER])
+    ).toBeInTheDocument();
+    fireEvent.click(getByText("ok"));
+    expect(onCloseMock).toHaveBeenCalled();
+  });
+
+  test("renders correctly with fail save new user", () => {
+    const { getByText } = render(
+      <NotificationPopup
+        open={true}
+        onClose={onCloseMock}
+        onSubmit={onSubmitMock}
+        type={NotificationTypes.FAIL_SAVE_NEW_USER}
+      />
+    );
+    expect(
+      getByText(NotificationTexts[NotificationTypes.FAIL_SAVE_NEW_USER])
+    ).toBeInTheDocument();
+    fireEvent.click(getByText("try again"));
+  });
+
+  test("renders correctly with fail update user", () => {
+    const { getByText } = render(
+      <NotificationPopup
+        open={true}
+        onClose={onCloseMock}
+        onSubmit={onSubmitMock}
+        type={NotificationTypes.FAIL_UPDATE_USER}
+      />
+    );
+    expect(
+      getByText(NotificationTexts[NotificationTypes.FAIL_UPDATE_USER])
+    ).toBeInTheDocument();
+    fireEvent.click(getByText("try again"));
+  });
+});
+
+  
