@@ -9,13 +9,17 @@ import { Student } from "./models/Student";
 
 const { createServer } = require("node:http");
 const { Server } = require("socket.io");
+const cors = require("cors");
 
 dotenv.config();
 
 const app: Express = express();
 const port = process.env.PORT || 8000;
 const server = createServer(app);
+
 const io = new Server(server);
+
+app.use(cors());
 
 io.on("connection", (socket: any) => {
   console.log("a user connected");

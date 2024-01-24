@@ -1,114 +1,165 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import generateId from "../../utility/generateId";
-import calculateAge from "../../utility/calculateAge";
-import dayjs from "dayjs";
-
-interface IStudent {
-  id: number;
-  name: string;
-  age: number;
-  gender: string;
-  address: string;
-  mobile: string;
-  dob: Date;
-  isNew?: boolean;
-}
+import { GridRowId, GridValidRowModel } from "@mui/x-data-grid";
+// import { RootState } from "../../path-to-your-root-reducer";
 
 interface IStudentState {
-  students: IStudent[];
-  loading: boolean;
-  error: string | null;
+  userFetchingError: boolean;
+  userAddingError: boolean;
+  userUpdatingError: boolean;
+  removeStudentError: boolean;
+  isLoading: boolean;
+  students: GridValidRowModel[];
 }
 
+const initialState: IStudentState = {
+  userFetchingError: false,
+  userAddingError: false,
+  userUpdatingError: false,
+  removeStudentError: false,
+  isLoading: true,
+  students: [
+    {
+      id: 1,
+      name: "",
+      gender: "",
+      address: "",
+      mobileno: "",
+      dateofbirth: "",
+      age: "",
+    },
+    {
+      id: 2,
+      name: "",
+      gender: "",
+      address: "",
+      mobileno: "",
+      dateofbirth: "",
+      age: "",
+    },
+    {
+      id: 3,
+      name: "",
+      gender: "",
+      address: "",
+      mobileno: "",
+      dateofbirth: "",
+      age: "",
+    },
+    {
+      id: 4,
+      name: "",
+      gender: "",
+      address: "",
+      mobileno: "",
+      dateofbirth: "",
+      age: "",
+    },
+    {
+      id: 5,
+      name: "",
+      gender: "",
+      address: "",
+      mobileno: "",
+      dateofbirth: "",
+      age: "",
+    },
+    {
+      id: 6,
+      name: "",
+      gender: "",
+      address: "",
+      mobileno: "",
+      dateofbirth: "",
+      age: "",
+    },
+  ],
+};
+
 const studentSlice = createSlice({
-  name: "student",
-  initialState: {
-    students: [
-      {
-        id: generateId(),
-        name: "jon",
-        gender: "Male",
-        address: "Mumbai",
-        mobile: "0711397391",
-        dob: new Date("2000-07-08"),
-        age: calculateAge(new Date("2000-07-08")),
-      },
-      {
-        id: generateId(),
-        name: "Lannister",
-        age: calculateAge(new Date("1998-04-23")),
-        gender: "Female",
-        address: "Delhi",
-        mobile: "0703864608",
-        dob: new Date("1998-04-23"),
-        isNew: false,
-      },
-    ],
-  } as IStudentState,
+  name: "students",
+  initialState,
   reducers: {
-    setLoading: (state, action: PayloadAction<boolean>) => {
-      state.loading = action.payload;
-    },
-    getAllStudentsSuccess: (state, action: PayloadAction<IStudent[]>) => {
+    updateStudent: (state, action: PayloadAction<GridValidRowModel[]>) => {
+      console.log("action.payload", action.payload);
+      state.isLoading = false;
+      state.userAddingError = false;
+      state.userUpdatingError = false;
       state.students = action.payload;
-      state.loading = false;
-      state.error = null;
     },
-    getAllStudentsFailure: (state, action: PayloadAction<string>) => {
-      state.loading = false;
-      state.error = action.payload;
+    fetchAllStudentsStart: (state) => {
+      console.log("fetchAllStudentsStart hello 1");
+      state.isLoading = true;
+      state.userFetchingError = false;
     },
-    addStudentSuccess: (state) => {
-      state.loading = false;
-      state.error = null;
-      // Optionally, you can update the state with the newly added student if needed. need to change the saga !!!!! important
+    fetchAllStudentsSuccess: (
+      state,
+      action: PayloadAction<GridValidRowModel[]>
+    ) => {
+      console.log("fetchAllStudentsStart hello 2", action.payload);
+      state.isLoading = false;
+      state.students = action.payload;
     },
-    addStudentFailure: (state, action: PayloadAction<string>) => {
-      state.loading = false;
-      state.error = action.payload;
+    fetchStudentsError: (state) => {
+      state.isLoading = true;
+      state.userFetchingError = true;
     },
-    editStudentSuccess: (state) => {
-      state.loading = false;
-      state.error = null;
-      // Optionally, you can update the state with the edited student if needed.
+    addStudentStart: (state) => {
+      state.isLoading = true;
+      state.userAddingError = false;
     },
-    editStudentFailure: (state, action: PayloadAction<string>) => {
-      state.loading = false;
-      state.error = action.payload;
+    addStudentSuccess: (state, action: PayloadAction<GridValidRowModel>) => {
+      state.isLoading = false;
+      state.students = [...state.students, action.payload];
     },
-    deleteStudentSuccess: (state) => {
-      state.loading = false;
-      state.error = null;
-      // Optionally, you can update the state by removing the deleted student if needed.
+    addStudentError: (state) => {
+      state.isLoading = true;
+      state.userAddingError = true;
     },
-    deleteStudentFailure: (state, action: PayloadAction<string>) => {
-      state.loading = false;
-      state.error = action.payload;
+    removeStudentStart: (state) => {
+      state.isLoading = true;
+      state.removeStudentError = false;
     },
-    // addStudent: (state, action) => {
-    //   state.students.push(action.payload);
-    // },
-    // removeStudent: (state, action) => {
-    //   state.students = state.students.filter(
-    //     (student) => student.id !== action.payload
-    //   );
-    // },
+    removeStudentSuccess: (state, action: PayloadAction<GridRowId>) => {
+      state.isLoading = false;
+      state.students = state.students.filter(
+        (student) => student.id !== action.payload
+      );
+    },
+    removeStudentError: (state) => {
+      state.isLoading = true;
+      state.removeStudentError = true;
+    },
+    editStudentStart: (state) => {
+      state.isLoading = true;
+      state.userUpdatingError = false;
+    },
+    editStudentSuccess: (state, action: PayloadAction<GridValidRowModel>) => {
+      state.isLoading = false;
+      state.students = state.students.map((student) =>
+        student.id === action.payload.id ? action.payload : student
+      );
+    },
+    editStudentError: (state) => {
+      state.isLoading = true;
+      state.userUpdatingError = true;
+    },
   },
 });
 
-// export const { addStudent, removeStudent } = studentSlice.actions;
-// export const studentReducer = studentSlice.reducer;
-
 export const {
-  setLoading,
-  getAllStudentsSuccess,
-  getAllStudentsFailure,
+  updateStudent,
+  fetchAllStudentsStart,
+  fetchAllStudentsSuccess,
+  fetchStudentsError,
+  addStudentStart,
   addStudentSuccess,
-  addStudentFailure,
+  addStudentError,
+  removeStudentStart,
+  removeStudentSuccess,
+  removeStudentError,
+  editStudentStart,
   editStudentSuccess,
-  editStudentFailure,
-  deleteStudentSuccess,
-  deleteStudentFailure,
+  editStudentError,
 } = studentSlice.actions;
 
 export default studentSlice.reducer;

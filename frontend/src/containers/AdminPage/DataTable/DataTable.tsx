@@ -19,7 +19,7 @@ import Typography from "@mui/material/Typography";
 import generateId from "../../../utility/generateId";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../../redux/store";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
@@ -30,7 +30,22 @@ import calculateAge from "../../../utility/calculateAge";
 import Modal from "@mui/material/Modal";
 import Paper from "@mui/material/Paper";
 import MessageCard from "../Cards/MessageCard";
-import { addStudent, removeStudent } from "../../../redux/student/slice";
+
+import {
+  updateStudent,
+  fetchAllStudentsStart,
+  fetchAllStudentsSuccess,
+  fetchStudentsError,
+  addStudentStart,
+  addStudentSuccess,
+  addStudentError,
+  removeStudentStart,
+  removeStudentSuccess,
+  removeStudentError,
+  editStudentStart,
+  editStudentSuccess,
+  editStudentError,
+} from "../../../redux/student/slice";
 
 const StyledEditButton = styled(Button)`
   &&& {
@@ -152,7 +167,7 @@ interface IStudent {
   gender: string;
   address: string;
   mobile: string;
-  dob: Date;
+  dob: string;
   isNew?: boolean;
 }
 
@@ -165,14 +180,37 @@ interface IEditToolbarProps {
 
 function EditToolbar(props: IEditToolbarProps) {
   const { setRows, setRowModesModel } = props;
+  const currentRows = useSelector((state: RootState) => state.student.students);
+  const dispatch = useDispatch();
 
   const handleClick = () => {
     const id = generateId();
+    console.log("id", id);
     // Add the new row only once
-    setRows((oldRows) => [
+    // setRows((oldRows) => [
+    //   { id, name: "", address: "", mobile: "", isNew: true },
+    //   ...oldRows,
+    // ]);
+    setRows((currentRows) => [
       { id, name: "", address: "", mobile: "", isNew: true },
-      ...oldRows,
+      ...currentRows,
     ]);
+
+    dispatch(
+      updateStudent([
+        {
+          id,
+          name: "",
+          gender: "",
+          address: "",
+          mobileno: "",
+          dateofbirth: dayjs(new Date()).toISOString().slice(0, 10),
+          age: "",
+          isNew: true,
+        },
+        ...currentRows,
+      ])
+    );
     // Set the mode for the new row
     setRowModesModel((oldModel) => ({
       ...oldModel,
@@ -193,12 +231,34 @@ export default function DataTable() {
   const [rows, setRows] = useState(
     useSelector((state: RootState) => state.student.students)
   );
+  // const initialRows: GridRowsProp = useSelector(
+  //   (state: RootState) => state.student.students
+  // );
 
+  const loadState: boolean = useSelector(
+    (state: RootState) => state.student.isLoading
+  );
+  const studentAddingError: boolean = useSelector(
+    (state: RootState) => state.student.userAddingError
+  );
+  const studentUpdatingError: boolean = useSelector(
+    (state: RootState) => state.student.userUpdatingError
+  );
+  const studentRemovingError: boolean = useSelector(
+    (state: RootState) => state.student.removeStudentError
+  );
+  const fetchStudentsError: boolean = useSelector(
+    (state: RootState) => state.student.userFetchingError
+  );
   const dispatch = useDispatch();
 
   const [rowModesModel, setRowModesModel] = React.useState<GridRowModesModel>(
     {}
   );
+
+  // useEffect(() => {
+  //   dispatch(fetchAllStudentsStart());
+  // }, [dispatch]);
 
   const [mode, setMode] = useState<"Add" | "Edit">("Add"); // Track the mode (Add or Edit)
 
@@ -287,14 +347,26 @@ export default function DataTable() {
     setMode("Add");
     setShowSuccessModal(true);
     setAttemptedToAdd(false); // Reset attemptedToAdd after adding
+    // dispatch(
+    //   addStudent({
+    //     id: generateId(),
+    //     name: editedFields.name,
+    //     gender: editedFields.gender,
+    //     address: editedFields.address,
+    //     mobile: editedFields.mobile,
+    //     dob: editedFields.dob.toISOString(),
+    //     age: ageValues[id],
+    //   })
+    // );
+
     dispatch(
-      addStudent({
-        id: generateId(),
+      addStudentSuccess({
+        id: id,
         name: editedFields.name,
         gender: editedFields.gender,
         address: editedFields.address,
         mobile: editedFields.mobile,
-        dob: editedFields.dob.toISOString(),
+        dob: editedFields.dob.toISOString().slice(0, 10),
         age: ageValues[id],
       })
     );
@@ -339,14 +411,25 @@ export default function DataTable() {
       mobile: "",
       dob: dayjs(new Date()),
     });
+    // dispatch(
+    //   addStudent({
+    //     id: generateId(),
+    //     name: editedFields.name,
+    //     gender: editedFields.gender,
+    //     address: editedFields.address,
+    //     mobile: editedFields.mobile,
+    //     dob: editedFields.dob.toISOString(),
+    //     age: ageValues[id],
+    //   })
+    // );
     dispatch(
-      addStudent({
-        id: generateId(),
+      editStudentSuccess({
+        id: id,
         name: editedFields.name,
         gender: editedFields.gender,
         address: editedFields.address,
         mobile: editedFields.mobile,
-        dob: editedFields.dob.toISOString(),
+        dob: editedFields.dob.toISOString().slice(0, 10),
         age: ageValues[id],
       })
     );
@@ -355,7 +438,7 @@ export default function DataTable() {
   const handleDeleteClick = (id: GridRowId) => () => {
     setSelectedRowId(id);
     setShowRemoveConfirmModal(true);
-    dispatch(removeStudent(selectedRowId));
+    dispatch(removeStudentSuccess(id));
   };
 
   const handleCancelClick = (id: GridRowId) => () => {
@@ -660,7 +743,10 @@ export default function DataTable() {
       headerClassName: "custom-header",
       editable: true,
       valueFormatter(params) {
-        return params.value.replace(/(\d{3})(\d{3})(\d{4})/, "$1-$2-$3");
+        if (params.value) {
+          return params.value.replace(/(\d{3})(\d{3})(\d{4})/, "$1-$2-$3");
+        }
+        return ""; // or return something else if params.value is undefined
       },
       renderEditCell(params: GridRenderCellParams<any, string>) {
         const isMobileEmpty = !params.value;
