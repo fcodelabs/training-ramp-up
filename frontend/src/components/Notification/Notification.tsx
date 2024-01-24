@@ -47,6 +47,9 @@ const StyledButton = styled(Button)`
   margin-right: 0px !important;
   padding: 5px !important;
 `;
+
+import { NotificationTypes, NotificationTexts } from "../../utilities";
+
 const NotificationPopup: React.FC<ErrorPopupProps> = ({
   open,
   onClose,
@@ -88,45 +91,39 @@ const NotificationPopup: React.FC<ErrorPopupProps> = ({
       </>
     );
   };
-
-  if (type === "TABLE_ERROR") {
-    errorMessage = "Unable to retrieve table details. Please try again later.";
-    button = <ButtonSet />;
-  } else if (type === "ADD_USER") {
-    //done
-    errorMessage = "A new student added successfully";
-    button = <SingleButton text="Confirm" />;
-  } else if (type === "SAVE_USER") {
-    //done
-    errorMessage = "Student details updated successfully";
-    button = <SingleButton text="Confirm" />;
-  } else if (type === "MISSING_FIELDS") {
-    //done
-    errorMessage = "Mandatory fields missing.";
-    button = <SingleButton text="keep editing" />;
-  } else if (type === "DISCARD_CHANGES") {
-    //done
-    errorMessage = "Discard changes?";
-    button = <ButtonSet />;
-  } else if (type === "SAVE_NEW_USER") {
-    //done
-    errorMessage = "A new student added successfully";
+  if (type === NotificationTypes.LOADING_DATA) {
+    errorMessage = NotificationTexts[NotificationTypes.LOADING_DATA];
     button = <SingleButton text="ok" />;
-  } else if (type === "FAIL_SAVE_NEW_USER") {
-    //done
-    errorMessage = "Unable to add the new student. Please try again later";
-    button = <AddUpdateErrorButton />;
-  } else if (type === "FAIL_UPDATE_USER") {
-    //done
-    errorMessage = "Cannnot update the student details. Please try again later";
-    button = <AddUpdateErrorButton />;
-  } else if (type === "DELETE_USER") {
-    errorMessage = "Are you sure you want to remove this student?";
+  } else if (type === NotificationTypes.ADD_USER) {
+    errorMessage = NotificationTexts[NotificationTypes.ADD_USER];
+    button = <SingleButton text="Confirm" />;
+  } else if (type === NotificationTypes.SAVE_USER) {
+    errorMessage = NotificationTexts[NotificationTypes.SAVE_USER];
+    button = <SingleButton text="Confirm" />;
+  } else if (type === NotificationTypes.MISSING_FIELDS) {
+    errorMessage = NotificationTexts[NotificationTypes.MISSING_FIELDS];
+    button = <SingleButton text="keep editing" />;
+  } else if (type === NotificationTypes.DISCARD_CHANGES) {
+    errorMessage = NotificationTexts[NotificationTypes.DISCARD_CHANGES];
     button = <ButtonSet />;
-  } else if (type === "DELETE_USER_SUCCESS") {
-    errorMessage = "Student deleted successfully";
+  } else if (type === NotificationTypes.SAVE_NEW_USER) {
+    errorMessage = NotificationTexts[NotificationTypes.SAVE_NEW_USER];
+    button = <SingleButton text="ok" />;
+  } else if (type === NotificationTypes.FAIL_SAVE_NEW_USER) {
+    errorMessage = NotificationTexts[NotificationTypes.FAIL_SAVE_NEW_USER];
+    button = <AddUpdateErrorButton />;
+  } else if (type === NotificationTypes.FAIL_UPDATE_USER) {
+    errorMessage = NotificationTexts[NotificationTypes.FAIL_UPDATE_USER];
+    button = <AddUpdateErrorButton />;
+  } else if (type === NotificationTypes.DELETE_USER) {
+    errorMessage = NotificationTexts[NotificationTypes.DELETE_USER];
+    button = <ButtonSet />;
+  } else if (type === NotificationTypes.DELETE_USER_SUCCESS) {
+    errorMessage = NotificationTexts[NotificationTypes.DELETE_USER_SUCCESS];
     button = <SingleButton text="ok" />;
   }
+
+
 
   return (
     <div>

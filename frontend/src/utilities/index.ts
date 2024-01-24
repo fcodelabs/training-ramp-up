@@ -59,3 +59,52 @@ export const Columns = [
   "age",
   "action",
 ];
+
+export const emptyRows = [
+  {
+    id: 1,
+    error: true,
+  },
+  {
+    id: 2,
+    error: true,
+  },
+  {
+    id: 3,
+    error: true,
+  },
+  {
+    id: 4,
+    error: true,
+  },
+  {
+    id: 5,
+    error: true,
+  },
+];
+
+export enum NotificationTypes {
+  LOADING_DATA = "LOADING_DATA",
+  ADD_USER = "ADD_USER",
+  SAVE_USER = "SAVE_USER",
+  MISSING_FIELDS = "MISSING_FIELDS",
+  DISCARD_CHANGES = "DISCARD_CHANGES",
+  SAVE_NEW_USER = "SAVE_NEW_USER",
+  FAIL_SAVE_NEW_USER = "FAIL_SAVE_NEW_USER",
+  FAIL_UPDATE_USER = "FAIL_UPDATE_USER",
+  DELETE_USER = "DELETE_USER",
+  DELETE_USER_SUCCESS = "DELETE_USER_SUCCESS",
+}
+
+export const NotificationTexts: Record<NotificationTypes, string> = {
+  [NotificationTypes.LOADING_DATA]: "Unable to retrieve table details. Please try again later.",
+  [NotificationTypes.ADD_USER]: "A new student added successfully",
+  [NotificationTypes.SAVE_USER]: "Student details updated successfully",
+  [NotificationTypes.MISSING_FIELDS]: "Mandatory fields missing.",
+  [NotificationTypes.DISCARD_CHANGES]: "Discard changes?",
+  [NotificationTypes.SAVE_NEW_USER]: "A new student added successfully",
+  [NotificationTypes.FAIL_SAVE_NEW_USER]: "Unable to add the new student. Please try again later",
+  [NotificationTypes.FAIL_UPDATE_USER]: "Cannot update the student details. Please try again later",
+  [NotificationTypes.DELETE_USER]: "Are you sure you want to remove this student?",
+  [NotificationTypes.DELETE_USER_SUCCESS]: "Student deleted successfully",
+};

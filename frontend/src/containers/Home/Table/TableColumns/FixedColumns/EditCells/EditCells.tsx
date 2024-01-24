@@ -127,7 +127,7 @@ const EditableCell: React.FC<EditableCellProps> = ({
         fullWidth
         type="string"
         placeholder=""
-        value={value || ""}
+        value={value}
         onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChange(e.target.value)}
         helperText={error && "please enter a valid phone number"}
       ></StyledTextFieldWrapper>
@@ -162,6 +162,7 @@ const EditableCell: React.FC<EditableCellProps> = ({
         fullWidth
         defaultValue={options[0]}
         value={value || options[0]}
+        style={{ textAlign: "start"}}
         onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
           handleChange(e.target.value)
         }
@@ -171,7 +172,7 @@ const EditableCell: React.FC<EditableCellProps> = ({
             key={option}
             value={option}
             defaultValue={option[0]}
-            style={{ justifyContent: "flex-end" }}
+            style={{ justifyContent: "flex-start" }}
           >
             {option}
           </StyledMenuItem>
