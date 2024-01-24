@@ -20,12 +20,16 @@ AppDataSource.initialize().then(async () => {
   );
 
   const server = createServer(app);
-  initializeSocketIO(server); 
+  initializeSocketIO(server);
 
   Routes.forEach((route) => {
     (app as any)[route.method](
       route.route,
-      (req: express.Request, res: express.Response, next: express.NextFunction) => {
+      (
+        req: express.Request,
+        res: express.Response,
+        next: express.NextFunction
+      ) => {
         const result = new (route.controller as any)()[route.action](
           req,
           res,
@@ -44,7 +48,7 @@ AppDataSource.initialize().then(async () => {
     );
   });
 
-  server.listen(5000);
+  server.listen(process.env.PORT);
 
-  console.log("Express server has started on port 5000.");
+  console.log(`Express server has started on port ${process.env.PORT}.`);
 });
