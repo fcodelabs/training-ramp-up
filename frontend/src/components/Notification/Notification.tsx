@@ -1,31 +1,31 @@
-import * as React from 'react'
+import * as React from "react";
 import {
-    Dialog,
-    DialogContent,
-    Typography,
-    Button,
-    Backdrop,
-} from '@mui/material'
-import styled from 'styled-components'
+  Dialog,
+  DialogContent,
+  Typography,
+  Button,
+  Backdrop,
+} from "@mui/material";
+import styled from "styled-components";
 
 interface ErrorPopupProps {
-    open: boolean
-    onSubmit: () => void
-    onClose: () => void
-    type: string
+  open: boolean;
+  onSubmit: () => void;
+  onClose: () => void;
+  type: string;
 }
 
 const ButtonWrapper = styled.div`
-    padding: 15px 0 0 0;
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-end;
-`
+  padding: 15px 0 0 0;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+`;
 
 const StyledBackdrop = styled(Backdrop)`
-    background-color: rgba(255, 255, 255, 0.2) !important;
-    color: #fff;
-`
+  background-color: rgba(255, 255, 255, 0.2) !important;
+  color: #fff;
+`;
 
 const StyledDialogContent = styled(Dialog)`
   && {
@@ -39,124 +39,103 @@ const StyledDialogContent = styled(Dialog)`
         padding: 15px 20px 5px 20px !important;
         min-width: 300px;
       }}
-`
+`;
 
 const StyledButton = styled(Button)`
-    border: none !important;
-    margin-left: 4px !important;
-    margin-right: 0px !important;
-    padding: 5px !important;
-`
+  border: none !important;
+  margin-left: 4px !important;
+  margin-right: 0px !important;
+  padding: 5px !important;
+`;
+
+import { NotificationTypes, NotificationTexts } from "../../utilities";
+
 const NotificationPopup: React.FC<ErrorPopupProps> = ({
-    open,
-    onClose,
-    type,
-    onSubmit,
+  open,
+  onClose,
+  type,
+  onSubmit,
 }) => {
-    let errorMessage = ''
-    let button: React.ReactNode = null
+  let errorMessage = "";
+  let button: React.ReactNode = null;
 
-    const ButtonSet: React.FC = () => {
-        return (
-            <>
-                <StyledButton
-                    variant="outlined"
-                    color="primary"
-                    onClick={onClose}
-                >
-                    Dismiss
-                </StyledButton>
-                <StyledButton
-                    variant="outlined"
-                    color="secondary"
-                    onClick={onSubmit}
-                >
-                    Confirm
-                </StyledButton>
-            </>
-        )
-    }
-
-    const SingleButton: React.FC<{ text: string }> = ({ text }) => {
-        return (
-            <>
-                <StyledButton
-                    variant="outlined"
-                    color="primary"
-                    onClick={onClose}
-                >
-                    {text}
-                </StyledButton>
-            </>
-        )
-    }
-
-    const AddUpdateErrorButton: React.FC = () => {
-        return (
-            <>
-                <StyledButton
-                    variant="outlined"
-                    color="primary"
-                    onClick={onSubmit}
-                >
-                    try again
-                </StyledButton>
-            </>
-        )
-    }
-
-    if (type === 'TABLE_ERROR') {
-        errorMessage =
-            'Unable to retrieve table details. Please try again later.'
-        button = <ButtonSet />
-    } else if (type === 'ADD_USER') {
-        //done
-        errorMessage = 'A new student added successfully'
-        button = <SingleButton text="Confirm" />
-    } else if (type === 'SAVE_USER') {
-        //done
-        errorMessage = 'Student details updated successfully'
-        button = <SingleButton text="Confirm" />
-    } else if (type === 'MISSING_FIELDS') {
-        //done
-        errorMessage = 'Mandatory fields missing.'
-        button = <SingleButton text="keep editing" />
-    } else if (type === 'DISCARD_CHANGES') {
-        //done
-        errorMessage = 'Discard changes?'
-        button = <ButtonSet />
-    } else if (type === 'SAVE_NEW_USER') {
-        //done
-        errorMessage = 'A new student added successfully'
-        button = <SingleButton text="ok" />
-    } else if (type === 'FAIL_SAVE_NEW_USER') {
-        //done
-        errorMessage = 'Unable to add the new student. Please try again later'
-        button = <AddUpdateErrorButton  />
-    } else if (type === 'FAIL_UPDATE_USER') {
-        //done
-        errorMessage =
-            'Cannnot update the student details. Please try again later'
-        button = <AddUpdateErrorButton  />
-    } else if (type === 'DELETE_USER') {
-        errorMessage = 'Are you sure you want to remove this student?'
-        button = <ButtonSet />
-    } else if (type === 'DELETE_USER_SUCCESS') {
-        errorMessage = 'Student deleted successfully'
-        button = <SingleButton text="ok" />
-    }
-
+  const ButtonSet: React.FC = () => {
     return (
-        <div>
-            <StyledBackdrop open={open} />
-            <StyledDialogContent open={open} onClose={onClose}>
-                <DialogContent>
-                    <Typography variant="body1">{errorMessage}</Typography>
-                    <ButtonWrapper>{button}</ButtonWrapper>
-                </DialogContent>
-            </StyledDialogContent>
-        </div>
-    )
-}
+      <>
+        <StyledButton variant="outlined" color="primary" onClick={onClose}>
+          Dismiss
+        </StyledButton>
+        <StyledButton variant="outlined" color="secondary" onClick={onSubmit}>
+          Confirm
+        </StyledButton>
+      </>
+    );
+  };
 
-export default NotificationPopup
+  const SingleButton: React.FC<{ text: string }> = ({ text }) => {
+    return (
+      <>
+        <StyledButton variant="outlined" color="primary" onClick={onClose}>
+          {text}
+        </StyledButton>
+      </>
+    );
+  };
+
+  const AddUpdateErrorButton: React.FC = () => {
+    return (
+      <>
+        <StyledButton variant="outlined" color="primary" onClick={onSubmit}>
+          try again
+        </StyledButton>
+      </>
+    );
+  };
+  if (type === NotificationTypes.LOADING_DATA) {
+    errorMessage = NotificationTexts[NotificationTypes.LOADING_DATA];
+    button = <SingleButton text="ok" />;
+  } else if (type === NotificationTypes.ADD_USER) {
+    errorMessage = NotificationTexts[NotificationTypes.ADD_USER];
+    button = <SingleButton text="Confirm" />;
+  } else if (type === NotificationTypes.SAVE_USER) {
+    errorMessage = NotificationTexts[NotificationTypes.SAVE_USER];
+    button = <SingleButton text="Confirm" />;
+  } else if (type === NotificationTypes.MISSING_FIELDS) {
+    errorMessage = NotificationTexts[NotificationTypes.MISSING_FIELDS];
+    button = <SingleButton text="keep editing" />;
+  } else if (type === NotificationTypes.DISCARD_CHANGES) {
+    errorMessage = NotificationTexts[NotificationTypes.DISCARD_CHANGES];
+    button = <ButtonSet />;
+  } else if (type === NotificationTypes.SAVE_NEW_USER) {
+    errorMessage = NotificationTexts[NotificationTypes.SAVE_NEW_USER];
+    button = <SingleButton text="ok" />;
+  } else if (type === NotificationTypes.FAIL_SAVE_NEW_USER) {
+    errorMessage = NotificationTexts[NotificationTypes.FAIL_SAVE_NEW_USER];
+    button = <AddUpdateErrorButton />;
+  } else if (type === NotificationTypes.FAIL_UPDATE_USER) {
+    errorMessage = NotificationTexts[NotificationTypes.FAIL_UPDATE_USER];
+    button = <AddUpdateErrorButton />;
+  } else if (type === NotificationTypes.DELETE_USER) {
+    errorMessage = NotificationTexts[NotificationTypes.DELETE_USER];
+    button = <ButtonSet />;
+  } else if (type === NotificationTypes.DELETE_USER_SUCCESS) {
+    errorMessage = NotificationTexts[NotificationTypes.DELETE_USER_SUCCESS];
+    button = <SingleButton text="ok" />;
+  }
+
+
+
+  return (
+    <div>
+      <StyledBackdrop open={open} />
+      <StyledDialogContent open={open} onClose={onClose}>
+        <DialogContent>
+          <Typography variant="body1">{errorMessage}</Typography>
+          <ButtonWrapper>{button}</ButtonWrapper>
+        </DialogContent>
+      </StyledDialogContent>
+    </div>
+  );
+};
+
+export default NotificationPopup;

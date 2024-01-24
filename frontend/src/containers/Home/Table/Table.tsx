@@ -12,12 +12,13 @@ import {
   GridRenderEditCellParams,
   GridValidRowModel,
   DataGrid,
+  GridRenderCellParams,
 } from "@mui/x-data-grid";
+import { Columns } from "../../../utilities/index";
 import { FixedColumns } from "./TableColumns/FixedColumns/FixedColumns";
 import PopupNotification from "../../../components/Notification/Notification";
 import { useAppSelector, useAppDispatch } from "../../../redux/hooks";
-import { emptyColumns } from "../../../components/TableSkeletons/TableSkeletons";
-import GridActionsColumn from "./TableColumns/ActionColumn/ActionColumn";
+import { GridActionsColumn } from "./TableColumns/ActionColumn/ActionColumn";
 import { validateUser } from "../../../utilities/validateUser";
 import {
   discardUser,
@@ -25,10 +26,11 @@ import {
   setUsers,
   addUser,
   updateUser,
-} from "../../../redux/user/userSlice";
+} from "../../../redux/user/slice";
 import { generateNewId } from "../../../utilities/index";
 import styled from "styled-components";
 import { Socket, io } from "socket.io-client";
+import { NotificationTypes } from "../../../utilities/index";
 const url = process.env.REACT_APP_API_URL;
 
 const Container = styled.div`
@@ -103,6 +105,7 @@ const StyledDataGrid = styled(DataGrid)(() => ({
 
 const Table = () => {
   const rows: GridValidRowModel[] = useAppSelector((state) => state.user.rows);
+  const isLoading = useAppSelector((state) => state.user.isLoading);
   const [rowModesModel, setRowModesModel] = useState<GridRowModesModel>({});
   const [notification, setNotification] = useState({
     open: false,
@@ -146,24 +149,18 @@ const Table = () => {
   const handleSaveClick = (params: GridRenderEditCellParams) => () => {
     const editedRow = rows.find((row) => row.id === params.id)!;
 
-    if (
-      validateUser(
-        editedRow,
-        emptyColumns.map((column) => column.field)
-      )
-    ) {
+    if (validateUser(editedRow, Columns)) {
       setRowModesModel({
         ...rowModesModel,
         [params.id]: { mode: GridRowModes.View },
       });
 
       dispatch(addUser(editedRow));
-
     } else {
       setNotification({
         open: true,
         onConfirm: handleCloseNotification,
-        type: "MISSING_FIELDS",
+        type: NotificationTypes.MISSING_FIELDS,
       });
     }
   };
@@ -176,7 +173,7 @@ const Table = () => {
     setNotification({
       open: true,
       onConfirm: confirmDelete,
-      type: "DELETE_USER",
+      type: NotificationTypes.DELETE_USER,
     });
   };
 
@@ -193,7 +190,7 @@ const Table = () => {
     setNotification({
       open: true,
       onConfirm: comfirmDiscard,
-      type: "DISCARD_CHANGES",
+      type: NotificationTypes.DISCARD_CHANGES,
     });
   };
 
@@ -232,7 +229,7 @@ const Table = () => {
       flex: 1,
       minWidth: 200,
       cellClassName: "actions",
-      renderCell: (params) => (
+      renderCell: (params: GridRenderCellParams) => (
         <GridActionsColumn
           params={params}
           isInEditMode={rowModesModel[params.id]?.mode === GridRowModes.Edit}
@@ -257,7 +254,7 @@ const Table = () => {
       setNotification({
         open: true,
         onConfirm: handleCloseNotification,
-        type: "SAVE_NEW_USER",
+        type: NotificationTypes.SAVE_USER,
       });
       socket.emit("messageReceived", "Message received successfully");
     });
@@ -268,13 +265,13 @@ const Table = () => {
           ...oldModel,
           [id]: { mode: GridRowModes.Edit, fieldToFocus: "id" },
         }));
-    
+
         handleCloseNotification();
-      }
+      };
       setNotification({
         open: true,
         onConfirm: handleUnsuccessfull,
-        type: "FAIL_SAVE_NEW_USER",
+        type: NotificationTypes.FAIL_SAVE_NEW_USER,
       });
       socket.emit("messageReceived", "Message received successfully");
     });
@@ -283,7 +280,7 @@ const Table = () => {
       setNotification({
         open: true,
         onConfirm: handleCloseNotification,
-        type: "SAVE_USER",
+        type: NotificationTypes.SAVE_USER,
       });
       socket.emit("messageReceived", "Message received successfully");
     });
@@ -294,13 +291,13 @@ const Table = () => {
           ...oldModel,
           [id]: { mode: GridRowModes.Edit, fieldToFocus: "id" },
         }));
-    
+
         handleCloseNotification();
-      }
+      };
       setNotification({
         open: true,
         onConfirm: handleUnsuccessfull,
-        type: "FAIL_UPDATE_USER",
+        type: NotificationTypes.FAIL_UPDATE_USER,
       });
       socket.emit("messageReceived", "Message received successfully");
     });
@@ -309,7 +306,7 @@ const Table = () => {
       setNotification({
         open: true,
         onConfirm: handleCloseNotification,
-        type: "DELETE_USER_SUCCESS",
+        type: NotificationTypes.DELETE_USER_SUCCESS,
       });
       socket.emit("messageReceived", "Message received successfully");
     });
@@ -321,7 +318,14 @@ const Table = () => {
 
   useEffect(() => {
     dispatch(fetchUsers());
-  }, [dispatch]);
+    if (isLoading) {
+      setNotification({
+        open: true,
+        onConfirm: handleCloseNotification,
+        type: NotificationTypes.LOADING_DATA,
+      });
+    }
+  }, [dispatch, isLoading]);
 
   return (
     <Container>
@@ -342,6 +346,12 @@ const Table = () => {
         processRowUpdate={processRowUpdate}
         getRowHeight={getRowHeight}
         disableColumnMenu
+        initialState={{
+          pagination: {
+            paginationModel: { pageSize: 10, page: 0 },
+          },
+        }}
+        pageSizeOptions={[10, 25, 50]}
       />
       <PopupNotification
         open={notification.open}

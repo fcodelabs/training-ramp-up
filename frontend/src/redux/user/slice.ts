@@ -1,59 +1,14 @@
 import { GridValidRowModel } from "@mui/x-data-grid";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-
+import { emptyRows } from "../../utilities";
 type initialDataType = {
   isLoading: boolean;
   rows: GridValidRowModel[];
 };
 
-const initialState: initialDataType = {
+export const initialState: initialDataType = {
   isLoading: false,
-  rows: [
-    {
-      id: 1,
-      name: "",
-      gender: "",
-      address: "",
-      mobile: "",
-      birthday: "",
-      age: "",
-      action: "",
-      error: true,
-    },
-    {
-      id: 2,
-      name: "",
-      gender: "",
-      address: "",
-      mobile: "",
-      birthday: "",
-      age: "",
-      action: "",
-      error: true,
-    },
-    {
-      id: 3,
-      name: "",
-      gender: "",
-      address: "",
-      mobile: "",
-      birthday: "",
-      age: "",
-      action: "",
-      error: true,
-    },
-    {
-      id: 4,
-      name: "",
-      gender: "",
-      address: "",
-      mobile: "",
-      birthday: "",
-      age: "",
-      action: "",
-      error: true,
-    },
-  ],
+  rows: [...emptyRows],
 };
 
 const userSlice = createSlice({
@@ -72,6 +27,7 @@ const userSlice = createSlice({
     },
     fetchUsersFailure: (state) => {
       state.isLoading = true;
+      state.rows = [...emptyRows];
     },
     discardUser: (state, action: PayloadAction<number>) => {
       state.rows = state.rows.filter((user) => user.id !== action.payload);
@@ -85,7 +41,7 @@ const userSlice = createSlice({
       state.rows = state.rows.map((user) =>
         user.id === action.payload ? { ...user, error: true } : user
       );
-    }
+    },
   },
 });
 
@@ -96,7 +52,7 @@ export const {
   addUser,
   discardUser,
   updateUser,
-  setUserError
+  setUserError,
 } = userSlice.actions;
 
 export default userSlice.reducer;

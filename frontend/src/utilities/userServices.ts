@@ -8,7 +8,6 @@ export const fetchUsersAsync = async () => {
     const response = await axios.get(`${url}/students`);
     return response.data;
   } catch (error) {
-    console.error(error);
     throw error; // You might want to handle errors in a different way based on your requirements
   }
 };
@@ -22,7 +21,6 @@ export const addUsersAsync = async (user: GridValidRowModel) => {
     });
     return response.data;
   } catch (error) {
-    console.error(error);
     throw error;
   }
 };
@@ -36,7 +34,6 @@ export const updateUserAsync = async (user: GridValidRowModel) => {
     });
     return response.data;
   } catch (error) {
-    console.error(error);
     throw error;
   }
 }
@@ -46,7 +43,6 @@ export const deleteUserAsync = async (id: number) => {
     const response = await axios.delete(`${url}/students/${id}/${userId}`);
     return response.data;
   } catch (error) {
-    console.error(error);
     throw error;
   }
 };
