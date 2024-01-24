@@ -1,6 +1,5 @@
-import React from 'react';
-import logo from './logo.svg';
-import Home from './pages/home/home';
+import React from "react";
+import Home from "./pages/home/Home";
 
 function App() {
   return (
