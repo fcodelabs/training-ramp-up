@@ -3,6 +3,7 @@ import express, { Express, Request, Response } from "express";
 import { DataSource } from "typeorm";
 
 import studentRoute from "./routes/studentRoute";
+import socketRouter from "./routes/studentRoute";
 
 import dotenv from "dotenv";
 import { Student } from "./models/Student";
@@ -54,7 +55,8 @@ app.get("/", (req: Request, res: Response) => {
   res.send("Hello World!");
 });
 
-app.use("/student", studentRoute);
+// app.use("/student", studentRoute);
+app.use("/student", socketRouter(io));
 
 // app.listen(port, () => {
 //   console.log(`Server running on port ${port}`);

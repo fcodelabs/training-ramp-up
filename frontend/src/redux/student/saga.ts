@@ -143,16 +143,12 @@ import { GridRowId, GridValidRowModel } from "@mui/x-data-grid";
 
 import {
   updateStudent,
-  fetchAllStudentsStart,
   fetchAllStudentsSuccess,
   fetchStudentsError,
-  addStudentStart,
   addStudentSuccess,
   addStudentError,
-  removeStudentStart,
   removeStudentSuccess,
   removeStudentError,
-  editStudentStart,
   editStudentSuccess,
   editStudentError,
 } from "./slice";
@@ -167,7 +163,9 @@ function* getAllStudentsWorker(): Generator<any, any, any> {
       axios.get<GridValidRowModel[]>,
       "http://localhost:5000/student/allStudents"
     );
+    console.log("data", data);
     yield put(updateStudent(data));
+    yield put(fetchAllStudentsSuccess);
     //const response = yield call(axios.get, `${BASE_URL}/allStudents`);
     //yield put(fetchAllStudentsSuccess(response.data));
   } catch (error: any) {
@@ -197,6 +195,7 @@ function* addNewStudentWorker(
       "http://localhost:5000/student/add",
       newStudent
     );
+    yield put(fetchAllStudentsSuccess);
   } catch (error: any) {
     console.log("hello adding error");
     console.log(error);
@@ -215,12 +214,14 @@ function* updateStudentWorker(action: PayloadAction<GridValidRowModel>) {
     dob: action.payload.dob,
     age: action.payload.age,
   };
+  console.log("updatedStudent", updateStudent);
   try {
     yield call(
       axios.put<GridValidRowModel>,
       `http://localhost:5000/student/edit/${action.payload.id}`,
       updatedStudent
     );
+    yield put(fetchAllStudentsSuccess);
   } catch (error: any) {
     yield put(editStudentError(error));
 
@@ -242,7 +243,7 @@ function* deleteStudentWorker(action: PayloadAction<GridRowId>) {
 }
 
 function* getAllStudentsWatcher() {
-  yield takeLatest(fetchAllStudentsStart, getAllStudentsWorker);
+  yield takeLatest(fetchAllStudentsSuccess, getAllStudentsWorker);
 }
 
 function* addNewStudentWatcher() {

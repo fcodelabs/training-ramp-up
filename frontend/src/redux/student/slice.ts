@@ -17,62 +17,7 @@ const initialState: IStudentState = {
   userUpdatingError: false,
   removeStudentError: false,
   isLoading: true,
-  students: [
-    {
-      id: 1,
-      name: "",
-      gender: "",
-      address: "",
-      mobileno: "",
-      dateofbirth: "",
-      age: "",
-    },
-    {
-      id: 2,
-      name: "",
-      gender: "",
-      address: "",
-      mobileno: "",
-      dateofbirth: "",
-      age: "",
-    },
-    {
-      id: 3,
-      name: "",
-      gender: "",
-      address: "",
-      mobileno: "",
-      dateofbirth: "",
-      age: "",
-    },
-    {
-      id: 4,
-      name: "",
-      gender: "",
-      address: "",
-      mobileno: "",
-      dateofbirth: "",
-      age: "",
-    },
-    {
-      id: 5,
-      name: "",
-      gender: "",
-      address: "",
-      mobileno: "",
-      dateofbirth: "",
-      age: "",
-    },
-    {
-      id: 6,
-      name: "",
-      gender: "",
-      address: "",
-      mobileno: "",
-      dateofbirth: "",
-      age: "",
-    },
-  ],
+  students: [],
 };
 
 const studentSlice = createSlice({
@@ -80,33 +25,24 @@ const studentSlice = createSlice({
   initialState,
   reducers: {
     updateStudent: (state, action: PayloadAction<GridValidRowModel[]>) => {
-      console.log("action.payload", action.payload);
+      console.log("update student action.payload", action.payload);
+
       state.isLoading = false;
       state.userAddingError = false;
       state.userUpdatingError = false;
       state.students = action.payload;
+      console.log("state students", state.students);
     },
-    fetchAllStudentsStart: (state) => {
-      console.log("fetchAllStudentsStart hello 1");
-      state.isLoading = true;
-      state.userFetchingError = false;
-    },
-    fetchAllStudentsSuccess: (
-      state,
-      action: PayloadAction<GridValidRowModel[]>
-    ) => {
-      console.log("fetchAllStudentsStart hello 2", action.payload);
+    fetchAllStudentsSuccess: (state) => {
+      // console.log("fetchAllStudentsStart hello 2", action.payload);
       state.isLoading = false;
-      state.students = action.payload;
+      // state.students = action.payload;
     },
     fetchStudentsError: (state) => {
       state.isLoading = true;
       state.userFetchingError = true;
     },
-    addStudentStart: (state) => {
-      state.isLoading = true;
-      state.userAddingError = false;
-    },
+
     addStudentSuccess: (state, action: PayloadAction<GridValidRowModel>) => {
       state.isLoading = false;
       state.students = [...state.students, action.payload];
@@ -115,10 +51,7 @@ const studentSlice = createSlice({
       state.isLoading = true;
       state.userAddingError = true;
     },
-    removeStudentStart: (state) => {
-      state.isLoading = true;
-      state.removeStudentError = false;
-    },
+
     removeStudentSuccess: (state, action: PayloadAction<GridRowId>) => {
       state.isLoading = false;
       state.students = state.students.filter(
@@ -129,10 +62,7 @@ const studentSlice = createSlice({
       state.isLoading = true;
       state.removeStudentError = true;
     },
-    editStudentStart: (state) => {
-      state.isLoading = true;
-      state.userUpdatingError = false;
-    },
+
     editStudentSuccess: (state, action: PayloadAction<GridValidRowModel>) => {
       state.isLoading = false;
       state.students = state.students.map((student) =>
@@ -148,16 +78,16 @@ const studentSlice = createSlice({
 
 export const {
   updateStudent,
-  fetchAllStudentsStart,
+
   fetchAllStudentsSuccess,
   fetchStudentsError,
-  addStudentStart,
+
   addStudentSuccess,
   addStudentError,
-  removeStudentStart,
+
   removeStudentSuccess,
   removeStudentError,
-  editStudentStart,
+
   editStudentSuccess,
   editStudentError,
 } = studentSlice.actions;

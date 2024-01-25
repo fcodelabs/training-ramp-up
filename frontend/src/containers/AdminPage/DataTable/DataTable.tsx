@@ -33,18 +33,10 @@ import MessageCard from "../Cards/MessageCard";
 
 import {
   updateStudent,
-  fetchAllStudentsStart,
   fetchAllStudentsSuccess,
-  fetchStudentsError,
-  addStudentStart,
   addStudentSuccess,
-  addStudentError,
-  removeStudentStart,
   removeStudentSuccess,
-  removeStudentError,
-  editStudentStart,
   editStudentSuccess,
-  editStudentError,
 } from "../../../redux/student/slice";
 
 const StyledEditButton = styled(Button)`
@@ -191,10 +183,10 @@ function EditToolbar(props: IEditToolbarProps) {
     //   { id, name: "", address: "", mobile: "", isNew: true },
     //   ...oldRows,
     // ]);
-    setRows((currentRows) => [
-      { id, name: "", address: "", mobile: "", isNew: true },
-      ...currentRows,
-    ]);
+    // setRows((currentRows) => [
+    //   { id, name: "", address: "", mobile: "", isNew: true },
+    //   ...currentRows,
+    // ]);
 
     dispatch(
       updateStudent([
@@ -228,9 +220,12 @@ function EditToolbar(props: IEditToolbarProps) {
 }
 
 export default function DataTable() {
+  const temp = useSelector((state: RootState) => state.student.students);
   const [rows, setRows] = useState(
     useSelector((state: RootState) => state.student.students)
   );
+
+  console.log("temp", temp);
   // const initialRows: GridRowsProp = useSelector(
   //   (state: RootState) => state.student.students
   // );
@@ -256,9 +251,9 @@ export default function DataTable() {
     {}
   );
 
-  // useEffect(() => {
-  //   dispatch(fetchAllStudentsStart());
-  // }, [dispatch]);
+  useEffect(() => {
+    dispatch(fetchAllStudentsSuccess());
+  }, [dispatch]);
 
   const [mode, setMode] = useState<"Add" | "Edit">("Add"); // Track the mode (Add or Edit)
 
@@ -294,6 +289,7 @@ export default function DataTable() {
       setSelectedRowId(null);
       // Show the RemoveSuccessCard
       setShowRemoveSuccessCard(true);
+      dispatch(removeStudentSuccess(id));
     }
   };
 
@@ -438,7 +434,7 @@ export default function DataTable() {
   const handleDeleteClick = (id: GridRowId) => () => {
     setSelectedRowId(id);
     setShowRemoveConfirmModal(true);
-    dispatch(removeStudentSuccess(id));
+    // dispatch(removeStudentSuccess(id));
   };
 
   const handleCancelClick = (id: GridRowId) => () => {
@@ -1104,7 +1100,7 @@ export default function DataTable() {
           },
           width: "auto",
         }}
-        rows={rows}
+        rows={temp}
         columns={columns}
         editMode="row"
         disableRowSelectionOnClick
@@ -1113,7 +1109,7 @@ export default function DataTable() {
         onRowEditStop={handleRowEditStop}
         processRowUpdate={processRowUpdate}
         slots={{ toolbar: EditToolbar }}
-        slotProps={{ toolbar: { setRows, setRowModesModel } }}
+        slotProps={{ toolbar: { setRowModesModel } }}
         initialState={{
           pagination: {
             paginationModel: { page: 0, pageSize: 5 },
