@@ -1,24 +1,33 @@
-import { Entity ,Column, PrimaryGeneratedColumn  } from "typeorm";
-@Entity()
-export class Student{
-    @PrimaryGeneratedColumn()
-    id: number
+import { BaseEntity, Column, CreateDateColumn, Entity, PrimaryColumn, UpdateDateColumn } from "typeorm";
 
-    @Column({ length: 50 })
-    name: string
+@Entity('student')
+export class Student extends BaseEntity{
 
-    @Column({ length: 10 })
-    gender: string
+    @PrimaryColumn({unique: true})
+    id: number;
 
-    @Column({ length: 200, nullable: true })
-    address: string
-
-    @Column({ length: 15, nullable: true })
-    mobileno: string
-
-    @Column({ type: 'date', nullable: true })
-    dob: Date
+    @Column({nullable: false})
+    name: string;
 
     @Column()
-    age: number
+    gender: string;
+
+    @Column()
+    address: string;
+
+    @Column()
+    mobileno: number;
+
+    @Column()
+    dob: string;
+
+    @Column()
+    age: number;
+
+    @CreateDateColumn()
+    created_at: Date;
+
+    @UpdateDateColumn()
+    updated_at: Date;
+
 }

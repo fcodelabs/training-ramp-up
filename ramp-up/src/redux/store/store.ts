@@ -1,5 +1,5 @@
 import { configureStore } from '@reduxjs/toolkit'
- import dataGridSlice from '../slice/dataGridSlice'
+ import dataGridSlice from '../slices/dataGridSlice'
 
 const store = configureStore({
   reducer: {

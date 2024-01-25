@@ -1,4 +1,4 @@
-import DataGrids from './components/DataGrids/DataGrids'
+import DataGrids from './components/DataGrid/DataGrid'
 import TopBar from './components/TopBar/TopBar'
 
 
