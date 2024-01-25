@@ -2,7 +2,7 @@
 import express, { Express, Request, Response } from "express";
 import { DataSource } from "typeorm";
 
-import studentRoute from "./routes/studentRoute";
+// import studentRoute from "./routes/studentRoute";
 import socketRouter from "./routes/studentRoute";
 
 import dotenv from "dotenv";
@@ -18,12 +18,18 @@ const app: Express = express();
 const port = process.env.PORT || 8000;
 const server = createServer(app);
 
-const io = new Server(server);
-
 app.use(cors());
 
+const io = new Server(server, {
+  cors: {
+    origin: "*",
+    methods: ["GET", "POST", "DELETE", "PUT"],
+  },
+});
+
 io.on("connection", (socket: any) => {
-  console.log("a user connected");
+  console.log("here backend socket");
+  console.log("a user connected", socket.id);
 });
 
 export const AppDataSource = new DataSource({

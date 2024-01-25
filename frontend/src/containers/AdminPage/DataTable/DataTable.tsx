@@ -37,7 +37,14 @@ import {
   addStudentSuccess,
   removeStudentSuccess,
   editStudentSuccess,
+  addStudentError,
+  editStudentError,
+  removeStudentError,
 } from "../../../redux/student/slice";
+
+import io from "socket.io-client";
+const socket = io("http://localhost:5000");
+console.log("Undersocket", socket);
 
 const StyledEditButton = styled(Button)`
   &&& {
@@ -281,6 +288,42 @@ export default function DataTable() {
     mobile: "",
     dob: dayjs(new Date()),
   });
+
+  useEffect(() => {
+    socket.on("get-all-students", (data) => {
+      console.log("getAllStudents", data);
+    });
+
+    socket.on("new-student", (data) => {
+      if (data === 201) {
+        setShowSuccessModal(true);
+        dispatch(fetchAllStudentsSuccess());
+      }
+      if (data === 500) {
+        dispatch(addStudentError());
+      }
+    });
+
+    socket.on("edit-student", (data) => {
+      if (data === 201) {
+        setShowUpdateSuccessModal(true);
+        dispatch(fetchAllStudentsSuccess());
+      }
+      if (data === 500) {
+        dispatch(editStudentError());
+      }
+    });
+
+    socket.on("delete-student", (data) => {
+      if (data === 201) {
+        setShowRemoveSuccessCard(true);
+        dispatch(fetchAllStudentsSuccess());
+      }
+      if (data === 500) {
+        dispatch(removeStudentError());
+      }
+    });
+  }, []);
 
   const handleConfirmRemove = (id: GridRowId | null) => {
     if (id) {
