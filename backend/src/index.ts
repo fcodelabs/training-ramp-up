@@ -1,45 +1,50 @@
 // src/index.js
+import "reflect-metadata";
 import express, { Express, Request, Response } from "express";
 import { DataSource } from "typeorm";
 
-// import studentRoute from "./routes/studentRoute";
 import socketRouter from "./routes/studentRoute";
 
 import dotenv from "dotenv";
 import { Student } from "./models/Student";
-
-const { createServer } = require("node:http");
-const { Server } = require("socket.io");
-const cors = require("cors");
+import { Server } from "socket.io";
+import http from "http";
+import cors from "cors";
 
 dotenv.config();
 
-const app: Express = express();
-const port = process.env.PORT || 8000;
-const server = createServer(app);
-
+const app: express.Application = express();
 app.use(cors());
+const port = process.env.PORT || 8000;
+const server = http.createServer(app);
+
+// const io = new Server(server);
 
 const io = new Server(server, {
   cors: {
     origin: "*",
-    methods: ["GET", "POST", "DELETE", "PUT"],
+    methods: ["GET", "POST"],
   },
 });
 
-io.on("connection", (socket: any) => {
-  console.log("here backend socket");
+io.on("connection", (socket) => {
   console.log("a user connected", socket.id);
 });
 
 export const AppDataSource = new DataSource({
   type: "postgres",
-  host: process.env.LOCALHOST,
-  port: 5432,
-  username: process.env.DB_USERNAME,
-  password: process.env.PASSWORD,
-  database: process.env.DATABASE,
+  // host: process.env.LOCALHOST,
+  // port: 5432,
+  // username: process.env.DB_USERNAME,
+  // password: process.env.PASSWORD,
+  // database: process.env.DATABASE,
   synchronize: true,
+  host: process.env.DEPLOYED_HOST,
+  port: 5432,
+  username: process.env.DEPLOYED_USERNAME,
+  password: process.env.DEPLOYED_PASSWORD,
+  database: process.env.DEPLOYED_DB,
+
   logging: true,
   entities: [Student],
 });
@@ -47,8 +52,11 @@ export const AppDataSource = new DataSource({
 AppDataSource.initialize()
   .then(() => {
     console.log("Database connected");
-    app.listen(port, () => {
-      console.log(`Server running on port ${port}`);
+    // app.listen(port, () => {
+    //   console.log(`Server running on port ${port}`);
+    // });
+    server.listen(5000, () => {
+      console.log("server is running on port 5000");
     });
   })
   .catch((err) => {
@@ -61,7 +69,6 @@ app.get("/", (req: Request, res: Response) => {
   res.send("Hello World!");
 });
 
-// app.use("/student", studentRoute);
 app.use("/student", socketRouter(io));
 
 // app.listen(port, () => {

@@ -45,7 +45,9 @@ const studentSlice = createSlice({
 
     addStudentSuccess: (state, action: PayloadAction<GridValidRowModel>) => {
       state.isLoading = false;
-      state.students = [...state.students, action.payload];
+      state.students = state.students.map((student) =>
+        student.id === action.payload.id ? action.payload : student
+      );
     },
     addStudentError: (state) => {
       state.isLoading = true;

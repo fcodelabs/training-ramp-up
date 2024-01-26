@@ -10,7 +10,7 @@ const StudentController = {
       //const studentRepository = AppDataSource.getRepository(Student);
       // Create a new student instance with data from the request body
       //console.log("hello 2");
-      StudentService.addNewStudentService(req, res);
+      await StudentService.addNewStudentService(req, res);
     } catch (error) {
       // Log the error for debugging purposes
       console.log(req.body);
@@ -23,7 +23,7 @@ const StudentController = {
 
   getAllStudentsController: async (req: Request, res: Response) => {
     try {
-      StudentService.getAllStudentsService(req, res);
+      await StudentService.getAllStudentsService(req, res);
     } catch (error) {
       console.log(req.body);
       console.error("Error getting all students:", error);
@@ -33,7 +33,7 @@ const StudentController = {
 
   editStudentController: async (req: Request, res: Response) => {
     try {
-      StudentService.editStudentService(req, res);
+      await StudentService.editStudentService(req, res);
     } catch (error) {
       console.log(req.body);
       console.error("Error editing student:", error);
@@ -43,7 +43,9 @@ const StudentController = {
 
   deleteStudentController: async (req: Request, res: Response) => {
     try {
-      StudentService.deleteStudentService(req, res);
+      await StudentService.deleteStudentService(req, res);
+
+      console.log("delete controller", res.statusCode);
     } catch (error) {
       console.log(req.body);
       console.error("Error deleting student:", error);

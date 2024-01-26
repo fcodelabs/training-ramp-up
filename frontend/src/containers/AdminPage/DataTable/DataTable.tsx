@@ -228,9 +228,7 @@ function EditToolbar(props: IEditToolbarProps) {
 
 export default function DataTable() {
   const temp = useSelector((state: RootState) => state.student.students);
-  const [rows, setRows] = useState(
-    useSelector((state: RootState) => state.student.students)
-  );
+  const [rows, setRows] = useState(temp);
 
   console.log("temp", temp);
   // const initialRows: GridRowsProp = useSelector(
@@ -289,14 +287,35 @@ export default function DataTable() {
     dob: dayjs(new Date()),
   });
 
+  const [ageValues, setAgeValues] = React.useState<{
+    [key: string]: number | null;
+  }>({});
+  useEffect(() => {
+    // Assuming 'temp' contains an array of students with 'id' and 'dob' properties
+    const updatedAgeValues: { [key: string]: number | null } = {};
+
+    temp.forEach((student) => {
+      const { id, dob } = student;
+      // Calculate age based on the 'dob' property or use your own logic
+      const calculatedAge = calculateAge(dob);
+
+      // Update the ageValues with the calculated age
+      updatedAgeValues[id] = calculatedAge;
+    });
+
+    // Update the state with the new age values
+    setAgeValues(updatedAgeValues);
+  }, [temp]);
+
   useEffect(() => {
     socket.on("get-all-students", (data) => {
       console.log("getAllStudents", data);
     });
 
     socket.on("new-student", (data) => {
+      console.log("new-student adding", data);
       if (data === 201) {
-        setShowSuccessModal(true);
+        setShowSuccessModal(false);
         dispatch(fetchAllStudentsSuccess());
       }
       if (data === 500) {
@@ -305,6 +324,7 @@ export default function DataTable() {
     });
 
     socket.on("edit-student", (data) => {
+      console.log("edit-student", data);
       if (data === 201) {
         setShowUpdateSuccessModal(true);
         dispatch(fetchAllStudentsSuccess());
@@ -315,12 +335,18 @@ export default function DataTable() {
     });
 
     socket.on("delete-student", (data) => {
-      if (data === 201) {
+      console.log("delete-student", data);
+      if (data === 200) {
+        console.log("delete-student 204", data);
         setShowRemoveSuccessCard(true);
         dispatch(fetchAllStudentsSuccess());
       }
       if (data === 500) {
         dispatch(removeStudentError());
+        console.log("delete-student error", data);
+      }
+      if (data === 404) {
+        console.log("delete-student error student not found", data);
       }
     });
   }, []);
@@ -346,7 +372,7 @@ export default function DataTable() {
   };
 
   const handleEditClick = (id: GridRowId) => () => {
-    const editedRow = rows.find((row) => row.id === id);
+    const editedRow = temp.find((row) => row.id === id);
 
     if (editedRow) {
       setEditedFields({
@@ -366,7 +392,14 @@ export default function DataTable() {
   const handleAddClick = (id: GridRowId) => () => {
     // Set attemptedToAdd to true to trigger error state on empty fields
     setAttemptedToAdd(true);
-
+    const formattedMobile = editedFields.mobile
+      ? editedFields.mobile.replace(/^\+94/, "0")
+      : "";
+    // Further format the mobile number as needed
+    const formattedForDatabase = formattedMobile.replace(
+      /(\d{3})(\d{3})(\d{4})/,
+      "$1-$2-$3"
+    );
     // Validate all fields before adding a new row
     if (
       !editedFields.name.trim() ||
@@ -374,7 +407,8 @@ export default function DataTable() {
       !editedFields.address.trim() ||
       !editedFields.mobile.trim() ||
       dayjs(editedFields.dob).isSame(dayjs(new Date()), "day") ||
-      !(ageValues[id] !== undefined && (ageValues[id], 10) < 18)
+      !(ageValues[id] !== undefined && (ageValues[id], 10) < 18) ||
+      !validatePhoneNumber(editedFields.mobile)
     ) {
       // Display an error message
       setFieldMissingModal(true);
@@ -404,7 +438,7 @@ export default function DataTable() {
         name: editedFields.name,
         gender: editedFields.gender,
         address: editedFields.address,
-        mobile: editedFields.mobile,
+        mobile: formattedForDatabase,
         dob: editedFields.dob.toISOString().slice(0, 10),
         age: ageValues[id],
       })
@@ -422,7 +456,14 @@ export default function DataTable() {
   const handleSaveClick = (id: GridRowId) => () => {
     // Set attemptedToAdd to true to trigger error state on empty fields
     setAttemptedToAdd(true);
-
+    const formattedMobile = editedFields.mobile
+      ? editedFields.mobile.replace(/^\+94/, "0")
+      : "";
+    // Further format the mobile number as needed
+    const formattedForDatabase = formattedMobile.replace(
+      /(\d{3})(\d{3})(\d{4})/,
+      "$1-$2-$3"
+    );
     // Validate all fields before updating the row
     if (
       !editedFields.name.trim() ||
@@ -430,7 +471,8 @@ export default function DataTable() {
       !editedFields.address.trim() ||
       !editedFields.mobile.trim() ||
       dayjs(editedFields.dob).isSame(dayjs(new Date()), "day") ||
-      !(ageValues[id] !== undefined && (ageValues[id], 10) < 18)
+      !(ageValues[id] !== undefined && (ageValues[id], 10) < 18) ||
+      !validatePhoneNumber(editedFields.mobile)
     ) {
       // Display an error message or take any other appropriate action
       setFieldMissingModal(true);
@@ -467,7 +509,7 @@ export default function DataTable() {
         name: editedFields.name,
         gender: editedFields.gender,
         address: editedFields.address,
-        mobile: editedFields.mobile,
+        mobile: formattedForDatabase,
         dob: editedFields.dob.toISOString().slice(0, 10),
         age: ageValues[id],
       })
@@ -593,6 +635,7 @@ export default function DataTable() {
     setRowModesModel({});
     setShowDiscardModal(false);
     setMode("Add");
+    dispatch(removeStudentSuccess(parseInt(editingRowId)));
   };
 
   const handleDismissDiscard = () => {
@@ -610,13 +653,22 @@ export default function DataTable() {
     return { ...updatedRow, isNew: false } as IStudent;
   };
 
+  // const processRowUpdate = (newRow: GridRowModel) => {
+  //   const { id, isNew, ...updatedRow } = newRow as IStudent;
+
+  //   // Exclude the most recently added row from the oldRows
+  //   setRows((oldRows) =>
+  //     oldRows
+  //       .filter((row) => row.id !== id) // Exclude the row with the corresponding id
+  //       .map((row) => (row.id === id ? { ...row, ...updatedRow } : row))
+  //   );
+
+  //   return { ...updatedRow, isNew: false } as IStudent;
+  // };
+
   const handleRowModesModelChange = (newRowModesModel: GridRowModesModel) => {
     setRowModesModel(newRowModesModel);
   };
-
-  const [ageValues, setAgeValues] = React.useState<{
-    [key: string]: number | null;
-  }>({});
 
   const columns: GridColDef[] = [
     {
@@ -783,30 +835,40 @@ export default function DataTable() {
       editable: true,
       valueFormatter(params) {
         if (params.value) {
-          return params.value.replace(/(\d{3})(\d{3})(\d{4})/, "$1-$2-$3");
+          // Remove leading '+94' and add '0' if necessary
+          let processedValue = params.value.replace(/^\+94/, "0");
+
+          // Apply the pattern
+          processedValue = processedValue.replace(
+            /(\d{3})(\d{3})(\d{4})/,
+            "$1-$2-$3"
+          );
+
+          return processedValue;
         }
-        return ""; // or return something else if params.value is undefined
+
+        return "";
       },
+
       renderEditCell(params: GridRenderCellParams<any, string>) {
         const isMobileEmpty = !params.value;
         const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
           const newValue = event.target.value;
           console.log("newValue", newValue);
           // Check if the entered phone number is valid
-          const isValidPhoneNumber = validatePhoneNumber(newValue);
+          //const isValidPhoneNumber = validatePhoneNumber(newValue);
 
           // Update the cell value if the phone number is valid
-          if (isValidPhoneNumber || newValue === "") {
-            params.api.setEditCellValue({
-              id: params.id,
-              field: params.field,
-              value: newValue,
-            });
-            setEditedFields((prevFields) => ({
-              ...prevFields,
-              mobile: event.target.value,
-            }));
-          }
+
+          params.api.setEditCellValue({
+            id: params.id,
+            field: params.field,
+            value: newValue,
+          });
+          setEditedFields((prevFields) => ({
+            ...prevFields,
+            mobile: event.target.value,
+          }));
         };
 
         return (
@@ -820,7 +882,9 @@ export default function DataTable() {
               }
               onChange={handleChange}
               error={
-                !validatePhoneNumber(params.value as string) && attemptedToAdd
+                (!validatePhoneNumber(params.value as string) &&
+                  attemptedToAdd) ||
+                (isMobileEmpty && attemptedToAdd)
               }
               helperText={
                 !validatePhoneNumber(params.value as string) && attemptedToAdd
@@ -981,9 +1045,12 @@ export default function DataTable() {
                     age: event.target.value,
                   }));
                 }}
-                error={isBelowMinimumAge || (isDateEmpty && attemptedToAdd)}
+                error={
+                  (isBelowMinimumAge && attemptedToAdd) ||
+                  (isDateEmpty && attemptedToAdd)
+                }
                 helperText={
-                  isBelowMinimumAge
+                  isBelowMinimumAge && attemptedToAdd
                     ? "Individual is below the minimum age allowed"
                     : ""
                 }
@@ -1003,7 +1070,8 @@ export default function DataTable() {
                     marginTop: "0px",
                     whiteSpace: "balance",
                   },
-                  marginTop: isBelowMinimumAge ? "30px" : "0px",
+                  marginTop:
+                    isBelowMinimumAge && attemptedToAdd ? "30px" : "0px",
                 }}
               />
             </div>
@@ -1013,7 +1081,7 @@ export default function DataTable() {
           return (
             <div style={{ display: "flex", flexDirection: "column" }}>
               <Typography variant="body2">{age}</Typography>
-              {isBelowMinimumAge && (
+              {isBelowMinimumAge && attemptedToAdd && (
                 <Typography variant="caption" color="error">
                   Individual is below the minimum age allowed
                 </Typography>

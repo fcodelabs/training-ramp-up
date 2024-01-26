@@ -1,9 +1,13 @@
 const validatePhoneNumber = (value: string): boolean => {
   // Regular expression for validating phone numbers
-  const phoneNumberRegex = /^0[0-9]*$/;
+  const phoneNumberRegex = /^(?:\+94|0)\d{9}$/;
+
+  if (!value) {
+    return true;
+  }
 
   // Check if the value matches the regex
-  return phoneNumberRegex.test(value) && value.length <= 10;
+  return phoneNumberRegex.test(value);
 };
 
 export default validatePhoneNumber;

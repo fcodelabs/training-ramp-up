@@ -19,7 +19,7 @@ const StudentService = {
       const savedStudent = await studentRepository.save(newStudent);
 
       // Send the saved student data as the response
-      res.status(201).json(savedStudent);
+      return res.status(201).json(savedStudent);
     } catch (error) {
       // Log the error for debugging purposes
       console.log(req.body);
@@ -34,7 +34,7 @@ const StudentService = {
     try {
       const studentRepository = AppDataSource.getRepository(Student);
       const students = await studentRepository.find();
-      res.status(200).json(students);
+      res.status(201).json(students);
       return students;
     } catch (error) {
       console.log(req.body);
@@ -53,7 +53,7 @@ const StudentService = {
       if (student) {
         studentRepository.merge(student, req.body);
         const results = await studentRepository.save(student);
-        return res.status(200).json(results);
+        return res.status(201).json(results);
       }
       return res.status(404).json({ message: "Student not found" });
     } catch (error) {
@@ -71,8 +71,8 @@ const StudentService = {
       });
       console.log(student);
       if (student) {
-        const results = await studentRepository.remove(student);
-        return res.status(200).json(results);
+        await studentRepository.remove(student);
+        return res.status(204).end();
       }
       return res.status(404).json({ message: "Student not found" });
     } catch (error) {
