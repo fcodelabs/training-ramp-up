@@ -21,6 +21,7 @@ export const calculateAge = (dateOfBirth: Date) => {
 };
 
 export const formatDate = (value: string | null): string => {
+  console.log(value, "value of the date object");
   const dateObject = value ? new Date(value) : new Date();
 
   return dateObject
@@ -45,7 +46,7 @@ export const formatMobileDisplay = (mobile: string) => {
 };
 
 export const generateNewId = (data: GridRowsProp) => {
-  const maxId = data.reduce((max, item) => (item.id > max ? item.id : max), 0);
+  const maxId = data.reduce((max, item) => (item.id > max ? item.id : max), -1);
   return maxId + 1;
 };
 

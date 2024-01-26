@@ -154,6 +154,7 @@ export const FixedColumns: GridColDef[] = [
     },
     renderCell: (params) => {
       const formattedDate = formatDate(params.value);
+      console.log(formattedDate);
       if (params.row.error)
         return (
           <div>
