@@ -19,7 +19,7 @@ import { FixedColumns } from "./TableColumns/FixedColumns/FixedColumns";
 import PopupNotification from "../../../components/Notification/Notification";
 import { useAppSelector, useAppDispatch } from "../../../redux/hooks";
 import { GridActionsColumn } from "./TableColumns/ActionColumn/ActionColumn";
-import { validateUser } from "../../../utilities/validateUser";
+import { isEmptyFields, validateUser } from "../../../utilities/validateUser";
 import {
   discardUser,
   fetchUsers,
@@ -149,13 +149,16 @@ const Table = () => {
   const handleSaveClick = (params: GridRenderEditCellParams) => () => {
     const editedRow = rows.find((row) => row.id === params.id)!;
 
-    if (validateUser(editedRow, Columns)) {
-      setRowModesModel({
-        ...rowModesModel,
-        [params.id]: { mode: GridRowModes.View },
-      });
+    if (!isEmptyFields(editedRow, Columns)) {
+      if (validateUser(editedRow, Columns)) {
+        setRowModesModel({
+          ...rowModesModel,
+          [params.id]: { mode: GridRowModes.View },
+        });
 
-      dispatch(addUser(editedRow));
+        dispatch(addUser(editedRow));
+      } else {
+      }
     } else {
       setNotification({
         open: true,

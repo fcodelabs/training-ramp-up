@@ -3,12 +3,13 @@ import { GridValidRowModel } from "@mui/x-data-grid";
 
 const url = process.env.REACT_APP_API_URL;
 const userId = localStorage.getItem("userId");
+
 export const fetchUsersAsync = async () => {
   try {
     const response = await axios.get(`${url}/students`);
     return response.data;
   } catch (error) {
-    throw error; // You might want to handle errors in a different way based on your requirements
+    throw error; 
   }
 };
 
