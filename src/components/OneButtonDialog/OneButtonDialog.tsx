@@ -25,7 +25,7 @@ export default function OneButtonDialog({ title, buttonText, isOpen, setOpen }: 
         open={isOpen}
         onClose={handleClose}
       >
-        <DialogTitle id="alert-dialog-title">
+        <DialogTitle sx={{fontSize:'16px'}}>
           {title}
         </DialogTitle>
         <DialogActions>

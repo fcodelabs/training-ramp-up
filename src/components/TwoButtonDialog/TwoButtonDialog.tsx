@@ -20,7 +20,7 @@ export default function TwoButtonDialog({ title, buttonText1, buttonText2, isOpe
         sx={{ '& .MuiDialog-paper': { width:'calc(100% - 32px)', maxWidth: '444px', maxHeight: 435 } }}
         open={isOpen}
       >
-        <DialogTitle id="alert-dialog-title">
+        <DialogTitle sx={{fontSize:'16px'}}>
           {title}
         </DialogTitle>
         <DialogActions>
