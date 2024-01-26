@@ -130,6 +130,7 @@ export default function DataTable() {
   const [keepEditingIsOpen, setKeepEditingIsOpen] = React.useState(false);
   const [saveedSuccessIsOpen, setSavedSuccessIsOpen] = React.useState(false);
   const [discrdChangesIsOpen, setDiscardChangesIsOpen] = React.useState(false);
+  const [updatesuccessIsOpen, setupdatesuccessIsOpen] = React.useState(false);
   const [currentid, setCurrentId] = React.useState<GridRowId | null>(null);
   const [nameIsEmpty, setNameIsEmpty] = React.useState(false);
   const [genderIsEmpty, setGenderIsEmpty] = React.useState(false);
@@ -151,6 +152,12 @@ export default function DataTable() {
 
   const handleSaveClick = (id: GridRowId) => () => {
     setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.View } });
+    setSavedSuccessIsOpen(true);
+  };
+
+  const handleUpdateClick = (id: GridRowId) => () => {
+    setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.View } });
+    setupdatesuccessIsOpen(true);
   };
 
   const handleRemoveClick = (id: GridRowId) => () => {
@@ -168,6 +175,13 @@ export default function DataTable() {
       setRows(rows.filter((row) => row.id !== id));
     }
     setDiscardChangesIsOpen(false);
+    setAgeValidateError(false);
+    setNumberValidateError(false);
+    setNameIsEmpty(false);
+    setGenderIsEmpty(false);
+    setAddressIsEmpty(false);
+    setMobileNumberIsEmpty(false);
+    setBirthdayIsEmpty(false);
   };
 
   const handleDiscardChangesClick = (id: GridRowId) => () => {
@@ -239,7 +253,6 @@ export default function DataTable() {
     setRows(rows.map((row) => (row.id === newRow.id ? updatedRow : row)));
     try {
       dispatch(replaceStudents(rows));
-      setSavedSuccessIsOpen(true);
     } catch (err) {
       console.log(err);
     }
@@ -279,6 +292,7 @@ export default function DataTable() {
               : "1px solid rgba(33, 150, 243, 1)",
             "& .MuiOutlinedInput-root fieldset": {
               border: "none",
+              margin: '16px'
             },
           }}
           value={params.value as string}
@@ -549,12 +563,10 @@ export default function DataTable() {
                   onClick={handleDiscardChangesClick(id)}
                   color="inherit"
                 />
-                ,
               </Box>,
             ];
           }
           return [
-            <Box sx={{ px: 0, py: "25px" }}>
               <GridActionsCellItem
                 icon={
                   <StyledButton variant="outlined" size="small">
@@ -562,9 +574,10 @@ export default function DataTable() {
                   </StyledButton>
                 }
                 label="Update"
-                onClick={handleSaveClick(id)}
+                onClick={handleUpdateClick(id)}
                 color="inherit"
-              />
+                sx={{padding:"16px"}}
+              />,
               <GridActionsCellItem
                 icon={
                   <StyledButton variant="outlined" size="small" color="error">
@@ -572,10 +585,9 @@ export default function DataTable() {
                   </StyledButton>
                 }
                 label="Cancel"
-                onClick={handleCancelClick(id)}
+                onClick={handleDiscardChangesClick(id)}
                 color="inherit"
               />
-            </Box>,
           ];
         }
 
@@ -656,6 +668,13 @@ export default function DataTable() {
         isOpen={discrdChangesIsOpen}
         handleClickFirstButton={() => setDiscardChangesIsOpen(false)}
         handleClickSecondButton={handleCancelClick(currentid as GridRowId)}
+      />
+
+      <OneButtonDialog
+        title="Student details updated successfully"
+        buttonText="OK"
+        isOpen={updatesuccessIsOpen}
+        setOpen={setupdatesuccessIsOpen}
       />
     </>
   );
