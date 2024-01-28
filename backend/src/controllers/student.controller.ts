@@ -27,7 +27,6 @@ export const getAllStudents = async (
     const allStudents = await studentRepo.find();
     res.status(201).json(allStudents);
   } catch (error) {
-    console.error(error);
     res.status(500).json({ error: 'internal server error' });
   }
 };
