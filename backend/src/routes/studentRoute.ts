@@ -1,8 +1,9 @@
 import { Application } from "express"
 import { StudentController } from "../controllers/student"
+import { Server } from "socket.io"
 
-export function studentRoutes(app: Application) {
-  const studentController = new StudentController()
+export function studentRoutes(app: Application, io: Server) {
+  const studentController = new StudentController(io)
 
   app.post("/students", studentController.create.bind(studentController))
   app.get("/students", studentController.findAll.bind(studentController))

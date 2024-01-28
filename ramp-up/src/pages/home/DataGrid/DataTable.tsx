@@ -13,9 +13,9 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import dayjs from "dayjs";
-import { INewStudent } from "../../../redux/sagas/studentSaga";
 import { addStudentRequest, getStudentsRequest, editStudentRequest, deleteStudentRequest } from "../../../redux/slices/studentSlice";
 import {formatMobile, convertDate, validateMobile} from "../../../utility/index";
+import { IStudent } from "../../../redux/slices/studentSlice";
 import {
   GridRowModel,
   GridRowId,
@@ -294,6 +294,10 @@ function DataTable() {
   }
 
   const columns: GridColDef[] = [
+    { 
+      field: 'sortId', 
+      },
+
     {
       field: "id",
       type: "number",
@@ -307,6 +311,7 @@ function DataTable() {
       field: "name",
       headerName: "Name",
       width: 137,
+      sortable:true,
       editable: true,
       renderEditCell: (params) => {
         let missing = false;
@@ -512,16 +517,6 @@ function DataTable() {
               sx={{
                 width: "168px",
 
-                // "&MuiOutlinedInput-input": {
-                //   color: "var(--text-primary, rgba(0, 0, 0, 0.87))",
-                //   fontFeatureSettings: "'clig' off, 'liga' off",
-                //   fontFamily: "Roboto",
-                //   fontSize: "14px",
-                //   fontStyle: "normal",
-                //   fontWeight: 400,
-                //   letterSpacing: "0.17px",
-                //   lineHeight: "143%",
-                // },
                 "& .MuiFormHelperText-root ": {
                   display: "none",
                 },
@@ -787,7 +782,8 @@ function DataTable() {
       mobile: formattedMobile,
     } as GridRowModel;
 
-    const studentData: INewStudent = {
+    const studentData: IStudent = {
+      id: newRow.id,
       name: newRow.name,
       age: newRow.age,
       gender: newRow.gender,
@@ -815,6 +811,7 @@ function DataTable() {
           )();
         } else {
           dispatch(editStudentRequest({student:studentData, id: newRow.id}));
+          console.log(newRow.sortId);
           showErrorModel(
             false,
             "Student details updated successfully",
@@ -902,6 +899,19 @@ function DataTable() {
           pagination: {
             paginationModel: { page: 0, pageSize: 10 },
           },
+          columns:{
+            columnVisibilityModel:{
+              sortId:false
+            },
+          },
+          sorting:{
+            sortModel:[
+              {
+                field: 'sortId', 
+                sort: 'asc',
+              }
+            ]
+          }
         }}
         pageSizeOptions={[5, 10]}
         checkboxSelection
@@ -923,12 +933,6 @@ function DataTable() {
         onCellClick={(params, event) => {
           event.stopPropagation();
         }}
-        sortModel={[
-          {
-            field: 'sortId', 
-            sort: 'asc', 
-          },
-        ]}
       />
     </Box>
   );
