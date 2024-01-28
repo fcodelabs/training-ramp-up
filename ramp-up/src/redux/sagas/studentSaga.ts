@@ -15,7 +15,7 @@ export interface INewStudent {
     dob: Date | null;
   }
 
-function* addStudentSaga(action: PayloadAction<INewStudent>) {
+function* addStudentSaga(action: PayloadAction<IStudent>) {
   try {
     const student = yield call(axios.post, 'http://localhost:5000/students', action.payload);
     yield put(addStudent(student.data));

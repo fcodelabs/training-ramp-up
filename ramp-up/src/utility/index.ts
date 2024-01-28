@@ -15,7 +15,7 @@ export const convertDate = (dob: string) => {
   };
 
 export const validateMobile = (value: string) => {
-    const mobileRegex = /^\+?\d{10}$/;
+    const mobileRegex = /^(?:\+94|0)\d{9}$/;
     return mobileRegex.test(value);
   };
   

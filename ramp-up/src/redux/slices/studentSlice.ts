@@ -12,7 +12,7 @@ export interface IStudent {
 }
 
 export interface IEditStudentPayload {
-  student: INewStudent;
+  student: IStudent;
   id: number;
 }
 
@@ -36,7 +36,7 @@ const studentSlice = createSlice({
       );
     },
 
-    addStudentRequest: (state, action: PayloadAction<INewStudent>) => {},
+    addStudentRequest: (state, action: PayloadAction<IStudent>) => {},
 
     getStudentsRequest: (state) => {},
 
