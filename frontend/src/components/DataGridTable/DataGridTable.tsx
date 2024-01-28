@@ -56,7 +56,7 @@ import { validatePhoneNumber } from "../../utility/validatePhoneNumber";
 import { dataGridStyles } from "../../styles/dataGridStyles";
 import PopupMessage from "../PopupMessage/PopupMessage";
 import io from "socket.io-client";
-const socket = io("http://localhost:5000");
+const socket = io("https://ramp-up-backend.onrender.com");
 
 let idValue = 0;
 
