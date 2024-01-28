@@ -1,45 +1,46 @@
 import { type Request, type Response } from 'express';
 import { Student } from '../../models/student';
 import AppDataSource from '../../dataSource';
-import { getAllStudents } from '../../controllers/student.controller';
+import { createStudent } from '../../controllers/student.controller';
 
 jest.mock('../../dataSource', () => ({
   getRepository: jest.fn().mockReturnValue({
-    find: jest.fn()
+    create: jest.fn(),
+    save: jest.fn()
   })
 }));
 
-describe('getAllStudents', () => {
+describe('createStudent', () => {
   let req: Partial<Request>;
   let res: Partial<Response>;
 
   beforeEach(() => {
-    req = {};
+    req = {
+      body: { name: 'John Doe' }
+    };
     res = {
       status: jest.fn().mockReturnThis(),
       json: jest.fn()
     };
   });
 
-  it('should return all students', async () => {
-    const mockStudents = [
-      { id: 1, name: 'John Doe' },
-      { id: 2, name: 'Jane Doe' }
-    ];
+  it('should create a new student', async () => {
+    const mockStudent = { id: 1, name: 'John Doe' };
     const studentRepo = AppDataSource.getRepository(Student);
-    (studentRepo.find as jest.Mock).mockResolvedValue(mockStudents);
+    (studentRepo.create as jest.Mock).mockReturnValue(mockStudent);
+    (studentRepo.save as jest.Mock).mockResolvedValue(mockStudent);
 
-    await getAllStudents(req as Request, res as Response);
+    await createStudent(req as Request, res as Response);
 
     expect(res.status).toHaveBeenCalledWith(201);
-    expect(res.json).toHaveBeenCalledWith(mockStudents);
+    expect(res.json).toHaveBeenCalledWith(mockStudent);
   });
 
   it('should handle errors', async () => {
     const studentRepo = AppDataSource.getRepository(Student);
-    (studentRepo.find as jest.Mock).mockRejectedValue(new Error('Test error'));
+    (studentRepo.save as jest.Mock).mockRejectedValue(new Error('Test error'));
 
-    await getAllStudents(req as Request, res as Response);
+    await createStudent(req as Request, res as Response);
 
     expect(res.status).toHaveBeenCalledWith(500);
     expect(res.json).toHaveBeenCalledWith({ error: 'internal server error' });

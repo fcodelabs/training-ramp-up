@@ -13,7 +13,6 @@ export const createStudent = async (
     await studentRepo.save(newStudent);
     res.status(201).json(newStudent);
   } catch (error) {
-    console.error(error);
     res.status(500).json({ error: 'internal server error' });
   }
 };
@@ -50,7 +49,6 @@ export const updateStudent = async (
       res.status(201).json(updatedStudent);
     }
   } catch (error) {
-    console.error(error);
     res.status(500).json({ error: 'internal server error' });
   }
 };
@@ -73,7 +71,6 @@ export const removeStudent = async (
       res.status(204).end();
     }
   } catch (error) {
-    console.error(error);
     res.status(500).json({ error: 'internal server error' });
   }
 };

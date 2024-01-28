@@ -14,11 +14,13 @@ import {
 } from "../slice/studentSlice";
 import { PayloadAction } from "@reduxjs/toolkit";
 
+const apiUrl = process.env.REACT_APP_API_URL;
+
 function* watchGetAllStudents(): Generator<any, any, any> {
   try {
     const { data } = yield call(
       axios.get<GridValidRowModel[]>,
-      "https://ramp-up-backend.onrender.com/students/getAllStudents"
+      `${apiUrl}/getAllStudents`
     );
     yield put(updateStudent(data));
   } catch (error: any) {
@@ -43,7 +45,7 @@ function* watchAddNewStudent(
   try {
     yield call(
       axios.post<GridValidRowModel>,
-      "https://ramp-up-backend.onrender.com/students/newStudent",
+      `${apiUrl}/newStudent`,
       newStudent
     );
   } catch (error: any) {
@@ -65,7 +67,7 @@ function* watchUpdateStudent(action: PayloadAction<GridValidRowModel>) {
   try {
     yield call(
       axios.put<GridValidRowModel>,
-      `https://ramp-up-backend.onrender.com/students/updateStudent/${action.payload.id}`,
+      `${apiUrl}/updateStudent/${action.payload.id}`,
       updatedStudent
     );
   } catch (error: any) {
@@ -77,10 +79,7 @@ function* watchUpdateStudent(action: PayloadAction<GridValidRowModel>) {
 
 function* watchRemoveStudent(action: PayloadAction<GridRowId>) {
   try {
-    yield call(
-      axios.delete,
-      `https://ramp-up-backend.onrender.com/students/removeStudent/${action.payload}`
-    );
+    yield call(axios.delete, `${apiUrl}/removeStudent/${action.payload}`);
   } catch (error: any) {
     yield put(removeStudentError(error));
     yield put(fetchAllStudents());
