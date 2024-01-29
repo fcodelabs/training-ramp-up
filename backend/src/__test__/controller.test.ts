@@ -82,11 +82,11 @@ describe("StudentController", () => {
       userId: "user123",
     },
   };
-
   const mockResponse = {
     status: jest.fn().mockReturnThis(),
     send: jest.fn(),
   };
+
   beforeEach(() => {
     jest.clearAllMocks();
   });

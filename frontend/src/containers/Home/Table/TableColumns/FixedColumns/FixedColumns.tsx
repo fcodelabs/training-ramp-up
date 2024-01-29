@@ -33,7 +33,7 @@ export const FixedColumns: GridColDef[] = [
     width: 165,
     editable: true,
     sortable: true,
-    sortingOrder: ["asc", "desc"],
+    sortingOrder: ["desc", "asc"],
     renderHeader: () => {
       return <Header text="Name" />;
     },
@@ -148,7 +148,7 @@ export const FixedColumns: GridColDef[] = [
     type: "string",
     minWidth: 165,
     editable: true,
-    sortingOrder: ["asc", "desc"],
+    sortingOrder: ["desc", "asc"],
     renderHeader: () => {
       return <Header text="Date of Birth" />;
     },

@@ -13,7 +13,6 @@ export const initializeSocketIO = async (server: http.Server) => {
   });
 
   io.on("connection", (socket) => {
-    console.log("User connected");
     socket.on("authenticate", (userId) => {
       userSockets.set(userId, socket.id);
     });
