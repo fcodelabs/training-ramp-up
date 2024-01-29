@@ -195,7 +195,7 @@ const EditableCell: React.FC<EditableCellProps> = ({
         handleChange(e.target.value)
       }
       helperText={
-        error && (value!== '') && (field == "name" ? (
+        error && (field == "name" ? (
           <Typography variant="body2" color="error" fontSize={8} lineHeight={1}>
             Length of the name should be equal to
             <br /> 50 or less than 50
