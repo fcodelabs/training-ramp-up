@@ -7,6 +7,7 @@ temp/
 /.pnp
 .pnp.js
 /coverage
+/node_modules
 .prettierrc.json
 .DS_Store
 .env.local
