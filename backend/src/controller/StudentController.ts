@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { StudentService } from "../services/studentService";
-import { getSocketInstance } from "../services/socketService";
+import { getSocketInstance } from "../services/socketService"; // Import the socket manager
 import { userSockets } from "../services/socketService";
 import { Server } from "socket.io";
 
@@ -10,7 +10,6 @@ export class StudentController {
   async all(request: Request, response: Response) {
     try {
       const students = await this.studentService.getAllStudents();
-      console.log("students");
       response.status(200).send(students);
     } catch (error) {
       response.status(500).send(error);
