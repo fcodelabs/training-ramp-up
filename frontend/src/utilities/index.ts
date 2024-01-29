@@ -45,7 +45,7 @@ export const formatMobileDisplay = (mobile: string) => {
 };
 
 export const generateNewId = (data: GridRowsProp) => {
-  const maxId = data.reduce((max, item) => (item.id > max ? item.id : max), 0);
+  const maxId = data.reduce((max, item) => (item.id > max ? item.id : max), -1);
   return maxId + 1;
 };
 
@@ -97,14 +97,18 @@ export enum NotificationTypes {
 }
 
 export const NotificationTexts: Record<NotificationTypes, string> = {
-  [NotificationTypes.LOADING_DATA]: "Unable to retrieve table details. Please try again later.",
+  [NotificationTypes.LOADING_DATA]:
+    "Unable to retrieve table details. Please try again later.",
   [NotificationTypes.ADD_USER]: "A new student added successfully",
   [NotificationTypes.SAVE_USER]: "Student details updated successfully",
   [NotificationTypes.MISSING_FIELDS]: "Mandatory fields missing.",
   [NotificationTypes.DISCARD_CHANGES]: "Discard changes?",
   [NotificationTypes.SAVE_NEW_USER]: "A new student added successfully",
-  [NotificationTypes.FAIL_SAVE_NEW_USER]: "Unable to add the new student. Please try again later",
-  [NotificationTypes.FAIL_UPDATE_USER]: "Cannot update the student details. Please try again later",
-  [NotificationTypes.DELETE_USER]: "Are you sure you want to remove this student?",
+  [NotificationTypes.FAIL_SAVE_NEW_USER]:
+    "Unable to add the new student. Please try again later",
+  [NotificationTypes.FAIL_UPDATE_USER]:
+    "Cannot update the student details. Please try again later",
+  [NotificationTypes.DELETE_USER]:
+    "Are you sure you want to remove this student?",
   [NotificationTypes.DELETE_USER_SUCCESS]: "Student deleted successfully",
 };
