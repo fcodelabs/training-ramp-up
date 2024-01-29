@@ -1,31 +1,6 @@
 import { GridRowModel } from "@mui/x-data-grid";
 import parsePhoneNumber from "libphonenumber-js";
 
-
-const isEmptyFields = (user: GridRowModel, requiredFields: string[]) => {
-  try {
-    if (requiredFields.includes("name") && user.name === "") {
-      return true;
-    }
-    if (requiredFields.includes("age") && user.age === "") {
-      return true;
-    }
-    if (requiredFields.includes("mobile") && user.mobile === "") {
-      return true;
-    }
-    if (requiredFields.includes("address") && user.address === "") {
-      return true;
-    }
-    if (requiredFields.includes("birthday") && user.birthday === null) {
-      return true;
-    }
-  } catch (error) {
-    throw new Error("Error in validating user");
-  }
-  return false;
-}
-
-
 const validateUser = (user: GridRowModel, requiredFields: string[]) => {
   try {
     if (requiredFields.includes("name") && !validateName(user.name)) {
@@ -56,9 +31,6 @@ const validateName = (name: Date | string | number) => {
   if (name === "") {
     return false;
   }
-  if (String(name).length > 50) {
-    return false;
-  }
   return true;
 };
 
@@ -71,9 +43,6 @@ const validateAge = (age: number | string | Date) => {
 
 const validateAddress = (address: Date | string | number) => {
   if (address === "") {
-    return false;
-  }
-  if (String(address).length >200) {
     return false;
   }
   return true;
@@ -106,7 +75,6 @@ const validateBirthday = (birthday: Date | string | number) => {
 };
 
 export {
-  isEmptyFields,
   validateUser,
   validateName,
   validateAge,

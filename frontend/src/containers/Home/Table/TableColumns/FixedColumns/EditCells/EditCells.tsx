@@ -128,9 +128,7 @@ const EditableCell: React.FC<EditableCellProps> = ({
         type="string"
         placeholder=""
         value={value}
-        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-          handleChange(e.target.value)
-        }
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChange(e.target.value)}
         helperText={error && "please enter a valid phone number"}
       ></StyledTextFieldWrapper>
     );
@@ -146,9 +144,7 @@ const EditableCell: React.FC<EditableCellProps> = ({
         fullWidth
         type="date"
         value={dateObject ? dateObject.toISOString().slice(0, 10) : ""}
-        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-          handleDateChange(e.target.value)
-        }
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleDateChange(e.target.value)}
         InputProps={{
           inputProps: {
             max: today,
@@ -166,7 +162,7 @@ const EditableCell: React.FC<EditableCellProps> = ({
         fullWidth
         defaultValue={options[0]}
         value={value || options[0]}
-        style={{ textAlign: "start" }}
+        style={{ textAlign: "start"}}
         onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
           handleChange(e.target.value)
         }
@@ -193,20 +189,6 @@ const EditableCell: React.FC<EditableCellProps> = ({
       value={value || ""}
       onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
         handleChange(e.target.value)
-      }
-      helperText={
-        error && (field == "name" ? (
-          <Typography variant="body2" color="error" fontSize={8} lineHeight={1}>
-            Length of the name should be equal to
-            <br /> 50 or less than 50
-          </Typography>
-        ) : (
-          <Typography variant="body2" color="error" fontSize={8} lineHeight={1}>
-            Length of the Address should equal to
-            <br />
-            200 or less than 200
-          </Typography>)
-        )
       }
     />
   );
