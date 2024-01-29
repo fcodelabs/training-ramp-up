@@ -26,6 +26,7 @@ export const ContainerWrapper = styled.div`
 
 export default function Home() {
 
+
   return (
     <HomeWarpper>
       <Appbar />
@@ -35,4 +36,3 @@ export default function Home() {
     </HomeWarpper>
   );
 }
-
