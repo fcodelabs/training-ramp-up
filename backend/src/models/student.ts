@@ -6,7 +6,7 @@ import {
   PrimaryColumn,
 } from "typeorm";
 
-@Entity("Student")
+@Entity("student")
 export class Student extends BaseEntity {
   @PrimaryColumn()
   id!: number;
