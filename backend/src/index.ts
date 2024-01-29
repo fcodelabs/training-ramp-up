@@ -39,17 +39,19 @@ export const AppDataSource = new DataSource({
   // password: process.env.PASSWORD,
   // database: process.env.DATABASE,
   // synchronize: true,
-  host: process.env.DEPLOYED_HOST,
-  port: 5432,
-  username: process.env.DEPLOYED_USERNAME,
-  password: process.env.DEPLOYED_PASSWORD,
-  database: process.env.DEPLOYED_DB,
+  // host: process.env.DEPLOYED_HOST,
+  // port: 5432,
+  // username: process.env.DEPLOYED_USERNAME,
+  // password: process.env.DEPLOYED_PASSWORD,
+  // database: process.env.DEPLOYED_DB,
   url: process.env.DEPLOYED_URL,
-  logging: true,
+  logging: false,
   entities: [Student],
   ssl: {
     rejectUnauthorized: false,
   },
+  migrations: [],
+  subscribers: [],
 });
 
 AppDataSource.initialize()
