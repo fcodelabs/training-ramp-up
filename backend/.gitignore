@@ -6,7 +6,6 @@ tmp/
 temp/
 /.pnp
 .pnp.js
-/node_modules
 /coverage
 .prettierrc.json
 .DS_Store
