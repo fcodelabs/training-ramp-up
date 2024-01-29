@@ -5,7 +5,6 @@ import { GridColDef, GridRowsProp } from '@mui/x-data-grid'
 export const emptyRows: GridRowsProp = [
     {
         id: 1,
-        uid: 1,
         name: '',
         gender: '',
         address: '',
@@ -16,7 +15,6 @@ export const emptyRows: GridRowsProp = [
     },
     {
         id: 2,
-        uid: 2,
         name: '',
         gender: '',
         address: '',
@@ -27,7 +25,6 @@ export const emptyRows: GridRowsProp = [
     },
     {
         id: 3,
-        uid: 3,
         name: '',
         gender: '',
         address: '',
@@ -47,7 +44,7 @@ const colStyles = {
 }
 
 export const emptyColumns: GridColDef[] = [
-    { field: 'uid', headerName: 'ID', type: 'number', ...colStyles },
+    { field: 'id', headerName: 'ID', type: 'number', ...colStyles },
     { field: 'name', headerName: 'Name', type: 'string', ...colStyles },
     {
         field: 'gender',
