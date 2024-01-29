@@ -34,7 +34,7 @@ io.on("connection", (socket) => {
 export const AppDataSource = new DataSource({
   type: "postgres",
   //host: process.env.LOCALHOST,
-  //port: 5432,
+  port: 5432,
   // username: process.env.DB_USERNAME,
   // password: process.env.PASSWORD,
   // database: process.env.DATABASE,
