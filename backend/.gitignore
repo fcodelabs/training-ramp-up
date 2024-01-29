@@ -2,7 +2,7 @@
 .vscode/
 .env
 build/
-node_modules/
+/node_modules
 tmp/
 temp/
 /.pnp
