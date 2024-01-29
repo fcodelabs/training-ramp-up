@@ -1,11 +1,17 @@
-import { configureStore } from '@reduxjs/toolkit'
- import dataGridSlice from '../slices/dataGridSlice'
+import { configureStore } from "@reduxjs/toolkit";
+import studentSlice from "../slices/slice"
+import createSagaMiddleware from "redux-saga";
+import { studentSaga } from "../sagas/saga";
 
-const store = configureStore({
+const sagaMiddleware = createSagaMiddleware();
+export const store = configureStore({
   reducer: {
-    dataGrid: dataGridSlice,
+    student: studentSlice,
   },
-})
-export default store;
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().concat(sagaMiddleware),
+});
+sagaMiddleware.run(studentSaga);
+
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;

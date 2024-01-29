@@ -1,4 +1,17 @@
-import DataGrids from './components/DataGrid/DataGrid'
+
+
+// import AdminPage from "./containers/Home";
+
+// function App() {
+//   return (
+//     <div className="App">
+//       <AdminPage />
+//     </div>
+//   );
+// }
+
+// export default App;
+import Table from './components/Table/Table'
 import TopBar from './components/TopBar/TopBar'
 
 
@@ -6,7 +19,7 @@ function App() {
   return (
     <div className="App">
       <TopBar />
-      <DataGrids />
+      <Table />
     </div>
   )
 }
