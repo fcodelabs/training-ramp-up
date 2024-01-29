@@ -6,7 +6,7 @@ import { DataSource } from "typeorm";
 import socketRouter from "./routes/studentRoute";
 
 import dotenv from "dotenv";
-import { Student } from "./models/Student";
+import { Student } from "./models/student";
 import { Server } from "socket.io";
 import http from "http";
 import cors from "cors";
@@ -54,6 +54,7 @@ export const AppDataSource = new DataSource({
   subscribers: [],
 });
 
+console.log("process.env.DEPLOYED_URL", process.env.DEPLOYED_URL);
 AppDataSource.initialize()
   .then(() => {
     console.log("Database connected");

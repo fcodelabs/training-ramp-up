@@ -1,4 +1,4 @@
-import { Student } from "../models/Student";
+import { Student } from "../models/student";
 import { Request, Response } from "express";
 import { AppDataSource } from "../index";
 import { Console } from "console";

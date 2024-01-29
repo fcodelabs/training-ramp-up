@@ -1,6 +1,6 @@
-import { Student } from "../models/Student";
+//import { Student } from "../models/Student";
 import { Request, Response } from "express";
-import { AppDataSource } from "../index";
+// import { AppDataSource } from "../index";
 import StudentService from "../services/studentService";
 
 const StudentController = {
