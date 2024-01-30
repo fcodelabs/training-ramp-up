@@ -8,10 +8,7 @@ class UserService {
     try {
       return await this.userRepository.save(user);
     } catch (error) {
-      if (error.code === "23505") {
-        throw new Error("Email already exists");
-      }
-      throw error;
+        throw error;
     }
   }
   async findByEmail(email: string): Promise<User | undefined> {
