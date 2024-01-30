@@ -1,5 +1,5 @@
 // src/index.js
-// import "reflect-metadata";
+import "reflect-metadata";
 import express, { Express, Request, Response } from "express";
 import { DataSource } from "typeorm";
 

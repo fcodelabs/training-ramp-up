@@ -8,24 +8,24 @@ import {
 
 @Entity({ name: "student" })
 export class Student extends BaseEntity {
-  @PrimaryColumn()
+  @PrimaryColumn({ type: "int" })
   id!: number;
 
-  @Column()
+  @Column({ type: "varchar" })
   name!: string;
 
-  @Column()
+  @Column({ type: "varchar" })
   gender!: string;
 
-  @Column()
+  @Column({ type: "varchar" })
   address!: string;
 
-  @Column()
+  @Column({ type: "varchar" })
   mobile!: string;
 
   @Column({ type: "date" })
   dob!: string;
 
-  @Column()
+  @Column({ type: "int" })
   age!: number;
 }
