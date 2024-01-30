@@ -1,6 +1,6 @@
 import React from "react";
 import { useAppDispatch } from "../../../../../../redux/hooks";
-import { updateUser } from "../../../../../../redux/user/slice";
+import { updateUser } from "../../../../../../redux/student/slice";
 import { MenuItem, TextField, Typography } from "@mui/material";
 import { calculateAge } from "../../../../../../utilities/index";
 import { GridRenderEditCellParams } from "@mui/x-data-grid";

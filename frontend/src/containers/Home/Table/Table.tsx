@@ -29,7 +29,7 @@ import {
   setUsers,
   addUser,
   updateUser,
-} from "../../../redux/user/slice";
+} from "../../../redux/student/slice";
 import { generateNewId } from "../../../utilities/index";
 import styled from "styled-components";
 import { Socket, io } from "socket.io-client";

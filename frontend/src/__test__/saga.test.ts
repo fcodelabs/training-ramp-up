@@ -1,13 +1,13 @@
 import { fetchUsersAsync } from "../utilities/studentServices";
 import { Saga, runSaga, stdChannel } from "redux-saga";
-import { userSaga, watchAddNewUser } from "../redux/user/saga"; // Replace with your actual file path
+import { userSaga, watchAddNewUser } from "../redux/student/saga"; // Replace with your actual file path
 import {
   fetchUsers,
   addUser,
   discardUser,
   setUsers,
-} from "../redux/user/slice";
-import userReducer, { initialState } from "../redux/user/slice"; // Adjust the import based on your actual file path
+} from "../redux/student/slice";
+import userReducer, { initialState } from "../redux/student/slice"; // Adjust the import based on your actual file path
 
 afterEach(() => {
   jest.clearAllMocks();
