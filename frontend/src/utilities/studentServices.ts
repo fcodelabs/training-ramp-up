@@ -8,7 +8,7 @@ export const fetchUsersAsync = async () => {
     const response = await axios.get(`${url}/students`);
     return response.data;
   } catch (error) {
-    throw error; // You might want to handle errors in a different way based on your requirements
+    throw error;
   }
 };
 

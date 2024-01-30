@@ -13,7 +13,7 @@ import {
   addUsersAsync,
   deleteUserAsync,
   updateUserAsync,
-} from "../../utilities/userServices";
+} from "../../utilities/studentServices";
 
 export function* watchFetchUsers() {
   try {

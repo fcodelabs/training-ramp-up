@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import Appbar from "../../components/Appbar/Appbar";
 import Table from "./Table/Table";
+import { Button } from "@mui/material";
 
 
 export const HomeWarpper = styled.div`
@@ -24,6 +25,17 @@ export const ContainerWrapper = styled.div`
   align-items: center;
 `;
 
+export const ButtonWrapper = styled.div`
+  display: flex;
+  position: relative;
+  flex-direction: row;
+  width: 100%;
+  height: auto;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 0 20px;
+`;
+
 export default function Home() {
 
 
@@ -31,6 +43,7 @@ export default function Home() {
     <HomeWarpper>
       <Appbar />
       <ContainerWrapper>
+      
         <Table />
       </ContainerWrapper>
     </HomeWarpper>

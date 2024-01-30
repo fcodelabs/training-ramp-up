@@ -10,7 +10,7 @@ import {
   validateBirthday,
   validateMobile,
   validateName,
-} from "../../../../../utilities/validateUser";
+} from "../../../../../utilities/validateStudent";
 import { formatDate } from "../../../../../utilities/index";
 import { Skeleton } from "@mui/material";
 

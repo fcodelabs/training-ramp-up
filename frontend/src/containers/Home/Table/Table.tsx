@@ -19,7 +19,10 @@ import { FixedColumns } from "./TableColumns/FixedColumns/FixedColumns";
 import PopupNotification from "../../../components/Notification/Notification";
 import { useAppSelector, useAppDispatch } from "../../../redux/hooks";
 import { GridActionsColumn } from "./TableColumns/ActionColumn/ActionColumn";
-import { isEmptyFields, validateUser } from "../../../utilities/validateUser";
+import {
+  isEmptyFields,
+  validateStudent,
+} from "../../../utilities/validateStudent";
 import {
   discardUser,
   fetchUsers,
@@ -31,6 +34,7 @@ import { generateNewId } from "../../../utilities/index";
 import styled from "styled-components";
 import { Socket, io } from "socket.io-client";
 import { NotificationTypes } from "../../../utilities/index";
+import UserCard from "../../../components/UserCard/UserCard";
 const url = process.env.REACT_APP_API_URL;
 
 const Container = styled.div`
@@ -46,6 +50,7 @@ const Title = styled.div`
   display: flex;
   flex-direction: row;
   padding: 5px 15px 5px 15px;
+  margin-top: 20px;
   font-size: 24px;
   font-weight: 500;
   font-style: normal;
@@ -61,6 +66,17 @@ const ButtonWrapper = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: flex-end;
+
+  @media screen and (max-width: 768px) {
+    justify-content: center;
+  }
+`;
+const AdminButtonWrapper = styled.div`
+  padding: 10px 15px 10px 15px;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  background-color: #2196f314;
 
   @media screen and (max-width: 768px) {
     justify-content: center;
@@ -150,7 +166,7 @@ const Table = () => {
     const editedRow = rows.find((row) => row.id === params.id)!;
 
     if (!isEmptyFields(editedRow, Columns)) {
-      if (validateUser(editedRow, Columns)) {
+      if (validateStudent(editedRow, Columns)) {
         setRowModesModel({
           ...rowModesModel,
           [params.id]: { mode: GridRowModes.View },
@@ -329,12 +345,19 @@ const Table = () => {
     }
   }, [dispatch, isLoading]);
 
+  const [AddUserClicked, setAddUserClicked] = useState(false);
+
   return (
     <Container>
-      <Title>User Details</Title>
+      <AdminButtonWrapper>
+        <Button variant="contained" onClick={() => setAddUserClicked(true)}>
+          Add new User
+        </Button>
+      </AdminButtonWrapper>
+      <Title>Student Details</Title>
       <ButtonWrapper>
         <Button variant="contained" onClick={handleAddClick}>
-          Add new
+          Add new Student
         </Button>
       </ButtonWrapper>
       <StyledDataGrid
@@ -360,6 +383,10 @@ const Table = () => {
         onClose={handleCloseNotification}
         type={notification.type}
         onSubmit={notification.onConfirm}
+      />
+      <UserCard
+        open={AddUserClicked}
+        onClose={() => setAddUserClicked(false)}
       />
     </Container>
   );
