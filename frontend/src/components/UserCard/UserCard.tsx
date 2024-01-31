@@ -10,6 +10,10 @@ import {
 import React from "react";
 import styled from "styled-components";
 import { isValidEmail, isValidName } from "../../utilities/validateUser";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import { updateNewUser } from "../../redux/user/slice";
+import { Role } from "../../redux/user/slice";
+
 type UserCardProps = {
   open: boolean;
   onClose: () => void;
@@ -39,25 +43,24 @@ const StyledDialogContent = styled(Dialog)`
 
 const UserCard: React.FC<UserCardProps> = ({ open, onClose }) => {
   const errorMessage = "Add a New User";
-  const [email, setEmail] = React.useState("");
-  const [name, setName] = React.useState("");
-  const [role, setRole] = React.useState("Observer");
+  const dispatch = useAppDispatch();
+  const user = useAppSelector((state) => state.user.newUser);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setEmail(event.target.value);
+    dispatch(updateNewUser({[event.target.name]: event.target.value }));
   }
 
   const onClick = () => { 
     console.log("clicked");
   }
   
-  const isEmailValidated = isValidEmail(email);
+  const isEmailValidated = user.isVerifiedUser
   const isEmailTaken = true;
   const isEmailOk = isEmailValidated && !isEmailTaken;
 
   const users = [
-    { id: 1, value: "Observer" },
-    { id: 2, value: "Admin" },
+    { id: 1, value: Role.OBSERVER },
+    { id: 2, value: Role.ADMIN },
   ];
   return (
     <div>
@@ -65,16 +68,17 @@ const UserCard: React.FC<UserCardProps> = ({ open, onClose }) => {
       <StyledDialogContent open={open} onClose={onClose}>
         <DialogContent>
           <Typography fontSize={20}>{errorMessage}</Typography>
-          <StyledTextField fullWidth label="Name" error= {!isValidName(name)} onChange={handleChange} value={name}>
+          <StyledTextField fullWidth label="Name" error= {!isValidName(user.name)} onChange={handleChange} value={user.name} name="name">
             Name
           </StyledTextField>
-          <StyledTextField fullWidth label="Email" error={!isEmailOk} onChange={handleChange} value={email} helperText={isEmailTaken? "The entered email has already been registered. ": !isEmailValidated? "Please enter a valid email address. ":""}>
+          <StyledTextField fullWidth label="Email" error={!isEmailOk} onChange={handleChange} value={user.email} name="email"helperText={isEmailTaken? "The entered email has already been registered. ": !isEmailValidated? "Please enter a valid email address. ":""}>
             Email
           </StyledTextField>
           <StyledTextField
             select
             label="Role"
-            defaultValue="Observer"
+            name="role"
+            defaultValue={Role.OBSERVER}
             fullWidth
             onChange={handleChange}
           >

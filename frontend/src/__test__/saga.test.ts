@@ -1,11 +1,10 @@
-import { fetchUsersAsync } from "../utilities/studentServices";
 import { Saga, runSaga, stdChannel } from "redux-saga";
-import { userSaga, watchAddNewUser } from "../redux/student/saga"; // Replace with your actual file path
+import { studentSaga, watchAddNewStudent } from "../redux/student/saga"; // Replace with your actual file path
 import {
-  fetchUsers,
-  addUser,
-  discardUser,
-  setUsers,
+  fetchStudents,
+  addStudent,
+  discardStudent,
+  setStudents,
 } from "../redux/student/slice";
 import userReducer, { initialState } from "../redux/student/slice"; // Adjust the import based on your actual file path
 
@@ -14,7 +13,7 @@ afterEach(() => {
 });
 
 describe("userSaga", () => {
-  it("should watch for fetchUsers, addUser, and discardUser actions", () => {
+  it("should watch for fetchStudents, addStudent, and discardStudent actions", () => {
     const dispatched: any[] = [];
     const mockUser = { id: 1, name: "John Doe" };
     const channel = stdChannel();
@@ -24,34 +23,34 @@ describe("userSaga", () => {
         dispatch: (action) => dispatched.push(action),
         channel,
       },
-      userSaga
+      studentSaga
     );
 
-    channel.put(fetchUsers());
-    channel.put(addUser({ id: 1, name: "John Doe" }));
-    channel.put(discardUser(1));
+    channel.put(fetchStudents());
+    channel.put(addStudent({ id: 1, name: "John Doe" }));
+    channel.put(discardStudent(1));
   });
 
-  it("should handle addUser action for new user", async () => {
+  it("should handle addStudent action for new user", async () => {
     const dispatched: any[] = [];
     const mockUser = { id: 1, name: "John Doe", isNew: true };
-    const addUsersAsyncMock = jest.fn(() => mockUser);
+    const addStudentsAsyncMock = jest.fn(() => mockUser);
 
     await runSaga(
       {
         dispatch: (action) => dispatched.push(action),
       },
-      watchAddNewUser as Saga, // Update the type of watchAddNewUser
+      watchAddNewStudent as Saga, // Update the type of watchAddNewStudent
       { payload: mockUser },
-      addUsersAsyncMock
+      addStudentsAsyncMock
     ).toPromise();
   });
 });
 
 // userReducer tests
-// discardUser
+// discardStudent
 describe("userReducer", () => {
-  it("should handle discardUser action", () => {
+  it("should handle discardStudent action", () => {
     const initialStateWithUsers = {
       ...initialState,
       rows: [
@@ -74,7 +73,7 @@ describe("userReducer", () => {
 
     const newState = userReducer(
       initialStateWithUsers,
-      discardUser(userIdToDiscard)
+      discardStudent(userIdToDiscard)
     );
 
     // Expectations
@@ -84,9 +83,9 @@ describe("userReducer", () => {
     ).toBeFalsy();
   });
 
-  //setUsers
+  //setStudents
 
-  it("should handle setUsers action", () => {
+  it("should handle setStudents action", () => {
     const initialStateWithUsers = {
       ...initialState,
       rows: [
@@ -129,7 +128,7 @@ describe("userReducer", () => {
       },
     ];
 
-    const newState = userReducer(initialStateWithUsers, setUsers(newUsers));
+    const newState = userReducer(initialStateWithUsers, setStudents(newUsers));
 
     // Expectations
     expect(newState.rows).toHaveLength(newUsers.length);

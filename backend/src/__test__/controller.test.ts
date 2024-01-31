@@ -4,7 +4,7 @@ import { StudentService } from "../services/studentService";
 
 jest.mock("../services/studentService");
 jest.mock("../services/socketService");
-jest.mock("../entity/Student");
+// jest.mock("../entity/Student");
 
 const mockSave = jest.fn();
 const mockFindOne = jest.fn();

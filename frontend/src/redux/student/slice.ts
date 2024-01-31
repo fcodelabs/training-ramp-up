@@ -11,48 +11,48 @@ export const initialState: initialDataType = {
   rows: [...emptyRows],
 };
 
-const userSlice = createSlice({
-  name: "user",
+const studentSlice = createSlice({
+  name: "student",
   initialState,
   reducers: {
-    fetchUsers: (state) => {
+    fetchStudents: (state) => {
       //middleware
     },
-    addUser: (state, action: PayloadAction<GridValidRowModel>) => {
+    addStudent: (state, action: PayloadAction<GridValidRowModel>) => {
       //middleware
     },
-    setUsers: (state, action: PayloadAction<GridValidRowModel[]>) => {
+    setStudents: (state, action: PayloadAction<GridValidRowModel[]>) => {
       state.rows = action.payload;
       state.isLoading = false;
     },
-    fetchUsersFailure: (state) => {
+    fetchStudentsFailure: (state) => {
       state.isLoading = true;
       state.rows = [...emptyRows];
     },
-    discardUser: (state, action: PayloadAction<number>) => {
-      state.rows = state.rows.filter((user) => user.id !== action.payload);
+    discardStudent: (state, action: PayloadAction<number>) => {
+      state.rows = state.rows.filter((student) => student.id !== action.payload);
     },
-    updateUser: (state, action: PayloadAction<GridValidRowModel>) => {
-      state.rows = state.rows.map((user) =>
-        user.id === action.payload.id ? { ...user, ...action.payload } : user
+    updateStudent: (state, action: PayloadAction<GridValidRowModel>) => {
+      state.rows = state.rows.map((student) =>
+        student.id === action.payload.id ? { ...student, ...action.payload } : student
       );
     },
-    setUserError: (state, action: PayloadAction<number>) => {
-      state.rows = state.rows.map((user) =>
-        user.id === action.payload ? { ...user, error: true } : user
+    setStudentError: (state, action: PayloadAction<number>) => {
+      state.rows = state.rows.map((student) =>
+        student.id === action.payload ? { ...student, error: true } : student
       );
     },
   },
 });
 
 export const {
-  fetchUsers,
-  setUsers,
-  fetchUsersFailure,
-  addUser,
-  discardUser,
-  updateUser,
-  setUserError,
-} = userSlice.actions;
+  fetchStudents,
+  setStudents,
+  fetchStudentsFailure,
+  addStudent,
+  discardStudent,
+  updateStudent,
+  setStudentError,
+} = studentSlice.actions;
 
-export default userSlice.reducer;
+export default studentSlice.reducer;

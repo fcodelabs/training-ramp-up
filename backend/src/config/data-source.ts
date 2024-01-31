@@ -26,6 +26,6 @@ export const AppDataSource = new DataSource({
   password: "200551R",
   database: "ramp-up",
   entities: [Student, User],
-  synchronize: true,
-  logging: false,
+  synchronize: false,
+  logging: true,
 });

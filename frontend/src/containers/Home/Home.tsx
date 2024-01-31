@@ -2,8 +2,6 @@ import React from "react";
 import styled from "styled-components";
 import Appbar from "../../components/Appbar/Appbar";
 import Table from "./Table/Table";
-import { Button } from "@mui/material";
-
 
 export const HomeWarpper = styled.div`
   display: flex;
@@ -37,13 +35,10 @@ export const ButtonWrapper = styled.div`
 `;
 
 export default function Home() {
-
-
   return (
     <HomeWarpper>
       <Appbar />
       <ContainerWrapper>
-      
         <Table />
       </ContainerWrapper>
     </HomeWarpper>

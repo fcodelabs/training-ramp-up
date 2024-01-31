@@ -24,11 +24,11 @@ import {
   validateStudent,
 } from "../../../utilities/validateStudent";
 import {
-  discardUser,
-  fetchUsers,
-  setUsers,
-  addUser,
-  updateUser,
+  discardStudent,
+  fetchStudents,
+  setStudents,
+  addStudent,
+  updateStudent,
 } from "../../../redux/student/slice";
 import { generateNewId } from "../../../utilities/index";
 import styled from "styled-components";
@@ -120,8 +120,8 @@ const StyledDataGrid = styled(DataGrid)(() => ({
 }));
 
 const Table = () => {
-  const rows: GridValidRowModel[] = useAppSelector((state) => state.user.rows);
-  const isLoading = useAppSelector((state) => state.user.isLoading);
+  const rows: GridValidRowModel[] = useAppSelector((state) => state.student.rows);
+  const isLoading = useAppSelector((state) => state.student.isLoading);
   const [rowModesModel, setRowModesModel] = useState<GridRowModesModel>({});
   const [notification, setNotification] = useState({
     open: false,
@@ -143,7 +143,7 @@ const Table = () => {
   };
   const processRowUpdate = (newRow: GridRowModel) => {
     const updatedRow = { ...newRow, isNew: false };
-    dispatch(updateUser(updatedRow));
+    dispatch(updateStudent(updatedRow));
     return updatedRow;
   };
 
@@ -172,7 +172,7 @@ const Table = () => {
           [params.id]: { mode: GridRowModes.View },
         });
 
-        dispatch(addUser(editedRow));
+        dispatch(addStudent(editedRow));
       }
     } else {
       setNotification({
@@ -185,7 +185,7 @@ const Table = () => {
 
   const handleDeleteClick = (id: GridRowId) => () => {
     const confirmDelete = () => {
-      dispatch(discardUser(Number(id)));
+      dispatch(discardStudent(Number(id)));
       handleCloseNotification();
     };
     setNotification({
@@ -197,7 +197,7 @@ const Table = () => {
 
   const handleCancelClick = (id: GridRowId) => () => {
     const comfirmDiscard = () => {
-      dispatch(fetchUsers());
+      dispatch(fetchStudents());
       setRowModesModel({
         ...rowModesModel,
         [id]: { mode: GridRowModes.View },
@@ -215,7 +215,7 @@ const Table = () => {
   const handleAddClick = () => {
     const id = generateNewId(rows);
     dispatch(
-      setUsers([
+      setStudents([
         {
           id,
           name: "",
@@ -335,7 +335,7 @@ const Table = () => {
   }, []);
 
   useEffect(() => {
-    dispatch(fetchUsers());
+    dispatch(fetchStudents());
     if (isLoading) {
       setNotification({
         open: true,

@@ -1,7 +1,9 @@
 import { combineReducers } from "@reduxjs/toolkit";
-import userReducer from "./student/slice";
+import studentReducer from "./student/slice";
+import userReducer from "./user/slice";
 
 const rootReducer = combineReducers({
+  student: studentReducer,
   user: userReducer,
 });
 

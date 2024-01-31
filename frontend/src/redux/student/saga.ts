@@ -1,54 +1,54 @@
-import { takeLatest, put, call, takeLeading } from "redux-saga/effects";
+import { put, call, takeLeading } from "redux-saga/effects";
 import {
-  setUsers,
-  fetchUsers,
-  fetchUsersFailure,
-  addUser,
-  setUserError,
-  discardUser,
+  setStudents,
+  fetchStudents,
+  fetchStudentsFailure,
+  addStudent,
+  setStudentError,
+  discardStudent,
 } from "./slice";
 import { GridValidRowModel } from "@mui/x-data-grid";
 import {
-  fetchUsersAsync,
-  addUsersAsync,
-  deleteUserAsync,
-  updateUserAsync,
-} from "../../utilities/studentServices";
+  fetchStudentsAsync,
+  addStudentsAsync,
+  deleteStudentAsync,
+  updateStudentAsync,
+} from "../../utilities/services";
 
-export function* watchFetchUsers() {
+export function* watchFetchStudents() {
   try {
-    const students: GridValidRowModel[] = yield call(fetchUsersAsync);
-    yield put(setUsers(students));
+    const students: GridValidRowModel[] = yield call(fetchStudentsAsync);
+    yield put(setStudents(students));
   } catch (error: any) {
-    yield put(fetchUsersFailure(error));
+    yield put(fetchStudentsFailure(error));
   }
 }
 
-export function* watchAddNewUser(action: any) {
+export function* watchAddNewStudent(action: any) {
   try {
     let student: GridValidRowModel;
     if (action.payload.isNew) {
-      student = yield call(addUsersAsync, action.payload);
+      student = yield call(addStudentsAsync, action.payload);
     } else {
-      student = yield call(updateUserAsync, action.payload);
+      student = yield call(updateStudentAsync, action.payload);
     }
-    yield put(addUser(student));
+    yield put(addStudent(student));
   } catch (error: any) {
-    yield put(setUserError(action.payload.id));
+    yield put(setStudentError(action.payload.id));
     return error;
   }
 }
 
-export function* watchDeleteUser(action: any) {
+export function* watchDeleteStudent(action: any) {
   try {
-    yield call(deleteUserAsync, action.payload);
+    yield call(deleteStudentAsync, action.payload);
   } catch (error: any) {
     return error;
   }
 }
 
-export function* userSaga() {
-  yield takeLeading(fetchUsers, watchFetchUsers);
-  yield takeLeading(addUser, watchAddNewUser);
-  yield takeLeading(discardUser, watchDeleteUser);
+export function* studentSaga() {
+  yield takeLeading(fetchStudents, watchFetchStudents);
+  yield takeLeading(addStudent, watchAddNewStudent);
+  yield takeLeading(discardStudent, watchDeleteStudent);
 }
