@@ -1,45 +1,45 @@
-import { AppDataSource } from ".."
-import { Student } from "../models/student"
+import { AppDataSource } from "..";
+import { Student } from "../models/student";
 
 export class StudentService {
-  async create(data: Partial<Student>) {
-    const repository = AppDataSource.getRepository(Student)
-    const student = repository.create(data)
-    return await repository.save(student)
+  static async create(data: Partial<Student>) {
+    const repository = AppDataSource.getRepository(Student);
+    const student = repository.create(data);
+    return await repository.save(student);
   }
 
-  async findAll() {
+  static async findAll() {
     try {
-      const repository = AppDataSource.getRepository(Student)
-      return await repository.find()
+      const repository = AppDataSource.getRepository(Student);
+      return await repository.find();
     } catch (error) {
-      console.error("Error finding all students:", error)
+      console.error("Error finding all students:", error);
     }
   }
 
-  async edit(id: number, data: Partial<Student>) {
+  static async edit(id: number, data: Partial<Student>) {
     try {
-      const repository = AppDataSource.getRepository(Student)
-      const result = await repository.update(id, data)
+      const repository = AppDataSource.getRepository(Student);
+      const result = await repository.update(id, data);
       if (result.affected === 0) {
-        throw new Error("Student not found")
+        throw new Error("Student not found");
       }
-      return await repository.findOne({ where: { id: id } })
+      return await repository.findOne({ where: { id: id } });
     } catch (error) {
-      console.error("Error editing student:", error)
+      console.error("Error editing student:", error);
     }
   }
 
-  async delete(id: number) {
+  static async delete(id: number) {
     try {
-      const repository = AppDataSource.getRepository(Student)
-      const result = await repository.delete(id)
+      const repository = AppDataSource.getRepository(Student);
+      const result = await repository.delete(id);
       if (result.affected === 0) {
-        throw new Error("Student not found")
+        throw new Error("Student not found");
       }
-      return true
+      return true;
     } catch (error) {
-      console.error("Error deleting student:", error)
+      console.error("Error deleting student:", error);
     }
   }
 }

@@ -1,5 +1,5 @@
 export function formatMobile(mobile: string){
-    const mobileWithoutPlus = mobile.replace(/^\+/, "");
+    const mobileWithoutPlus = mobile.replace(/^\+94/, "0");
     const formattedMobile = mobileWithoutPlus.replace(
       /(\d{3})(\d{3})(\d{4})/,
       "$1-$2-$3",
