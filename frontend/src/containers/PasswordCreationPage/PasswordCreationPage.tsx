@@ -118,7 +118,9 @@ const PasswordCreationPage = () => {
                 }
                 label="Password"
               />
-              {passwordError && <FormHelperText>Password</FormHelperText>}
+              {passwordError && (
+                <FormHelperText color="error">Password</FormHelperText>
+              )}
             </FormControl>
           </Grid>
           <Grid item sx={{ marginBottom: "10px" }}>
@@ -152,7 +154,7 @@ const PasswordCreationPage = () => {
                 label="Confirm Password"
               />
               {confirmPasswordError && (
-                <FormHelperText>Confirm Password</FormHelperText>
+                <FormHelperText color="error">Confirm Password</FormHelperText>
               )}
             </FormControl>
           </Grid>
