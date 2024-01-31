@@ -3,25 +3,25 @@ import { BaseEntity, Column, CreateDateColumn, Entity, PrimaryColumn, UpdateDate
 @Entity('student')
 export class Student extends BaseEntity{
 
-    @PrimaryColumn({unique: true})
+    @PrimaryColumn('number',{unique: true})
     id: number;
 
-    @Column({nullable: false})
+    @Column('text',{nullable: false})
     name: string;
 
-    @Column()
+    @Column('text')
     gender: string;
 
-    @Column()
+    @Column('text')
     address: string;
 
-    @Column()
+    @Column('text')
     mobile: string;
 
-    @Column()
+    @Column('text')
     dob: string;
 
-    @Column()
+    @Column('int')
     age: number;
 
     @CreateDateColumn()

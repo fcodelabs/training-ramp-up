@@ -46,7 +46,7 @@ function* addNewStudentWorker(
     dob: action.payload.dob,
     age: action.payload.age,
   };
-  console.log("newstudent", newStudent);
+  
   try {
     console.log(newStudent);
     yield call(
@@ -56,8 +56,7 @@ function* addNewStudentWorker(
     );
     yield put(fetchAllStudentsSuccess);
   } catch (error: any) {
-    console.log("hello adding error");
-    console.log(error);
+    
     yield put(addStudentError());
 
     return error;

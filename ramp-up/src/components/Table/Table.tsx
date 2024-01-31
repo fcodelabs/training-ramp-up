@@ -31,14 +31,21 @@ import Modal from "@mui/material/Modal";
 import Paper from "@mui/material/Paper";
 import MessageCard from "../Cards/MessageCard";
 
+import io from 'socket.io-client';
+
 import {
   updateStudent,
   fetchAllStudentsSuccess,
   addStudentSuccess,
   removeStudentSuccess,
   editStudentSuccess,
+  addStudentError,
+  editStudentError,
+  removeStudentError,
 
 } from "../../redux/slices/slice";
+
+
 
 
 
@@ -219,15 +226,12 @@ export default function Table() {
           </div>
         </div>
       </GridToolbarContainer>
-      // <StyledButtonBox>
-      //   <StyledAddNewButton variant="contained" onClick={handleClick}>
-      //     ADD NEW
-      //   </StyledAddNewButton>
-      // </StyledButtonBox>
+      
     );
   }
 
- 
+  //const SOCKET_SERVER_URL = 'http://localhost:4000';
+
   const dispatch = useDispatch();
 
   const [rowModesModel, setRowModesModel] = React.useState<GridRowModesModel>(
@@ -240,7 +244,6 @@ export default function Table() {
 
   const [mode, setMode] = useState<"Add" | "Edit">("Add"); 
 
-  // states to maintain showing the models/notification cards
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [showDiscardModal, setShowDiscardModal] = useState(false);
   const [showDiscardUpdateModal, setShowDiscardUpdateModal] = useState(false);
@@ -282,7 +285,65 @@ export default function Table() {
     setAgeValues(updatedAgeValues);
   }, [students]);
 
-  
+  const socket=io('http://localhost:4000');
+
+  useEffect(() => {
+    console.log('useEffect is running');
+
+  socket.on('connect', () => {
+     console.log('Connected to socket server');
+
+     setTimeout(()=>{
+        socket.on('notification', (data: any) => {
+          console.log('Notification:', data.message);
+     });
+    },500);  
+});
+}, []);
+
+    // useEffect(() => {
+    //   socket.on("getstudents", (data: any) => {
+    //     console.log("getAllStudents", data);
+    //   });
+
+    //   socket.on("newstudent", (data: any) => {
+    //     console.log("new student added", data);
+    //     if (data === 201) {
+    //       setShowSuccessModal(false);
+    //       dispatch(fetchAllStudentsSuccess());
+    //     }
+    //     if (data === 500) {
+    //       dispatch(addStudentError());
+    //     }
+    //   });
+
+    //   socket.on("editstudent", (data: any) => {
+    //     console.log("edited student", data);
+    //     if (data === 201) {
+    //       setShowUpdateSuccessModal(true);
+    //       dispatch(fetchAllStudentsSuccess());
+    //     }
+    //     if (data === 500) {
+    //       dispatch(editStudentError());
+    //     }
+    //   }); 
+
+    //   socket.on("deletestudent", (data) => {
+    //     console.log("deleted student", data);
+    //     if (data === 200) {
+    //       console.log("delete-student 204", data);
+    //       setShowRemoveSuccessCard(true);
+    //       dispatch(fetchAllStudentsSuccess());
+    //     }
+    //     if (data === 500) {
+    //       dispatch(removeStudentError());
+    //       console.log("delete-student error", data);
+    //     }
+    //     if (data === 404) {
+    //       console.log("delete-student error student not found", data);
+    //     }
+    //   });
+    // }, []);
 
   const handleConfirmRemove = (id: GridRowId | null) => {
     if (id) {
@@ -328,12 +389,12 @@ export default function Table() {
     const formattedMobile = editedFields.mobile
       ? editedFields.mobile.replace(/^\+94/, "0")
       : "";
-    // Further format the mobile number as needed
+   
     const formattedForDatabase = formattedMobile.replace(
       /(\d{3})(\d{3})(\d{4})/,
       "$1-$2-$3"
     );
-    // Validate all fields before adding a new row
+    
     if (
       !editedFields.name.trim() ||
       !editedFields.gender.trim() ||
@@ -442,10 +503,8 @@ export default function Table() {
     );
 
     if (isRowModified) {
-      // If changes exist, show the discard changes modal
       setShowDiscardModal(true);
     } else {
-      // If no changes, proceed with canceling
       setRowModesModel({
         ...rowModesModel,
         [id]: { mode: GridRowModes.View, ignoreModifications: true },
@@ -460,16 +519,13 @@ export default function Table() {
   };
 
   const handleCancelUpdateClick = (id: GridRowId) => () => {
-    // Check if there are changes in the row
     const isRowModified = Object.keys(rowModesModel).some(
       (key) => key === id.toString()
     );
 
     if (isRowModified) {
-      // If changes exist, show the discard changes modal
       setShowDiscardUpdateModal(true);
     } else {
-      // If no changes, proceed with canceling
       cancelEdit(id);
     }
   };
@@ -490,7 +546,6 @@ export default function Table() {
 
   const handleConfirmDiscardUpdate = () => {
     if (editingRowId !== null) {
-      // Revert changes made during editing process
       setRowModesModel({
         ...rowModesModel,
         [editingRowId]: { mode: GridRowModes.View, ignoreModifications: true },
@@ -502,7 +557,6 @@ export default function Table() {
       );
 
       if (originalRow) {
-        // Update the row with the original data
         setRows((oldRows) =>
           oldRows.map((row) =>
             row.id === parseInt(editingRowId.toString())
@@ -512,7 +566,6 @@ export default function Table() {
         );
       }
 
-      // Reset the state and close the modal
       setMode("Add");
       setEditingRowId(null);
       setShowDiscardUpdateModal(false);
@@ -574,13 +627,23 @@ export default function Table() {
 
   const columns: GridColDef[] = [
     {
+      field: '__check__',
+      headerName: 'Checkbox',
+      headerClassName: 'user-details',
+      width: 37,
+      sortable: false,
+      headerAlign: 'center',
+      align: 'center',
+      disableColumnMenu: true,
+    },
+    {
       field: "id",
       headerName: "ID",
       width: 86,
       editable: false,
       sortable: false,
       disableColumnMenu: true,
-      headerClassName: "custom-header",
+      headerClassName: "user-details",
     },
     {
       field: "name",
@@ -589,7 +652,7 @@ export default function Table() {
       width: 135,
       sortable: true,
       disableColumnMenu: true,
-      headerClassName: "custom-header",
+      headerClassName: "user-details",
       editable: true,
       renderEditCell(params: GridRenderCellParams<any, string>) {
         const isNameEmpty =
@@ -639,7 +702,7 @@ export default function Table() {
       width: 135,
       sortable: false,
       disableColumnMenu: true,
-      headerClassName: "custom-header",
+      headerClassName: "user-details",
       editable: true,
       renderEditCell: (params: GridRenderCellParams<any, string>) => {
         const isGenderEmpty = !params.value;
@@ -690,7 +753,7 @@ export default function Table() {
       width: 135,
       sortable: false,
       disableColumnMenu: true,
-      headerClassName: "custom-header",
+      headerClassName: "user-details",
       editable: true,
       renderEditCell(params: GridRenderCellParams<any, string>) {
         const isAddressEmpty = !params.value;
@@ -734,7 +797,7 @@ export default function Table() {
       width: 135,
       sortable: false,
       disableColumnMenu: true,
-      headerClassName: "custom-header",
+      headerClassName: "user-details",
       editable: true,
       valueFormatter(params) {
         if (params.value) {
@@ -826,7 +889,7 @@ export default function Table() {
       width: 205,
       sortable: true,
       disableColumnMenu: true,
-      headerClassName: "custom-header",
+      headerClassName: "user-details",
       editable: true,
       valueFormatter: (params) => {
         const date = dayjs(new Date(params.value));
@@ -914,7 +977,7 @@ export default function Table() {
       width: 101,
       disableColumnMenu: true,
       sortable: false,
-      headerClassName: "custom-header",
+      headerClassName: "user-details",
       editable: false,
       renderCell: (params: GridRenderCellParams<any, string>) => {
         const isAgeEmpty = !params.value;
@@ -999,7 +1062,7 @@ export default function Table() {
       width: 195,
       disableColumnMenu: true,
       sortable: false,
-      headerClassName: "custom-header",
+      headerClassName: "user-details",
       type: "actions",
       getActions: ({ id }: { id: GridRowId }) => {
         const isInEditMode = rowModesModel[id]?.mode === GridRowModes.Edit;
