@@ -3,6 +3,9 @@ import { Button, IconButton, TextField, Typography } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import styled from "styled-components";
 import { validatePassword } from "../../utilities/validateUser";
+import { Paths } from "../../App";
+import { useAppDispatch } from "../../redux/hooks";
+import { signup } from "../../redux/user/slice";
 
 const StyledPasswordCreate = styled.div`
   height: 100vh;
@@ -40,11 +43,14 @@ const PasswordCreate = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [passwordMatchError, setPasswordMatchError] = useState("");
+  const dispatch = useAppDispatch();
+  const urlParams = new URLSearchParams(window.location.search);
+  const token = urlParams.get("token");
+  console.log(token);
 
   const handleTogglePasswordVisibility = () => {
     setShowPassword((prevShowPassword) => !prevShowPassword);
   };
-
 
   const handlePasswordChange = (newPassword: any) => {
     setPassword(newPassword);
@@ -72,7 +78,14 @@ const PasswordCreate = () => {
   };
 
   const handleSubmit = () => {
-    // Handle submission logic here
+    if (!passwordError && !passwordMatchError && validatePassword(password)) {
+      const body = {
+        password: password,
+        token: token,
+      };
+      dispatch(signup(body));
+      window.location.href = Paths.HOME;
+    }
   };
 
   return (

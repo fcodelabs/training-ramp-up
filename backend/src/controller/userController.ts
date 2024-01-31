@@ -97,7 +97,6 @@ export class UserController {
       user.verified = true;
 
       await this.userService.createUser(user);
-
       res.status(200).json({ message: "User created successfully" });
     } catch (error) {
       res.status(500).json({ error: "Internal Server Error" });

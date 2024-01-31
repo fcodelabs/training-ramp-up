@@ -54,6 +54,10 @@ export const deleteStudentAsync = async (id: number) => {
 
 export const loginAsync = async (newuser: any) => {
   try {
+    newuser = {
+      email:"thambarasahassaka@gmail.com",
+      password: "1234567",
+    }
     const response: any = await axios.post(`${url}/users/login`, newuser, {
       headers: {
         "Content-Type": "application/json",
@@ -98,6 +102,24 @@ export const asyncAuthenticateUser = async () => {
         authorization: `Bearer ${Token}`,
       },
     });
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const signupUsersAsync = async (data: any) => {
+  try {
+    const body = {
+      token: data.token,
+      password: data.password,
+    };
+    const response = await axios.post(`${url}/users/signup`, body, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    console.log("response", response);
+    return response.data;
   } catch (error) {
     throw error;
   }

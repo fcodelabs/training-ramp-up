@@ -64,6 +64,10 @@ const userSlice = createSlice({
       state.role = Role.OBSERVER;
       localStorage.removeItem(LocalstorageId);
     },
+
+    signup: (state, action: PayloadAction<any>) => {
+      //middleware
+    },
     updateNewUser: (
       state,
       action: PayloadAction<Partial<InitialDataTypeUser["newUser"]>>
@@ -96,5 +100,6 @@ export const {
   updateNewUser,
   addNewUser,
   loginSuccess,
-  authententicate
+  authententicate,
+  signup
 } = userSlice.actions;

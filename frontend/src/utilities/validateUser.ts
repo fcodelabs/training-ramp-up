@@ -21,6 +21,7 @@ const validatePassword = (inputPassword: any) => {
     const isMinLength = inputPassword.length >= 8;
 
     if (
+      inputPassword!="" &&
       isLowerCase &&
       isUpperCase &&
       isSpecialChar &&

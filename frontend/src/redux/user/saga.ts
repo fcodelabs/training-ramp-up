@@ -8,12 +8,14 @@ import {
   loginSuccess,
   logout,
   setNewUserVerification,
+  signup,
   updateNewUser,
 } from "./slice";
 import {
   loginAsync,
   addUsersAsync,
   asyncAuthenticateUser,
+  signupUsersAsync,
 } from "../../utilities/services";
 const LocalstorageId = `${process.env.REACT_APP_API_URL}`;
 
@@ -54,9 +56,19 @@ export function* watchAuthenticate() {
   }
 }
 
+export function* watchSignupUser(action: any): Generator<any, void, any> {
+  try {
+    yield call(signupUsersAsync, action.payload);
+  } catch (error: any) {
+    return error;
+  }
+
+}
+
 export function* userSaga() {
   yield takeLatest(login, watchLogin);
   yield takeLatest(logout, watchLogout);
   yield takeLatest(addNewUser, watchAddNewUser);
   yield takeLatest(authententicate, watchAuthenticate);
+  yield takeLeading(signup, watchSignupUser);
 }
