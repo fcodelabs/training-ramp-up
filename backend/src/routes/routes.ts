@@ -1,6 +1,11 @@
 import { StudentController } from "../controller/studentController";
 import { UserController } from "../controller/userController";
 import { authenticateToken, authorizeRole } from "../middleware/auth";
+export enum Role {
+  ADMIN = "admin",
+  OBSERVER = "observer",
+  NONE = "",
+}
 
 export const Routes = [
   {
@@ -54,10 +59,17 @@ export const Routes = [
     middleware: [],
   },
   {
-    method:'post',
-    route:'/users/email',
+    method: "post",
+    route: "/users/email",
     controller: UserController,
-    action:'email',
-    middleware:[]
-  }
+    action: "email",
+    middleware: [authenticateToken, authorizeRole([Role.ADMIN])],
+  },
+  {
+    method: "post",
+    route: "/users/verify",
+    controller: UserController,
+    action: "verify",
+    middleware: [authenticateToken],
+  },
 ];

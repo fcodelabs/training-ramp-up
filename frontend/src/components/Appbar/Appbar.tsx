@@ -1,7 +1,8 @@
 import React from 'react'
 import { Button } from '@mui/material'
 import styled from 'styled-components'
-
+import { useAppDispatch } from '../../redux/hooks'
+import { login } from '../../redux/user/slice'
 const AppbarWrapper = styled.div`
     display: flex;
     position: fixed;
@@ -30,12 +31,18 @@ const ButtonWrapper = styled.div`
     flex-direction: raw;
 `
 
+
 const Appbar = () => {
+    const dispatch = useAppDispatch();
+    const handleLogin = () => {
+        dispatch(login({user:"test"}))
+        console.log("clicked")
+    }
     return (
         <AppbarWrapper>
             <AppbarTitle>Ramp up Project</AppbarTitle>
             <ButtonWrapper>
-                <Button variant="outlined">Login</Button>
+                <Button variant="outlined" onClick={handleLogin}>Login</Button>
             </ButtonWrapper>
         </AppbarWrapper>
     )

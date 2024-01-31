@@ -1,7 +1,10 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styled from "styled-components";
 import Appbar from "../../components/Appbar/Appbar";
 import Table from "./Table/Table";
+import { useAppDispatch } from "../../redux/hooks";
+import { authententicate } from "../../redux/user/slice";
+const LocalstorageId = `${process.env.REACT_APP_API_URL}`;
 
 export const HomeWarpper = styled.div`
   display: flex;
@@ -35,6 +38,7 @@ export const ButtonWrapper = styled.div`
 `;
 
 export default function Home() {
+
   return (
     <HomeWarpper>
       <Appbar />

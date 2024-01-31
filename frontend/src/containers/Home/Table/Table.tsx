@@ -35,6 +35,7 @@ import styled from "styled-components";
 import { Socket, io } from "socket.io-client";
 import { NotificationTypes } from "../../../utilities/index";
 import UserCard from "../../../components/UserCard/UserCard";
+import { Role, authententicate } from "../../../redux/user/slice";
 const url = process.env.REACT_APP_API_URL;
 
 const Container = styled.div`
@@ -120,7 +121,9 @@ const StyledDataGrid = styled(DataGrid)(() => ({
 }));
 
 const Table = () => {
-  const rows: GridValidRowModel[] = useAppSelector((state) => state.student.rows);
+  const rows: GridValidRowModel[] = useAppSelector(
+    (state) => state.student.rows
+  );
   const isLoading = useAppSelector((state) => state.student.isLoading);
   const [rowModesModel, setRowModesModel] = useState<GridRowModesModel>({});
   const [notification, setNotification] = useState({
@@ -129,6 +132,7 @@ const Table = () => {
     type: "",
   });
   const dispatch = useAppDispatch();
+
   const handleCloseNotification = () => {
     setNotification({ open: false, onConfirm: () => {}, type: "" });
   };
@@ -260,7 +264,10 @@ const Table = () => {
     },
   ];
 
+
   useEffect(() => {
+    dispatch(authententicate());
+
     const socket: Socket = io(`${url}`);
     socket.on("connect", () => {
       console.log("Connected to Socket.IO server");
@@ -346,14 +353,16 @@ const Table = () => {
   }, [dispatch, isLoading]);
 
   const [AddUserClicked, setAddUserClicked] = useState(false);
-
+  const role = useAppSelector((state) => state.user.role);
   return (
     <Container>
-      <AdminButtonWrapper>
-        <Button variant="contained" onClick={() => setAddUserClicked(true)}>
-          Add new User
-        </Button>
-      </AdminButtonWrapper>
+      {role === Role.ADMIN && (
+        <AdminButtonWrapper>
+          <Button variant="contained" onClick={() => setAddUserClicked(true)}>
+            Add new User
+          </Button>
+        </AdminButtonWrapper>
+      )}
       <Title>Student Details</Title>
       <ButtonWrapper>
         <Button variant="contained" onClick={handleAddClick}>

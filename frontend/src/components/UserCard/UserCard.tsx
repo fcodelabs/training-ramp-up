@@ -11,7 +11,7 @@ import React from "react";
 import styled from "styled-components";
 import { isValidEmail, isValidName } from "../../utilities/validateUser";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import { updateNewUser } from "../../redux/user/slice";
+import { addNewUser, updateNewUser } from "../../redux/user/slice";
 import { Role } from "../../redux/user/slice";
 
 type UserCardProps = {
@@ -50,12 +50,14 @@ const UserCard: React.FC<UserCardProps> = ({ open, onClose }) => {
     dispatch(updateNewUser({[event.target.name]: event.target.value }));
   }
 
-  const onClick = () => { 
+  const onClickAdd = () => { 
+    dispatch(addNewUser(user));
     console.log("clicked");
+
   }
   
-  const isEmailValidated = user.isVerifiedUser
-  const isEmailTaken = true;
+  const isEmailValidated = isValidEmail(user.email);
+  const isEmailTaken = user.isVerifiedUser;
   const isEmailOk = isEmailValidated && !isEmailTaken;
 
   const users = [
@@ -89,7 +91,7 @@ const UserCard: React.FC<UserCardProps> = ({ open, onClose }) => {
             ))}
           </StyledTextField>{" "}
           <ButtonWrapper>
-            <Button variant="contained" style={{ marginRight: "10px" }}>
+            <Button variant="contained" style={{ marginRight: "10px" }} onClick={onClickAdd}>
               Submit
             </Button>
             <Button variant="outlined" onClick={onClose}>

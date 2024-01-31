@@ -3,12 +3,9 @@ import * as jwt from "jsonwebtoken";
 
 const SECRET_KEY = process.env.SECRET_KEY || "default-secret-key";
 
-export const authenticateToken = (
-  req,
-  res: Response,
-  next: NextFunction
-) => {
-  const token = req.header("TOKEN");
+export const authenticateToken = (req, res: Response, next: NextFunction) => {
+  console.log("req.headers", req.headers);
+  const token = req.headers.authorization.split(" ")[1];
   if (!token) {
     res.status(401).json({ error: "Access denied. Token not provided." });
     return;
@@ -31,7 +28,6 @@ export const authenticateToken = (
 export const authorizeRole = (allowedRoles: string[]) => {
   return (req, res: Response, next: NextFunction) => {
     const userRole = req.user?.role;
-    
 
     if (!userRole || !allowedRoles.includes(userRole)) {
       return res

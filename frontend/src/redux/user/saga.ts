@@ -1,13 +1,26 @@
 //sagas for logging in and out
 
-import { call, put, takeLatest } from "redux-saga/effects";
-import { addNewUser, login, logout, updateNewUser } from "./slice";
-import { loginAsync, addUsersAsync } from "../../utilities/services";
+import { call, put, takeLatest, takeLeading } from "redux-saga/effects";
+import {
+  addNewUser,
+  authententicate,
+  login,
+  loginSuccess,
+  logout,
+  setNewUserVerification,
+  updateNewUser,
+} from "./slice";
+import {
+  loginAsync,
+  addUsersAsync,
+  asyncAuthenticateUser,
+} from "../../utilities/services";
+const LocalstorageId = `${process.env.REACT_APP_API_URL}`;
 
 export function* watchLogin(action: any) {
   try {
     const token: string = yield call(loginAsync, action.payload);
-    yield put(login(token));
+    yield put(loginSuccess(token));
   } catch (error: any) {
     return error;
   }
@@ -23,11 +36,20 @@ export function* watchLogout() {
 
 export function* watchAddNewUser(action: any): Generator<any, void, any> {
   try {
-    const respond: any = yield call(addUsersAsync, action.payload);
-    if (respond.status === 200 && respond.data.verified === true) {
-      yield put(updateNewUser({ isVerifiedUser: true }));
-    }
+    const response: any = yield call(addUsersAsync, action.payload);
+    yield put(setNewUserVerification(response.isVerified));
   } catch (error: any) {
+    return error;
+  }
+}
+
+export function* watchAuthenticate() {
+  try {
+    yield call(asyncAuthenticateUser);
+    const Token : any= localStorage.getItem(LocalstorageId)
+    yield put(loginSuccess(Token));
+  } catch (error: any) {
+    // yield put(logout());
     return error;
   }
 }
@@ -36,4 +58,5 @@ export function* userSaga() {
   yield takeLatest(login, watchLogin);
   yield takeLatest(logout, watchLogout);
   yield takeLatest(addNewUser, watchAddNewUser);
+  yield takeLatest(authententicate, watchAuthenticate);
 }

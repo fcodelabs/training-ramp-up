@@ -58,7 +58,7 @@ export class UserController {
         } else {
           if (user.verified) {
             res
-              .status(400)
+              .status(200)
               .json({ error: "email already exists", isVerified: true });
             return;
           }
@@ -102,5 +102,9 @@ export class UserController {
     } catch (error) {
       res.status(500).json({ error: "Internal Server Error" });
     }
+  }
+
+  async verify(req: Request, res: Response) {
+    res.status(200).json({ message: "User verified successfully" });
   }
 }
