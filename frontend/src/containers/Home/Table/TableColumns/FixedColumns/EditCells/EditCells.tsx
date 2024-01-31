@@ -1,6 +1,6 @@
 import React from "react";
 import { useAppDispatch } from "../../../../../../redux/hooks";
-import { updateUser } from "../../../../../../redux/user/slice";
+import { updateStudent } from "../../../../../../redux/student/slice";
 import { MenuItem, TextField, Typography } from "@mui/material";
 import { calculateAge } from "../../../../../../utilities/index";
 import { GridRenderEditCellParams } from "@mui/x-data-grid";
@@ -67,7 +67,7 @@ const EditableCell: React.FC<EditableCellProps> = ({
       field: params.field,
       value: newValue,
     });
-    dispatch(updateUser(update));
+    dispatch(updateStudent(update));
   };
 
   const handleDateChange = (newDate: string) => {
@@ -88,7 +88,7 @@ const EditableCell: React.FC<EditableCellProps> = ({
       age: Number(age),
       birthday: newDateObject.toISOString().slice(0, 10),
     };
-    dispatch(updateUser(updateAge));
+    dispatch(updateStudent(updateAge));
   };
 
   if (field === "age") {

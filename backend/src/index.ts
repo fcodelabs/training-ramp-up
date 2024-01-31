@@ -10,6 +10,7 @@ import { initializeSocketIO } from "../src/services/socketService"; // Import th
 AppDataSource.initialize().then(async () => {
   const app = express();
   app.use(bodyParser.json());
+  // app.use(authenticateToken)
   app.use(bodyParser.urlencoded({ extended: true }));
   app.use(
     cors({
@@ -23,31 +24,19 @@ AppDataSource.initialize().then(async () => {
   initializeSocketIO(server);
 
   Routes.forEach((route) => {
-    (app as any)[route.method](
-      route.route,
-      (
-        req: express.Request,
-        res: express.Response,
-        next: express.NextFunction
-      ) => {
-        const result = new (route.controller as any)()[route.action](
-          req,
-          res,
-          next
+    const { method, route: path, controller, action, middleware } = route;
+    (app as any)[method](path, ...middleware, (req: any, res: any, next: any) => {
+      const result = new (controller as any)()[action](req, res, next);
+      if (result instanceof Promise) {
+        result.then((data: any) =>
+          data !== null && data !== undefined ? res.send(data) : undefined
         );
-        if (result instanceof Promise) {
-          result.then((result) =>
-            result !== null && result !== undefined
-              ? res.send(result)
-              : undefined
-          );
-        } else if (result !== null && result !== undefined) {
-          res.json(result);
-        }
+      } else if (result !== null && result !== undefined) {
+        res.json(result);
       }
-    );
+    });
   });
-
+  
   server.listen(process.env.PORT);
 
   console.log(`Express server has started on port ${process.env.PORT}.`);

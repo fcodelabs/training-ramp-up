@@ -15,7 +15,7 @@ import {
   validateAge,
   validateBirthday,
   validateMobile,
-} from "../utilities/validateUser";
+} from "../utilities/validateStudent";
 const theme = createTheme();
 describe("EditableCell", () => {
   afterEach(() => {

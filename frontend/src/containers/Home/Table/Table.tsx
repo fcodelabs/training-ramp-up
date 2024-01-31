@@ -19,18 +19,23 @@ import { FixedColumns } from "./TableColumns/FixedColumns/FixedColumns";
 import PopupNotification from "../../../components/Notification/Notification";
 import { useAppSelector, useAppDispatch } from "../../../redux/hooks";
 import { GridActionsColumn } from "./TableColumns/ActionColumn/ActionColumn";
-import { isEmptyFields, validateUser } from "../../../utilities/validateUser";
 import {
-  discardUser,
-  fetchUsers,
-  setUsers,
-  addUser,
-  updateUser,
-} from "../../../redux/user/slice";
+  isEmptyFields,
+  validateStudent,
+} from "../../../utilities/validateStudent";
+import {
+  discardStudent,
+  fetchStudents,
+  setStudents,
+  addStudent,
+  updateStudent,
+} from "../../../redux/student/slice";
 import { generateNewId } from "../../../utilities/index";
 import styled from "styled-components";
 import { Socket, io } from "socket.io-client";
 import { NotificationTypes } from "../../../utilities/index";
+import UserCard from "../../../components/UserCard/UserCard";
+import { Role, authententicate } from "../../../redux/user/slice";
 const url = process.env.REACT_APP_API_URL;
 
 const Container = styled.div`
@@ -46,6 +51,7 @@ const Title = styled.div`
   display: flex;
   flex-direction: row;
   padding: 5px 15px 5px 15px;
+  margin-top: 20px;
   font-size: 24px;
   font-weight: 500;
   font-style: normal;
@@ -61,6 +67,17 @@ const ButtonWrapper = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: flex-end;
+
+  @media screen and (max-width: 768px) {
+    justify-content: center;
+  }
+`;
+const AdminButtonWrapper = styled.div`
+  padding: 10px 15px 10px 15px;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  background-color: #2196f314;
 
   @media screen and (max-width: 768px) {
     justify-content: center;
@@ -104,8 +121,10 @@ const StyledDataGrid = styled(DataGrid)(() => ({
 }));
 
 const Table = () => {
-  const rows: GridValidRowModel[] = useAppSelector((state) => state.user.rows);
-  const isLoading = useAppSelector((state) => state.user.isLoading);
+  const rows: GridValidRowModel[] = useAppSelector(
+    (state) => state.student.rows
+  );
+  const isLoading = useAppSelector((state) => state.student.isLoading);
   const [rowModesModel, setRowModesModel] = useState<GridRowModesModel>({});
   const [notification, setNotification] = useState({
     open: false,
@@ -113,6 +132,7 @@ const Table = () => {
     type: "",
   });
   const dispatch = useAppDispatch();
+
   const handleCloseNotification = () => {
     setNotification({ open: false, onConfirm: () => {}, type: "" });
   };
@@ -127,7 +147,7 @@ const Table = () => {
   };
   const processRowUpdate = (newRow: GridRowModel) => {
     const updatedRow = { ...newRow, isNew: false };
-    dispatch(updateUser(updatedRow));
+    dispatch(updateStudent(updatedRow));
     return updatedRow;
   };
 
@@ -150,13 +170,13 @@ const Table = () => {
     const editedRow = rows.find((row) => row.id === params.id)!;
 
     if (!isEmptyFields(editedRow, Columns)) {
-      if (validateUser(editedRow, Columns)) {
+      if (validateStudent(editedRow, Columns)) {
         setRowModesModel({
           ...rowModesModel,
           [params.id]: { mode: GridRowModes.View },
         });
 
-        dispatch(addUser(editedRow));
+        dispatch(addStudent(editedRow));
       }
     } else {
       setNotification({
@@ -169,7 +189,7 @@ const Table = () => {
 
   const handleDeleteClick = (id: GridRowId) => () => {
     const confirmDelete = () => {
-      dispatch(discardUser(Number(id)));
+      dispatch(discardStudent(Number(id)));
       handleCloseNotification();
     };
     setNotification({
@@ -181,7 +201,7 @@ const Table = () => {
 
   const handleCancelClick = (id: GridRowId) => () => {
     const comfirmDiscard = () => {
-      dispatch(fetchUsers());
+      dispatch(fetchStudents());
       setRowModesModel({
         ...rowModesModel,
         [id]: { mode: GridRowModes.View },
@@ -199,7 +219,7 @@ const Table = () => {
   const handleAddClick = () => {
     const id = generateNewId(rows);
     dispatch(
-      setUsers([
+      setStudents([
         {
           id,
           name: "",
@@ -244,7 +264,10 @@ const Table = () => {
     },
   ];
 
+
   useEffect(() => {
+    dispatch(authententicate());
+
     const socket: Socket = io(`${url}`);
     socket.on("connect", () => {
       console.log("Connected to Socket.IO server");
@@ -319,7 +342,7 @@ const Table = () => {
   }, []);
 
   useEffect(() => {
-    dispatch(fetchUsers());
+    dispatch(fetchStudents());
     if (isLoading) {
       setNotification({
         open: true,
@@ -329,12 +352,21 @@ const Table = () => {
     }
   }, [dispatch, isLoading]);
 
+  const [AddUserClicked, setAddUserClicked] = useState(false);
+  const role = useAppSelector((state) => state.user.role);
   return (
     <Container>
-      <Title>User Details</Title>
+      {role === Role.ADMIN && (
+        <AdminButtonWrapper>
+          <Button variant="contained" onClick={() => setAddUserClicked(true)}>
+            Add new User
+          </Button>
+        </AdminButtonWrapper>
+      )}
+      <Title>Student Details</Title>
       <ButtonWrapper>
         <Button variant="contained" onClick={handleAddClick}>
-          Add new
+          Add new Student
         </Button>
       </ButtonWrapper>
       <StyledDataGrid
@@ -360,6 +392,10 @@ const Table = () => {
         onClose={handleCloseNotification}
         type={notification.type}
         onSubmit={notification.onConfirm}
+      />
+      <UserCard
+        open={AddUserClicked}
+        onClose={() => setAddUserClicked(false)}
       />
     </Container>
   );

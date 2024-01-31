@@ -1,54 +1,74 @@
-import { takeLatest, put, call, takeLeading } from "redux-saga/effects";
+//sagas for logging in and out
+
+import { call, put, takeLatest, takeLeading } from "redux-saga/effects";
 import {
-  setUsers,
-  fetchUsers,
-  fetchUsersFailure,
-  addUser,
-  setUserError,
-  discardUser,
+  addNewUser,
+  authententicate,
+  login,
+  loginSuccess,
+  logout,
+  setNewUserVerification,
+  signup,
+  updateNewUser,
 } from "./slice";
-import { GridValidRowModel } from "@mui/x-data-grid";
 import {
-  fetchUsersAsync,
+  loginAsync,
   addUsersAsync,
-  deleteUserAsync,
-  updateUserAsync,
-} from "../../utilities/userServices";
+  asyncAuthenticateUser,
+  signupUsersAsync,
+} from "../../utilities/services";
+const LocalstorageId = `${process.env.REACT_APP_API_URL}`;
 
-export function* watchFetchUsers() {
+export function* watchLogin(action: any) {
   try {
-    const students: GridValidRowModel[] = yield call(fetchUsersAsync);
-    yield put(setUsers(students));
+    const token: string = yield call(loginAsync, action.payload);
+    yield put(loginSuccess(token));
   } catch (error: any) {
-    yield put(fetchUsersFailure(error));
-  }
-}
-
-export function* watchAddNewUser(action: any) {
-  try {
-    let student: GridValidRowModel;
-    if (action.payload.isNew) {
-      student = yield call(addUsersAsync, action.payload);
-    } else {
-      student = yield call(updateUserAsync, action.payload);
-    }
-    yield put(addUser(student));
-  } catch (error: any) {
-    yield put(setUserError(action.payload.id));
     return error;
   }
 }
 
-export function* watchDeleteUser(action: any) {
+export function* watchLogout() {
   try {
-    yield call(deleteUserAsync, action.payload);
+    yield put(logout());
   } catch (error: any) {
     return error;
   }
+}
+
+export function* watchAddNewUser(action: any): Generator<any, void, any> {
+  try {
+    const response: any = yield call(addUsersAsync, action.payload);
+    yield put(setNewUserVerification(response.isVerified));
+  } catch (error: any) {
+    return error;
+  }
+}
+
+export function* watchAuthenticate() {
+  try {
+    yield call(asyncAuthenticateUser);
+    const Token : any= localStorage.getItem(LocalstorageId)
+    yield put(loginSuccess(Token));
+  } catch (error: any) {
+    // yield put(logout());
+    return error;
+  }
+}
+
+export function* watchSignupUser(action: any): Generator<any, void, any> {
+  try {
+    yield call(signupUsersAsync, action.payload);
+  } catch (error: any) {
+    return error;
+  }
+
 }
 
 export function* userSaga() {
-  yield takeLeading(fetchUsers, watchFetchUsers);
-  yield takeLeading(addUser, watchAddNewUser);
-  yield takeLeading(discardUser, watchDeleteUser);
+  yield takeLatest(login, watchLogin);
+  yield takeLatest(logout, watchLogout);
+  yield takeLatest(addNewUser, watchAddNewUser);
+  yield takeLatest(authententicate, watchAuthenticate);
+  yield takeLeading(signup, watchSignupUser);
 }
