@@ -29,7 +29,7 @@ import validatePhoneNumber from "../../../utility/validatePhoneNumber";
 import calculateAge from "../../../utility/calculateAge";
 import Modal from "@mui/material/Modal";
 import Paper from "@mui/material/Paper";
-import MessageCard from "../Cards/MessageCard";
+import MessageCard from "../../../components/Cards/MessageCard";
 
 import {
   updateStudent,
