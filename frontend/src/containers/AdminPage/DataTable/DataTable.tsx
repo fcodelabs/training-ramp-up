@@ -42,6 +42,8 @@ import {
   removeStudentError,
 } from "../../../redux/student/slice";
 
+import AddNewUser from "../AddNewUser/AddNewUser";
+
 import io from "socket.io-client";
 const socket = io("https://ramp-up-backend1-epcm.onrender.com/");
 console.log("Undersocket", socket);
@@ -226,7 +228,11 @@ function EditToolbar(props: IEditToolbarProps) {
   );
 }
 
-export default function DataTable() {
+export default function DataTable({
+  handleAddNewUserClick,
+}: {
+  handleAddNewUserClick: () => void;
+}) {
   const temp = useSelector((state: RootState) => state.student.students);
   const [rows, setRows] = useState(temp);
 
@@ -1169,6 +1175,7 @@ export default function DataTable() {
 
   return (
     <StyledDataTableBox>
+      <AddNewUser handleAddClick={handleAddNewUserClick} />
       <StyledGridTitle variant="h4">User Details</StyledGridTitle>
 
       <DataGrid

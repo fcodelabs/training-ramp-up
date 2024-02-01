@@ -179,10 +179,13 @@ const AddNewUserCard: React.FC<IUserCardProps> = ({ onSubmit, onCancel }) => {
           value={email}
           onChange={handleEmailChange}
           error={emailMissing || emailInvalid}
-          helperText={[
-            emailMissing ? "Mandatory fields missing." : "",
-            emailInvalid ? "Please enter a valid email address." : "",
-          ].join(" ")}
+          helperText={
+            emailMissing
+              ? "Mandatory fields missing."
+              : emailInvalid
+              ? "Invalid email address."
+              : ""
+          }
         />
         <FormControl>
           <InputLabel htmlFor="role-select">Role</InputLabel>

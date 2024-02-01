@@ -48,7 +48,7 @@ const StyledDataBox = styled(Box)`
     display: flex;
     justify-content: center;
     align-items: center;
-
+    margin-top: 80px;
     margin-bottom: 50px;
   }
 `;
@@ -72,20 +72,6 @@ const StyledAddNewUserButton = styled(Button)`
     font-size: 14px;
     line-height: 24px;
     letter-spacing: 0.4px;
-  }
-`;
-
-const StyledTopBox = styled(Box)`
-  &&& {
-    display: flex;
-
-    width: 1153.2px;
-    align-self: center;
-    justify-content: flex-end;
-    margin-top: 80px;
-    background-color: rgba(33, 150, 243, 0.08);
-    border-radius: 4px;
-    padding: 12px;
   }
 `;
 
@@ -114,13 +100,8 @@ function AdminPage() {
         <StyledTypography variant="h5">Ramp Up Project</StyledTypography>
         <StyledLoginButton variant="outlined">LOGIN</StyledLoginButton>
       </StyledHeaderBox>
-      <StyledTopBox>
-        <StyledAddNewUserButton variant="contained" onClick={handleAddClick}>
-          Add New User
-        </StyledAddNewUserButton>
-      </StyledTopBox>
       <StyledDataBox>
-        <DataTable />
+        <DataTable handleAddNewUserClick={handleAddClick} />
       </StyledDataBox>
       {newUserCardModal && (
         <Modal
