@@ -31,13 +31,6 @@ export function* watchLogin(action: any) {
   }
 }
 
-export function* watchLogout() {
-  try {
-    yield put(logout());
-  } catch (error: any) {
-    return error;
-  }
-}
 
 export function* watchAddNewUser(action: any): Generator<any, void, any> {
   try {
@@ -70,7 +63,6 @@ export function* watchSignupUser(action: any): Generator<any, void, any> {
 
 export function* userSaga() {
   yield takeLatest(login, watchLogin);
-  yield takeLatest(logout, watchLogout);
   yield takeLatest(addNewUser, watchAddNewUser);
   yield takeLatest(authenticate, watchAuthenticate);
   yield takeLeading(signup, watchSignupUser);

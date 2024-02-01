@@ -28,9 +28,8 @@ function App() {
     <div>
       <Routes>
         <Route path={Paths.LOGIN} element={<Login />} />
-        {/* {make this home page also protected } ////////////////////////////////////////////////////////////////////////*/ }
-        <Route path={Paths.HOME} element={<Home />} /> 
         <Route element={<ProtectedRoute />}>
+          <Route path={Paths.HOME} element={<Home />} />
           <Route path={Paths.SIGNUP} element={<PasswordCreate />} />
         </Route>
       </Routes>

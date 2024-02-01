@@ -121,6 +121,9 @@ const NotificationPopup: React.FC<ErrorPopupProps> = ({
   } else if (type === NotificationTypes.DELETE_USER_SUCCESS) {
     errorMessage = NotificationTexts[NotificationTypes.DELETE_USER_SUCCESS];
     button = <SingleButton text="ok" />;
+  } else if (type ===NotificationTypes.LOGOUT_USER) {
+    errorMessage = NotificationTexts[NotificationTypes.LOGOUT_USER];
+    button = <ButtonSet />;
   }
 
 
