@@ -5,6 +5,7 @@ import {
   Grid,
   IconButton,
   InputAdornment,
+  Modal,
   Paper,
   TextField,
   Typography,
@@ -15,6 +16,7 @@ import "@fontsource/roboto";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import isPasswordValid from "../../utility/passwordValidator";
+import MessageCard from "../../components/Cards/MessageCard";
 
 const StyledContainer = styled(Container)`
   &&& {
@@ -92,6 +94,8 @@ const NewPasswordPage = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
+  const [successMessageCardModal, setSuccessMessageCardModal] = useState(false);
+
   const handleTogglePassword = () => {
     setShowPassword((prev) => !prev);
   };
@@ -128,6 +132,7 @@ const NewPasswordPage = () => {
     if (password !== confirmPassword) {
       setPasswordMissMatch(true);
     }
+    setSuccessMessageCardModal(true);
   };
 
   return (
@@ -190,6 +195,33 @@ const NewPasswordPage = () => {
           Submit
         </StyledButton>
       </StyledFormBox>
+      {successMessageCardModal && (
+        <Modal
+          open={successMessageCardModal}
+          //onClose={setSuccessMessageCardModal(false)}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
+        >
+          <Paper
+            sx={{
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              borderRadius: "12px",
+            }}
+          >
+            <MessageCard
+              message="Your account has been successfully created."
+              primaryButton={{
+                text: "OK",
+                onClick: () => setSuccessMessageCardModal(false),
+              }}
+              primaryOption="OK"
+            />
+          </Paper>
+        </Modal>
+      )}
     </StyledContainer>
   );
 };
