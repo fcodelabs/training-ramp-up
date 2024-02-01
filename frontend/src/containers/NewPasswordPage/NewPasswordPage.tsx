@@ -105,9 +105,9 @@ const NewPasswordPage = () => {
   };
 
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const password = e.target.value;
+    const new_password = e.target.value;
 
-    setPassword(password);
+    setPassword(new_password);
     setPasswordInValid(!isPasswordValid(password));
     console.log("password", password);
 
@@ -117,8 +117,8 @@ const NewPasswordPage = () => {
   const handleConfirmPasswordChange = (
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
-    const confirmPassword = e.target.value;
-    setConfirmPassword(confirmPassword);
+    const new_confirmPassword = e.target.value;
+    setConfirmPassword(new_confirmPassword);
     setConfirmPasswordMissing(confirmPassword.trim() === "");
   };
 
