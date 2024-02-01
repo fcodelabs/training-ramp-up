@@ -178,8 +178,8 @@ export const FixedColumns: GridColDef[] = [
     field: "age",
     headerName: "Age",
     type: "number",
-    flex: 1,
-    width: 50,
+    minWidth: 50,
+    flex: 0.4,
     sortable: false,
     editable: true,
     renderHeader() {

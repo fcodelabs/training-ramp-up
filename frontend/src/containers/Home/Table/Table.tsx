@@ -63,7 +63,7 @@ const Title = styled.div`
 `;
 
 const ButtonWrapper = styled.div`
-  padding: 5px 15px 15px 15px;
+  padding: 5px 15px 5px 15px;
   display: flex;
   flex-direction: row;
   justify-content: flex-end;
@@ -85,6 +85,7 @@ const AdminButtonWrapper = styled.div`
 `;
 
 const StyledDataGrid = styled(DataGrid)(() => ({
+  margin: "10px 0",
   "& .MuiDataGrid-sortIcon": {
     opacity: "1 !important",
     visibility: "visible",
@@ -131,6 +132,8 @@ const Table = () => {
     onConfirm: () => {},
     type: "",
   });
+  const [AddUserClicked, setAddUserClicked] = useState(false);
+  const role = useAppSelector((state) => state.user.role);
   const dispatch = useAppDispatch();
 
   const handleCloseNotification = () => {
@@ -242,28 +245,37 @@ const Table = () => {
     }));
   };
 
-  const columns: GridColDef[] = [
-    ...FixedColumns,
-    {
-      field: "actions",
-      type: "actions",
-      headerName: "Action",
-      flex: 1,
-      minWidth: 200,
-      cellClassName: "actions",
-      renderCell: (params: GridRenderCellParams) => (
-        <GridActionsColumn
-          params={params}
-          isInEditMode={rowModesModel[params.id]?.mode === GridRowModes.Edit}
-          handleSaveClick={handleSaveClick(params)}
-          handleCancelClick={handleCancelClick(params.id)}
-          handleEditClick={handleEditClick(params.id)}
-          handleDeleteClick={handleDeleteClick(params.id)}
-        />
-      ),
-    },
-  ];
+  const handleEditable= () => {
+     return role === Role.ADMIN ? true : false;
+  }
 
+  const columns: GridColDef[] =
+    role === Role.ADMIN
+      ? [
+          ...FixedColumns,
+          {
+            field: "actions",
+            type: "actions",
+            headerName: "Action",
+            flex: 1,
+            hideable: true,
+            minWidth: 200,
+            cellClassName: "actions",
+            renderCell: (params: GridRenderCellParams) => (
+              <GridActionsColumn
+                params={params}
+                isInEditMode={
+                  rowModesModel[params.id]?.mode === GridRowModes.Edit
+                }
+                handleSaveClick={handleSaveClick(params)}
+                handleCancelClick={handleCancelClick(params.id)}
+                handleEditClick={handleEditClick(params.id)}
+                handleDeleteClick={handleDeleteClick(params.id)}
+              />
+            ),
+          },
+        ]
+      : FixedColumns;
 
   useEffect(() => {
     dispatch(authententicate());
@@ -352,8 +364,6 @@ const Table = () => {
     }
   }, [dispatch, isLoading]);
 
-  const [AddUserClicked, setAddUserClicked] = useState(false);
-  const role = useAppSelector((state) => state.user.role);
   return (
     <Container>
       {role === Role.ADMIN && (
@@ -364,15 +374,19 @@ const Table = () => {
         </AdminButtonWrapper>
       )}
       <Title>Student Details</Title>
-      <ButtonWrapper>
-        <Button variant="contained" onClick={handleAddClick}>
-          Add new Student
-        </Button>
-      </ButtonWrapper>
+      {role === Role.ADMIN && (
+        <ButtonWrapper>
+          <Button variant="contained" onClick={handleAddClick}>
+            Add new Student
+          </Button>
+        </ButtonWrapper>
+      )}
+
       <StyledDataGrid
         rows={rows}
         columns={columns}
         editMode="row"
+        isCellEditable={params => handleEditable()}
         rowModesModel={rowModesModel}
         checkboxSelection
         onRowModesModelChange={handleRowModesModelChange}
