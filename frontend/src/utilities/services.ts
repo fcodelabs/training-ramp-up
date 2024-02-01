@@ -90,16 +90,15 @@ export const addUsersAsync = async (user: any) => {
   }
 };
 
-export const asyncAuthenticateUser = async () => {
+export const asyncAuthenticateUser = async (token: any) => {
   try {
-    const Token = localStorage.getItem(LocalstorageId) || "popp";
     const temp = {
-      token: Token,
+      token: token,
     };
     await axios.post(`${url}/users/verify`, temp, {
       headers: {
         "Content-Type": "application/json",
-        authorization: `Bearer ${Token}`,
+        authorization: `Bearer ${token}`,
       },
     });
   } catch (error) {
