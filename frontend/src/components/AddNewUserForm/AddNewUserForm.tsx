@@ -16,6 +16,9 @@ import {
   useMediaQuery,
 } from "@mui/material";
 import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { addUsers } from "../../redux/slice/userSlice";
+import { validateEmail } from "../../utility/emailValidator";
 
 interface IProps {
   openPopup: boolean;
@@ -28,8 +31,10 @@ const AddNewUserForm = ({ openPopup, closePopup }: IProps) => {
   const [email, setEmail] = useState("");
   const [nameError, setNameError] = useState(false);
   const [emailError, setEmailError] = useState(false);
-
+  const [nameHelperText, setNameHelperText] = useState("");
+  const [emailHelperText, setEmailHelperText] = useState("");
   const [role, setRole] = useState("Admin");
+  const dispatch = useDispatch();
 
   const handleRoleChange = (event: SelectChangeEvent) => {
     setRole(event.target.value);
@@ -49,17 +54,32 @@ const AddNewUserForm = ({ openPopup, closePopup }: IProps) => {
     setNameError(false);
 
     if (name === "") {
+      setNameHelperText("Mandotary fields missing");
       setNameError(true);
     }
     if (email === "") {
+      setEmailHelperText("Mandotary fields missing");
       setEmailError(true);
     }
-
-    if (email && name) {
-      console.log("name: ", name);
-      console.log("email: ", email);
+    if (email) {
+      setEmailError(false);
+      if (!validateEmail(email)) {
+        setEmailHelperText("Please enter a valid email address");
+        setEmailError(true);
+      }
     }
-    closePopup();
+    if (email && name) {
+      setEmailError(false);
+      if (!validateEmail(email)) {
+        setEmailHelperText("Please enter a valid email address");
+        setEmailError(true);
+      } else {
+        dispatch(
+          addUsers({ name: name, email: email, role: role, password: "12345" })
+        );
+        closePopup();
+      }
+    }
   };
 
   return (
@@ -98,7 +118,7 @@ const AddNewUserForm = ({ openPopup, closePopup }: IProps) => {
                       label="Name"
                     />
                     {nameError && (
-                      <FormHelperText color="error">Name</FormHelperText>
+                      <FormHelperText error>{nameHelperText}</FormHelperText>
                     )}
                   </FormControl>
                 </Grid>
@@ -117,7 +137,7 @@ const AddNewUserForm = ({ openPopup, closePopup }: IProps) => {
                       label="Email"
                     />
                     {emailError && (
-                      <FormHelperText color="error">Email</FormHelperText>
+                      <FormHelperText error>{emailHelperText}</FormHelperText>
                     )}
                   </FormControl>
                 </Grid>

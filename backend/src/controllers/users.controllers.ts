@@ -1,11 +1,19 @@
 import AppDataSource from '../dataSource';
 import { Users } from '../models/user';
 import { type Request, type Response } from 'express';
+import { sendMail, transporter } from '../sendEmails';
 
 export const createUser = async (
   req: Request,
   res: Response
 ): Promise<void> => {
+  await sendMail(
+    transporter,
+    req.body.email as string,
+    req.body.role as string,
+    req.body.name as string
+  );
+
   try {
     const userRepo = AppDataSource.getRepository(Users);
     const newUser = userRepo.create(req.body as Users);
