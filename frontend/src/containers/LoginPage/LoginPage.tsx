@@ -83,6 +83,20 @@ const StyledButton = styled(Button)`
   }
 `;
 
+const StyledBottomTypography = styled(Typography)`
+  &&& {
+    font-family: Roboto;
+    margin-top: 16px;
+    color: #00000099;
+  }
+`;
+
+const StyledBottomButton = styled(Button)`
+  &&& {
+    color: #2196f3;
+  }
+`;
+
 const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -111,6 +125,10 @@ const LoginPage = () => {
     }
   };
 
+  const handleRegister = () => {
+    console.log("Register Click");
+  };
+
   return (
     <StyledContainer>
       <StyledHeaderBox>
@@ -137,6 +155,12 @@ const LoginPage = () => {
         <StyledButton variant="contained" onClick={handleLogin}>
           Login
         </StyledButton>
+        <StyledBottomTypography>
+          Don’t have an account?{" "}
+          <StyledBottomButton onClick={handleRegister}>
+            Register Now
+          </StyledBottomButton>
+        </StyledBottomTypography>
       </StyledFormBox>
     </StyledContainer>
   );
