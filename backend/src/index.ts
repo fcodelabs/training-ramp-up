@@ -4,6 +4,7 @@
 import 'reflect-metadata';
 import express from 'express';
 import socketRouter from './routes/student.routes';
+import userRouter from './routes/users.routes';
 import cors from 'cors';
 import http from 'http';
 import { Server } from 'socket.io';
@@ -24,7 +25,7 @@ io.on('connection', (socket) => {
 
 app.use(express.json());
 app.use('/students', socketRouter(io));
-
+app.use('/users', userRouter);
 server.listen(5000, () => {
   console.log('server is running on port: 5000');
 });
