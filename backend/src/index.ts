@@ -5,7 +5,7 @@ import { Routes } from "./routes/routes";
 import cors = require("cors");
 import { createServer } from "http";
 
-import { initializeSocketIO } from "../src/services/socketService"; // Import the socket manager
+import { initializeSocketIO } from "../src/services/socketService"; 
 
 AppDataSource.initialize().then(async () => {
   const app = express();
