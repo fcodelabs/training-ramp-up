@@ -35,7 +35,7 @@ import styled from "styled-components";
 import { Socket, io } from "socket.io-client";
 import { NotificationTypes } from "../../../utilities/index";
 import UserCard from "../../../components/UserCard/UserCard";
-import { Role, authententicate } from "../../../redux/user/slice";
+import { Role } from "../../../redux/user/slice";
 const url = process.env.REACT_APP_API_URL;
 
 const Container = styled.div`
@@ -278,7 +278,6 @@ const Table = () => {
       : FixedColumns;
 
   useEffect(() => {
-    dispatch(authententicate());
 
     const socket: Socket = io(`${url}`);
     socket.on("connect", () => {

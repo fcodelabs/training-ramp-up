@@ -24,7 +24,7 @@ type InitialDataTypeUser = {
 
 const initialStateUser: InitialDataTypeUser = {
   isLogged: false,
-  role: Role.OBSERVER,
+  role: Role.NONE,
   token: "",
   newUser: {
     _id: "",
@@ -34,7 +34,6 @@ const initialStateUser: InitialDataTypeUser = {
     isVerifiedUser: false,
   },
 };
-
 
 const parseToken = (token: string): { role: Role } => {
   try {
@@ -64,7 +63,6 @@ const userSlice = createSlice({
       state.role = Role.OBSERVER;
       localStorage.removeItem(LocalstorageId);
     },
-
     signup: (state, action: PayloadAction<any>) => {
       //middleware
     },
@@ -85,7 +83,7 @@ const userSlice = createSlice({
     login: (state, action: PayloadAction<any>) => {
       //middleware
     },
-    authententicate: (state) => {
+    authenticate: (state, action: PayloadAction<any>) => {
       //middleware
     },
   },
@@ -100,6 +98,6 @@ export const {
   updateNewUser,
   addNewUser,
   loginSuccess,
-  authententicate,
-  signup
+  authenticate,
+  signup,
 } = userSlice.actions;

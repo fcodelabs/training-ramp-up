@@ -3,7 +3,7 @@
 import { call, put, takeLatest, takeLeading } from "redux-saga/effects";
 import {
   addNewUser,
-  authententicate,
+  authenticate,
   login,
   loginSuccess,
   logout,
@@ -45,11 +45,11 @@ export function* watchAddNewUser(action: any): Generator<any, void, any> {
   }
 }
 
-export function* watchAuthenticate() {
+export function* watchAuthenticate(action: any): Generator<any, void, any>{
   try {
-    yield call(asyncAuthenticateUser);
-    const Token : any= localStorage.getItem(LocalstorageId)
-    yield put(loginSuccess(Token));
+    const token = action.payload;
+    yield call(asyncAuthenticateUser, token);
+    yield put(loginSuccess(token));
   } catch (error: any) {
     // yield put(logout());
     return error;
@@ -69,6 +69,6 @@ export function* userSaga() {
   yield takeLatest(login, watchLogin);
   yield takeLatest(logout, watchLogout);
   yield takeLatest(addNewUser, watchAddNewUser);
-  yield takeLatest(authententicate, watchAuthenticate);
+  yield takeLatest(authenticate, watchAuthenticate);
   yield takeLeading(signup, watchSignupUser);
 }

@@ -8,6 +8,7 @@ import { useAppDispatch } from "../../redux/hooks";
 import { signup } from "../../redux/user/slice";
 
 const StyledPasswordCreate = styled.div`
+  position: relative;
   height: 100vh;
   width: 100%;
   display: flex;
@@ -46,7 +47,6 @@ const PasswordCreate = () => {
   const dispatch = useAppDispatch();
   const urlParams = new URLSearchParams(window.location.search);
   const token = urlParams.get("token");
-  console.log(token);
 
   const handleTogglePasswordVisibility = () => {
     setShowPassword((prevShowPassword) => !prevShowPassword);

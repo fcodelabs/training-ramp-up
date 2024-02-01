@@ -1,26 +1,36 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Home from "./containers/Home/Home";
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, Navigate } from "react-router-dom";
 import PasswordCreate from "./containers/PasswordCreate/PasswordCreate";
-const userId = Math.floor(Math.random() * 1000000);
-localStorage.setItem("userId", userId.toString());
+import ProtectedRoute from "./components/PrivateRoute/PrivateRoute";
+import { authenticate } from "./redux/user/slice";
+import { useAppDispatch } from "./redux/hooks";
+const LocalstorageId = `${process.env.REACT_APP_API_URL}`;
+
+const userId = localStorage.getItem("userId");
 
 export enum Paths {
   HOME = "/",
-  SIGNUP = "/signup",
+  SIGNUP = "signup",
+  NOTFOUND = "/404",
 }
-const routes = [
-  { path: Paths.HOME, element: <Home /> },
-  { path: Paths.SIGNUP, element: <PasswordCreate /> },
-];
+
+const routes = [{ path: Paths.HOME, element: <Home /> }];
 
 function App() {
+  const dispatch = useAppDispatch();
+  useEffect(() => {
+    const token = localStorage.getItem(LocalstorageId);
+    dispatch(authenticate(token));
+  }, []);
+
   return (
     <div>
       <Routes>
-        {routes.map((route, _id) => (
-          <Route key={_id} path={route.path} element={route.element} />
-        ))}
+        <Route path={Paths.HOME} element={<Home />} />
+        <Route element={<ProtectedRoute />}>
+          <Route path={Paths.SIGNUP} element={<PasswordCreate />} />
+        </Route>
       </Routes>
     </div>
   );
