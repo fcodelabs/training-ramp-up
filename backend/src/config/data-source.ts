@@ -20,11 +20,11 @@ dotenv.config();
 
 export const AppDataSource = new DataSource({
   type: "postgres",
-  host: "localhost",
+  host: process.env.HOST,
   port: 5432,
-  username: "postgres",
-  password: "200551R",
-  database: "ramp-up",
+  username: process.env.PG_USERNAME,
+  password: process.env.PASSWORD ,
+  database: process.env.DATABASE,
   entities: [Student, User],
   synchronize: false,
   logging: true,
