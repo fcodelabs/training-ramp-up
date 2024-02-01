@@ -77,7 +77,9 @@ const userSlice = createSlice({
     logout: (state) => {
       state.isLogged = false;
       state.token = "";
-      state.role = Role.OBSERVER;
+      state.email = "";
+      state.password = "";
+      state.role = Role.NONE;
       localStorage.removeItem(LocalstorageId);
     },
     signup: (state, action: PayloadAction<any>) => {

@@ -5,6 +5,7 @@ import styled from "styled-components";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { useNavigate } from "react-router";
 import { login, updateUser } from "../../redux/user/slice";
+import { Paths } from "../../App";
 const StyledPasswordCreate = styled.div`
   position: relative;
   height: 100vh;
@@ -66,7 +67,7 @@ const Login = () => {
 
     dispatch(login({ email, password }));
     if (isLogged) {
-      navigate("/home");
+      navigate(Paths.HOME);
     }
   };
 

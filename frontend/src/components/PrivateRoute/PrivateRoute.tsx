@@ -6,6 +6,7 @@ const urlParams = new URLSearchParams(window.location.search);
 const token = urlParams.get("token");
 
 import { useEffect } from "react";
+import Login from "../../containers/Login/Login";
 
 export default function ProtectedRoute(children: any) {
   const role = useAppSelector((state) => state.user.role);
@@ -18,6 +19,6 @@ export default function ProtectedRoute(children: any) {
   if (role) {
     return <Outlet />;
   } else {
-    return <div></div>;
+    return <Login/>;
   }
 }
