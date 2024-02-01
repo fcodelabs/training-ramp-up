@@ -5,12 +5,12 @@ import PasswordCreate from "./containers/PasswordCreate/PasswordCreate";
 import ProtectedRoute from "./components/PrivateRoute/PrivateRoute";
 import { authenticate } from "./redux/user/slice";
 import { useAppDispatch } from "./redux/hooks";
+import Login from "./containers/Login/Login";
 const LocalstorageId = `${process.env.REACT_APP_API_URL}`;
 
-const userId = localStorage.getItem("userId");
-
 export enum Paths {
-  HOME = "/",
+  LOGIN = "/",
+  HOME = "/home",
   SIGNUP = "signup",
   NOTFOUND = "/404",
 }
@@ -27,7 +27,9 @@ function App() {
   return (
     <div>
       <Routes>
-        <Route path={Paths.HOME} element={<Home />} />
+        <Route path={Paths.LOGIN} element={<Login />} />
+        {/* {make this home page also protected } ////////////////////////////////////////////////////////////////////////*/ }
+        <Route path={Paths.HOME} element={<Home />} /> 
         <Route element={<ProtectedRoute />}>
           <Route path={Paths.SIGNUP} element={<PasswordCreate />} />
         </Route>

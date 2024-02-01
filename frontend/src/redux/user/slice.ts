@@ -19,12 +19,18 @@ type InitialDataTypeUser = {
   isLogged: boolean;
   role: Role;
   token: string;
+  email?: string;
+  password?: string;
+  loginError?: boolean;
   newUser: newUser;
 };
 
 const initialStateUser: InitialDataTypeUser = {
   isLogged: false,
   role: Role.NONE,
+  email: "",
+  password: "",
+  loginError: false,
   token: "",
   newUser: {
     _id: "",
@@ -50,13 +56,24 @@ const userSlice = createSlice({
   name: "user",
   initialState: initialStateUser,
   reducers: {
+    updateUser: (
+      state,
+      action: PayloadAction<Partial<InitialDataTypeUser>>
+    ) => {
+      Object.assign(state, action.payload);
+      state.loginError = false;
+    },
     loginSuccess: (state, action: PayloadAction<string>) => {
       state.isLogged = true;
       state.token = action.payload;
+      state.loginError = false;
       state.role = parseToken(action.payload).role;
       localStorage.setItem(LocalstorageId, action.payload);
     },
-
+    loginFail: (state, action: PayloadAction<string>) => {
+      state.loginError = true;
+      // localStorage.removeItem(LocalstorageId);
+    },
     logout: (state) => {
       state.isLogged = false;
       state.token = "";
@@ -70,7 +87,6 @@ const userSlice = createSlice({
       state,
       action: PayloadAction<Partial<InitialDataTypeUser["newUser"]>>
     ) => {
-      console.log("action.payload", action.payload);
       state.newUser = { ...state.newUser, ...action.payload };
       state.newUser.isVerifiedUser = false;
     },
@@ -94,6 +110,8 @@ export default userSlice.reducer;
 export const {
   login,
   logout,
+  loginFail,
+  updateUser,
   setNewUserVerification,
   updateNewUser,
   addNewUser,

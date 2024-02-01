@@ -54,10 +54,10 @@ export const deleteStudentAsync = async (id: number) => {
 
 export const loginAsync = async (newuser: any) => {
   try {
-    newuser = {
-      email:"thambarasahassaka@gmail.com",
-      password: "1234567",
-    }
+    // newuser = {
+    //   email:"thambarasahassaka@gmail.com",
+    //   password: "1234567",
+    // }
     const response: any = await axios.post(`${url}/users/login`, newuser, {
       headers: {
         "Content-Type": "application/json",

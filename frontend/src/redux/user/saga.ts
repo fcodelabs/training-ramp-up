@@ -5,6 +5,7 @@ import {
   addNewUser,
   authenticate,
   login,
+  loginFail,
   loginSuccess,
   logout,
   setNewUserVerification,
@@ -24,6 +25,8 @@ export function* watchLogin(action: any) {
     const token: string = yield call(loginAsync, action.payload);
     yield put(loginSuccess(token));
   } catch (error: any) {
+    console.log("error", error);
+    yield put(loginFail(error));
     return error;
   }
 }
@@ -72,3 +75,5 @@ export function* userSaga() {
   yield takeLatest(authenticate, watchAuthenticate);
   yield takeLeading(signup, watchSignupUser);
 }
+
+
