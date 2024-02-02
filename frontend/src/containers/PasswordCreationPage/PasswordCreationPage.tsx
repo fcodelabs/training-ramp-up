@@ -12,8 +12,14 @@ import {
   Typography,
   useMediaQuery,
 } from "@mui/material";
-import React, { useState } from "react";
-
+import React, { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import { useLocation, useNavigate } from "react-router-dom";
+import validator from "validator";
+import { createUsers } from "../../redux/slice/userSlice";
+import { io } from "socket.io-client";
+import PopupMessage from "../../components/PopupMessage/PopupMessage";
+const socket = io("http://localhost:5000");
 const PasswordCreationPage = () => {
   const isMobile = useMediaQuery("(max-width: 600px)");
   const [password, setPassword] = useState("");
@@ -22,6 +28,24 @@ const PasswordCreationPage = () => {
   const [confirmPasswordError, setConfirmPasswordError] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [passwordHelperText, setPasswordHelperText] = useState("");
+  const [confirmPasswordHelperText, setConfirmPasswordHelperText] =
+    useState("");
+  const [succesMesasage, setSuccessMessage] = useState(false);
+  const query = new URLSearchParams(useLocation().search);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    socket.on("connect", () => {
+      console.log("connected");
+    });
+    socket.on("create_new_user", (data) => {
+      if (data === 200) {
+        setSuccessMessage(true);
+      }
+    });
+  }, []);
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
   const handleClickShowConfirmPassword = () =>
@@ -40,7 +64,21 @@ const PasswordCreationPage = () => {
 
   const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     event.preventDefault();
+    setPasswordError(false);
+    setPasswordHelperText("");
     setPassword(event.target.value);
+    if (
+      validator.isStrongPassword(event.target.value, {
+        minLength: 8,
+        minLowercase: 1,
+        minUppercase: 1,
+        minNumbers: 1,
+        minSymbols: 1,
+      }) === false
+    ) {
+      setPasswordError(true);
+      setPasswordHelperText("Weak Password");
+    }
   };
   const handleConfirmPasswordChange = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -55,17 +93,26 @@ const PasswordCreationPage = () => {
 
     if (password === "") {
       setPasswordError(true);
+      setPasswordHelperText("Mandotary fields missing");
     }
     if (confirmPassword === "") {
       setConfirmPasswordError(true);
+      setConfirmPasswordHelperText("Mandotary fields missing");
     }
 
     if (confirmPassword && password) {
       if (confirmPassword !== password) {
+        setPasswordHelperText("");
+        setConfirmPasswordHelperText("Please make sure your passwords match!");
         setConfirmPasswordError(true);
         setPasswordError(true);
       } else {
-        alert(`Your password has been created!`);
+        dispatch(
+          createUsers({
+            password: password,
+            token: query.get("token") as string,
+          })
+        );
       }
     }
   };
@@ -90,7 +137,11 @@ const PasswordCreationPage = () => {
         <form noValidate autoComplete="off" onSubmit={handleSubmit}>
           <Grid item sx={{ marginBottom: "10px" }}>
             <FormControl sx={{ minWidth: isMobile ? "300px" : "400px" }}>
-              <InputLabel size="small" htmlFor="outlined-adornment-password">
+              <InputLabel
+                size="small"
+                htmlFor="outlined-password"
+                color={confirmPasswordError ? "error" : "primary"}
+              >
                 Password
               </InputLabel>
               <OutlinedInput
@@ -98,7 +149,7 @@ const PasswordCreationPage = () => {
                 value={password}
                 onChange={handlePasswordChange}
                 error={passwordError}
-                id="outlined-adornment-password"
+                id="outlined-password"
                 type={showPassword ? "text" : "password"}
                 endAdornment={
                   <InputAdornment position="end">
@@ -119,13 +170,17 @@ const PasswordCreationPage = () => {
                 label="Password"
               />
               {passwordError && (
-                <FormHelperText color="error">Password</FormHelperText>
+                <FormHelperText error>{passwordHelperText}</FormHelperText>
               )}
             </FormControl>
           </Grid>
           <Grid item sx={{ marginBottom: "10px" }}>
             <FormControl sx={{ minWidth: isMobile ? "300px" : "400px" }}>
-              <InputLabel size="small" htmlFor="outlined-adornment-password">
+              <InputLabel
+                size="small"
+                htmlFor="outlined-confirm-password"
+                color={confirmPasswordError ? "error" : "primary"}
+              >
                 Confirm Password
               </InputLabel>
               <OutlinedInput
@@ -133,7 +188,7 @@ const PasswordCreationPage = () => {
                 value={confirmPassword}
                 onChange={handleConfirmPasswordChange}
                 error={confirmPasswordError}
-                id="outlined-adornment-password"
+                id="outlined-confirm-password"
                 type={showConfirmPassword ? "text" : "password"}
                 endAdornment={
                   <InputAdornment position="end">
@@ -154,7 +209,9 @@ const PasswordCreationPage = () => {
                 label="Confirm Password"
               />
               {confirmPasswordError && (
-                <FormHelperText color="error">Confirm Password</FormHelperText>
+                <FormHelperText error>
+                  {confirmPasswordHelperText}
+                </FormHelperText>
               )}
             </FormControl>
           </Grid>
@@ -172,9 +229,19 @@ const PasswordCreationPage = () => {
           </Grid>
         </form>
       </Grid>
+      {succesMesasage && (
+        <PopupMessage
+          open={succesMesasage}
+          title={"Your account has been successfully created."}
+          handleClickSecondButton={() => {
+            setSuccessMessage(false);
+            navigate("/");
+          }}
+          secondButtonName="Ok"
+        />
+      )}
     </>
   );
 };
 
 export default PasswordCreationPage;
-//validation part is not done yet

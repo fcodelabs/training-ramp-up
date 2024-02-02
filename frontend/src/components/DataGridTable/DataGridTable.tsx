@@ -57,7 +57,8 @@ import { dataGridStyles } from "../../styles/dataGridStyles";
 import PopupMessage from "../PopupMessage/PopupMessage";
 import io from "socket.io-client";
 import AddNewUserForm from "../AddNewUserForm/AddNewUserForm";
-const socket = io("https://ramp-up-backend.onrender.com");
+// const socket = io("https://ramp-up-backend.onrender.com");
+const socket = io("http://localhost:5000");
 
 let idValue = 0;
 
@@ -205,6 +206,8 @@ const DataGridTable = () => {
   const [currentRowId, setCurrentRowId] = useState<GridRowId | null>(null);
   const [rowModesModel, setRowModesModel] = useState<GridRowModesModel>({});
   const [openAddNewuser, setOpenAddNewUser] = useState(false);
+  const [emailSentSuccesfully, setEmailSentSuccesfully] = useState(false);
+  const [emailSendFailed, setEmailSendFailed] = useState(false);
 
   useEffect(() => {
     dispatch(fetchAllStudents());
@@ -239,6 +242,13 @@ const DataGridTable = () => {
       }
       if (data === 500) {
         dispatch(removeStudentError());
+      }
+    });
+    socket.on("send_email", (data) => {
+      if (data === 200) {
+        setEmailSentSuccesfully(true);
+      } else if (data === 400 || data === 500) {
+        setEmailSendFailed(true);
       }
     });
   }, []);
@@ -911,6 +921,32 @@ const DataGridTable = () => {
           closePopup={() => {
             setOpenAddNewUser(false);
           }}
+        />
+      )}
+      {emailSentSuccesfully && (
+        <PopupMessage
+          open={emailSentSuccesfully}
+          title={
+            "A password creation link has been sent to the provided email address."
+          }
+          handleClickSecondButton={() => {
+            setEmailSentSuccesfully(false);
+            setOpenAddNewUser(false);
+          }}
+          secondButtonName="Ok"
+        />
+      )}
+      {emailSendFailed && (
+        <PopupMessage
+          open={emailSendFailed}
+          title={
+            "Failed to send the password creation link. Please try again later."
+          }
+          handleClickSecondButton={() => {
+            setEmailSendFailed(false);
+            setOpenAddNewUser(false);
+          }}
+          secondButtonName="Try again later"
         />
       )}
     </>
