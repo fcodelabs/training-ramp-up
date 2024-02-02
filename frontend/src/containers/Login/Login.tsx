@@ -64,13 +64,15 @@ const Login = () => {
   };
 
   const handleSubmit = () => {
-    if (!email || !password) {
+    if (!email) {
       setEmailError(true);
-      setPasswordError(true);
-      return;
     }
-
-    dispatch(login({ email, password }));
+    if (!password) {
+      setPasswordError(true);
+    }
+    if (email && password) {
+      dispatch(login({ email, password }));
+    }
   };
 
   return (
@@ -109,7 +111,7 @@ const Login = () => {
                 : ""
           }
         />
-        <StyledButton variant="contained" fullWidth onClick={handleSubmit} disabled={!email || !password}>
+        <StyledButton variant="contained" fullWidth onClick={handleSubmit}>
           Login
         </StyledButton>
         <StyledTypography>

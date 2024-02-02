@@ -99,7 +99,6 @@ const Register = () => {
     }
   }, [user.registered]);
 
-
   const handleSubmit = () => {
     if (!user.email) {
       setEmailEmptyError(true);
@@ -124,12 +123,7 @@ const Register = () => {
       user.password !== "" &&
       confirmPassword !== "";
     if (ok) {
-      const userdata = {
-        name: user.name,
-        email: user.email,
-        password: user.password,
-      };
-      dispatch(register(userdata));
+      dispatch(register(user));
     }
   };
 
@@ -227,15 +221,7 @@ const Register = () => {
             ),
           }}
         />
-        <StyledButton variant="contained" fullWidth onClick={handleSubmit}
-        disabled ={!validatePassword(user.password) ||
-          confirmPassword !== user.password ||
-          !isEmailOk ||
-          !isValidName(user.name) ||
-          user.name === "" ||
-          user.email === "" ||
-          user.password === "" ||
-          confirmPassword === ""}>
+        <StyledButton variant="contained" fullWidth onClick={handleSubmit}>
           Register
         </StyledButton>
         <StyledTypography>
