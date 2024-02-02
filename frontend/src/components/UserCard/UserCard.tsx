@@ -47,15 +47,14 @@ const UserCard: React.FC<UserCardProps> = ({ open, onClose }) => {
   const user = useAppSelector((state) => state.user.newUser);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    dispatch(updateNewUser({[event.target.name]: event.target.value }));
-  }
+    dispatch(updateNewUser({ [event.target.name]: event.target.value }));
+  };
 
-  const onClickAdd = () => { 
+  const onClickAdd = () => {
     dispatch(addNewUser(user));
     console.log("clicked");
+  };
 
-  }
-  
   const isEmailValidated = isValidEmail(user.email);
   const isEmailTaken = user.isVerifiedUser;
   const isEmailOk = isEmailValidated && !isEmailTaken;
@@ -70,10 +69,31 @@ const UserCard: React.FC<UserCardProps> = ({ open, onClose }) => {
       <StyledDialogContent open={open} onClose={onClose}>
         <DialogContent>
           <Typography fontSize={20}>{errorMessage}</Typography>
-          <StyledTextField fullWidth label="Name" error= {!isValidName(user.name)} onChange={handleChange} value={user.name} name="name">
+          <StyledTextField
+            fullWidth
+            label="Name"
+            error={!isValidName(user.name)}
+            onChange={handleChange}
+            value={user.name}
+            name="name"
+          >
             Name
           </StyledTextField>
-          <StyledTextField fullWidth label="Email" error={!isEmailOk} onChange={handleChange} value={user.email} name="email"helperText={isEmailTaken? "The entered email has already been registered. ": !isEmailValidated? "Please enter a valid email address. ":""}>
+          <StyledTextField
+            fullWidth
+            label="Email"
+            error={!isEmailOk}
+            onChange={handleChange}
+            value={user.email}
+            name="email"
+            helperText={
+              isEmailTaken
+                ? "The entered email has already been registered. "
+                : !isEmailValidated
+                  ? "Please enter a valid email address. "
+                  : ""
+            }
+          >
             Email
           </StyledTextField>
           <StyledTextField
@@ -91,7 +111,19 @@ const UserCard: React.FC<UserCardProps> = ({ open, onClose }) => {
             ))}
           </StyledTextField>{" "}
           <ButtonWrapper>
-            <Button variant="contained" style={{ marginRight: "10px" }} onClick={onClickAdd}>
+            <Button
+              variant="contained"
+              style={{ marginRight: "10px" }}
+              onClick={onClickAdd}
+              disabled={
+                !isValidName(user.name) ||
+                !isValidEmail(user.email) ||
+                user.isVerifiedUser ||
+                !user.role ||
+                user.email === "" ||
+                user.name === ""
+              }
+            >
               Submit
             </Button>
             <Button variant="outlined" onClick={onClose}>

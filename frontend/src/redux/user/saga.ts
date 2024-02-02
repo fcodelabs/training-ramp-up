@@ -7,16 +7,17 @@ import {
   login,
   loginFail,
   loginSuccess,
-  logout,
   setNewUserVerification,
   signup,
-  updateNewUser,
+  register,
+  registerSuccess,
 } from "./slice";
 import {
   loginAsync,
   addUsersAsync,
   asyncAuthenticateUser,
   signupUsersAsync,
+  registerUsersAsync,
 } from "../../utilities/services";
 const LocalstorageId = `${process.env.REACT_APP_API_URL}`;
 
@@ -31,7 +32,6 @@ export function* watchLogin(action: any) {
   }
 }
 
-
 export function* watchAddNewUser(action: any): Generator<any, void, any> {
   try {
     const response: any = yield call(addUsersAsync, action.payload);
@@ -41,13 +41,13 @@ export function* watchAddNewUser(action: any): Generator<any, void, any> {
   }
 }
 
-export function* watchAuthenticate(action: any): Generator<any, void, any>{
+export function* watchAuthenticate(action: any): Generator<any, void, any> {
   try {
     const token = action.payload;
     yield call(asyncAuthenticateUser, token);
     yield put(loginSuccess(token));
   } catch (error: any) {
-    // yield put(logout());
+    yield put(loginFail(error));
     return error;
   }
 }
@@ -58,14 +58,27 @@ export function* watchSignupUser(action: any): Generator<any, void, any> {
   } catch (error: any) {
     return error;
   }
+}
 
+export function* watchRegisterUser(action: any): Generator<any, void, any> {
+  try {
+    const response: any = yield call(registerUsersAsync, action.payload);
+    if (response.isVerified) {
+      console.log("response.isVerified", response.isVerified);
+      yield put(setNewUserVerification(response.isVerified));
+    } else {
+      yield put(registerSuccess());
+    }
+  } catch (error: any) {
+    console.log("error", error);
+    return error;
+  }
 }
 
 export function* userSaga() {
   yield takeLatest(login, watchLogin);
   yield takeLatest(addNewUser, watchAddNewUser);
   yield takeLatest(authenticate, watchAuthenticate);
-  yield takeLeading(signup, watchSignupUser);
+  yield takeLatest(signup, watchSignupUser);
+  yield takeLatest(register, watchRegisterUser);
 }
-
-

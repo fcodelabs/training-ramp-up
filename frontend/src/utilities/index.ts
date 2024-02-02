@@ -95,6 +95,7 @@ export enum NotificationTypes {
   DELETE_USER = "DELETE_USER",
   DELETE_USER_SUCCESS = "DELETE_USER_SUCCESS",
   LOGOUT_USER = "LOGOUT_USER",
+  SUCCESS_REGISTER_OBSERVER = "SUCCESS_REGISTER_OBSERVER",
 }
 
 export const NotificationTexts: Record<NotificationTypes, string> = {
@@ -113,4 +114,5 @@ export const NotificationTexts: Record<NotificationTypes, string> = {
     "Are you sure you want to remove this student?",
   [NotificationTypes.DELETE_USER_SUCCESS]: "Student deleted successfully",
   [NotificationTypes.LOGOUT_USER]: "Are you sure you want to logout?",
+  [NotificationTypes.SUCCESS_REGISTER_OBSERVER]: "Your account has been successfully created."
 };

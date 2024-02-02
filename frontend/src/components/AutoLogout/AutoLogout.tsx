@@ -1,21 +1,23 @@
-import React, { useEffect } from 'react';
-import { Role, logout } from '../../redux/user/slice';
-import { useAppDispatch, useAppSelector } from '../../redux/hooks';
+import { useEffect } from "react";
+import { Role, logout } from "../../redux/user/slice";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 
 const AutoLogout = () => {
   const dispatch = useAppDispatch();
-  const timeoutInMinutes = useAppSelector((state) => state.user.role) === Role.ADMIN ? 15 : 600;  
-  useEffect(() => {
-    let timeoutId:any;
-    console.log(timeoutInMinutes);
-    const resetTimeout = () => {
-      if (timeoutId) {
-        clearTimeout(timeoutId);
-      }
+  const timeoutInMinutes =
+    useAppSelector((state) => state.user.role) === Role.ADMIN ? 15 : 600;
 
-      timeoutId = setTimeout(() => {
-        dispatch(logout());
-      }, timeoutInMinutes * 60 * 1000);
+  useEffect(() => {
+    let timeoutId: NodeJS.Timeout;
+
+    const resetTimeout = () => {
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(
+        () => {
+          dispatch(logout());
+        },
+        timeoutInMinutes * 60 * 1000
+      );
     };
 
     const handleActivity = () => {
@@ -24,16 +26,13 @@ const AutoLogout = () => {
 
     resetTimeout();
 
-    window.addEventListener('mousemove', handleActivity);
-    window.addEventListener('keypress', handleActivity);
+    window.addEventListener("mousemove", handleActivity);
+    window.addEventListener("keypress", handleActivity);
 
     return () => {
-      if (timeoutId) {
-        clearTimeout(timeoutId);
-      }
-
-      window.removeEventListener('mousemove', handleActivity);
-      window.removeEventListener('keypress', handleActivity);
+      window.removeEventListener("mousemove", handleActivity);
+      window.removeEventListener("keypress", handleActivity);
+      clearTimeout(timeoutId);
     };
   }, [dispatch, timeoutInMinutes]);
 
