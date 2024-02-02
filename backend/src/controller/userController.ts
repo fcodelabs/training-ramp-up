@@ -106,20 +106,21 @@ export class UserController {
   async register(req: Request, res: Response) {
     const { email, password, role } = req.body;
     try {
-      const user = await this.userService.findByEmail(email);
-      if (user.verified) {
-        res
-          .status(200)
-          .json({ messege: "Email already exists", isVerified: true });
+      console.log(email, password);
+      const user: any = await this.userService.findByEmail(email);
+      if (user && user.verified) {
+        res.status(409).json({ error: "Email already exists" });
         return;
+      } else {
+        const hashedPassword = await bcrypt.hash(password, 10);
+        const newUser = new User();
+        newUser.email = email;
+        newUser.password = hashedPassword;
+        newUser.role = "observer";
+        newUser.verified = true;
+        await this.userService.createUser(newUser);
       }
-      const hashedPassword = await bcrypt.hash(password, 10);
-      const newUser = new User();
-      newUser.email = email;
-      newUser.password = hashedPassword;
-      newUser.role = "observer";
 
-      await this.userService.createUser(newUser);
       res.status(200).json({ message: "User created successfully" });
     } catch (error) {
       res.status(500).json({ error: "Internal Server Error" });

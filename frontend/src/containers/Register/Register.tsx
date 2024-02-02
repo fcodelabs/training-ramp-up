@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button, IconButton, TextField, Typography } from "@mui/material";
 import styled from "styled-components";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
@@ -85,6 +85,16 @@ const Register = () => {
     setNotification({ open: false, onConfirm: () => {}, type: "" });
     navigate(Paths.LOGIN);
   };
+   
+  useEffect(() => {
+    if (user.registered) {
+      setNotification({
+        open: true,
+        type: NotificationTypes.SUCCESS_REGISTER_OBSERVER,
+        onConfirm: () => {},
+      });
+    }
+  },[user.registered])
 
   const isEmailValidated = isValidEmail(user.email);
   const isEmailTaken = user.isVerifiedUser;
@@ -119,16 +129,7 @@ const Register = () => {
             password: user.password
         }
       dispatch(register(userdata));
-      if (user.registered) {
-        setNotification({
-          open: true,
-          type: NotificationTypes.SUCCESS_REGISTER_OBSERVER,
-          onConfirm: () => navigate(Paths.LOGIN),
-        });
-      }
     }
-
-    return;
   };
 
   return (

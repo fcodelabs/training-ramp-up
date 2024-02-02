@@ -77,6 +77,6 @@ export function* userSaga() {
   yield takeLatest(login, watchLogin);
   yield takeLatest(addNewUser, watchAddNewUser);
   yield takeLatest(authenticate, watchAuthenticate);
-  yield takeLeading(signup, watchSignupUser);
+  yield takeLatest(signup, watchSignupUser);
   yield takeLatest(register, watchRegisterUser);
 }
