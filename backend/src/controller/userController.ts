@@ -109,8 +109,11 @@ export class UserController {
       console.log(email, password);
       const user: any = await this.userService.findByEmail(email);
       if (user && user.verified) {
-        res.status(409).json({ error: "Email already exists" });
-        return;
+        console.log("user already exists");
+        res
+          .status(200)
+          .json({ messege: "email already exists", isVerified: true });
+          return;
       } else {
         const hashedPassword = await bcrypt.hash(password, 10);
         const newUser = new User();
@@ -119,10 +122,12 @@ export class UserController {
         newUser.role = "observer";
         newUser.verified = true;
         await this.userService.createUser(newUser);
-      }
+        console.log("user created successfully");
 
-      res.status(200).json({ message: "User created successfully" });
+        res.status(200).json({ message: "User created successfully" });
+      }
     } catch (error) {
+      console.error(error);
       res.status(500).json({ error: "Internal Server Error" });
     }
   }

@@ -58,13 +58,16 @@ const Register = () => {
   const [NameEmptyError, setNameEmptyError] = useState(false);
   const [PasswordComfirmEmptyError, setPasswordComfirmEmptyError] =
     useState(false);
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   const [notification, setNotification] = useState({
     open: false,
     onConfirm: () => {},
     type: "",
   });
-  const dispatch = useAppDispatch();
-  const navigate = useNavigate();
+  const isEmailValidated = isValidEmail(user.email);
+  const isEmailTaken = user.isVerifiedUser;
+  const isEmailOk = isEmailValidated && !isEmailTaken;
 
   const handleTogglePasswordVisibility = () => {
     setShowPassword((prevShowPassword) => !prevShowPassword);
@@ -85,7 +88,7 @@ const Register = () => {
     setNotification({ open: false, onConfirm: () => {}, type: "" });
     navigate(Paths.LOGIN);
   };
-   
+
   useEffect(() => {
     if (user.registered) {
       setNotification({
@@ -94,11 +97,9 @@ const Register = () => {
         onConfirm: () => {},
       });
     }
-  },[user.registered])
+  }, [user.registered]);
 
-  const isEmailValidated = isValidEmail(user.email);
-  const isEmailTaken = user.isVerifiedUser;
-  const isEmailOk = isEmailValidated && !isEmailTaken;
+
   const handleSubmit = () => {
     if (!user.email) {
       setEmailEmptyError(true);
@@ -123,11 +124,11 @@ const Register = () => {
       user.password !== "" &&
       confirmPassword !== "";
     if (ok) {
-        const userdata ={
-            name: user.name,
-            email: user.email,
-            password: user.password
-        }
+      const userdata = {
+        name: user.name,
+        email: user.email,
+        password: user.password,
+      };
       dispatch(register(userdata));
     }
   };
