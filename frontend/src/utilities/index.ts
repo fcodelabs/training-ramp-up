@@ -1,4 +1,4 @@
-import { GridColDef, GridRowsProp } from "@mui/x-data-grid";
+import { GridRowsProp } from "@mui/x-data-grid";
 
 export const calculateAge = (dateOfBirth: Date) => {
   if (!dateOfBirth) {

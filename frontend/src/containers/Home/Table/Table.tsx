@@ -35,7 +35,9 @@ import styled from "styled-components";
 import { Socket, io } from "socket.io-client";
 import { NotificationTypes } from "../../../utilities/index";
 import UserCard from "../../../components/UserCard/UserCard";
-import { Role } from "../../../redux/user/slice";
+import { Role, setSocketId } from "../../../redux/user/slice";
+const LocalstorageId = `${process.env.REACT_APP_API_URL}`;
+
 const url = process.env.REACT_APP_API_URL;
 
 const Container = styled.div`
@@ -127,6 +129,7 @@ const Table = () => {
     (state) => state.student.rows
   );
   const isLoading = useAppSelector((state) => state.student.isLoading);
+  const user = useAppSelector((state) => state.user);
   const [rowModesModel, setRowModesModel] = useState<GridRowModesModel>({});
   const [notification, setNotification] = useState({
     open: false,
@@ -179,8 +182,11 @@ const Table = () => {
           ...rowModesModel,
           [params.id]: { mode: GridRowModes.View },
         });
-
-        dispatch(addStudent(editedRow));
+        const data = {
+          editedRow: editedRow,
+          socketId: user.socketId,
+        }
+        dispatch(addStudent(data));
       }
     } else {
       setNotification({
@@ -193,7 +199,11 @@ const Table = () => {
 
   const handleDeleteClick = (id: GridRowId) => () => {
     const confirmDelete = () => {
-      dispatch(discardStudent(Number(id)));
+      const data ={
+        id: Number(id),
+        socketId: user.socketId,
+      }
+      dispatch(discardStudent(data));
       handleCloseNotification();
     };
     setNotification({
@@ -279,14 +289,15 @@ const Table = () => {
       : FixedColumns;
 
   useEffect(() => {
-    const socket: Socket = io(`${url}`);
-    socket.on("connect", () => {
-      console.log("Connected to Socket.IO server");
+    const socket: any = io(`${url}`);
 
-      socket.emit("authenticate", localStorage.getItem("userId"));
+    socket.on("connect", () => {
+      console.log("Connected to Socket.IO server", socket.id);
+      dispatch(setSocketId(socket.id));
+      socket.emit("authenticate", socket.id);
     });
 
-    socket.on("added_successfully", (id) => {
+    socket.on("added_successfully", (id: any) => {
       setNotification({
         open: true,
         onConfirm: handleCloseNotification,
@@ -295,7 +306,7 @@ const Table = () => {
       socket.emit("messageReceived", "Message received successfully");
     });
 
-    socket.on("add_unsuccessfull", (id) => {
+    socket.on("add_unsuccessfull", (id: any) => {
       const handleUnsuccessfull = () => {
         setRowModesModel((oldModel) => ({
           ...oldModel,
@@ -312,7 +323,7 @@ const Table = () => {
       socket.emit("messageReceived", "Message received successfully");
     });
 
-    socket.on("updated_successfully", (id) => {
+    socket.on("updated_successfully", (id: any) => {
       setNotification({
         open: true,
         onConfirm: handleCloseNotification,
@@ -321,7 +332,7 @@ const Table = () => {
       socket.emit("messageReceived", "Message received successfully");
     });
 
-    socket.on("update_unsuccessfull", (id) => {
+    socket.on("update_unsuccessfull", (id: any) => {
       const handleUnsuccessfull = () => {
         setRowModesModel((oldModel) => ({
           ...oldModel,
@@ -338,7 +349,7 @@ const Table = () => {
       socket.emit("messageReceived", "Message received successfully");
     });
 
-    socket.on("deleted_successfully", (id) => {
+    socket.on("deleted_successfully", (id: any) => {
       setNotification({
         open: true,
         onConfirm: handleCloseNotification,
@@ -347,10 +358,14 @@ const Table = () => {
       socket.emit("messageReceived", "Message received successfully");
     });
 
+    socket.on("disconnect", () => {
+      socket.emit("userDisconnected");
+    });
+
     return () => {
       socket.disconnect();
     };
-  }, []);
+  }, [dispatch]);
 
   useEffect(() => {
     dispatch(fetchStudents());

@@ -29,8 +29,8 @@ const studentSlice = createSlice({
       state.isLoading = true;
       state.rows = [...emptyRows];
     },
-    discardStudent: (state, action: PayloadAction<number>) => {
-      state.rows = state.rows.filter((student) => student.id !== action.payload);
+    discardStudent: (state, action: PayloadAction<any>) => {
+      state.rows = state.rows.filter((student) => student.id !== action.payload.id);
     },
     updateStudent: (state, action: PayloadAction<GridValidRowModel>) => {
       state.rows = state.rows.map((student) =>
