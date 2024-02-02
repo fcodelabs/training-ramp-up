@@ -227,7 +227,15 @@ const Register = () => {
             ),
           }}
         />
-        <StyledButton variant="contained" fullWidth onClick={handleSubmit}>
+        <StyledButton variant="contained" fullWidth onClick={handleSubmit}
+        disabled ={!validatePassword(user.password) ||
+          confirmPassword !== user.password ||
+          !isEmailOk ||
+          !isValidName(user.name) ||
+          user.name === "" ||
+          user.email === "" ||
+          user.password === "" ||
+          confirmPassword === ""}>
           Register
         </StyledButton>
         <StyledTypography>

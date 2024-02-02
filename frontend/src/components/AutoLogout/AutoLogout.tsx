@@ -5,7 +5,7 @@ import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 const AutoLogout = () => {
   const dispatch = useAppDispatch();
   const timeoutInMinutes =
-    useAppSelector((state) => state.user.role) === Role.ADMIN ? 1 : 600;
+    useAppSelector((state) => state.user.role) === Role.ADMIN ? 15 : 600;
 
   useEffect(() => {
     let timeoutId: NodeJS.Timeout;

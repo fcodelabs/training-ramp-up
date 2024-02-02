@@ -20,11 +20,6 @@ export enum Paths {
 const routes = [{ path: Paths.HOME, element: <Home /> }];
 
 function App() {
-  const dispatch = useAppDispatch();
-  useEffect(() => {
-    const token = localStorage.getItem(LocalstorageId);
-    dispatch(authenticate(token));
-  }, []);
 
   return (
     <div>
