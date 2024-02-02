@@ -66,7 +66,7 @@ export const Routes = [
   },
   {
     method: "post",
-    route: "/users/email",
+    route: "/users/email/:socketId",
     controller: UserController,
     action: "email",
     middleware: [authenticateToken, authorizeRole([Role.ADMIN])],

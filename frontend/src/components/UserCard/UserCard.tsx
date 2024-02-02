@@ -45,13 +45,18 @@ const UserCard: React.FC<UserCardProps> = ({ open, onClose }) => {
   const errorMessage = "Add a New User";
   const dispatch = useAppDispatch();
   const user = useAppSelector((state) => state.user.newUser);
+  const socketId = useAppSelector((state) => state.user.socketId);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     dispatch(updateNewUser({ [event.target.name]: event.target.value }));
   };
 
   const onClickAdd = () => {
-    dispatch(addNewUser(user));
+    const data ={
+      user: user,
+      socketId: socketId
+    }
+    dispatch(addNewUser(data));
     console.log("clicked");
   };
 

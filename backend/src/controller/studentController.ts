@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
 import { StudentService } from "../services/studentService";
 import { getSocketInstance } from "../services/socketService"; // Import the socket manager
-import { userSockets } from "../services/socketService";
 import { Server } from "socket.io";
 
 export class StudentController {
@@ -29,7 +28,7 @@ export class StudentController {
 
   async add(request: Request, response: Response) {
     const { id, name, gender, address, mobile, birthday, age } = request.body;
-    const userId = request.params.userId;
+    const userId =  request.params.userId;
     try {
       const student = await this.studentService.createStudent(
         id,
@@ -50,7 +49,7 @@ export class StudentController {
 
   async update(request: Request, response: Response) {
     const studentId = Number(request.params.id);
-    const userId = request.params.userId;
+    const userId =  request.params.userId;
     const { id, name, gender, address, mobile, birthday, age } = request.body;
     const student = {
       id,
@@ -76,7 +75,8 @@ export class StudentController {
 
   async remove(request: Request, response: Response) {
     const id = parseInt(request.params.id);
-    const userId = request.params.userId;
+    const userId =  request.params.userId;
+
 
     try {
       const removedStudent = await this.studentService.removeStudent(id);
@@ -88,15 +88,15 @@ export class StudentController {
     }
   }
 }
-async function sendMessage(
+
+export async function sendMessage(
   io: Server,
   userId: string,
   message: string,
   studentId: number
 ) {
-  const socketId = userSockets.get(userId);
-  if (socketId) {
-    io.to(socketId).emit(message, studentId);
+  if (userId) {
+    io.to(userId).emit(message, studentId);
   } else {
     console.warn("User not found:", userId);
   }

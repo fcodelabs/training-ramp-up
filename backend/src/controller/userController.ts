@@ -6,10 +6,13 @@ import * as jwt from "jsonwebtoken";
 import { User } from "../entity/user";
 import * as bcrypt from "bcrypt";
 import { sendSignupEmail } from "../services/emailService";
+import { getSocketInstance } from "../services/socketService";
+import { sendMessage } from "./studentController";
 const SECRET_KEY = process.env.SECRET_KEY;
 
 export class UserController {
   private userService = new UserService();
+  private io = getSocketInstance();
 
   async login(req: Request, res: Response) {
     const { email, password } = req.body;
@@ -34,6 +37,7 @@ export class UserController {
 
   async email(req: Request, res: Response) {
     const { email, role, name } = req.body;
+    const socketId = req.params.socketId;
 
     try {
       if (name && role && email) {
@@ -71,8 +75,12 @@ export class UserController {
           tempToken,
           isVerified: false,
         });
+        sendMessage(this.io, socketId, "email_sent_successfully", email);
+
       } else {
         res.status(400).json({ error: "Invalid request parameters" });
+        sendMessage(this.io, socketId, "email_sent_fail", email);
+
       }
     } catch (error) {
       res.status(500).json({ error: "Internal Server Error" });

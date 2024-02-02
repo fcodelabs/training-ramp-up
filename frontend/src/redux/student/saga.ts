@@ -27,14 +27,18 @@ export function* watchFetchStudents() {
 export function* watchAddNewStudent(action: any) {
   try {
     let student: GridValidRowModel;
-    if (action.payload.isNew) {
+    const data ={
+      row : action.payload.editedRow,
+      socketId : action.payload.socketId
+    }
+    if (data.row.isNew) {
       student = yield call(addStudentsAsync, action.payload);
     } else {
       student = yield call(updateStudentAsync, action.payload);
     }
     yield put(addStudent(student));
   } catch (error: any) {
-    yield put(setStudentError(action.payload.id));
+    yield put(setStudentError(action.payload.editedRow.id));
     return error;
   }
 }

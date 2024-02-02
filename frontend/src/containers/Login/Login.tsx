@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import { Button, TextField, Typography } from "@mui/material";
 import styled from "styled-components";
+const LocalstorageId = `${process.env.REACT_APP_API_URL}`;
 
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { useNavigate } from "react-router";
-import { login, updateUser } from "../../redux/user/slice";
+import { authenticate, login, updateUser } from "../../redux/user/slice";
 import { Paths } from "../../App";
 const StyledPasswordCreate = styled.div`
   position: relative;
@@ -48,10 +49,14 @@ const Login = () => {
   const isLogged = useAppSelector((state) => state.user.isLogged);
 
   useEffect(() => {
+    const token = localStorage.getItem(LocalstorageId);
+    if (token) {
+      dispatch(authenticate(token));
+    }
     if (isLogged) {
       navigate(Paths.HOME);
     }
-  }, [navigate, isLogged]);
+  }, [navigate, isLogged, dispatch]);
 
   const handleEmailChange = (email: any) => {
     dispatch(updateUser({ email }));

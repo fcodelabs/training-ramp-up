@@ -37,7 +37,7 @@ const StyledDialogContent = styled(Dialog)`
   && {
     .MuiDialogContent-root {
         padding: 15px 20px 5px 20px !important;
-        min-width: 300px;
+        min-width: 300px !important;
       }}
 `;
 
@@ -127,20 +127,37 @@ const NotificationPopup: React.FC<ErrorPopupProps> = ({
   } else if(type === NotificationTypes.SUCCESS_REGISTER_OBSERVER){
     errorMessage = NotificationTexts[NotificationTypes.SUCCESS_REGISTER_OBSERVER];
     button = <SingleButton text="ok" />;
+  } else if (type === NotificationTypes.SUCCESS_SEND_EMAIL) {
+    errorMessage = NotificationTexts[NotificationTypes.SUCCESS_SEND_EMAIL];
+    button = <SingleButton text="ok" />;
+  } else if (type === NotificationTypes.FAIL_SEND_EMAIL) {
+    errorMessage = NotificationTexts[NotificationTypes.FAIL_SEND_EMAIL];
+    button = <SingleButton text="try again later" />;
   }
 
-
+  function breakText(text: string) {
+    if (text.length > 45) {
+      const firstLine = text.substring(0, 45);
+      const secondLine = text.substring(45);
+      return `${firstLine}\n${secondLine}`;
+    }
+    return text;
+  }
+  
 
   return (
     <div>
-      <StyledBackdrop open={open} />
-      <StyledDialogContent open={open} onClose={onClose}>
-        <DialogContent>
-          <Typography variant="body1">{errorMessage}</Typography>
-          <ButtonWrapper>{button}</ButtonWrapper>
-        </DialogContent>
-      </StyledDialogContent>
-    </div>
+    <StyledBackdrop open={open} />
+    <StyledDialogContent open={open} onClose={onClose}>
+      <DialogContent>
+        <Typography variant="body1" >
+          {breakText(errorMessage)}
+        </Typography>
+        <ButtonWrapper>{button}</ButtonWrapper>
+      </DialogContent>
+    </StyledDialogContent>
+  </div>
+  
   );
 };
 

@@ -2,7 +2,6 @@ import axios from "axios";
 import { GridValidRowModel } from "@mui/x-data-grid";
 const LocalstorageId = `${process.env.REACT_APP_API_URL}`;
 const url = process.env.REACT_APP_API_URL;
-const userId = localStorage.getItem("userId");
 
 export const fetchStudentsAsync = async () => {
   try {
@@ -19,10 +18,10 @@ export const fetchStudentsAsync = async () => {
   }
 };
 
-export const addStudentsAsync = async (user: GridValidRowModel) => {
+export const addStudentsAsync = async (data: GridValidRowModel) => {
   try {
     const Token = localStorage.getItem(LocalstorageId);
-    const response = await axios.post(`${url}/students/${userId}`, user, {
+    const response = await axios.post(`${url}/students/${data.socketId}`, data.editedRow, {
       headers: {
         "Content-Type": "application/json",
         authorization: `Bearer ${Token}`,
@@ -34,12 +33,12 @@ export const addStudentsAsync = async (user: GridValidRowModel) => {
   }
 };
 
-export const updateStudentAsync = async (user: GridValidRowModel) => {
+export const updateStudentAsync = async (data: GridValidRowModel) => {
   try {
     const Token = localStorage.getItem(LocalstorageId);
     const response = await axios.put(
-      `${url}/students/${user.id}/${userId}`,
-      user,
+      `${url}/students/${data.editedRow.id}/${data.socketId}`,
+      data.editedRow,
       {
         headers: {
           "Content-Type": "application/json",
@@ -53,10 +52,10 @@ export const updateStudentAsync = async (user: GridValidRowModel) => {
   }
 };
 
-export const deleteStudentAsync = async (id: number) => {
+export const deleteStudentAsync = async (data: any) => {
   try {
     const Token = localStorage.getItem(LocalstorageId);
-    const response = await axios.delete(`${url}/students/${id}/${userId}`,{
+    const response = await axios.delete(`${url}/students/${data.id}/${data.socketId}`,{
       headers: {
         "Content-Type": "application/json",
         authorization: `Bearer ${Token}`,
@@ -82,15 +81,15 @@ export const loginAsync = async (newuser: any) => {
   }
 };
 
-export const addUsersAsync = async (user: any) => {
+export const addUsersAsync = async (data: any) => {
   try {
     const newuser = {
-      name: user.name,
-      email: user.email,
-      role: user.role,
+      name: data.user.name,
+      email: data.user.email,
+      role: data.user.role,
     };
     const Token = localStorage.getItem(LocalstorageId);
-    const response = await axios.post(`${url}/users/email`, newuser, {
+    const response = await axios.post(`${url}/users/email/${data.socketId}`, newuser, {
       headers: {
         "Content-Type": "application/json",
         authorization: `Bearer ${Token}`,

@@ -18,6 +18,7 @@ type newUser = {
 
 type InitialDataTypeUser = {
   isLogged: boolean;
+  socketId?: string;
   role: Role;
   email?: string;
   password?: string;
@@ -28,6 +29,7 @@ type InitialDataTypeUser = {
 const initialStateUser: InitialDataTypeUser = {
   isLogged: false,
   role: Role.NONE,
+  socketId: "",
   email: "",
   password: "",
   loginError: false,
@@ -57,6 +59,9 @@ const userSlice = createSlice({
   name: "user",
   initialState: initialStateUser,
   reducers: {
+    setSocketId: (state, action: PayloadAction<string>) => {
+      state.socketId = action.payload;
+    },
     updateUser: (
       state,
       action: PayloadAction<Partial<InitialDataTypeUser>>
@@ -98,7 +103,7 @@ const userSlice = createSlice({
     setNewUserVerification: (state, action: PayloadAction<boolean>) => {
       state.newUser.isVerifiedUser = action.payload;
     },
-    addNewUser: (state, action: PayloadAction<newUser>) => {
+    addNewUser: (state, action: PayloadAction<any>) => {
       //middleware
     },
     login: (state, action: PayloadAction<any>) => {
@@ -127,5 +132,6 @@ export const {
   authenticate,
   signup,
   register,
-  registerSuccess
+  registerSuccess,
+  setSocketId,
 } = userSlice.actions;
