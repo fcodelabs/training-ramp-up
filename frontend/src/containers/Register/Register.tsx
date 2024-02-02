@@ -5,10 +5,8 @@ import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { useNavigate } from "react-router";
 import {
-  login,
   register,
   updateNewUser,
-  updateUser,
 } from "../../redux/user/slice";
 import { Paths } from "../../App";
 import {
@@ -18,6 +16,7 @@ import {
 } from "../../utilities/validateUser";
 import NotificationPopup from "../../components/Notification/Notification";
 import { NotificationTypes } from "../../utilities";
+
 const StyledPasswordCreate = styled.div`
   position: relative;
   height: 100vh;
@@ -99,7 +98,6 @@ const Register = () => {
     }
   }, [user.registered]);
 
-
   const handleSubmit = () => {
     if (!user.email) {
       setEmailEmptyError(true);
@@ -124,12 +122,7 @@ const Register = () => {
       user.password !== "" &&
       confirmPassword !== "";
     if (ok) {
-      const userdata = {
-        name: user.name,
-        email: user.email,
-        password: user.password,
-      };
-      dispatch(register(userdata));
+      dispatch(register(user));
     }
   };
 
@@ -227,15 +220,7 @@ const Register = () => {
             ),
           }}
         />
-        <StyledButton variant="contained" fullWidth onClick={handleSubmit}
-        disabled ={!validatePassword(user.password) ||
-          confirmPassword !== user.password ||
-          !isEmailOk ||
-          !isValidName(user.name) ||
-          user.name === "" ||
-          user.email === "" ||
-          user.password === "" ||
-          confirmPassword === ""}>
+        <StyledButton variant="contained" fullWidth onClick={handleSubmit}>
           Register
         </StyledButton>
         <StyledTypography>

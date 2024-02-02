@@ -8,7 +8,7 @@ class UserService {
     try {
       return await this.userRepository.save(user);
     } catch (error) {
-        throw error;
+      throw error;
     }
   }
   async findByEmail(email: string): Promise<User | undefined> {

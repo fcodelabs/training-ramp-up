@@ -1,5 +1,4 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-import { stat } from "fs";
 const LocalstorageId = `${process.env.REACT_APP_API_URL}`;
 
 enum Role {
@@ -20,7 +19,6 @@ type newUser = {
 type InitialDataTypeUser = {
   isLogged: boolean;
   role: Role;
-  token: string;
   email?: string;
   password?: string;
   loginError?: boolean;
@@ -33,7 +31,6 @@ const initialStateUser: InitialDataTypeUser = {
   email: "",
   password: "",
   loginError: false,
-  token: "",
   newUser: {
     _id: "",
     name: "",
@@ -69,7 +66,6 @@ const userSlice = createSlice({
     },
     loginSuccess: (state, action: PayloadAction<string>) => {
       state.isLogged = true;
-      state.token = action.payload;
       state.loginError = false;
       state.role = parseToken(action.payload).role;
       localStorage.setItem(LocalstorageId, action.payload);
@@ -84,7 +80,6 @@ const userSlice = createSlice({
     },
     logout: (state) => {
       state.isLogged = false;
-      state.token = "";
       state.email = "";
       state.password = "";
       state.role = Role.NONE;

@@ -13,7 +13,7 @@ export const Routes = [
     route: "/students",
     controller: StudentController,
     action: "all",
-    middleware: [],
+    middleware: [authenticateToken],
   },
   {
     method: "get",
@@ -27,23 +27,22 @@ export const Routes = [
     route: "/students/:userId",
     controller: StudentController,
     action: "add",
-    middleware: [],
+    middleware: [authenticateToken, authorizeRole([Role.ADMIN])],
   },
   {
     method: "put",
     route: "/students/:id/:userId",
     controller: StudentController,
     action: "update",
-    middleware: [],
+    middleware: [authenticateToken, authorizeRole([Role.ADMIN])],
   },
   {
     method: "delete",
     route: "/students/:id/:userId",
     controller: StudentController,
     action: "remove",
-    middleware: [],
+    middleware: [authenticateToken, authorizeRole([Role.ADMIN])],
   },
-  //////////////////////////////////////////////
   {
     method: "post",
     route: "/users/signup",

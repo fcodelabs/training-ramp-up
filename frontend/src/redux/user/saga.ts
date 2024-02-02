@@ -1,6 +1,5 @@
-//sagas for logging in and out
 
-import { call, put, takeLatest, takeLeading } from "redux-saga/effects";
+import { call, put, takeLatest } from "redux-saga/effects";
 import {
   addNewUser,
   authenticate,
@@ -64,13 +63,11 @@ export function* watchRegisterUser(action: any): Generator<any, void, any> {
   try {
     const response: any = yield call(registerUsersAsync, action.payload);
     if (response.isVerified) {
-      console.log("response.isVerified", response.isVerified);
       yield put(setNewUserVerification(response.isVerified));
     } else {
       yield put(registerSuccess());
     }
   } catch (error: any) {
-    console.log("error", error);
     return error;
   }
 }

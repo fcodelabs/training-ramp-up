@@ -28,7 +28,6 @@ export class UserController {
 
       res.status(200).json({ token });
     } catch (error) {
-      console.error(error);
       res.status(500).json({ error: "Internal Server Error" });
     }
   }
@@ -106,14 +105,12 @@ export class UserController {
   async register(req: Request, res: Response) {
     const { email, password, role } = req.body;
     try {
-      console.log(email, password);
       const user: any = await this.userService.findByEmail(email);
       if (user && user.verified) {
-        console.log("user already exists");
         res
           .status(200)
           .json({ messege: "email already exists", isVerified: true });
-          return;
+        return;
       } else {
         const hashedPassword = await bcrypt.hash(password, 10);
         const newUser = new User();
@@ -122,12 +119,10 @@ export class UserController {
         newUser.role = "observer";
         newUser.verified = true;
         await this.userService.createUser(newUser);
-        console.log("user created successfully");
 
         res.status(200).json({ message: "User created successfully" });
       }
     } catch (error) {
-      console.error(error);
       res.status(500).json({ error: "Internal Server Error" });
     }
   }
