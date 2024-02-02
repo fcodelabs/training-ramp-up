@@ -74,6 +74,7 @@ const ButtonWrapper = styled.div`
 `;
 const AdminButtonWrapper = styled.div`
   padding: 10px 15px 10px 15px;
+  margin-bottom: 50px;
   display: flex;
   flex-direction: row;
   justify-content: flex-end;
@@ -245,9 +246,9 @@ const Table = () => {
     }));
   };
 
-  const handleEditable= () => {
-     return role === Role.ADMIN ? true : false;
-  }
+  const handleEditable = () => {
+    return role === Role.ADMIN ? true : false;
+  };
 
   const columns: GridColDef[] =
     role === Role.ADMIN
@@ -278,7 +279,6 @@ const Table = () => {
       : FixedColumns;
 
   useEffect(() => {
-
     const socket: Socket = io(`${url}`);
     socket.on("connect", () => {
       console.log("Connected to Socket.IO server");
@@ -373,19 +373,19 @@ const Table = () => {
         </AdminButtonWrapper>
       )}
       <Title>Student Details</Title>
-      {role === Role.ADMIN && (
-        <ButtonWrapper>
+      <ButtonWrapper>
+        {role === Role.ADMIN && (
           <Button variant="contained" onClick={handleAddClick}>
             Add new Student
           </Button>
-        </ButtonWrapper>
-      )}
+        )}
+      </ButtonWrapper>
 
       <StyledDataGrid
         rows={rows}
         columns={columns}
         editMode="row"
-        isCellEditable={params => handleEditable()}
+        isCellEditable={(params) => handleEditable()}
         rowModesModel={rowModesModel}
         checkboxSelection
         onRowModesModelChange={handleRowModesModelChange}

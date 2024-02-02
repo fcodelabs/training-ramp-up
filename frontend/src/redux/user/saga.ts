@@ -1,6 +1,5 @@
-//sagas for logging in and out
 
-import { call, put, takeLatest, takeLeading } from "redux-saga/effects";
+import { call, put, takeLatest } from "redux-saga/effects";
 import {
   addNewUser,
   authenticate,

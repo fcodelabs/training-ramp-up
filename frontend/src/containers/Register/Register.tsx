@@ -5,10 +5,8 @@ import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { useNavigate } from "react-router";
 import {
-  login,
   register,
   updateNewUser,
-  updateUser,
 } from "../../redux/user/slice";
 import { Paths } from "../../App";
 import {
@@ -18,6 +16,7 @@ import {
 } from "../../utilities/validateUser";
 import NotificationPopup from "../../components/Notification/Notification";
 import { NotificationTypes } from "../../utilities";
+
 const StyledPasswordCreate = styled.div`
   position: relative;
   height: 100vh;

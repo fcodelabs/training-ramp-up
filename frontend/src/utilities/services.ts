@@ -6,7 +6,13 @@ const userId = localStorage.getItem("userId");
 
 export const fetchStudentsAsync = async () => {
   try {
-    const response = await axios.get(`${url}/students`);
+    const Token = localStorage.getItem(LocalstorageId);
+    const response = await axios.get(`${url}/students`, {
+      headers: {
+        "Content-Type": "application/json",
+        authorization: `Bearer ${Token}`,
+      },
+    });
     return response.data;
   } catch (error) {
     throw error;
@@ -15,9 +21,11 @@ export const fetchStudentsAsync = async () => {
 
 export const addStudentsAsync = async (user: GridValidRowModel) => {
   try {
+    const Token = localStorage.getItem(LocalstorageId);
     const response = await axios.post(`${url}/students/${userId}`, user, {
       headers: {
         "Content-Type": "application/json",
+        authorization: `Bearer ${Token}`,
       },
     });
     return response.data;
@@ -28,12 +36,14 @@ export const addStudentsAsync = async (user: GridValidRowModel) => {
 
 export const updateStudentAsync = async (user: GridValidRowModel) => {
   try {
+    const Token = localStorage.getItem(LocalstorageId);
     const response = await axios.put(
       `${url}/students/${user.id}/${userId}`,
       user,
       {
         headers: {
           "Content-Type": "application/json",
+          authorization: `Bearer ${Token}`,
         },
       }
     );
@@ -45,7 +55,13 @@ export const updateStudentAsync = async (user: GridValidRowModel) => {
 
 export const deleteStudentAsync = async (id: number) => {
   try {
-    const response = await axios.delete(`${url}/students/${id}/${userId}`);
+    const Token = localStorage.getItem(LocalstorageId);
+    const response = await axios.delete(`${url}/students/${id}/${userId}`,{
+      headers: {
+        "Content-Type": "application/json",
+        authorization: `Bearer ${Token}`,
+      },
+    });
     return response.data;
   } catch (error) {
     throw error;
@@ -54,10 +70,6 @@ export const deleteStudentAsync = async (id: number) => {
 
 export const loginAsync = async (newuser: any) => {
   try {
-    // newuser = {
-    //   email:"thambarasahassaka@gmail.com",
-    //   password: "1234567",
-    // }
     const response: any = await axios.post(`${url}/users/login`, newuser, {
       headers: {
         "Content-Type": "application/json",
@@ -135,4 +147,4 @@ export const registerUsersAsync = async (data: any) => {
   } catch (error) {
     throw error;
   }
-}
+};
