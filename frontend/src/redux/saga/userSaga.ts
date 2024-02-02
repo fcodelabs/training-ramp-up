@@ -1,9 +1,14 @@
 import { takeLatest, call } from "redux-saga/effects";
 import { PayloadAction } from "@reduxjs/toolkit";
-import { IUsers, addUsers } from "../slice/userSlice";
+import {
+  IPasswordToken,
+  IUsers,
+  addUsers,
+  createUsers,
+} from "../slice/userSlice";
 import axios from "axios";
 
-function* watchAddNewStudent(
+function* watchSendMail(
   action: PayloadAction<IUsers>
 ): Generator<any, any, any> {
   const newUser = {
@@ -15,7 +20,7 @@ function* watchAddNewStudent(
   try {
     yield call(
       axios.post<IUsers>,
-      "http://localhost:5000/users/newUser",
+      "http://localhost:5000/users/emailSend",
       newUser
     );
   } catch (error: any) {
@@ -23,6 +28,21 @@ function* watchAddNewStudent(
   }
 }
 
+function* watchCreateUser(
+  action: PayloadAction<IPasswordToken>
+): Generator<any, any, any> {
+  const { password, token } = action.payload;
+  try {
+    yield call(
+      axios.post<IPasswordToken>,
+      "http://localhost:5000/users/newUser",
+      { password, token }
+    );
+  } catch (error: any) {
+    return error;
+  }
+}
 export function* userRoleSaga() {
-  yield takeLatest(addUsers, watchAddNewStudent);
+  yield takeLatest(addUsers, watchSendMail);
+  yield takeLatest(createUsers, watchCreateUser);
 }

@@ -17,9 +17,10 @@ export const sendMail = async (
   transporter: any,
   recieverEmail: string,
   role: string,
-  name: string
+  name: string,
+  token: string
 ): Promise<void> => {
-  const link = 'www.google.com';
+  const link = 'http://localhost:3000/passwordcreate';
   const mailOptions = {
     from: {
       name: 'Ramp-up',
@@ -30,17 +31,20 @@ export const sendMail = async (
     text: 'This is a test email',
     html: `<P>Dear ${name},</P>
     <P>You have been added as an ${role} to our system. Please click the following link to create your password and access your account: </P>
-    <P><a href='${link}'>Password Creation Link</a></P>
+    <P><a href='${link}?token=${token}'>Password Creation Link</a></P>
     <P>Please note that the password creation link is valid for one-time use only. Ensure that you use it promptly to set up your password. </P>
     <P>Best Regards,</P>
     <P>Team Ramp-up</P>
     `
   };
 
-  try {
-    const result = await transporter.sendMail(mailOptions);
-    return result;
-  } catch (error) {
-    console.error(error);
-  }
+  await new Promise<void>((resolve, reject) => {
+    transporter.sendMail(mailOptions, (error: any, info: any) => {
+      if (error != null) {
+        reject(error);
+      } else {
+        resolve();
+      }
+    });
+  });
 };
