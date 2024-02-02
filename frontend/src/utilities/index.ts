@@ -96,6 +96,8 @@ export enum NotificationTypes {
   DELETE_USER_SUCCESS = "DELETE_USER_SUCCESS",
   LOGOUT_USER = "LOGOUT_USER",
   SUCCESS_REGISTER_OBSERVER = "SUCCESS_REGISTER_OBSERVER",
+  SUCCESS_SEND_EMAIL = "SUCCESS_SEND_EMAIL",
+  FAIL_SEND_EMAIL = "FAIL_SEND_EMAIL",
 }
 
 export const NotificationTexts: Record<NotificationTypes, string> = {
@@ -114,5 +116,7 @@ export const NotificationTexts: Record<NotificationTypes, string> = {
     "Are you sure you want to remove this student?",
   [NotificationTypes.DELETE_USER_SUCCESS]: "Student deleted successfully",
   [NotificationTypes.LOGOUT_USER]: "Are you sure you want to logout?",
-  [NotificationTypes.SUCCESS_REGISTER_OBSERVER]: "Your account has been successfully created."
+  [NotificationTypes.SUCCESS_REGISTER_OBSERVER]: "Your account has been successfully created.",
+  [NotificationTypes.SUCCESS_SEND_EMAIL]: "A password creation link has been sent to the  provided email address.",
+  [NotificationTypes.FAIL_SEND_EMAIL]: "Failed to send the password creation link. Please try again later.",
 };

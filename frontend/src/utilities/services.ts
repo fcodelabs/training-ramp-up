@@ -81,15 +81,15 @@ export const loginAsync = async (newuser: any) => {
   }
 };
 
-export const addUsersAsync = async (user: any) => {
+export const addUsersAsync = async (data: any) => {
   try {
     const newuser = {
-      name: user.name,
-      email: user.email,
-      role: user.role,
+      name: data.user.name,
+      email: data.user.email,
+      role: data.user.role,
     };
     const Token = localStorage.getItem(LocalstorageId);
-    const response = await axios.post(`${url}/users/email`, newuser, {
+    const response = await axios.post(`${url}/users/email/${data.socketId}`, newuser, {
       headers: {
         "Content-Type": "application/json",
         authorization: `Bearer ${Token}`,

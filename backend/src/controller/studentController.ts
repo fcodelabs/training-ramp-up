@@ -88,7 +88,8 @@ export class StudentController {
     }
   }
 }
-async function sendMessage(
+
+export async function sendMessage(
   io: Server,
   userId: string,
   message: string,

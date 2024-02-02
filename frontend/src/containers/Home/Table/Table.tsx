@@ -185,7 +185,7 @@ const Table = () => {
         const data = {
           editedRow: editedRow,
           socketId: user.socketId,
-        }
+        };
         dispatch(addStudent(data));
       }
     } else {
@@ -199,10 +199,10 @@ const Table = () => {
 
   const handleDeleteClick = (id: GridRowId) => () => {
     const confirmDelete = () => {
-      const data ={
+      const data = {
         id: Number(id),
         socketId: user.socketId,
-      }
+      };
       dispatch(discardStudent(data));
       handleCloseNotification();
     };
@@ -358,6 +358,26 @@ const Table = () => {
       socket.emit("messageReceived", "Message received successfully");
     });
 
+    socket.on("email_sent_successfully", (id: any) => {
+      handleCloseAddUser();
+      setNotification({
+        open: true,
+        onConfirm: handleCloseNotification,
+        type: NotificationTypes.SUCCESS_SEND_EMAIL,
+      });
+      socket.emit("messageReceived", "Message received successfully");
+    });
+
+    socket.on("email_sent_fail", (id: any) => {
+      handleCloseAddUser();
+      setNotification({
+        open: true,
+        onConfirm: handleCloseNotification,
+        type: NotificationTypes.FAIL_SEND_EMAIL,
+      });
+      socket.emit("messageReceived", "Message received successfully");
+    });
+
     socket.on("disconnect", () => {
       socket.emit("userDisconnected");
     });
@@ -377,6 +397,10 @@ const Table = () => {
       });
     }
   }, [dispatch, isLoading]);
+
+  const handleCloseAddUser = () => {
+    setAddUserClicked(false);
+  }
 
   return (
     <Container>

@@ -103,7 +103,7 @@ const userSlice = createSlice({
     setNewUserVerification: (state, action: PayloadAction<boolean>) => {
       state.newUser.isVerifiedUser = action.payload;
     },
-    addNewUser: (state, action: PayloadAction<newUser>) => {
+    addNewUser: (state, action: PayloadAction<any>) => {
       //middleware
     },
     login: (state, action: PayloadAction<any>) => {
