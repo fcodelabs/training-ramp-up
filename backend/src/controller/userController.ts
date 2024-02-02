@@ -59,7 +59,7 @@ export class UserController {
           if (user.verified) {
             res
               .status(200)
-              .json({ error: "email already exists", isVerified: true });
+              .json({ messege: "email already exists", isVerified: true });
             return;
           }
           user.tempToken = hashedToken;
@@ -97,6 +97,29 @@ export class UserController {
       user.verified = true;
 
       await this.userService.createUser(user);
+      res.status(200).json({ message: "User created successfully" });
+    } catch (error) {
+      res.status(500).json({ error: "Internal Server Error" });
+    }
+  }
+
+  async register(req: Request, res: Response) {
+    const { email, password, role } = req.body;
+    try {
+      const user = await this.userService.findByEmail(email);
+      if (user.verified) {
+        res
+          .status(200)
+          .json({ messege: "Email already exists", isVerified: true });
+        return;
+      }
+      const hashedPassword = await bcrypt.hash(password, 10);
+      const newUser = new User();
+      newUser.email = email;
+      newUser.password = hashedPassword;
+      newUser.role = "observer";
+
+      await this.userService.createUser(newUser);
       res.status(200).json({ message: "User created successfully" });
     } catch (error) {
       res.status(500).json({ error: "Internal Server Error" });

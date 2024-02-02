@@ -1,9 +1,9 @@
 const isValidEmail = (email: string) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-  };
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return email === '' || emailRegex.test(email);
+};
 const isValidName = (name: string) => {
-    return name.length > 0 && name.length <= 50;
+    return name.length >= 0 && name.length <= 50;
 }
 
 
@@ -18,15 +18,14 @@ const validatePassword = (inputPassword: any) => {
     const isUpperCase = uppercaseRegex.test(inputPassword);
     const isSpecialChar = specialCharRegex.test(inputPassword);
     const isNumber = numberRegex.test(inputPassword);
-    const isMinLength = inputPassword.length >= 8;
+    const isMinLength = inputPassword.length >= 8 ;
 
     if (
-      inputPassword!="" &&
-      isLowerCase &&
+      (isLowerCase &&
       isUpperCase &&
       isSpecialChar &&
       isNumber &&
-      isMinLength
+      isMinLength)|| inputPassword === ""
     ) {
       return true;
     } else {

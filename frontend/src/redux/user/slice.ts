@@ -10,8 +10,10 @@ enum Role {
 type newUser = {
   _id: string;
   name: string;
+  password: string;
   email: string;
   role: Role;
+  registered: boolean;
   isVerifiedUser: boolean;
 };
 
@@ -35,8 +37,10 @@ const initialStateUser: InitialDataTypeUser = {
   newUser: {
     _id: "",
     name: "",
+    password: "",
     email: "",
     role: Role.OBSERVER,
+    registered: false,
     isVerifiedUser: false,
   },
 };
@@ -74,6 +78,10 @@ const userSlice = createSlice({
       state.loginError = true;
       // localStorage.removeItem(LocalstorageId);
     },
+    registerSuccess: (state) => {
+      state.newUser.registered = true;
+      state.newUser.isVerifiedUser = false;
+    },
     logout: (state) => {
       state.isLogged = false;
       state.token = "";
@@ -104,6 +112,9 @@ const userSlice = createSlice({
     authenticate: (state, action: PayloadAction<any>) => {
       //middleware
     },
+    register: (state, action: PayloadAction<any>) => {
+      //middleware
+    }
   },
 });
 
@@ -120,4 +131,6 @@ export const {
   loginSuccess,
   authenticate,
   signup,
+  register,
+  registerSuccess
 } = userSlice.actions;

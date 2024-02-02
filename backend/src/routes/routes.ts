@@ -53,6 +53,13 @@ export const Routes = [
   },
   {
     method: "post",
+    route: "/users/register",
+    controller: UserController,
+    action: "register",
+    middleware: [],
+  },
+  {
+    method: "post",
     route: "/users/login",
     controller: UserController,
     action: "login",

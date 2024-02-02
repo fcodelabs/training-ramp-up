@@ -48,14 +48,13 @@ const Login = () => {
   const isLogged = useAppSelector((state) => state.user.isLogged);
 
   const handleEmailChange = (email: any) => {
-    dispatch(updateUser({ email })); 
-    setEmailError(false); 
-    
+    dispatch(updateUser({ email }));
+    setEmailError(false);
   };
 
   const handlePasswordChange = (password: any) => {
     dispatch(updateUser({ password }));
-    setPasswordError(false); 
+    setPasswordError(false);
   };
 
   const handleSubmit = () => {
@@ -74,13 +73,18 @@ const Login = () => {
   return (
     <StyledPasswordCreate>
       <StyledPasswordContainer>
-        <StyledTypography fontSize={20} justifyContent={"flex-start"} width={"100%"}>
+        <StyledTypography
+          fontSize={20}
+          fontWeight={500}
+          justifyContent={"flex-start"}
+          width={"100%"}
+        >
           Login
         </StyledTypography>
         <StyledTextField
           fullWidth
           placeholder="Email"
-          value={email||''}
+          value={email || ""}
           onChange={(e) => handleEmailChange(e.target.value)}
           error={emailError || LoginError}
           label="Email"
@@ -91,14 +95,23 @@ const Login = () => {
           type="password"
           label="Password"
           placeholder="Password"
-          value={password||''}
+          value={password || ""}
           onChange={(e) => handlePasswordChange(e.target.value)}
           error={passwordError || LoginError}
-          helperText={passwordError ? "Mandatory field missing" : LoginError ? "Invalid email or password" : ""}
+          helperText={
+            passwordError
+              ? "Mandatory field missing"
+              : LoginError
+                ? "Invalid email or password"
+                : ""
+          }
         />
         <StyledButton variant="contained" fullWidth onClick={handleSubmit}>
           Login
         </StyledButton>
+        <StyledTypography>
+          Don&apos;t have an account? <a href={Paths.REGISTER}>Register</a>
+        </StyledTypography>
       </StyledPasswordContainer>
     </StyledPasswordCreate>
   );
