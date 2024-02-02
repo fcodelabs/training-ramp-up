@@ -2,6 +2,7 @@ import express, { Express } from "express";
 import dotenv from "dotenv";
 import { DataSource } from "typeorm";
 import { studentRoutes } from "./routes/studentRoute";
+import { userRoutes } from "./routes/userRoute";
 import cors from "cors";
 import { createServer } from "node:http";
 import { Server } from "socket.io";
@@ -40,8 +41,8 @@ export const AppDataSource = new DataSource({
   password: "27090",
   database: "Ramp-up",
   entities: ["src/models/**/*.ts"],
-  synchronize: true,
-  logging: true,
+  synchronize: false,
+  logging: false,
 });
 const startServer = async () => {
   try {
@@ -49,6 +50,7 @@ const startServer = async () => {
     console.log("Data Source has been initialized!");
 
     studentRoutes(app, io);
+    userRoutes(app);
 
     server.listen(port, () => {
       console.log(`[server]: Server is running at http://localhost:${port}`);

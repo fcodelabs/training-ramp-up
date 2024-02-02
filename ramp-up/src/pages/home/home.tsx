@@ -2,6 +2,7 @@ import React from "react";
 import { AppBar, Toolbar, Button, Card } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import DataTable from "./DataGrid/DataTable";
+import AddUser from "./AddUser/AddUser";
 
 const CustomButton = styled(Button)({
   padding: "6px 16px",
@@ -92,6 +93,7 @@ function Home() {
       </AppBar>
 
       <Card sx={styles.card}>
+        <AddUser/>
         <div style={styles.cardTitle}>User Details</div>
         <DataTable />
       </Card>
