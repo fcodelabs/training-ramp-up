@@ -1,6 +1,7 @@
 import React from "react";
 import Home from "./pages/home/Home";
 import io from "socket.io-client";
+import { CreatePassword } from "./pages/CreatePassword/CreatePassword";
 
 const socket = io("http://localhost:5000");
 

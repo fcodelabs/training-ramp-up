@@ -1,5 +1,4 @@
 import { createSlice, PayloadAction} from "@reduxjs/toolkit";
-import { INewStudent } from "../sagas/studentSaga";
 
 export interface IStudent {
   id: number;
