@@ -21,11 +21,11 @@ const userSlice = createSlice({
         addUserEmail: (state, action: PayloadAction<string>) => {
             state.userEmails.push(action.payload);
         },
-       
         addUserRequest: (state, action: PayloadAction<IUser>) => {},
+        addUserPasswordRequest: (state, action: PayloadAction<{token: string, password: string}>) => {},
     }
 })
 
-export const { addUserEmail, addUserRequest } = userSlice.actions;
+export const { addUserEmail, addUserRequest, addUserPasswordRequest } = userSlice.actions;
 export const userReducer = userSlice.reducer;
 

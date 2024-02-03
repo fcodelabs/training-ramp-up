@@ -1,10 +1,13 @@
 import nodemailer from "nodemailer";
 import crypto from "crypto";
+import dotenv from "dotenv";
 
-export const sendEmail = async (to: string) => {
-  // Create a transporter
+export const sendEmail = async (to: string, name: string) => {
+  dotenv.config();
+
   const transporter = nodemailer.createTransport({
     service: "gmail",
+    secure: true,
     auth: {
       user: process.env.EMAIL,
       pass: process.env.PASSWORD,
@@ -16,7 +19,7 @@ export const sendEmail = async (to: string) => {
   const passwordCreationLink = `${process.env.CLIENT_URL}/create-password/${token}`;
 
   const subject = "Account Registration - Password Creation Link";
-  const text = `Dear [Name], 
+  const text = `Dear ${name}, 
 
   You have been added as an admin/observer to our system. Please click the following link to create your password and access your account: 
   

@@ -41,7 +41,7 @@ export const AppDataSource = new DataSource({
   password: "27090",
   database: "Ramp-up",
   entities: ["src/models/**/*.ts"],
-  synchronize: false,
+  synchronize: true,
   logging: false,
 });
 const startServer = async () => {

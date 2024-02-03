@@ -13,4 +13,19 @@ export class UserController {
         .json({ message: "An error occurred while creating the user." });
     }
   }
+
+  static async addPassword(req: Request, res: Response) {
+    try {
+      const user = await UserService.addPassword(
+        req.params.token,
+        req.body.password,
+      );
+      res.status(200).json(user); // 200 status code for OK
+    } catch (error) {
+      console.error(error);
+      res
+        .status(500)
+        .json({ message: "An error occurred while adding the password." });
+    }
+  }
 }
