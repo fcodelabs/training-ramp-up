@@ -13,6 +13,10 @@ import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
 import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined';
 import { validatePassword } from "../../utility";
 import ErrorModal from "../../components/ErrorModal/ErrorModal";
+import { useParams } from "react-router-dom";
+import { addUserPasswordRequest } from "../../redux/slices/userSlice";
+import { useDispatch } from "react-redux";
+
 const styles = {
     box:{
         width: "100%",
@@ -38,6 +42,10 @@ const styles = {
 }
 
 export function CreatePassword() {
+
+    const dispatch = useDispatch();  
+    const { token } = useParams<{token: string}>();
+
     const [showPassword, setShowPassword] = React.useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = React.useState(false);
     const [password, setPassword] = React.useState("");
@@ -59,10 +67,18 @@ export function CreatePassword() {
     
     const handleSubmit = () => {
         if(validatePassword(password) && password === confirmPassword){
-            setIsOpenErrorModal(true);
-            
+          if(token){
+            try{
+              dispatch(addUserPasswordRequest({password, token}));
+              setIsOpenErrorModal(true);
+              setPassword("");
+              setConfirmPassword("");
+            } catch (error) {
+              console.log(error);
+            }
+          }
         }
-    }
+      }
 
     return(
         <Box sx={styles.box}>

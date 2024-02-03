@@ -23,6 +23,9 @@ export class User {
   @Column({ type: "bigint", nullable: true })
   passwordExpires: number;
 
+  @Column({ nullable: true })
+  password: string;
+
   @CreateDateColumn()
   createdAt: Date;
 
