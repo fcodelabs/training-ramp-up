@@ -4,7 +4,7 @@ import AppBar from '@mui/material/AppBar'
 
 export default function TopBar() {
   return (
-    <AppBar color="transparent" variant="outlined" elevation={0}>
+
       <div
         style={{
           display: 'flex',
@@ -34,6 +34,6 @@ export default function TopBar() {
           </div>
         </div>
       </div>
-    </AppBar>
+   
   )
 }

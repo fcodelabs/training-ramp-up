@@ -1,9 +1,17 @@
-import Table from '../components/Table/Table'
+import Table from '../../components/Table/Table'
 
-export default function Grid() {
+export default function Home() {
   return (
     // <div><TopBar/></div>
-    <Table />
+    <div style={{
+      minHeight: '90vh',
+      display: "flex",
+      justifyContent: 'center',
+      alignItems: 'center',
+    }}>
+      <Table />
+    </div>
+    
   )
 }
 // import React from "react";

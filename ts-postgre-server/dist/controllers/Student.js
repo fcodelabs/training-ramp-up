@@ -26,9 +26,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteStudent = exports.updateStudent = exports.createStudent = exports.getStudents = void 0;
 const express_validator_1 = require("express-validator");
 const studentService = __importStar(require("../services/Student"));
+const Server_1 = require("../Server");
 const getStudents = async (_req, res) => {
     try {
         const students = await studentService.getStudentsService();
+        Server_1.io.emit('notification', { message: 'Data fetched successfully' });
         return res.status(200).json(students);
     }
     catch (error) {

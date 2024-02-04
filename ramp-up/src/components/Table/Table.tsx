@@ -1,4 +1,4 @@
-import * as React from "react";
+import * as React from 'react'
 import {
   GridRowsProp,
   GridRowModesModel,
@@ -11,27 +11,28 @@ import {
   GridRowModel,
   GridRowEditStopReasons,
   GridRenderCellParams,
-} from "@mui/x-data-grid";
-import Button from "@mui/material/Button";
-import styled from "styled-components";
-import "@fontsource/roboto";
-import { Box, TextField, MenuItem, Select } from "@mui/material";
-import Typography from "@mui/material/Typography";
-import { useSelector, useDispatch } from "react-redux";
-import { RootState } from "../../redux/store/store";
-import { useEffect, useState } from "react";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import dayjs, { Dayjs } from "dayjs";
-import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
-import validatePhoneNumber from "../../utility/validatePhoneNumber";
-import calculateAge from "../../utility/calculateAge";
-import Modal from "@mui/material/Modal";
-import Paper from "@mui/material/Paper";
-import MessageCard from "../Cards/MessageCard";
+} from '@mui/x-data-grid'
+import Button from '@mui/material/Button'
+import styled from 'styled-components'
+import '@fontsource/roboto'
+import { Box, TextField, MenuItem, Select } from '@mui/material'
+import Typography from '@mui/material/Typography'
+import { useSelector, useDispatch } from 'react-redux'
+import { RootState } from '../../redux/store/store'
+import { useEffect, useState } from 'react'
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
+import { DatePicker } from '@mui/x-date-pickers/DatePicker'
+import dayjs, { Dayjs } from 'dayjs'
+import { DemoContainer } from '@mui/x-date-pickers/internals/demo'
+import validatePhoneNumber from '../../utility/validatePhoneNumber'
+import calculateAge from '../../utility/calculateAge'
+import Modal from '@mui/material/Modal'
+import Paper from '@mui/material/Paper'
+import MessageCard from '../Cards/MessageCard'
+import InputForm from '../InputForm/InputForm'
 
-import io from 'socket.io-client';
+import io from 'socket.io-client'
 
 import {
   updateStudent,
@@ -42,12 +43,7 @@ import {
   addStudentError,
   editStudentError,
   removeStudentError,
-
-} from "../../redux/slices/slice";
-
-
-
-
+} from '../../redux/slices/slice'
 
 const StyledEditButton = styled(Button)`
   &&& {
@@ -59,7 +55,7 @@ const StyledEditButton = styled(Button)`
     line-height: 22px;
     letter-spacing: 0.46px;
   }
-`;
+`
 
 const StyledRemoveButton = styled(Button)`
   &&& {
@@ -72,7 +68,7 @@ const StyledRemoveButton = styled(Button)`
     line-height: 22px;
     letter-spacing: 0.46px;
   }
-`;
+`
 
 const StyledAddButton = styled(Button)`
   &&& {
@@ -84,7 +80,7 @@ const StyledAddButton = styled(Button)`
     line-height: 22px;
     letter-spacing: 0.46px;
   }
-`;
+`
 
 const StyledDiscardButton = styled(Button)`
   &&& {
@@ -96,13 +92,11 @@ const StyledDiscardButton = styled(Button)`
     line-height: 22px;
     letter-spacing: 0.46px;
   }
-`;
-
-
+`
 
 const StyledDataTableBox = styled(Box)`
   &&& {
-    width: 100%;
+    width: 80%;
     height: auto;
     margin-left: 175px;
     margin-right: 175px;
@@ -111,7 +105,7 @@ const StyledDataTableBox = styled(Box)`
     box-shadow: 0px 2px 1px -1px #00000033, 0px 1px 1px 0px #00000024,
       0px 1px 3px 0px #0000001f;
 
-    fontfamily: "Roboto";
+    fontfamily: 'Roboto';
     fontweight: 400;
     fontsize: 14px;
     lineheight: 20.02px;
@@ -129,244 +123,249 @@ const StyledDataTableBox = styled(Box)`
       gap: 8px;
     }
   }
-`;
+`
 interface IStudent {
-  id: number;
-  name: string;
-  age: number;
-  gender: string;
-  address: string;
-  mobile: string;
-  dob: string;
-  isNew?: boolean;
+  id: number
+  name: string
+  age: number
+  gender: string
+  address: string
+  mobile: string
+  dob: string
+  isNew?: boolean
 }
 
 interface IEditToolbarProps {
-  setRows: (newRows: (oldRows: GridRowsProp) => GridRowsProp) => void;
+  setRows: (newRows: (oldRows: GridRowsProp) => GridRowsProp) => void
   setRowModesModel: (
     newModel: (oldModel: GridRowModesModel) => GridRowModesModel
-  ) => void;
+  ) => void
 }
 
-
-
 export default function Table() {
-  const students = useSelector((state: RootState) => state.student.students);
-  const [rows, setRows] = useState(students);
-
-  
+  const students = useSelector((state: RootState) => state.student.students)
+  const [rows, setRows] = useState(students)
 
   function EditToolbar(props: IEditToolbarProps) {
-    const { setRows, setRowModesModel } = props;
-    const currentRows = useSelector((state: RootState) => state.student.students);
-    const dispatch = useDispatch();
-  
+    const { setRows, setRowModesModel } = props
+    const currentRows = useSelector(
+      (state: RootState) => state.student.students
+    )
+    const dispatch = useDispatch()
+
     const handleClick = () => {
-      const id = students.length+1;
-       
+      const id = students.length + 1
+
       dispatch(
         updateStudent([
           {
             id,
-            name: "",
-            gender: "",
-            address: "",
-            mobileno: "",
+            name: '',
+            gender: '',
+            address: '',
+            mobileno: '',
             dateofbirth: dayjs(new Date()).toISOString().slice(0, 10),
-            age: "",
+            age: '',
             isNew: true,
           },
           ...currentRows,
         ])
-      );
+      )
       // Set the mode for the new row
       setRowModesModel((oldModel) => ({
         ...oldModel,
-        [id]: { mode: GridRowModes.Edit, fieldToFocus: "name" },
-      }));
-    };
-  
+        [id]: { mode: GridRowModes.Edit, fieldToFocus: 'name' },
+      }))
+    }
+
     return (
       <GridToolbarContainer>
         <div
           style={{
+            padding: '20px',
             display: 'flex',
-            flexDirection: 'column',
+            justifyContent: 'flex-end',
+            width: '100%',
+          }}
+        >
+          <Button
+            style={{ backgroundColor: '#2196F3' }}
+            variant="contained"
+            size="medium"
+            onClick={() => setOpenModal(true)}
+          >
+            ADD NEW USER
+          </Button>
+        </div>
+
+        <div
+          style={{
+            display: 'flex',
+            width: '100%',
+            justifyContent: 'space-between',
+            padding: '20px',
           }}
         >
           <div
             style={{
-              display: 'flex',
-              justifyContent: 'flex-start',
-              gap: '4px',
-              padding: '16px',
-              fontSize: '24px',
+              fontSize: '26px',
               fontWeight: '400',
-              fontFamily: 'Roboto,sans-serif',
-              lineHeight: '32.02px',
+              fontFamily: 'Roboto,sans-serif'
             }}
           >
-            User Details
+            Student Details
           </div>
-          <div
-            style={{
-              padding: '6px 16px 6px 1000px',
-              display: 'flex',
-              justifyContent: 'flex-end',
-            }}
+
+          <Button
+            style={{ backgroundColor: '#2196F3' }}
+            variant="contained"
+            size="small"
+            onClick={handleClick}
           >
-            <Button
-              style={{ backgroundColor: '#2196F3' }}
-              variant="contained"
-              size="medium"
-              onClick={handleClick}
-            >
-              ADD NEW
-            </Button>
-          </div>
+            ADD NEW STUDENT
+          </Button>
         </div>
       </GridToolbarContainer>
-      
-    );
+    )
   }
 
   //const SOCKET_SERVER_URL = 'http://localhost:4000';
 
-  const dispatch = useDispatch();
+  const dispatch = useDispatch()
 
   const [rowModesModel, setRowModesModel] = React.useState<GridRowModesModel>(
     {}
-  );
+  )
 
   useEffect(() => {
-    dispatch(fetchAllStudentsSuccess());
-  }, [dispatch]);
+    dispatch(fetchAllStudentsSuccess())
+  }, [dispatch])
 
-  const [mode, setMode] = useState<"Add" | "Edit">("Add"); 
+  const [mode, setMode] = useState<'Add' | 'Edit'>('Add')
+  const [openModal, setOpenModal] = useState(false)
+  const [showSuccessModal, setShowSuccessModal] = useState(false)
+  const [showDiscardModal, setShowDiscardModal] = useState(false)
+  const [showDiscardUpdateModal, setShowDiscardUpdateModal] = useState(false)
+  const [showRemoveConfirmModal, setShowRemoveConfirmModal] = useState(false)
+  const [fieldMissingModal, setFieldMissingModal] = useState(false)
+  const [showRemoveSuccessCard, setShowRemoveSuccessCard] = useState(false)
+  const [showUpdateSuccessModal, setShowUpdateSuccessModal] = useState(false)
 
-  const [showSuccessModal, setShowSuccessModal] = useState(false);
-  const [showDiscardModal, setShowDiscardModal] = useState(false);
-  const [showDiscardUpdateModal, setShowDiscardUpdateModal] = useState(false);
-  const [showRemoveConfirmModal, setShowRemoveConfirmModal] = useState(false);
-  const [fieldMissingModal, setFieldMissingModal] = useState(false);
-  const [showRemoveSuccessCard, setShowRemoveSuccessCard] = useState(false);
-  const [showUpdateSuccessModal, setShowUpdateSuccessModal] = useState(false);
+  const [updatedRowId, setUpdatedRowId] = useState<GridRowId | null>(null)
+  const [editingRowId, setEditingRowId] = useState<GridRowId | null>(null)
 
-  const [updatedRowId, setUpdatedRowId] = useState<GridRowId | null>(null);
-  const [editingRowId, setEditingRowId] = useState<GridRowId | null>(null);
+  const [attemptedToAdd, setAttemptedToAdd] = useState(false) // track add button press
 
-  const [attemptedToAdd, setAttemptedToAdd] = useState(false); // track add button press
-
-  const [selectedRowId, setSelectedRowId] = useState<GridRowId | null>(null);
+  const [selectedRowId, setSelectedRowId] = useState<GridRowId | null>(null)
 
   const [editedFields, setEditedFields] = useState({
     // state to maintain fields are empty or not
-    name: "",
-    gender: "",
-    address: "",
-    mobile: "",
+    name: '',
+    gender: '',
+    address: '',
+    mobile: '',
     dob: dayjs(new Date()),
-  });
+  })
 
   const [ageValues, setAgeValues] = React.useState<{
-    [key: string]: number | null;
-  }>({});
+    [key: string]: number | null
+  }>({})
   useEffect(() => {
-    const updatedAgeValues: { [key: string]: number | null } = {};
+    const updatedAgeValues: { [key: string]: number | null } = {}
 
     students.forEach((student) => {
-      const { id, dob } = student;
-      const calculatedAge = calculateAge(dob);
+      const { id, dob } = student
+      const calculatedAge = calculateAge(dob)
 
-      updatedAgeValues[id] = calculatedAge;
-    });
+      updatedAgeValues[id] = calculatedAge
+    })
 
     // Update the state with the new age values
-    setAgeValues(updatedAgeValues);
-  }, [students]);
+    setAgeValues(updatedAgeValues)
+  }, [students])
 
-  const socket=io('http://localhost:4000');
+  const socket = io('http://localhost:4000')
 
   useEffect(() => {
-    console.log('useEffect is running');
+    console.log('useEffect is running')
 
-  socket.on('connect', () => {
-     console.log('Connected to socket server');
+    socket.on('connect', () => {
+      console.log('Connected to socket server')
 
-     setTimeout(()=>{
+      setTimeout(() => {
         socket.on('notification', (data: any) => {
-          console.log('Notification:', data.message);
-     });
-    },500);  
-});
-}, []);
+          console.log('Notification:', data.message)
+        })
+      }, 500)
+    })
+  }, [])
 
-    // useEffect(() => {
-    //   socket.on("getstudents", (data: any) => {
-    //     console.log("getAllStudents", data);
-    //   });
+  // useEffect(() => {
+  //   socket.on("getstudents", (data: any) => {
+  //     console.log("getAllStudents", data);
+  //   });
 
-    //   socket.on("newstudent", (data: any) => {
-    //     console.log("new student added", data);
-    //     if (data === 201) {
-    //       setShowSuccessModal(false);
-    //       dispatch(fetchAllStudentsSuccess());
-    //     }
-    //     if (data === 500) {
-    //       dispatch(addStudentError());
-    //     }
-    //   });
+  //   socket.on("newstudent", (data: any) => {
+  //     console.log("new student added", data);
+  //     if (data === 201) {
+  //       setShowSuccessModal(false);
+  //       dispatch(fetchAllStudentsSuccess());
+  //     }
+  //     if (data === 500) {
+  //       dispatch(addStudentError());
+  //     }
+  //   });
 
-    //   socket.on("editstudent", (data: any) => {
-    //     console.log("edited student", data);
-    //     if (data === 201) {
-    //       setShowUpdateSuccessModal(true);
-    //       dispatch(fetchAllStudentsSuccess());
-    //     }
-    //     if (data === 500) {
-    //       dispatch(editStudentError());
-    //     }
-    //   }); 
+  //   socket.on("editstudent", (data: any) => {
+  //     console.log("edited student", data);
+  //     if (data === 201) {
+  //       setShowUpdateSuccessModal(true);
+  //       dispatch(fetchAllStudentsSuccess());
+  //     }
+  //     if (data === 500) {
+  //       dispatch(editStudentError());
+  //     }
+  //   });
 
-    //   socket.on("deletestudent", (data) => {
-    //     console.log("deleted student", data);
-    //     if (data === 200) {
-    //       console.log("delete-student 204", data);
-    //       setShowRemoveSuccessCard(true);
-    //       dispatch(fetchAllStudentsSuccess());
-    //     }
-    //     if (data === 500) {
-    //       dispatch(removeStudentError());
-    //       console.log("delete-student error", data);
-    //     }
-    //     if (data === 404) {
-    //       console.log("delete-student error student not found", data);
-    //     }
-    //   });
-    // }, []);
+  //   socket.on("deletestudent", (data) => {
+  //     console.log("deleted student", data);
+  //     if (data === 200) {
+  //       console.log("delete-student 204", data);
+  //       setShowRemoveSuccessCard(true);
+  //       dispatch(fetchAllStudentsSuccess());
+  //     }
+  //     if (data === 500) {
+  //       dispatch(removeStudentError());
+  //       console.log("delete-student error", data);
+  //     }
+  //     if (data === 404) {
+  //       console.log("delete-student error student not found", data);
+  //     }
+  //   });
+  // }, []);
 
   const handleConfirmRemove = (id: GridRowId | null) => {
     if (id) {
-      setRows(rows.filter((row) => row.id !== id));
-      setShowRemoveConfirmModal(false);
-      setSelectedRowId(null);
+      setRows(rows.filter((row) => row.id !== id))
+      setShowRemoveConfirmModal(false)
+      setSelectedRowId(null)
       // Show the RemoveSuccessCard
-      setShowRemoveSuccessCard(true);
-      dispatch(removeStudentSuccess(id));
+      setShowRemoveSuccessCard(true)
+      dispatch(removeStudentSuccess(id))
     }
-  };
+  }
 
-  const handleRowEditStop: GridEventListener<"rowEditStop"> = (
+  const handleRowEditStop: GridEventListener<'rowEditStop'> = (
     params,
     event
   ) => {
     if (params.reason === GridRowEditStopReasons.rowFocusOut) {
-      event.defaultMuiPrevented = true;
+      event.defaultMuiPrevented = true
     }
-  };
+  }
 
   const handleEditClick = (id: GridRowId) => () => {
-    const editedRow = students.find((row) => row.id === id);
+    const editedRow = students.find((row) => row.id === id)
 
     if (editedRow) {
       setEditedFields({
@@ -375,46 +374,46 @@ export default function Table() {
         address: editedRow.address,
         mobile: editedRow.mobile,
         dob: dayjs(editedRow.dob),
-      });
+      })
     }
 
-    setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.Edit } });
-    setMode("Edit");
-    setEditingRowId(id);
-  };
+    setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.Edit } })
+    setMode('Edit')
+    setEditingRowId(id)
+  }
 
   const handleAddClick = (id: GridRowId) => () => {
     // Set attemptedToAdd to true to trigger error state on empty fields
-    setAttemptedToAdd(true);
+    setAttemptedToAdd(true)
     const formattedMobile = editedFields.mobile
-      ? editedFields.mobile.replace(/^\+94/, "0")
-      : "";
-   
+      ? editedFields.mobile.replace(/^\+94/, '0')
+      : ''
+
     const formattedForDatabase = formattedMobile.replace(
       /(\d{3})(\d{3})(\d{4})/,
-      "$1-$2-$3"
-    );
-    
+      '$1-$2-$3'
+    )
+
     if (
       !editedFields.name.trim() ||
       !editedFields.gender.trim() ||
       !editedFields.address.trim() ||
       !editedFields.mobile.trim() ||
-      dayjs(editedFields.dob).isSame(dayjs(new Date()), "day") ||
+      dayjs(editedFields.dob).isSame(dayjs(new Date()), 'day') ||
       !(ageValues[id] !== undefined && (ageValues[id], 10) < 18) ||
       !validatePhoneNumber(editedFields.mobile)
     ) {
       // Display an error message
-      setFieldMissingModal(true);
-      return;
+      setFieldMissingModal(true)
+      return
     }
 
     // If all fields are not empty, proceed with adding the row
-    setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.View } });
-    setMode("Add");
-    setShowSuccessModal(true);
-    setAttemptedToAdd(false); // Reset attemptedToAdd after adding
-    
+    setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.View } })
+    setMode('Add')
+    setShowSuccessModal(true)
+    setAttemptedToAdd(false) // Reset attemptedToAdd after adding
+
     dispatch(
       addStudentSuccess({
         id: id,
@@ -425,57 +424,55 @@ export default function Table() {
         dob: editedFields.dob.toISOString().slice(0, 10),
         age: ageValues[id],
       })
-    );
+    )
 
     setEditedFields({
-      name: "",
-      gender: "",
-      address: "",
-      mobile: "",
+      name: '',
+      gender: '',
+      address: '',
+      mobile: '',
       dob: dayjs(new Date()),
-    });
-  };
+    })
+  }
 
   const handleSaveClick = (id: GridRowId) => () => {
-
-   
     // Set attemptedToAdd to true to trigger error state on empty fields
-    setAttemptedToAdd(true);
+    setAttemptedToAdd(true)
     const formattedMobile = editedFields.mobile
-      ? editedFields.mobile.replace(/^\+94/, "0")
-      : "";
+      ? editedFields.mobile.replace(/^\+94/, '0')
+      : ''
     // Further format the mobile number as needed
     const formattedForDatabase = formattedMobile.replace(
       /(\d{3})(\d{3})(\d{4})/,
-      "$1-$2-$3"
-    );
+      '$1-$2-$3'
+    )
     // Validate all fields before updating the row
     if (
       !editedFields.name.trim() ||
       !editedFields.gender.trim() ||
       !editedFields.address.trim() ||
       !editedFields.mobile.trim() ||
-      dayjs(editedFields.dob).isSame(dayjs(new Date()), "day") ||
+      dayjs(editedFields.dob).isSame(dayjs(new Date()), 'day') ||
       !(ageValues[id] !== undefined && (ageValues[id], 10) < 18) ||
       !validatePhoneNumber(editedFields.mobile)
     ) {
       // Display an error message or take any other appropriate action
-      setFieldMissingModal(true);
-      return;
+      setFieldMissingModal(true)
+      return
     }
 
-    setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.View } });
-    setMode("Add");
-    setShowUpdateSuccessModal(true);
-    setUpdatedRowId(id);
-    setAttemptedToAdd(false); // Reset attemptedToAdd after updating
+    setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.View } })
+    setMode('Add')
+    setShowUpdateSuccessModal(true)
+    setUpdatedRowId(id)
+    setAttemptedToAdd(false) // Reset attemptedToAdd after updating
     setEditedFields({
-      name: "",
-      gender: "",
-      address: "",
-      mobile: "",
+      name: '',
+      gender: '',
+      address: '',
+      mobile: '',
       dob: dayjs(new Date()),
-    });
+    })
 
     dispatch(
       editStudentSuccess({
@@ -487,74 +484,74 @@ export default function Table() {
         dob: editedFields.dob.toISOString().slice(0, 10),
         age: ageValues[id],
       })
-    );
-  };
+    )
+  }
 
   const handleDeleteClick = (id: GridRowId) => () => {
-    setSelectedRowId(id);
-    setShowRemoveConfirmModal(true);
+    setSelectedRowId(id)
+    setShowRemoveConfirmModal(true)
     // dispatch(removeStudentSuccess(id));
-  };
+  }
 
   const handleCancelClick = (id: GridRowId) => () => {
     // Check if there are changes in the row
     const isRowModified = Object.keys(rowModesModel).some(
       (key) => key === id.toString()
-    );
+    )
 
     if (isRowModified) {
-      setShowDiscardModal(true);
+      setShowDiscardModal(true)
     } else {
       setRowModesModel({
         ...rowModesModel,
         [id]: { mode: GridRowModes.View, ignoreModifications: true },
-      });
+      })
 
-      const editedRow = rows.find((row) => row.id === id);
+      const editedRow = rows.find((row) => row.id === id)
       if (editedRow!.isNew) {
-        setRows(rows.filter((row) => row.id !== id));
+        setRows(rows.filter((row) => row.id !== id))
       }
-      setMode("Add");
+      setMode('Add')
     }
-  };
+  }
 
   const handleCancelUpdateClick = (id: GridRowId) => () => {
     const isRowModified = Object.keys(rowModesModel).some(
       (key) => key === id.toString()
-    );
+    )
 
     if (isRowModified) {
-      setShowDiscardUpdateModal(true);
+      setShowDiscardUpdateModal(true)
     } else {
-      cancelEdit(id);
+      cancelEdit(id)
     }
-  };
+  }
 
   const cancelEdit = (id: GridRowId) => {
     setRowModesModel({
       ...rowModesModel,
       [id]: { mode: GridRowModes.View, ignoreModifications: true },
-    });
+    })
 
-    const editedRow = rows.find((row) => row.id === id);
+    const editedRow = rows.find((row) => row.id === id)
     if (editedRow!.isNew) {
-      setRows(rows.filter((row) => row.id !== id));
+      setRows(rows.filter((row) => row.id !== id))
     }
-    setMode("Add");
-    setEditingRowId(null);
-  };
+    setMode('Add')
+    setEditingRowId(null)
+  }
 
   const handleConfirmDiscardUpdate = () => {
     if (editingRowId !== null) {
       setRowModesModel({
         ...rowModesModel,
         [editingRowId]: { mode: GridRowModes.View, ignoreModifications: true },
-      });
+      })
 
       // Find the original row data
       const originalRow = rows.find(
         (row) => row.id === parseInt(editingRowId.toString())
-      );
+      )
 
       if (originalRow) {
         setRows((oldRows) =>
@@ -563,67 +560,65 @@ export default function Table() {
               ? { ...row, ...originalRow }
               : row
           )
-        );
+        )
       }
 
-      setMode("Add");
-      setEditingRowId(null);
-      setShowDiscardUpdateModal(false);
+      setMode('Add')
+      setEditingRowId(null)
+      setShowDiscardUpdateModal(false)
     }
-  };
+  }
 
   const handleConfirmDiscardChanges = () => {
     // User confirmed discarding changes, remove the editing row
-    const tempeditingRowId = Object.keys(rowModesModel)[0];
+    const tempeditingRowId = Object.keys(rowModesModel)[0]
 
     if (editingRowId?.toString() === tempeditingRowId) {
-      setMode("Add");
-      handleConfirmDiscardUpdate();
+      setMode('Add')
+      handleConfirmDiscardUpdate()
     } else {
       // Handle discarding changes for non-editing rows
       // Reset the state and close the modal
-      setMode("Add");
-      setRowModesModel({});
-      setShowDiscardUpdateModal(false);
+      setMode('Add')
+      setRowModesModel({})
+      setShowDiscardUpdateModal(false)
     }
-  };
+  }
 
   const handleDismissDiscardChanges = () => {
     // User dismissed discarding changes, close the modal
-    setShowDiscardUpdateModal(false);
-    setEditingRowId(null);
-  };
+    setShowDiscardUpdateModal(false)
+    setEditingRowId(null)
+  }
 
   const handleConfirmDiscard = () => {
     // User confirmed discarding changes, remove the editing row
-    const editingRowId = Object.keys(rowModesModel)[0];
-    setRows(rows.filter((row) => row.id !== parseInt(editingRowId)));
-    setRowModesModel({});
-    setShowDiscardModal(false);
-    setMode("Add");
-    dispatch(removeStudentSuccess(parseInt(editingRowId)));
-  };
+    const editingRowId = Object.keys(rowModesModel)[0]
+    setRows(rows.filter((row) => row.id !== parseInt(editingRowId)))
+    setRowModesModel({})
+    setShowDiscardModal(false)
+    setMode('Add')
+    dispatch(removeStudentSuccess(parseInt(editingRowId)))
+  }
 
   const handleDismissDiscard = () => {
     // User dismissed discarding changes, close the modal
-    setShowDiscardModal(false);
-  };
+    setShowDiscardModal(false)
+  }
 
   const processRowUpdate = (newRow: GridRowModel) => {
-    const { isNew, ...updatedRow } = newRow as IStudent;
+    const { isNew, ...updatedRow } = newRow as IStudent
     setRows((oldRows) =>
       oldRows.map((row) =>
         row.id === newRow.id ? { ...row, ...updatedRow } : row
       )
-    );
-    return { ...updatedRow, isNew: false } as IStudent;
-  };
-
- 
+    )
+    return { ...updatedRow, isNew: false } as IStudent
+  }
 
   const handleRowModesModelChange = (newRowModesModel: GridRowModesModel) => {
-    setRowModesModel(newRowModesModel);
-  };
+    setRowModesModel(newRowModesModel)
+  }
 
   const columns: GridColDef[] = [
     {
@@ -637,35 +632,34 @@ export default function Table() {
       disableColumnMenu: true,
     },
     {
-      field: "id",
-      headerName: "ID",
+      field: 'id',
+      headerName: 'ID',
       width: 86,
       editable: false,
       sortable: false,
       disableColumnMenu: true,
-      headerClassName: "user-details",
+      headerClassName: 'user-details',
     },
     {
-      field: "name",
-      headerName: "Name",
-      type: "string",
+      field: 'name',
+      headerName: 'Name',
+      type: 'string',
       width: 135,
       sortable: true,
       disableColumnMenu: true,
-      headerClassName: "user-details",
+      headerClassName: 'user-details',
       editable: true,
       renderEditCell(params: GridRenderCellParams<any, string>) {
         const isNameEmpty =
           params.value === undefined ||
           params.value === null ||
-          params.value.trim() === "";
-        
+          params.value.trim() === ''
 
         return (
           <TextField
             size="small"
             value={
-              editedFields.name === ""
+              editedFields.name === ''
                 ? (params.value as string)
                 : editedFields.name
             }
@@ -674,46 +668,45 @@ export default function Table() {
                 id: params.id,
                 field: params.field,
                 value: event.target.value,
-              });
+              })
               setEditedFields((prevFields) => ({
                 ...prevFields,
                 name: event.target.value,
-              }));
+              }))
             }}
             error={isNameEmpty && attemptedToAdd}
             sx={{
-              "& .MuiOutlinedInput-notchedOutline": {
-                borderColor: "#2196F3",
+              '& .MuiOutlinedInput-notchedOutline': {
+                borderColor: '#2196F3',
                 borderRadius: 0,
               },
-              "&:hover .MuiOutlinedInput-notchedOutline": {
-                borderColor: "#2196F3",
+              '&:hover .MuiOutlinedInput-notchedOutline': {
+                borderColor: '#2196F3',
               },
             }}
           />
-        );
+        )
       },
     },
     {
-      field: "gender",
-      headerName: "Gender",
-      type: "singleSelect",
-      valueOptions: ["Male", "Female", "Other"],
+      field: 'gender',
+      headerName: 'Gender',
+      type: 'singleSelect',
+      valueOptions: ['Male', 'Female', 'Other'],
       width: 135,
       sortable: false,
       disableColumnMenu: true,
-      headerClassName: "user-details",
+      headerClassName: 'user-details',
       editable: true,
       renderEditCell: (params: GridRenderCellParams<any, string>) => {
-        const isGenderEmpty = !params.value;
+        const isGenderEmpty = !params.value
 
         return (
-          
           <Select
             size="small"
             fullWidth
             value={
-              editedFields.gender === ""
+              editedFields.gender === ''
                 ? (params.value as string)
                 : editedFields.gender
             }
@@ -722,46 +715,46 @@ export default function Table() {
                 id: params.id,
                 field: params.field,
                 value: e.target.value,
-              });
+              })
               setEditedFields((prevFields) => ({
                 ...prevFields,
                 gender: e.target.value,
-              }));
+              }))
             }}
             sx={{
-              "& .MuiOutlinedInput-notchedOutline": {
-                borderColor: "#2196F3",
+              '& .MuiOutlinedInput-notchedOutline': {
+                borderColor: '#2196F3',
                 borderRadius: 0,
               },
-              "&:hover .MuiOutlinedInput-notchedOutline": {
-                borderColor: "#2196F3",
+              '&:hover .MuiOutlinedInput-notchedOutline': {
+                borderColor: '#2196F3',
               },
             }}
             error={isGenderEmpty && attemptedToAdd}
           >
-            <MenuItem value={"Male"}>Male</MenuItem>
-            <MenuItem value={"Female"}>Female</MenuItem>
-            <MenuItem value={"Other"}>Other</MenuItem>
+            <MenuItem value={'Male'}>Male</MenuItem>
+            <MenuItem value={'Female'}>Female</MenuItem>
+            <MenuItem value={'Other'}>Other</MenuItem>
           </Select>
-        );
+        )
       },
     },
 
     {
-      field: "address",
-      headerName: "Address",
+      field: 'address',
+      headerName: 'Address',
       width: 135,
       sortable: false,
       disableColumnMenu: true,
-      headerClassName: "user-details",
+      headerClassName: 'user-details',
       editable: true,
       renderEditCell(params: GridRenderCellParams<any, string>) {
-        const isAddressEmpty = !params.value;
+        const isAddressEmpty = !params.value
         return (
           <TextField
             size="small"
             value={
-              editedFields.address === ""
+              editedFields.address === ''
                 ? (params.value as string)
                 : editedFields.address
             }
@@ -771,76 +764,75 @@ export default function Table() {
                 id: params.id,
                 field: params.field,
                 value: event.target.value,
-              });
+              })
               setEditedFields((prevFields) => ({
                 ...prevFields,
                 address: event.target.value,
-              }));
+              }))
             }}
             sx={{
-              "& .MuiOutlinedInput-notchedOutline": {
-                borderColor: "#2196F3",
+              '& .MuiOutlinedInput-notchedOutline': {
+                borderColor: '#2196F3',
                 borderRadius: 0,
               },
-              "&:hover .MuiOutlinedInput-notchedOutline": {
-                borderColor: "#2196F3",
+              '&:hover .MuiOutlinedInput-notchedOutline': {
+                borderColor: '#2196F3',
               },
             }}
             error={isAddressEmpty && attemptedToAdd}
           />
-        );
+        )
       },
     },
     {
-      field: "mobile",
-      headerName: "Mobile No:",
+      field: 'mobile',
+      headerName: 'Mobile No:',
       width: 135,
       sortable: false,
       disableColumnMenu: true,
-      headerClassName: "user-details",
+      headerClassName: 'user-details',
       editable: true,
       valueFormatter(params) {
         if (params.value) {
           // Remove leading '+94' and add '0' if necessary
-          let processedValue = params.value.replace(/^\+94/, "0");
+          let processedValue = params.value.replace(/^\+94/, '0')
 
           // Apply the pattern
           processedValue = processedValue.replace(
             /(\d{3})(\d{3})(\d{4})/,
-            "$1-$2-$3"
-          );
+            '$1-$2-$3'
+          )
 
-          return processedValue;
+          return processedValue
         }
 
-        return "";
+        return ''
       },
 
       renderEditCell(params: GridRenderCellParams<any, string>) {
-        const isMobileEmpty = !params.value;
+        const isMobileEmpty = !params.value
         const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-          const newValue = event.target.value;
-         
-          
+          const newValue = event.target.value
+
           // Update the cell value if the phone number is valid
 
           params.api.setEditCellValue({
             id: params.id,
             field: params.field,
             value: newValue,
-          });
+          })
           setEditedFields((prevFields) => ({
             ...prevFields,
             mobile: event.target.value,
-          }));
-        };
+          }))
+        }
 
         return (
           <>
             <TextField
               size="small"
               value={
-                editedFields.mobile === ""
+                editedFields.mobile === ''
                   ? (params.value as string)
                   : editedFields.mobile
               }
@@ -852,95 +844,92 @@ export default function Table() {
               }
               helperText={
                 !validatePhoneNumber(params.value as string) && attemptedToAdd
-                  ? "Please enter a valid phone number"
-                  : ""
+                  ? 'Please enter a valid phone number'
+                  : ''
               }
               sx={{
-                "& .MuiOutlinedInput-notchedOutline": {
-                  borderColor: "#2196F3",
+                '& .MuiOutlinedInput-notchedOutline': {
+                  borderColor: '#2196F3',
                   borderRadius: 0,
                 },
-                "&:hover .MuiOutlinedInput-notchedOutline": {
-                  borderColor: "#2196F3",
+                '&:hover .MuiOutlinedInput-notchedOutline': {
+                  borderColor: '#2196F3',
                 },
-                "& .MuiFormHelperText-root": {
+                '& .MuiFormHelperText-root': {
                   fontSize: 9,
-                  width: "auto",
-                  height: "auto",
-                  letterSpacing: "0.25px",
-                  marginLeft: "0px",
-                  marginTop: "0px",
-                  whiteSpace: "balance",
+                  width: 'auto',
+                  height: 'auto',
+                  letterSpacing: '0.25px',
+                  marginLeft: '0px',
+                  marginTop: '0px',
+                  whiteSpace: 'balance',
                 },
                 marginTop:
                   !validatePhoneNumber(params.value as string) && attemptedToAdd
-                    ? "30px"
-                    : "0px",
+                    ? '30px'
+                    : '0px',
               }}
             />
           </>
-        );
+        )
       },
     },
     {
-      field: "dob",
-      headerName: "Date of Birth",
-      type: "date",
+      field: 'dob',
+      headerName: 'Date of Birth',
+      type: 'date',
       width: 205,
       sortable: true,
       disableColumnMenu: true,
-      headerClassName: "user-details",
+      headerClassName: 'user-details',
       editable: true,
       valueFormatter: (params) => {
-        const date = dayjs(new Date(params.value));
-        return date.format("ddd MMM DD YYYY");
+        const date = dayjs(new Date(params.value))
+        return date.format('ddd MMM DD YYYY')
       },
 
       renderEditCell: (
         params: GridRenderCellParams<any, dayjs.Dayjs | null>
       ) => {
-        const isDateEmpty = !params.value;
-        const dateValue = params.value ? dayjs(params.value) : null;
+        const isDateEmpty = !params.value
+        const dateValue = params.value ? dayjs(params.value) : null
 
         const handleDateChange = (newValue: dayjs.Dayjs | null) => {
           params.api.setEditCellValue({
             id: params.id,
             field: params.field,
             value: newValue,
-          });
+          })
 
           // Calculate the age only if newValue is not null
           if (newValue !== null) {
-            const newAge = calculateAge(newValue.toDate());
-            const rowId = params.id;
+            const newAge = calculateAge(newValue.toDate())
+            const rowId = params.id
 
             setEditedFields((prevFields) => ({
               ...prevFields,
               dob: newValue,
-            }));
-
-            
+            }))
 
             setAgeValues((prevAgeValues) => ({
               ...prevAgeValues,
               [rowId]: newAge,
-            }));
+            }))
 
             // Update the 'age' field
             params.api.setEditCellValue({
               id: params.id,
-              field: "age",
+              field: 'age',
               value: newAge,
-            });
-           
+            })
           }
-        };
+        }
 
         return (
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DemoContainer
-              components={["DatePicker"]}
-              sx={{ paddingTop: "0px" }}
+              components={['DatePicker']}
+              sx={{ paddingTop: '0px' }}
             >
               <DatePicker
                 value={dateValue}
@@ -948,18 +937,18 @@ export default function Table() {
                 maxDate={dayjs()}
                 slotProps={{
                   textField: {
-                    size: "small",
+                    size: 'small',
                     sx: {
-                      "& .MuiOutlinedInput-notchedOutline": {
-                        borderColor: "#2196F3",
+                      '& .MuiOutlinedInput-notchedOutline': {
+                        borderColor: '#2196F3',
                         borderRadius: 0,
                       },
-                      "&:hover .MuiOutlinedInput-notchedOutline": {
-                        borderColor: "#2196F3",
+                      '&:hover .MuiOutlinedInput-notchedOutline': {
+                        borderColor: '#2196F3',
                       },
-                      alignContent: "center",
-                      justifyContent: "center",
-                      alignItems: "center",
+                      alignContent: 'center',
+                      justifyContent: 'center',
+                      alignItems: 'center',
                     },
                     error: isDateEmpty && attemptedToAdd,
                   },
@@ -967,26 +956,26 @@ export default function Table() {
               />
             </DemoContainer>
           </LocalizationProvider>
-        );
+        )
       },
     },
 
     {
-      field: "age",
-      headerName: "Age",
+      field: 'age',
+      headerName: 'Age',
       width: 101,
       disableColumnMenu: true,
       sortable: false,
-      headerClassName: "user-details",
+      headerClassName: 'user-details',
       editable: false,
       renderCell: (params: GridRenderCellParams<any, string>) => {
-        const isAgeEmpty = !params.value;
-        const isDateEmpty = !params.value;
+        const isAgeEmpty = !params.value
+        const isDateEmpty = !params.value
         const age =
           ageValues[params.row.id] !== undefined
             ? ageValues[params.row.id]?.toString()
-            : "";
-        const isBelowMinimumAge = age !== undefined && parseInt(age, 10) < 18;
+            : ''
+        const isBelowMinimumAge = age !== undefined && parseInt(age, 10) < 18
 
         if (
           params.row.id in rowModesModel &&
@@ -994,7 +983,7 @@ export default function Table() {
         ) {
           // Render a text field when in edit mode
           return (
-            <div style={{ display: "flex", flexDirection: "column" }}>
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
               <TextField
                 size="small"
                 value={age}
@@ -1003,11 +992,11 @@ export default function Table() {
                     id: params.id,
                     field: params.field,
                     value: event.target.value,
-                  });
+                  })
                   setEditedFields((prevFields) => ({
                     ...prevFields,
                     age: event.target.value,
-                  }));
+                  }))
                 }}
                 error={
                   (isBelowMinimumAge && attemptedToAdd) ||
@@ -1015,35 +1004,35 @@ export default function Table() {
                 }
                 helperText={
                   isBelowMinimumAge && attemptedToAdd
-                    ? "Individual is below the minimum age allowed"
-                    : ""
+                    ? 'Individual is below the minimum age allowed'
+                    : ''
                 }
                 sx={{
-                  "& .MuiOutlinedInput-notchedOutline": {
-                    borderColor: "#2196F3",
+                  '& .MuiOutlinedInput-notchedOutline': {
+                    borderColor: '#2196F3',
                     borderRadius: 0,
                   },
-                  "&:hover .MuiOutlinedInput-notchedOutline": {
-                    borderColor: "#2196F3",
+                  '&:hover .MuiOutlinedInput-notchedOutline': {
+                    borderColor: '#2196F3',
                   },
-                  "& .MuiFormHelperText-root": {
+                  '& .MuiFormHelperText-root': {
                     fontSize: 9,
-                    width: "100%",
-                    letterSpacing: "0.25px",
-                    marginLeft: "0px",
-                    marginTop: "0px",
-                    whiteSpace: "balance",
+                    width: '100%',
+                    letterSpacing: '0.25px',
+                    marginLeft: '0px',
+                    marginTop: '0px',
+                    whiteSpace: 'balance',
                   },
                   marginTop:
-                    isBelowMinimumAge && attemptedToAdd ? "30px" : "0px",
+                    isBelowMinimumAge && attemptedToAdd ? '30px' : '0px',
                 }}
               />
             </div>
-          );
+          )
         } else {
           // Render the age as plain text in view mode
           return (
-            <div style={{ display: "flex", flexDirection: "column" }}>
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
               <Typography variant="body2">{age}</Typography>
               {isBelowMinimumAge && attemptedToAdd && (
                 <Typography variant="caption" color="error">
@@ -1051,26 +1040,26 @@ export default function Table() {
                 </Typography>
               )}
             </div>
-          );
+          )
         }
       },
     },
 
     {
-      field: "action",
-      headerName: "Action",
+      field: 'action',
+      headerName: 'Action',
       width: 195,
       disableColumnMenu: true,
       sortable: false,
-      headerClassName: "user-details",
-      type: "actions",
+      headerClassName: 'user-details',
+      type: 'actions',
       getActions: ({ id }: { id: GridRowId }) => {
-        const isInEditMode = rowModesModel[id]?.mode === GridRowModes.Edit;
+        const isInEditMode = rowModesModel[id]?.mode === GridRowModes.Edit
 
         if (isInEditMode) {
           return [
             <div>
-              {mode === "Add" ? (
+              {mode === 'Add' ? (
                 <div className="action-buttons">
                   <StyledAddButton
                     onClick={handleAddClick(id)}
@@ -1106,7 +1095,7 @@ export default function Table() {
                 </div>
               )}
             </div>,
-          ];
+          ]
         }
 
         return [
@@ -1126,71 +1115,14 @@ export default function Table() {
               REMOVE
             </StyledRemoveButton>
           </div>,
-        ];
+        ]
       },
     },
-  ];
+  ]
 
   return (
     <StyledDataTableBox>
-      {/* <div
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-          }}
-        >
-          <div
-            style={{
-              display: 'flex',
-              justifyContent: 'flex-start',
-              gap: '4px',
-              padding: '16px',
-              fontSize: '24px',
-              fontWeight: '400',
-              fontFamily: 'Roboto,sans-serif',
-              lineHeight: '32.02px',
-            }}
-          >
-            User Details
-          </div>
-          <div
-            style={{
-              padding: '6px 16px 6px 1000px',
-              display: 'flex',
-              justifyContent: 'flex-end',
-            }}
-          >
-            <Button
-              style={{ backgroundColor: '#2196F3' }}
-              variant="contained"
-              size="medium"
-              onClick={handleClick}
-            >
-              ADD NEW
-            </Button>
-          </div>
-        </div> */}
- <Box
-        sx={{
-          height: 'fit-content',
-          width: 'fit-content',
-          margin: 'auto',
-          padding: '136px 144px 136px 144px',
-          display: 'flex',
-          flexDirection: 'column',
-          '& .actions': {
-            color: 'text.secondary',
-          },
-          '& .textPrimary': {
-            color: 'text.primary',
-          },
-          '& .user-details': {
-            backgroundColor: 'rgba(33, 150, 243, 0.08)',
-          },
-        }}
-      >
       <DataGrid
-        
         rows={students}
         columns={columns}
         editMode="row"
@@ -1212,73 +1144,10 @@ export default function Table() {
           rowModesModel[params.id]?.mode === GridRowModes.Edit ? 100 : 52
         }
       />
-     </Box>
-      
-        {/* {removeDialogOpen && (
-          <DialogBox
-            open={removeDialogOpen}
-            onClose={handleRemoveDialogDismiss}
-            dialogContent="Are you sure you want to remove this student?"
-            buttonLabel="CONFIRM"
-            buttonAction={handleRemoveDialogConfirm}
-            secondary={true}
-            secondaryButtonLabel="DISMISS"
-            secondaryButtonAction={handleRemoveDialogDismiss}
-          />
-        )}
 
-        {updateDialogOpen && (
-          <DialogBox
-            open={updateDialogOpen}
-            onClose={handleUpdateDialogDismiss}
-            dialogContent="Student Details updated successfully"
-            buttonLabel="OK"
-            buttonAction={handleUpdateDialogDismiss}
-          />
-        )}
+      {/* Modal for Adding Users */}
+      <InputForm openModal={openModal} setOpenModal={setOpenModal} />
 
-        {addDialogOpen && (
-          <DialogBox
-            open={addDialogOpen}
-            onClose={handleAddDialogDismiss}
-            dialogContent="A new student added successfully"
-            buttonLabel="OK"
-            buttonAction={handleAddDialogDismiss}
-          />
-        )}
-
-        {addDialogErrorOpen && (
-          <DialogBox
-            open={addDialogErrorOpen}
-            onClose={handleAddDialogErrorDismiss}
-            dialogContent="Mandatory fields missing"
-            buttonLabel="KEEP EDITING"
-            buttonAction={handleAddDialogErrorDismiss}
-          />
-        )}
-
-        {discardDialogOpen && (
-          <DialogBox
-            open={discardDialogOpen}
-            onClose={handleDiscardDialogDismiss}
-            dialogContent="Discard changes?"
-            buttonLabel="CONFIRM"
-            buttonAction={handleDiscardDialogConfirm}
-            secondary={true}
-            secondaryButtonLabel="DISMISS"
-            secondaryButtonAction={handleDiscardDialogDismiss}
-          />
-        )}
-
-        {mandatoryFieldError && (
-          <DialogBox
-            open={true}
-            onClose={() => setMandatoryFieldError(null)}
-            dialogContent={mandatoryFieldError}
-            buttonLabel="KEEP EDITING"
-            buttonAction={() => setMandatoryFieldError(null)}
-          />
-        )} */}
       {/* Modal for Adding Success */}
       <Modal
         open={showSuccessModal}
@@ -1288,17 +1157,17 @@ export default function Table() {
       >
         <Paper
           style={{
-            position: "absolute",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            borderRadius: "12px",
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            borderRadius: '12px',
           }}
         >
           <MessageCard
             message="A new student added successfully."
             primaryButton={{
-              text: "OK",
+              text: 'OK',
               onClick: () => setShowSuccessModal(false),
             }}
             primaryOption="OK"
@@ -1316,18 +1185,18 @@ export default function Table() {
         >
           <Paper
             style={{
-              position: "absolute",
-              top: "50%",
-              left: "50%",
-              transform: "translate(-50%, -50%)",
-              borderRadius: "12PX",
+              position: 'absolute',
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
+              borderRadius: '12PX',
             }}
           >
             <MessageCard
               message="Discard changes?"
-              primaryButton={{ text: "DISMISS", onClick: handleDismissDiscard }}
+              primaryButton={{ text: 'DISMISS', onClick: handleDismissDiscard }}
               secondaryButton={{
-                text: "CONFIRM",
+                text: 'CONFIRM',
                 onClick: handleConfirmDiscard,
               }}
               primaryOption="DISMISS"
@@ -1338,7 +1207,7 @@ export default function Table() {
       )}
 
       {/* Modal for Discard uPdate Changes */}
-       {showDiscardUpdateModal && (
+      {showDiscardUpdateModal && (
         <Modal
           open={showDiscardUpdateModal}
           onClose={handleDismissDiscardChanges}
@@ -1347,21 +1216,21 @@ export default function Table() {
         >
           <Paper
             style={{
-              position: "absolute",
-              top: "50%",
-              left: "50%",
-              transform: "translate(-50%, -50%)",
-              borderRadius: "12PX",
+              position: 'absolute',
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
+              borderRadius: '12PX',
             }}
           >
             <MessageCard
               message="Discard changes?"
               primaryButton={{
-                text: "DISMISS",
+                text: 'DISMISS',
                 onClick: handleDismissDiscardChanges,
               }}
               secondaryButton={{
-                text: "CONFIRM",
+                text: 'CONFIRM',
                 onClick: handleConfirmDiscardChanges,
               }}
               primaryOption="DISMISS"
@@ -1369,40 +1238,40 @@ export default function Table() {
             />
           </Paper>
         </Modal>
-      )} 
+      )}
       {/* Modal for Confirm Remove */}
       {showRemoveConfirmModal && (
         <Modal
           open={showRemoveConfirmModal}
           onClose={() => {
-            setShowRemoveConfirmModal(false);
-            setSelectedRowId(null);
+            setShowRemoveConfirmModal(false)
+            setSelectedRowId(null)
           }}
           aria-labelledby="discard-modal-title"
           aria-describedby="discard-modal-description"
         >
           <Paper
             style={{
-              position: "absolute",
-              top: "50%",
-              left: "50%",
-              transform: "translate(-50%, -50%)",
-              borderRadius: "12PX",
+              position: 'absolute',
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
+              borderRadius: '12PX',
             }}
           >
             <MessageCard
               message="Are you sure you want to remove this student?"
               primaryButton={{
-                text: "DISMISS",
+                text: 'DISMISS',
                 onClick: () => {
-                  setShowRemoveConfirmModal(false);
-                  setSelectedRowId(null);
+                  setShowRemoveConfirmModal(false)
+                  setSelectedRowId(null)
                 },
               }}
               secondaryButton={{
-                text: "CONFIRM",
+                text: 'CONFIRM',
                 onClick: () => {
-                  handleConfirmRemove(selectedRowId);
+                  handleConfirmRemove(selectedRowId)
                 },
               }}
               primaryOption="DISMISS"
@@ -1410,7 +1279,7 @@ export default function Table() {
             />
           </Paper>
         </Modal>
-      )} 
+      )}
 
       {/* Modal for Remove Success */}
       {showRemoveSuccessCard && (
@@ -1422,17 +1291,17 @@ export default function Table() {
         >
           <Paper
             style={{
-              position: "absolute",
-              top: "50%",
-              left: "50%",
-              transform: "translate(-50%, -50%)",
-              borderRadius: "12px",
+              position: 'absolute',
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
+              borderRadius: '12px',
             }}
           >
             <MessageCard
               message="The student removed successfully."
               primaryButton={{
-                text: "OK",
+                text: 'OK',
                 onClick: () => setShowRemoveSuccessCard(false),
               }}
               primaryOption="OK"
@@ -1449,17 +1318,17 @@ export default function Table() {
         >
           <Paper
             style={{
-              position: "absolute",
-              top: "50%",
-              left: "50%",
-              transform: "translate(-50%, -50%)",
-              borderRadius: "12px",
+              position: 'absolute',
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
+              borderRadius: '12px',
             }}
           >
             <MessageCard
               message="Student Details updated successfully."
               primaryButton={{
-                text: "OK",
+                text: 'OK',
                 onClick: () => setShowUpdateSuccessModal(false),
               }}
               primaryOption="OK"
@@ -1478,17 +1347,17 @@ export default function Table() {
         >
           <Paper
             style={{
-              position: "absolute",
-              top: "50%",
-              left: "50%",
-              transform: "translate(-50%, -50%)",
-              borderRadius: "12px",
+              position: 'absolute',
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
+              borderRadius: '12px',
             }}
           >
             <MessageCard
               message="Mandatory fields missing."
               primaryButton={{
-                text: "KEEP EDITING",
+                text: 'KEEP EDITING',
                 onClick: () => setFieldMissingModal(false),
               }}
               primaryOption="KEEP EDITING"
@@ -1497,5 +1366,5 @@ export default function Table() {
         </Modal>
       )}
     </StyledDataTableBox>
-  );
+  )
 }
