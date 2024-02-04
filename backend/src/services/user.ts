@@ -19,6 +19,22 @@ export class UserService {
     }
   }
 
+  static async selfRegister(data: Partial<User>) {
+    try {
+      const repository = AppDataSource.getTreeRepository(User);
+      const password = await hashPassword(data.password);
+      const newData = {
+        ...data,
+        password: password,
+        role: process.env.OBSERVER,
+      };
+      const newUser = repository.create(newData);
+      return await repository.save(newUser);
+    } catch (error) {
+      console.error("Error self registering:", error);
+    }
+  }
+
   static async findAll() {
     try {
       const repository = AppDataSource.getRepository(User);

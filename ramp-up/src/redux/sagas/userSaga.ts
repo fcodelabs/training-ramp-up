@@ -1,4 +1,4 @@
-import { addUserRequest, addUserEmail, addUserPasswordRequest, loginRequest } from "../slices/userSlice";
+import { addUserRequest, addUserEmail, addUserPasswordRequest, loginRequest, selfRegisterRequest } from "../slices/userSlice";
 import { call, takeLatest, put } from 'redux-saga/effects';
 import axios from 'axios';
 import { IUser } from "../slices/userSlice";
@@ -35,8 +35,17 @@ function* loginSaga(action: PayloadAction<{email: string, password: string}>) {
 
 }
 
+function* selfRegisterSaga(action: PayloadAction<{name: string, email: string, password: string}>) {
+    try {
+        yield call(axios.post, `http://localhost:5000/users/selfRegister`, action.payload);
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 export function* userSaga() {
     yield takeLatest(addUserRequest, addUserSaga)
     yield takeLatest(addUserPasswordRequest, addUserPasswordSaga)
     yield takeLatest(loginRequest, loginSaga)
+    yield takeLatest(selfRegisterRequest, selfRegisterSaga)
 }

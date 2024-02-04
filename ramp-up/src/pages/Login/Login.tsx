@@ -153,10 +153,9 @@ export function Login() {
             <span>Don't have an account? </span>
             <a 
             style={styles.registerLink}
-            href="/create-account">Register Now</a>
+            href="/self-registration">Register Now</a>
         </div>
      </div>
-    
         </Card>
         </Box>
     )

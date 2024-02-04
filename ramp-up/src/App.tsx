@@ -5,6 +5,7 @@ import { createBrowserRouter , Route, createRoutesFromElements, RouterProvider }
 import { CreatePassword } from "./pages/CreatePassword/CreatePassword";
 import { Login } from "./pages/Login/Login";
 import { SocketContext } from "./SocketContext";
+import { SelfRegistration } from "./pages/SelfRegistration/SelfRegistration";
 
 const socket = io("http://localhost:5000");
 
@@ -24,6 +25,7 @@ const roter = createBrowserRouter(
       <Route index element = {<Login />} />
       <Route path = "/create-password/:token" element = {<CreatePassword />} />
       <Route path = "/home" element = {<Home />} />
+      <Route path = "/self-registration" element = {<SelfRegistration />} />
     </Route>
   )
 )
