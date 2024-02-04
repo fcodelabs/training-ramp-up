@@ -1,4 +1,5 @@
 import * as nodemailer from "nodemailer";
+import { Server } from "socket.io";
 
 export const sendSignupEmail = async (
   email: string,
@@ -41,3 +42,17 @@ export const sendSignupEmail = async (
     });
   });
 };
+
+
+export async function sendMessage(
+  io: Server,
+  userId: string,
+  message: string,
+  studentId: number
+) {
+  if (userId) {
+    io.to(userId).emit(message, studentId);
+  } else {
+    console.warn("User not found:", userId);
+  }
+}

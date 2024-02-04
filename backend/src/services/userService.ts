@@ -1,7 +1,7 @@
 import { AppDataSource } from "../config/data-source";
 import { User } from "../entity/user";
 
-class UserService {
+export class UserService {
   private userRepository = AppDataSource.getRepository(User);
 
   async createUser(user: User): Promise<User> {
