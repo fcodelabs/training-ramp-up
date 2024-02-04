@@ -26,9 +26,11 @@ const userSlice = createSlice({
         addUserPasswordRequest: (state, action: PayloadAction<{token: string, password: string}>) => {},
 
         loginRequest: (state, action: PayloadAction<{email: string, password: string}>) => {},
+
+        selfRegisterRequest: (state, action: PayloadAction<{name: string, email: string, password: string}>) => {},
     }
 })
 
-export const { addUserEmail, addUserRequest, addUserPasswordRequest, loginRequest } = userSlice.actions;
+export const { addUserEmail, addUserRequest, addUserPasswordRequest, loginRequest, selfRegisterRequest } = userSlice.actions;
 export const userReducer = userSlice.reducer;
 

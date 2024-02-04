@@ -7,4 +7,5 @@ export function userRoutes(app: Application, io: Server) {
   app.post("/users", UserController.create);
   app.patch("/users", UserController.addPassword);
   app.post("/users/login", userController.login.bind(userController));
+  app.post("/users/selfRegister", UserController.selfRegister);
 }

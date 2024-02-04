@@ -21,6 +21,18 @@ export class UserController {
     }
   }
 
+  static async selfRegister(req: Request, res: Response) {
+    try {
+      const user = await UserService.selfRegister(req.body);
+      res.status(201).json(user);
+    } catch (error) {
+      console.error(error);
+      res
+        .status(500)
+        .json({ message: "An error occurred while self registering." });
+    }
+  }
+
   static async addPassword(req: Request, res: Response) {
     try {
       const user = await UserService.addPassword(
