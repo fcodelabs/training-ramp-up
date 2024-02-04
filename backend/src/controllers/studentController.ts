@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { StudentService } from "../services/studentService";
 import { getSocketInstance } from "../services/socketService"; // Import the socket manager
-import { Server } from "socket.io";
+import { sendMessage } from "../services/emailService";
 
 export class StudentController {
   private studentService = new StudentService();
@@ -89,15 +89,3 @@ export class StudentController {
   }
 }
 
-export async function sendMessage(
-  io: Server,
-  userId: string,
-  message: string,
-  studentId: number
-) {
-  if (userId) {
-    io.to(userId).emit(message, studentId);
-  } else {
-    console.warn("User not found:", userId);
-  }
-}

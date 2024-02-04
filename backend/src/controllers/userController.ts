@@ -5,9 +5,9 @@ import UserService, {
 import * as jwt from "jsonwebtoken";
 import { User } from "../entity/user";
 import * as bcrypt from "bcrypt";
-import { sendSignupEmail } from "../services/emailService";
+import { sendMessage, sendSignupEmail } from "../services/emailService";
+
 import { getSocketInstance } from "../services/socketService";
-import { sendMessage } from "./studentController";
 const SECRET_KEY = process.env.SECRET_KEY;
 
 export class UserController {
@@ -62,7 +62,7 @@ export class UserController {
           if (user.verified) {
             res
               .status(200)
-              .json({ messege: "email already exists", isVerified: true });
+              .json({ message: "email already exists", isVerified: true });
             return;
           }
           user.tempToken = hashedToken;

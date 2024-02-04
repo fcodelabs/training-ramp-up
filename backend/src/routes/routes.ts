@@ -1,5 +1,5 @@
-import { StudentController } from "../controller/studentController";
-import { UserController } from "../controller/userController";
+import { StudentController } from "../controllers/studentController";
+import { UserController } from "../controllers/userController";
 import { authenticateToken, authorizeRole } from "../middleware/auth";
 export enum Role {
   ADMIN = "admin",
