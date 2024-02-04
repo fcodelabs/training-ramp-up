@@ -50,7 +50,7 @@ const startServer = async () => {
     console.log("Data Source has been initialized!");
 
     studentRoutes(app, io);
-    userRoutes(app);
+    userRoutes(app, io);
 
     server.listen(port, () => {
       console.log(`[server]: Server is running at http://localhost:${port}`);

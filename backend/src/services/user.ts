@@ -1,7 +1,7 @@
 import { AppDataSource } from "..";
 import { User } from "../models/user";
 import { sendEmail } from "../utility/sendMail";
-import { hashPassword } from "../utility/passwordFunctions";
+import { hashPassword, checkPassword } from "../utility/passwordFunctions";
 
 export class UserService {
   static async create(data: Partial<User>) {
@@ -44,6 +44,24 @@ export class UserService {
       return await repository.save(user);
     } catch (error) {
       console.error("Error adding password:", error);
+    }
+  }
+
+  static async login(email: string, password: string) {
+    try {
+      const repository = AppDataSource.getRepository(User);
+      const user = await repository.findOne({ where: { email } });
+      if (!user) {
+        throw new Error("User not found");
+      }
+      const result = await checkPassword(user.password, password);
+      if (!result) {
+        throw new Error("Invalid password");
+      }
+      console.log(`User logged in ${user.email}`);
+      return user;
+    } catch (error) {
+      console.error("Error logging in:", error);
     }
   }
 }
