@@ -11,24 +11,32 @@ import {
 import { useEffect, useState } from "react";
 import { loginUsers } from "../../redux/slice/userSlice";
 import { useDispatch } from "react-redux";
-import { io } from "socket.io-client";
 import { useNavigate } from "react-router-dom";
-const socket = io("http://localhost:5000");
+// import { io } from "socket.io-client";
+// const socket = io("http://localhost:5000");
+import { socket } from "../..";
 const LoginPage = () => {
   const isMobile = useMediaQuery("(max-width: 600px)");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [emailError, setEmailError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
+  const [emailHelperText, setEmailHelperText] = useState("");
+  const [passwordHelperText, setPasswordHelperText] = useState("");
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   useEffect(() => {
     socket.on("login_user", (data) => {
-      console.log("hereeeada");
       if (data.statusCode === 200) {
         navigate("/home", { state: { role: data.role } });
+      }
+      if (data.statusCode === 401) {
+        setEmailHelperText("");
+        setPasswordHelperText("Invalid email or password");
+        setEmailError(true);
+        setPasswordError(true);
       }
     });
   }, [navigate]);
@@ -47,15 +55,16 @@ const LoginPage = () => {
 
     if (email === "") {
       setEmailError(true);
+      setEmailHelperText("Mandotary fields missing");
     }
     if (password === "") {
       setPasswordError(true);
+      setPasswordHelperText("Mandotary fields missing");
     }
 
     if (email && password) {
-      console.log(process.env.REACT_APP_API_USERS);
-      console.log(process.env.REACT_APP_API_STUDENTS);
       dispatch(loginUsers({ email, password }));
+      socket.emit("login", email);
     }
   };
 
@@ -88,7 +97,7 @@ const LoginPage = () => {
                 type="email"
                 value={email}
                 error={emailError}
-                helperText={emailError ? "Mandatory field is missing" : null}
+                helperText={emailError ? emailHelperText : null}
                 sx={{ marginBottom: "10px" }}
               />
               <TextField
@@ -100,7 +109,7 @@ const LoginPage = () => {
                 type="password"
                 value={password}
                 error={passwordError}
-                helperText={passwordError ? "Mandatory field is missing" : null}
+                helperText={passwordError ? passwordHelperText : null}
                 sx={{ marginBottom: "10px" }}
               />
               <Button

@@ -3,11 +3,13 @@ import { PayloadAction } from "@reduxjs/toolkit";
 import {
   ILoginCredentials,
   IPasswordToken,
+  IRegisterUser,
   IUsers,
   addUsers,
   createUsers,
   loginUsers,
   logoutUsers,
+  registerUsers,
 } from "../slice/userSlice";
 import axios from "axios";
 axios.defaults.withCredentials = true;
@@ -47,12 +49,17 @@ function* watchLoginUser(
 ): Generator<any, any, any> {
   const { email, password } = action.payload;
   try {
-    yield call(axios.post<ILoginCredentials>, `${apiUrl}/loginUser`, {
-      email,
-      password,
-    });
+    yield call(
+      axios.post<ILoginCredentials>,
+      `${apiUrl}/loginUser`,
+      {
+        email,
+        password,
+      },
+      { withCredentials: true }
+    );
   } catch (error: any) {
-    console.error(error);
+    return error;
   }
 }
 
@@ -65,9 +72,29 @@ function* watchLogoutUser(): Generator<any, any, any> {
     return error;
   }
 }
+function* watchRegisterUser(action: PayloadAction<IRegisterUser>) {
+  const { name, email, password } = action.payload;
+  try {
+    yield call(
+      axios.post<IRegisterUser>,
+      `${apiUrl}/registerUser`,
+      {
+        name,
+        email,
+        password,
+      },
+      {
+        withCredentials: true,
+      }
+    );
+  } catch (error: any) {
+    return error;
+  }
+}
 export function* userRoleSaga() {
   yield takeLatest(addUsers, watchSendMail);
   yield takeLatest(createUsers, watchCreateUser);
   yield takeLatest(loginUsers, watchLoginUser);
   yield takeLatest(logoutUsers, watchLogoutUser);
+  yield takeLatest(registerUsers, watchRegisterUser);
 }

@@ -125,8 +125,7 @@ export const registerUser = async (
     };
     const createdUser = userRepo.create(newUser as Users);
     await userRepo.save(createdUser);
-    console.log('here');
-    res.status(201).json({ message: 'User is registered' });
+    res.status(200).json({ message: 'User is registered' });
   } catch (err) {
     console.error(err);
     res.status(404).json({ message: 'User is not registered' });
@@ -180,7 +179,7 @@ export const loginUser = async (
   } catch {
     res.status(500).json({ error: 'Internal Server Error' });
   }
-  console.log('userRole' + userRole);
+
   return userRole;
 };
 

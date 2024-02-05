@@ -55,10 +55,11 @@ import { ageCalculator } from "../../utility/ageCalculator";
 import { validatePhoneNumber } from "../../utility/validatePhoneNumber";
 import { dataGridStyles } from "../../styles/dataGridStyles";
 import PopupMessage from "../PopupMessage/PopupMessage";
-import io from "socket.io-client";
 import AddNewUserForm from "../AddNewUserForm/AddNewUserForm";
+// import io from "socket.io-client";
 // const socket = io("https://ramp-up-backend.onrender.com");
-const socket = io("http://localhost:5000");
+// const socket = io("http://localhost:5000");
+import { socket } from "../..";
 
 let idValue = 0;
 

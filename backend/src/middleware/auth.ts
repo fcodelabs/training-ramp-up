@@ -21,9 +21,8 @@ export const verifyToken = async (
         res.status(401).json({ message: 'Unauthorized2' });
         return;
       }
-      (data as jwt.JwtPayload).user.role === 'Admin'
-        ? next()
-        : res.status(401).json({ message: 'Unauthorized3' });
+      req.body.role = (data as jwt.JwtPayload).user.role;
+      next();
     });
   } catch (error) {
     res.status(401).json({ message: 'Unauthorized4' });

@@ -9,8 +9,12 @@ import {
   registerUser
 } from '../controllers/users.controllers';
 import { verifyToken } from '../middleware/auth';
+import { verifyAdmin } from '../middleware/verifyAdmin';
 
-export default function userSocketRouter(io: any): Router {
+export default function userSocketRouter(
+  io: any,
+  userSocketMap: Map<string, string>
+): Router {
   const userRouter = Router();
   userRouter.post('/newUser', async (req: Request, res: Response) => {
     try {
@@ -32,8 +36,11 @@ export default function userSocketRouter(io: any): Router {
   });
   userRouter.post('/registerUser', async (req: Request, res: Response) => {
     try {
+      const socketId = userSocketMap.get(req.body.email as string);
       await registerUser(req, res).then(() => {
-        io.emit('register_user', res.statusCode);
+        if (socketId !== null) {
+          io.to(socketId).emit('register_user', res.statusCode);
+        }
       });
     } catch (error) {
       console.error(error);
@@ -42,16 +49,19 @@ export default function userSocketRouter(io: any): Router {
   userRouter.post('/loginUser', async (req: Request, res: Response) => {
     try {
       const role = await loginUser(req, res);
-      console.log('role ' + role);
-      if (role !== null) {
-        io.emit('login_user', { statusCode: res.statusCode, role });
+      const socketId = userSocketMap.get(req.body.email as string);
+      if (socketId !== null) {
+        io.to(socketId).emit('login_user', {
+          statusCode: res.statusCode,
+          role
+        });
       }
     } catch (error) {
       console.error(error);
     }
   });
 
-  userRouter.get('/getUsers', verifyToken, getAllUsers);
+  userRouter.get('/getUsers', verifyToken, verifyAdmin, getAllUsers);
   userRouter.post('/logoutUser', async (req: Request, res: Response) => {
     try {
       await logoutUser(req, res).then(() => {

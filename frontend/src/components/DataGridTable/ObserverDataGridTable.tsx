@@ -24,9 +24,10 @@ import {
 import { formatPhoneNumber } from "../../utility/formatPhoneNumber";
 import { dataGridStyles } from "../../styles/dataGridStyles";
 import PopupMessage from "../PopupMessage/PopupMessage";
-import io from "socket.io-client";
+// import io from "socket.io-client";
+// const socket = io("http://localhost:5000");
 // const socket = io("https://ramp-up-backend.onrender.com");
-const socket = io("http://localhost:5000");
+import { socket } from "../..";
 
 function EditToolbar() {
   return (

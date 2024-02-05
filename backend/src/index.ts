@@ -20,14 +20,20 @@ const io = new Server(server, {
     credentials: true
   }
 });
-
+const userSocketMap = new Map<string, string>();
 io.on('connection', (socket) => {
-  console.log(socket.id);
+  // console.log(socket.id);
+  socket.on('login', (userId: string) => {
+    userSocketMap.set(userId, socket.id);
+  });
+  socket.on('register', (userId: string) => {
+    userSocketMap.set(userId, socket.id);
+  });
 });
 app.use(cookieParser());
 app.use(express.json());
 app.use('/students', socketRouter(io));
-app.use('/users', userSocketRouter(io));
+app.use('/users', userSocketRouter(io, userSocketMap));
 server.listen(5000, () => {
   console.log('server is running on port: 5000');
 });
