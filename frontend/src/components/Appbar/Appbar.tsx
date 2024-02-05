@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "@mui/material";
 import styled from "styled-components";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
@@ -56,11 +56,11 @@ const Appbar = () => {
       open: true,
       onConfirm: () => {
         dispatch(logout());
-        navigate(Paths.LOGIN);
       },
       type: NotificationTypes.LOGOUT_USER,
     });
   };
+
   return (
     <AppbarWrapper>
       <AppbarTitle>Ramp up Project</AppbarTitle>

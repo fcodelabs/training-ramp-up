@@ -78,4 +78,11 @@ export const Routes = [
     action: "verify",
     middleware: [authenticateToken],
   },
+  {
+    method: "post",
+    route: "/users/logout",
+    controller: UserController,
+    action: "logout",
+    middleware: [],
+  }
 ];

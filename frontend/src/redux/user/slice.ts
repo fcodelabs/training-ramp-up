@@ -69,12 +69,10 @@ const userSlice = createSlice({
       Object.assign(state, action.payload);
       state.loginError = false;
     },
-    loginSuccess: (state, action: PayloadAction<string>) => {
+    loginSuccess: (state, action: PayloadAction<any>) => {
       state.isLogged = true;
       state.loginError = false;
-      state.role = parseToken(action.payload).role;
-      console.log("action.payload", action.payload);
-      localStorage.setItem(LocalstorageId, action.payload);
+      state.role = action.payload.role;
     },
     loginFail: (state, action: PayloadAction<string>) => {
       state.loginError = true;
@@ -84,12 +82,11 @@ const userSlice = createSlice({
       state.newUser.registered = true;
       state.newUser.isVerifiedUser = false;
     },
-    logout: (state) => {
+    logoutSuccess: (state) => {
       state.isLogged = false;
       state.email = "";
       state.password = "";
       state.role = Role.NONE;
-      localStorage.removeItem(LocalstorageId);
     },
     signup: (state, action: PayloadAction<any>) => {
       //middleware
@@ -110,10 +107,13 @@ const userSlice = createSlice({
     login: (state, action: PayloadAction<any>) => {
       //middleware
     },
-    authenticate: (state, action: PayloadAction<any>) => {
+    authenticate: (state) => {
       //middleware
     },
     register: (state, action: PayloadAction<any>) => {
+      //middleware
+    },
+    logout: (state) => {
       //middleware
     }
   },
@@ -123,6 +123,7 @@ export { Role };
 export default userSlice.reducer;
 export const {
   login,
+  logoutSuccess,
   logout,
   loginFail,
   updateUser,

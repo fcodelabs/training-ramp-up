@@ -21,6 +21,7 @@
     "bcrypt": "^5.1.1",
     "body-parser": "^1.19.1",
     "circular-json": "^0.5.9",
+    "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "debug": "^4.3.4",
     "dotenv": "^16.3.1",
@@ -39,6 +40,7 @@
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",
+    "@types/cookie-parser": "^1.4.6",
     "@types/jest": "^29.5.11",
     "@types/jsonwebtoken": "^9.0.5",
     "@typescript-eslint/eslint-plugin": "^6.19.1",

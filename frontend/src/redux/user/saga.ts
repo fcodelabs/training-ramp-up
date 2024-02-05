@@ -10,6 +10,8 @@ import {
   signup,
   register,
   registerSuccess,
+  logout,
+  logoutSuccess,
 } from "./slice";
 import {
   loginAsync,
@@ -17,13 +19,15 @@ import {
   asyncAuthenticateUser,
   signupUsersAsync,
   registerUsersAsync,
+  logoutAsync,
 } from "../../utilities/services";
 const LocalstorageId = `${process.env.REACT_APP_API_URL}`;
 
 export function* watchLogin(action: any) {
   try {
-    const token: string = yield call(loginAsync, action.payload);
-    yield put(loginSuccess(token));
+    const data: string = yield call(loginAsync, action.payload);
+    console.log("data", data);
+    yield put(loginSuccess(data));
   } catch (error: any) {
     console.log("error", error);
     yield put(loginFail(error));
@@ -40,11 +44,10 @@ export function* watchAddNewUser(action: any): Generator<any, void, any> {
   }
 }
 
-export function* watchAuthenticate(action: any): Generator<any, void, any> {
+export function* watchAuthenticate(): Generator<any, void, any>{
   try {
-    const token = action.payload;
-    yield call(asyncAuthenticateUser, token);
-    yield put(loginSuccess(token));
+    const data: any = yield call(asyncAuthenticateUser);
+    yield put(loginSuccess(data));
   } catch (error: any) {
     yield put(loginFail(error));
     return error;
@@ -72,10 +75,21 @@ export function* watchRegisterUser(action: any): Generator<any, void, any> {
   }
 }
 
+export function* watchLogoutUser() {
+  try {
+    yield call(logoutAsync);
+    yield put(logoutSuccess());
+  } catch (error: any) {
+    return error;
+  }
+}
+
+
 export function* userSaga() {
   yield takeLatest(login, watchLogin);
   yield takeLatest(addNewUser, watchAddNewUser);
   yield takeLatest(authenticate, watchAuthenticate);
   yield takeLatest(signup, watchSignupUser);
   yield takeLatest(register, watchRegisterUser);
+  yield takeLatest(logout, watchLogoutUser);
 }

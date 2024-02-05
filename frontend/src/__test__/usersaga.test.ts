@@ -37,7 +37,7 @@ describe("userSaga", () => {
     channel.put(addNewUser(mockUser));
 
     // Simulate authenticating a user
-    channel.put(authenticate("mockToken"));
+    channel.put(authenticate());
 
     // Simulate signing up a user
     channel.put(signup({ /* your signup data */ }));
@@ -52,7 +52,7 @@ describe("userSaga", () => {
       loginSuccess("mockToken"),
       addNewUser(mockUser),
       setNewUserVerification(true),
-      authenticate("mockToken"),
+      authenticate(),
       loginSuccess("mockToken"),
       signup({ /* your signup data */ }),
       register({ /* your register data */ }),

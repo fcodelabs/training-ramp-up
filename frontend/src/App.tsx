@@ -23,9 +23,9 @@ function App() {
       <Routes>
         <Route path={Paths.LOGIN} element={<Login />} />
         <Route path={Paths.REGISTER} element={<Register />} />
+        <Route path={Paths.SIGNUP} element={<PasswordCreate />} />
         <Route element={<ProtectedRoute />}>
           <Route path={Paths.HOME} element={<Home />} />
-          <Route path={Paths.SIGNUP} element={<PasswordCreate />} />
         </Route>
       </Routes>
     </div>
