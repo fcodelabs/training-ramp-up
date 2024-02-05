@@ -31,8 +31,7 @@ export class UserController {
         .cookie("token", token, {
           httpOnly: true,
           domain: ".lbmsalpha.live",
-          secure: false,
-          sameSite: "lax",
+          secure: true,
           maxAge: 1000 * 60 * 60 * 5,
         })
         .status(200)
@@ -144,6 +143,8 @@ export class UserController {
     try {
       res.clearCookie('token', {
         httpOnly: true,
+        domain: ".lbmsalpha.live",
+        secure: true,
       }).status(200).json({ message: "User logged out successfully"});
       console.log("logout");
     } catch (error) {
