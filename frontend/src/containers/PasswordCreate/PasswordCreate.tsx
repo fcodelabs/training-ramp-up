@@ -84,7 +84,7 @@ const PasswordCreate = () => {
         token: token,
       };
       dispatch(signup(body));
-      window.location.href = Paths.HOME;
+      window.location.href = Paths.LOGIN;
     }
   };
 

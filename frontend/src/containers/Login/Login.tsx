@@ -49,10 +49,9 @@ const Login = () => {
   const isLogged = useAppSelector((state) => state.user.isLogged);
 
   useEffect(() => {
-    const token = localStorage.getItem(LocalstorageId);
-    if (token) {
-      dispatch(authenticate(token));
-    }
+   
+    dispatch(authenticate());
+    
     if (isLogged) {
       navigate(Paths.HOME);
     }

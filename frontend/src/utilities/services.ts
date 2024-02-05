@@ -5,11 +5,10 @@ const url = process.env.REACT_APP_API_URL;
 
 export const fetchStudentsAsync = async () => {
   try {
-    const Token = localStorage.getItem(LocalstorageId);
     const response = await axios.get(`${url}/students`, {
+      withCredentials: true,
       headers: {
         "Content-Type": "application/json",
-        authorization: `Bearer ${Token}`,
       },
     });
     return response.data;
@@ -20,13 +19,16 @@ export const fetchStudentsAsync = async () => {
 
 export const addStudentsAsync = async (data: GridValidRowModel) => {
   try {
-    const Token = localStorage.getItem(LocalstorageId);
-    const response = await axios.post(`${url}/students/${data.socketId}`, data.editedRow, {
-      headers: {
-        "Content-Type": "application/json",
-        authorization: `Bearer ${Token}`,
-      },
-    });
+    const response = await axios.post(
+      `${url}/students/${data.socketId}`,
+      data.editedRow,
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      }
+    );
     return response.data;
   } catch (error) {
     throw error;
@@ -35,15 +37,14 @@ export const addStudentsAsync = async (data: GridValidRowModel) => {
 
 export const updateStudentAsync = async (data: GridValidRowModel) => {
   try {
-    const Token = localStorage.getItem(LocalstorageId);
     const response = await axios.put(
       `${url}/students/${data.editedRow.id}/${data.socketId}`,
       data.editedRow,
       {
         headers: {
           "Content-Type": "application/json",
-          authorization: `Bearer ${Token}`,
         },
+        withCredentials: true,
       }
     );
     return response.data;
@@ -54,13 +55,15 @@ export const updateStudentAsync = async (data: GridValidRowModel) => {
 
 export const deleteStudentAsync = async (data: any) => {
   try {
-    const Token = localStorage.getItem(LocalstorageId);
-    const response = await axios.delete(`${url}/students/${data.id}/${data.socketId}`,{
-      headers: {
-        "Content-Type": "application/json",
-        authorization: `Bearer ${Token}`,
-      },
-    });
+    const response = await axios.delete(
+      `${url}/students/${data.id}/${data.socketId}`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      }
+    );
     return response.data;
   } catch (error) {
     throw error;
@@ -73,10 +76,12 @@ export const loginAsync = async (newuser: any) => {
       headers: {
         "Content-Type": "application/json",
       },
+      withCredentials: true,
     });
     console.log("response", response);
-    return response.data.token;
+    return response.data;
   } catch (error) {
+    console.log("error", error);
     throw error;
   }
 };
@@ -88,30 +93,36 @@ export const addUsersAsync = async (data: any) => {
       email: data.user.email,
       role: data.user.role,
     };
-    const Token = localStorage.getItem(LocalstorageId);
-    const response = await axios.post(`${url}/users/email/${data.socketId}`, newuser, {
-      headers: {
-        "Content-Type": "application/json",
-        authorization: `Bearer ${Token}`,
-      },
-    });
+    const response = await axios.post(
+      `${url}/users/email/${data.socketId}`,
+      newuser,
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+
+      }
+    );
     return response.data;
   } catch (error) {
     throw error;
   }
 };
 
-export const asyncAuthenticateUser = async (token: any) => {
+export const asyncAuthenticateUser = async () => {
   try {
     const temp = {
-      token: token,
+      token: "token",
     };
-    await axios.post(`${url}/users/verify`, temp, {
+    const response = await axios.post(`${url}/users/verify`, temp, {
       headers: {
         "Content-Type": "application/json",
-        authorization: `Bearer ${token}`,
       },
+      withCredentials: true,
+
     });
+    return response.data;
   } catch (error) {
     throw error;
   }
@@ -127,6 +138,7 @@ export const signupUsersAsync = async (data: any) => {
       headers: {
         "Content-Type": "application/json",
       },
+
     });
     console.log("response", response);
     return response.data;
@@ -144,6 +156,22 @@ export const registerUsersAsync = async (data: any) => {
     });
     return response.data;
   } catch (error) {
+    throw error;
+  }
+};
+
+export const logoutAsync = async () => {
+  try {
+    const response = await axios.post(`${url}/users/logout`, {},{
+      withCredentials: true,
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    console.log("response", response.data);
+    return response.data;
+  } catch (error) {
+    console.log("error", error);
     throw error;
   }
 };

@@ -47,8 +47,7 @@ describe("userSaga", () => {
   });
 });
 
-// userReducer tests
-// discardStudent
+
 describe("userReducer", () => {
   it("should handle discardStudent action", () => {
     const initialStateWithUsers = {

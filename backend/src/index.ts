@@ -4,6 +4,7 @@ import { AppDataSource } from "./config/data-source";
 import { Routes } from "./routes/routes";
 import cors = require("cors");
 import { createServer } from "http";
+import * as cookieParser from "cookie-parser";  
 
 import { initializeSocketIO } from "../src/services/socketService"; 
 
@@ -11,10 +12,11 @@ AppDataSource.initialize().then(async () => {
   const app = express();
   app.use(bodyParser.json());
   // app.use(authenticateToken)
+  app.use(cookieParser());
   app.use(bodyParser.urlencoded({ extended: true }));
   app.use(
     cors({
-      origin: "*",
+      origin: ["http://localhost:3000","http://localhost:3000/home"],
       methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
       credentials: true,
     })

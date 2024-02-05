@@ -6,7 +6,6 @@ import * as jwt from "jsonwebtoken";
 import { User } from "../entity/user";
 import * as bcrypt from "bcrypt";
 import { sendMessage, sendSignupEmail } from "../services/emailService";
-
 import { getSocketInstance } from "../services/socketService";
 const SECRET_KEY = process.env.SECRET_KEY;
 
@@ -19,7 +18,7 @@ export class UserController {
 
     try {
       const user = await this.userService.findByEmail(email);
-
+      console.log("user", user);
       if (!user || !(await user.comparePassword(password))) {
         res.status(401).json({ error: "Invalid email or password" });
         return;
@@ -28,8 +27,13 @@ export class UserController {
       const token = jwt.sign({ email, role: user.role }, SECRET_KEY, {
         expiresIn: "5h",
       });
-
-      res.status(200).json({ token });
+      res
+        .cookie("token", token, {
+          httpOnly: true,
+          maxAge: 1000 * 60 * 60 * 5,
+        })
+        .status(200)
+        .json({ role: user.role });
     } catch (error) {
       res.status(500).json({ error: "Internal Server Error" });
     }
@@ -76,11 +80,9 @@ export class UserController {
           isVerified: false,
         });
         sendMessage(this.io, socketId, "email_sent_successfully", email);
-
       } else {
         res.status(400).json({ error: "Invalid request parameters" });
         sendMessage(this.io, socketId, "email_sent_fail", email);
-
       }
     } catch (error) {
       res.status(500).json({ error: "Internal Server Error" });
@@ -135,7 +137,20 @@ export class UserController {
     }
   }
 
-  async verify(req: Request, res: Response) {
-    res.status(200).json({ message: "User verified successfully" });
+  async logout(req: any, res: any) {
+    try {
+      res.clearCookie('token', {
+        httpOnly: true,
+      }).status(200).json({ message: "User logged out successfully"});
+      console.log("logout");
+    } catch (error) {
+      res.status(500).json({ error: "Internal Server Error" });
+    }
+  }
+
+  async verify(req: any, res: Response) {
+    res
+      .status(200)
+      .json({ message: "User verified successfully", role: req.user.role });
   }
 }
