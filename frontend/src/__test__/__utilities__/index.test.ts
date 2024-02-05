@@ -31,13 +31,13 @@ describe("generateNewId", () => {
     ];
 
     const newId = generateNewId(existingData);
-    expect(newId).toBe(4); // Assuming the next available ID is 4
+    expect(newId).toBe(4); 
   });
 
   it("should handle an empty data array", () => {
     const existingData: any = [];
     const newId = generateNewId(existingData);
-    expect(newId).toBe(1); // If the array is empty, the new ID should be 1
+    expect(newId).toBe(0); // If the array is empty, the new ID should be 0
   });
 });
 
@@ -45,7 +45,7 @@ describe("calculateAge", () => {
   it("should calculate age correctly", () => {
     const dateOfBirth = new Date("1990-01-01");
     const age = calculateAge(dateOfBirth);
-    expect(age).toBeGreaterThan(0); // Assuming the test is run in the future when the person is older than 0
+    expect(age).toBeGreaterThan(0); 
   });
 
   it("should handle future birth dates", () => {

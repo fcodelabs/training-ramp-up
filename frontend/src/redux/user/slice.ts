@@ -26,7 +26,7 @@ type InitialDataTypeUser = {
   newUser: newUser;
 };
 
-const initialStateUser: InitialDataTypeUser = {
+export const initialStateUser: InitialDataTypeUser = {
   isLogged: false,
   role: Role.NONE,
   socketId: "",
@@ -73,6 +73,7 @@ const userSlice = createSlice({
       state.isLogged = true;
       state.loginError = false;
       state.role = parseToken(action.payload).role;
+      console.log("action.payload", action.payload);
       localStorage.setItem(LocalstorageId, action.payload);
     },
     loginFail: (state, action: PayloadAction<string>) => {

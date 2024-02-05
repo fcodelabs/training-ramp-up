@@ -121,11 +121,12 @@ const NotificationPopup: React.FC<ErrorPopupProps> = ({
   } else if (type === NotificationTypes.DELETE_USER_SUCCESS) {
     errorMessage = NotificationTexts[NotificationTypes.DELETE_USER_SUCCESS];
     button = <SingleButton text="ok" />;
-  } else if (type ===NotificationTypes.LOGOUT_USER) {
+  } else if (type === NotificationTypes.LOGOUT_USER) {
     errorMessage = NotificationTexts[NotificationTypes.LOGOUT_USER];
     button = <ButtonSet />;
-  } else if(type === NotificationTypes.SUCCESS_REGISTER_OBSERVER){
-    errorMessage = NotificationTexts[NotificationTypes.SUCCESS_REGISTER_OBSERVER];
+  } else if (type === NotificationTypes.SUCCESS_REGISTER_OBSERVER) {
+    errorMessage =
+      NotificationTexts[NotificationTypes.SUCCESS_REGISTER_OBSERVER];
     button = <SingleButton text="ok" />;
   } else if (type === NotificationTypes.SUCCESS_SEND_EMAIL) {
     errorMessage = NotificationTexts[NotificationTypes.SUCCESS_SEND_EMAIL];
@@ -143,21 +144,22 @@ const NotificationPopup: React.FC<ErrorPopupProps> = ({
     }
     return text;
   }
-  
 
   return (
     <div>
-    <StyledBackdrop open={open} />
-    <StyledDialogContent open={open} onClose={onClose}>
-      <DialogContent>
-        <Typography variant="body1" >
-          {breakText(errorMessage)}
-        </Typography>
-        <ButtonWrapper>{button}</ButtonWrapper>
-      </DialogContent>
-    </StyledDialogContent>
-  </div>
-  
+      <StyledBackdrop open={open} />
+      <StyledDialogContent open={open} onClose={onClose}>
+        <DialogContent>
+          <Typography variant="body1">
+            {errorMessage ===
+            NotificationTexts[NotificationTypes.SUCCESS_SEND_EMAIL]
+              ? breakText(errorMessage)
+              : errorMessage}
+          </Typography>
+          <ButtonWrapper>{button}</ButtonWrapper>
+        </DialogContent>
+      </StyledDialogContent>
+    </div>
   );
 };
 

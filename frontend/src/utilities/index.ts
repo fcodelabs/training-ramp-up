@@ -117,6 +117,6 @@ export const NotificationTexts: Record<NotificationTypes, string> = {
   [NotificationTypes.DELETE_USER_SUCCESS]: "Student deleted successfully",
   [NotificationTypes.LOGOUT_USER]: "Are you sure you want to logout?",
   [NotificationTypes.SUCCESS_REGISTER_OBSERVER]: "Your account has been successfully created.",
-  [NotificationTypes.SUCCESS_SEND_EMAIL]: "A password creation link has been sent to the  provided email address.",
+  [NotificationTypes.SUCCESS_SEND_EMAIL]: "A password creation link has been sent to the provided email address.",
   [NotificationTypes.FAIL_SEND_EMAIL]: "Failed to send the password creation link. Please try again later.",
 };
