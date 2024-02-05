@@ -16,7 +16,7 @@ AppDataSource.initialize().then(async () => {
   app.use(bodyParser.urlencoded({ extended: true }));
   app.use(
     cors({
-      origin: "https://ramp-up.lbmsalpha.live",
+      origin: process.env.FRONT_END_URL,
       methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
       credentials: true,
     })
