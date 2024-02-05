@@ -30,6 +30,9 @@ export class UserController {
       res
         .cookie("token", token, {
           httpOnly: true,
+          domain: "localhost",
+          secure: false,
+          
           maxAge: 1000 * 60 * 60 * 5,
         })
         .status(200)

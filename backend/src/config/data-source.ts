@@ -11,7 +11,7 @@ export const AppDataSource = new DataSource({
     rejectUnauthorized: false,
   },
   type: "postgres",
-  synchronize: true,
+  synchronize: false,
   logging: false,
   entities: [Student, User],
   migrations: [],
