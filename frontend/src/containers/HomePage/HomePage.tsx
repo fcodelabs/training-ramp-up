@@ -9,7 +9,6 @@ import { useLocation } from "react-router-dom";
 const HomePage = () => {
   const location = useLocation();
   const userRole = location.state && location.state.role;
-  console.log(userRole);
   useEffect(() => {}, []);
   return (
     <Stack spacing={20} justifyContent="center" alignItems="center">

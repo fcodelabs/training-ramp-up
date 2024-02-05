@@ -195,6 +195,7 @@ const AdminDataGridTable = () => {
     (state: RootState) => state.student.userFetchingError
   );
   const dispatch = useDispatch();
+
   const [numbervalidateError, setNumberValidateError] = useState(false);
   const [agevalidateError, setAgeValidateError] = useState(false);
   const [keepEditingPopup, setKeepEditingPopup] = useState(false);
@@ -215,9 +216,7 @@ const AdminDataGridTable = () => {
   }, [dispatch]);
 
   useEffect(() => {
-    socket.on("get_all_students", (data) => {
-      console.log("getAll: ", data);
-    });
+    socket.on("get_all_students", (data) => {});
     socket.on("create_new_student", (data) => {
       if (data === 201) {
         setAddedSuccessfullyPopup(true);

@@ -13,18 +13,19 @@ export const verifyToken = async (
     const cookie = req.headers.cookie!;
     const token = cookie.split('=')[1];
     if (token === null) {
-      res.status(401).json({ message: 'Unauthorized1' });
+      res.status(401).json({ message: 'Unauthorized' });
       return;
     }
     const decoded = jwt.verify(token, SECRET_KEY, (error, data) => {
       if (error !== null) {
-        res.status(401).json({ message: 'Unauthorized2' });
+        console.log(error);
+        res.status(401).json({ message: 'Token is not valid' });
         return;
       }
       req.body.role = (data as jwt.JwtPayload).user.role;
       next();
     });
   } catch (error) {
-    res.status(401).json({ message: 'Unauthorized4' });
+    res.status(401).json({ message: 'Unauthorized' });
   }
 };

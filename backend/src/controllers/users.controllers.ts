@@ -156,7 +156,7 @@ export const loginUser = async (
           }
         },
         SECRET_KEY,
-        { expiresIn: '1h' }
+        { expiresIn: '1hr' }
       );
 
       if (req.cookies[`${email as string}`] !== null) {

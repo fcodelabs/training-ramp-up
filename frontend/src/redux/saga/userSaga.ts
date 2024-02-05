@@ -24,7 +24,9 @@ function* watchSendMail(
     password: action.payload.password,
   };
   try {
-    yield call(axios.post<IUsers>, `${apiUrl}/emailSend`, newUser);
+    yield call(axios.post<IUsers>, `${apiUrl}/emailSend`, newUser, {
+      withCredentials: true,
+    });
   } catch (error: any) {
     return error;
   }
@@ -35,10 +37,17 @@ function* watchCreateUser(
 ): Generator<any, any, any> {
   const { password, token } = action.payload;
   try {
-    yield call(axios.post<IPasswordToken>, `${apiUrl}/newUser`, {
-      password,
-      token,
-    });
+    yield call(
+      axios.post<IPasswordToken>,
+      `${apiUrl}/newUser`,
+      {
+        password,
+        token,
+      },
+      {
+        withCredentials: true,
+      }
+    );
   } catch (error: any) {
     return error;
   }
