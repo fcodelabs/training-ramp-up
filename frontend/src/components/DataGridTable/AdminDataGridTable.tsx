@@ -149,7 +149,7 @@ function EditToolbar(props: IEditToolbarProps) {
             padding="12px"
             sx={{ fontSize: "24px", fontWeight: 400, fontFamily: "Roboto" }}
           >
-            User Details
+            Students Details
           </Typography>
         </Grid>
       </Grid>

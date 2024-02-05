@@ -15,6 +15,7 @@ import {
   useMediaQuery,
 } from "@mui/material";
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const ObserversRegisterPage = () => {
   const isMobile = useMediaQuery("(max-width: 600px)");
@@ -28,6 +29,7 @@ const ObserversRegisterPage = () => {
   const [confirmPasswordError, setConfirmPasswordError] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const navigate = useNavigate();
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
   const handleClickShowConfirmPassword = () =>
@@ -231,6 +233,9 @@ const ObserversRegisterPage = () => {
                 padding: "0px",
                 textTransform: "none",
                 color: "rgba(33, 150, 243, 1)",
+              }}
+              onClick={() => {
+                navigate("/");
               }}
             >
               Login

@@ -11,6 +11,10 @@ export interface IPasswordToken {
   password: string;
   token: string;
 }
+export interface ILoginCredentials {
+  email: string;
+  password: string;
+}
 interface IinitialState {
   users: IUsers[];
 }
@@ -25,9 +29,12 @@ const userSlice = createSlice({
   reducers: {
     addUsers: (state, action: PayloadAction<IUsers>) => {},
     createUsers: (state, action: PayloadAction<IPasswordToken>) => {},
+    loginUsers: (state, action: PayloadAction<ILoginCredentials>) => {},
+    logoutUsers: (state) => {},
   },
 });
 
-export const { addUsers,createUsers } = userSlice.actions;
+export const { addUsers, createUsers, loginUsers, logoutUsers } =
+  userSlice.actions;
 
 export default userSlice.reducer;

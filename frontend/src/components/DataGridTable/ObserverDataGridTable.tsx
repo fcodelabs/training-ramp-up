@@ -37,7 +37,7 @@ function EditToolbar() {
             padding="12px"
             sx={{ fontSize: "24px", fontWeight: 400, fontFamily: "Roboto" }}
           >
-            User Details
+            Students Details
           </Typography>
         </Grid>
       </Grid>
@@ -231,6 +231,8 @@ const ObserverDataGridTable = () => {
         <Paper
           sx={{
             height: "auto",
+            width: "81.3%",
+            margin: "auto",
           }}
         >
           <DataGrid

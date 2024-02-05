@@ -8,8 +8,12 @@ import {
   Typography,
   useMediaQuery,
 } from "@mui/material";
-import { useState } from "react";
-
+import { useEffect, useState } from "react";
+import { loginUsers } from "../../redux/slice/userSlice";
+import { useDispatch } from "react-redux";
+import { io } from "socket.io-client";
+import { useNavigate } from "react-router-dom";
+const socket = io("http://localhost:5000");
 const LoginPage = () => {
   const isMobile = useMediaQuery("(max-width: 600px)");
   const [email, setEmail] = useState("");
@@ -17,6 +21,17 @@ const LoginPage = () => {
   const [emailError, setEmailError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
 
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    socket.on("login_user", (data) => {
+      console.log("hereeeada");
+      if (data.statusCode === 200) {
+        navigate("/home", { state: { role: data.role } });
+      }
+    });
+  }, [navigate]);
   const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     event.preventDefault();
     setEmail(event.target.value);
@@ -38,7 +53,9 @@ const LoginPage = () => {
     }
 
     if (email && password) {
-      console.log(email, password);
+      console.log(process.env.REACT_APP_API_USERS);
+      console.log(process.env.REACT_APP_API_STUDENTS);
+      dispatch(loginUsers({ email, password }));
     }
   };
 
@@ -108,6 +125,9 @@ const LoginPage = () => {
                 padding: "0px",
                 textTransform: "none",
                 color: "rgba(33, 150, 243, 1)",
+              }}
+              onClick={() => {
+                navigate("/register");
               }}
             >
               Register now

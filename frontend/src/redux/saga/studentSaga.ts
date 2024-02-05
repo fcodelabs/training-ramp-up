@@ -14,7 +14,7 @@ import {
 } from "../slice/studentSlice";
 import { PayloadAction } from "@reduxjs/toolkit";
 
-const apiUrl = process.env.REACT_APP_API_URL;
+const apiUrl = process.env.REACT_APP_API_STUDENTS as string;
 
 function* watchGetAllStudents(): Generator<any, any, any> {
   try {

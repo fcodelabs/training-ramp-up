@@ -7,6 +7,7 @@ import { Provider } from "react-redux";
 import LoginPage from "./containers/LoginPage/LoginPage";
 import HomePage from "./containers/HomePage/HomePage";
 import PasswordCreationPage from "./containers/PasswordCreationPage/PasswordCreationPage";
+import ObserversRegisterPage from "./containers/ObserversRegisterPage/ObserversRegisterPage";
 const routes = createBrowserRouter([
   {
     path: "/",
@@ -19,6 +20,10 @@ const routes = createBrowserRouter([
   {
     path: "/passwordcreate",
     element: <PasswordCreationPage />,
+  },
+  {
+    path: "/register",
+    element: <ObserversRegisterPage />,
   },
 ]);
 const root = ReactDOM.createRoot(
