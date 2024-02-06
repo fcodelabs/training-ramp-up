@@ -5,6 +5,7 @@ import AdminPage from "./containers/AdminPage/AdminPage";
 import AddNewUserCard from "./components/Cards/AddNewUserCard";
 import NewPasswordPage from "./containers/NewPasswordPage/NewPasswordPage";
 import LoginPage from "./containers/LoginPage/LoginPage";
+import RegisterPage from "./containers/RegisterPage/RegisterPage";
 
 function App() {
   return (
@@ -12,7 +13,8 @@ function App() {
       {/* <AdminPage /> */}
       {/* <AddNewUserCard /> */}
       {/* <NewPasswordPage /> */}
-      <LoginPage />
+      {/* <LoginPage /> */}
+      <RegisterPage />
     </div>
   );
 }

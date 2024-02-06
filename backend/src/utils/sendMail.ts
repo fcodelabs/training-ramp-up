@@ -3,9 +3,12 @@ const nodemailer = require("nodemailer");
 // Create a nodemailer transporter
 const transporter = nodemailer.createTransport({
   service: "gmail",
+  host: "smtp.gmail.com",
+  port: 587,
+  secure: false,
   auth: {
     user: "pasinduchan24@gmail.com",
-    pass: "fcodetest@123",
+    pass: "knsx akwk isfm bfqv",
   },
 });
 
@@ -39,13 +42,14 @@ const sendEmail = async (
   passwordCreationLink: string,
 ) => {
   // Setup email data
+  console.log("sendMail", name, email, role, passwordCreationLink);
   const mailOptions = {
     from: "pasinduchan24@gmail.com",
     to: email,
     subject: "Account Registration - Password Creation Link",
     text: createEmailContent(name, role, passwordCreationLink),
   };
-
+  console.log("mailOptions", mailOptions);
   // Send email
   try {
     const info = await transporter.sendMail(mailOptions);

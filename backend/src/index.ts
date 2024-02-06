@@ -4,12 +4,16 @@ import express, { Express, Request, Response } from "express";
 import { DataSource } from "typeorm";
 
 import socketRouter from "./routes/studentRoute";
+import userRouter from "./routes/userRoute";
+import authRouter from "./routes/authRoute";
 
 import dotenv from "dotenv";
 import { Student } from "./models/student";
 import { Server } from "socket.io";
 import http from "http";
 import cors from "cors";
+import { User } from "./models/user";
+import cookieParser from "cookie-parser";
 
 dotenv.config();
 
@@ -33,23 +37,19 @@ io.on("connection", (socket) => {
 
 export const AppDataSource = new DataSource({
   type: "postgres",
-  //host: process.env.LOCALHOST,
+  host: process.env.LOCALHOST,
   port: 5432,
-  // username: process.env.DB_USERNAME,
-  // password: process.env.PASSWORD,
-  // database: process.env.DATABASE,
-  // synchronize: true,
-  // host: process.env.DEPLOYED_HOST,
-  // port: 5432,
-  // username: process.env.DEPLOYED_USERNAME,
-  // password: process.env.DEPLOYED_PASSWORD,
-  // database: process.env.DEPLOYED_DB,
-  url: process.env.DEPLOYED_URL,
-  logging: false,
-  entities: [Student],
-  ssl: {
-    rejectUnauthorized: false,
-  },
+  username: process.env.DB_USERNAME,
+  password: process.env.PASSWORD,
+  database: process.env.DATABASE,
+  synchronize: true,
+
+  // url: process.env.DEPLOYED_URL,
+  logging: true,
+  entities: [Student, User],
+  // ssl: {
+  //   rejectUnauthorized: false,
+  // },
   migrations: [],
   subscribers: [],
 });
@@ -70,12 +70,15 @@ AppDataSource.initialize()
   });
 
 app.use(express.json());
+app.use(cookieParser());
 
 app.get("/", (req: Request, res: Response) => {
   res.send("Hello World!");
 });
 
+app.use("/auth", authRouter);
 app.use("/student", socketRouter(io));
+app.use("/user", userRouter);
 
 // app.listen(port, () => {
 //   console.log(`Server running on port ${port}`);

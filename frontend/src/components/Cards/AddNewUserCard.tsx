@@ -11,7 +11,8 @@ import {
 import styled from "@mui/system/styled";
 import "@fontsource/roboto";
 import Select from "@mui/material/Select";
-import Mailchecker from "mailchecker";
+// import Mailchecker from "mailchecker";
+import { validateEmail } from "../../utility/emailValidator";
 
 const StyledMenuBoxContainer = styled(Box)`
   &&& {
@@ -131,7 +132,7 @@ const AddNewUserCard: React.FC<IUserCardProps> = ({ onSubmit, onCancel }) => {
   const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newEmail = event.target.value;
     setEmail(newEmail);
-
+    console.log("mail", newEmail);
     // Check if email is valid and set the error message
     setEmailMissing(newEmail.trim() === "");
   };
@@ -142,15 +143,15 @@ const AddNewUserCard: React.FC<IUserCardProps> = ({ onSubmit, onCancel }) => {
       setNameMissing(true);
       setEmailMissing(true);
     }
-    if (!Mailchecker.isValid(email)) {
+    if (validateEmail(email) === false) {
+      console.log("email invalid");
       setEmailInvalid(true);
     }
-    if (name !== "" || email !== "" || Mailchecker.isValid(email)) {
+    if (name !== "" && email !== "" && validateEmail(email) === true) {
+      console.log("email valid");
       onSubmit(name, email, role);
       onCancel();
     }
-    setName("");
-    setEmail("");
   };
 
   const handleCancel = () => {
