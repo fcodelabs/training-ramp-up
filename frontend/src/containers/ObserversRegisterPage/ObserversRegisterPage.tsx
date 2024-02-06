@@ -295,7 +295,7 @@ const ObserversRegisterPage = () => {
                 color: "rgba(33, 150, 243, 1)",
               }}
               onClick={() => {
-                navigate("/");
+                navigate("/login");
               }}
             >
               Login
@@ -307,7 +307,7 @@ const ObserversRegisterPage = () => {
         <PopupMessage
           open={succesMesasage}
           title={"Your account has been successfully created."}
-          handleClickSecondButton={() => navigate("/")}
+          handleClickSecondButton={() => navigate("/login")}
           secondButtonName="Ok"
         />
       )}

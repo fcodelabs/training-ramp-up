@@ -159,12 +159,12 @@ export const loginUser = async (
         { expiresIn: '1hr' }
       );
 
-      if (req.cookies[`${email as string}`] !== null) {
-        req.cookies[`${email as string}`] = '';
+      if (req.cookies.userToken !== null) {
+        req.cookies.userToken = '';
       }
 
       res
-        .cookie(email as string, accessToken, {
+        .cookie('userToken', accessToken, {
           path: '/',
           expires: new Date(Date.now() + 1000 * 60 * 60),
           httpOnly: true,
@@ -202,7 +202,10 @@ export const logoutUser = async (
 ): Promise<void> => {
   try {
     const cookie = req.headers.cookie!;
-
+    if (cookie === undefined) {
+      res.status(401).json({ message: 'Unauthorized' });
+      return;
+    }
     const token = cookie.split('=')[1];
     if (token === null) {
       res.status(401).json({ message: 'Unauthorized' });
@@ -213,13 +216,12 @@ export const logoutUser = async (
         return res.status(401).json({ message: 'Unauthorized' });
       }
       const email: string = (data as jwt.JwtPayload).user.email as string;
-      res.clearCookie(`${email}`);
-      req.cookies[`${email}`] = '';
+      res.clearCookie('userToken');
+      req.cookies.userToken = '';
       return res.status(200).json({ message: 'Logout Successfully' });
     });
   } catch (error) {
-    console.error(error);
-    res.status(401).json({ message: 'Unauthorized' });
+    res.status(500).json({ message: 'Internal  Server Error' });
   }
 };
 
@@ -228,8 +230,27 @@ export const veryfyUser = async (
   res: Response
 ): Promise<void> => {
   try {
-    res.status(200).json({ message: 'User is verified' });
+    const cookie = req.headers.cookie!;
+    if (cookie === undefined) {
+      res.status(401).json({ message: 'User is  not verified' });
+      return;
+    }
+    const token = cookie.split('=')[1];
+    if (token === null) {
+      res.status(401).json({ message: 'Unauthorized' });
+      return;
+    }
+    const decoded = jwt.verify(token, SECRET_KEY, (error, data) => {
+      if (error !== null) {
+        console.log(error);
+        res.status(401).json({ message: 'Token is not valid' });
+        return;
+      }
+      req.body.role = (data as jwt.JwtPayload).user.role;
+      res.status(200).json({ message: 'User is verified' });
+    });
   } catch (error) {
-    res.status(401).json({ message: 'Unauthorized' });
+    console.log(error);
+    res.status(500).json({ message: 'Internel server Error' });
   }
 };

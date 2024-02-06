@@ -30,7 +30,7 @@ const LoginPage = () => {
   useEffect(() => {
     socket.on("login_user", (data) => {
       if (data.statusCode === 200) {
-        navigate("/home", { state: { role: data.role } });
+        navigate("/", { state: { role: data.role } });
       }
       if (data.statusCode === 401) {
         setEmailHelperText("");

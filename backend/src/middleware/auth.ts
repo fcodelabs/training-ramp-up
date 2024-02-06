@@ -11,6 +11,10 @@ export const verifyToken = async (
 ): Promise<void> => {
   try {
     const cookie = req.headers.cookie!;
+    if (cookie === undefined) {
+      res.status(401).json({ message: 'Unauthorized' });
+      return;
+    }
     const token = cookie.split('=')[1];
     if (token === null) {
       res.status(401).json({ message: 'Unauthorized' });
@@ -26,6 +30,7 @@ export const verifyToken = async (
       next();
     });
   } catch (error) {
-    res.status(401).json({ message: 'Unauthorized' });
+    console.log(error);
+    res.status(500).json({ message: 'Internel server Error' });
   }
 };

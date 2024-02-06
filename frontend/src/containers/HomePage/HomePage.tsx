@@ -18,7 +18,7 @@ const HomePage = () => {
   const navigate = useNavigate();
   const onIdle = () => {
     dispatch(logoutUsers());
-    navigate("/");
+    navigate("/login");
   };
 
   const onActive = () => {};

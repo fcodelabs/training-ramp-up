@@ -236,7 +236,7 @@ const PasswordCreationPage = () => {
           title={"Your account has been successfully created."}
           handleClickSecondButton={() => {
             setSuccessMessage(false);
-            navigate("/");
+            navigate("/login");
           }}
           secondButtonName="Ok"
         />

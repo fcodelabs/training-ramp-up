@@ -53,7 +53,7 @@ const Header = () => {
           open={isLogout}
           title={"Are you sure you want to logout?"}
           handleClickSecondButton={() => {
-            navigate("/");
+            navigate("/login");
           }}
           handleClickFirstButton={() => {
             setIsLogout(false);

@@ -66,26 +66,12 @@ export default function userSocketRouter(
   userRouter.post('/logoutUser', async (req: Request, res: Response) => {
     try {
       await logoutUser(req, res).then(() => {
-        console.log(res.statusCode);
         io.emit('logout_user', res.statusCode);
       });
     } catch (error) {
       console.error(error);
     }
   });
-  userRouter.post(
-    '/verifyAuth',
-    verifyToken,
-    async (req: Request, res: Response) => {
-      try {
-        await veryfyUser(req, res).then(() => {
-          console.log(res.statusCode);
-          io.emit('verify_user', res.statusCode);
-        });
-      } catch (error) {
-        console.error(error);
-      }
-    }
-  );
+  userRouter.post('/verifyAuth', veryfyUser);
   return userRouter;
 }

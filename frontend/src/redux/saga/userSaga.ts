@@ -1,4 +1,4 @@
-import { takeLatest, call } from "redux-saga/effects";
+import { takeLatest, call, put } from "redux-saga/effects";
 import { PayloadAction } from "@reduxjs/toolkit";
 import {
   ILoginCredentials,
@@ -10,6 +10,8 @@ import {
   loginUsers,
   logoutUsers,
   registerUsers,
+  setAutherization,
+  setAuthorizationError,
   verifyUsers,
 } from "../slice/userSlice";
 import axios from "axios";
@@ -59,6 +61,8 @@ function* watchLoginUser(
 ): Generator<any, any, any> {
   const { email, password } = action.payload;
   try {
+    yield put(setAuthorizationError(false));
+    yield put(setAutherization(false));
     yield call(
       axios.post<ILoginCredentials>,
       `${apiUrl}/loginUser`,
@@ -82,7 +86,9 @@ function* watchLogoutUser(): Generator<any, any, any> {
     return error;
   }
 }
-function* watchRegisterUser(action: PayloadAction<IRegisterUser>) {
+function* watchRegisterUser(
+  action: PayloadAction<IRegisterUser>
+): Generator<any, any, any> {
   const { name, email, password } = action.payload;
   try {
     yield call(
@@ -101,12 +107,19 @@ function* watchRegisterUser(action: PayloadAction<IRegisterUser>) {
     return error;
   }
 }
-function* watchVerifyUser() {
+function* watchVerifyUser(): Generator<any, any, any> {
   try {
-    yield call(axios.post, `${apiUrl}/verifyAuth`, {
+    yield put(setAuthorizationError(false));
+    yield put(setAutherization(false));
+    const res = yield call(axios.post, `${apiUrl}/verifyAuth`, {
       withCredentials: true,
     });
-  } catch (error: any) {
+    if (res.status === 200) {
+      yield put(setAutherization(true));
+    }
+  } catch (error) {
+    yield put(setAutherization(false));
+    yield put(setAuthorizationError(true));
     return error;
   }
 }

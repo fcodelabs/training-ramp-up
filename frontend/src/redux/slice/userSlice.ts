@@ -21,11 +21,13 @@ export interface IRegisterUser {
   password: string;
 }
 interface IinitialState {
-  users: IUsers[];
+  isAuthorized: boolean;
+  authorizationError: boolean;
 }
 
 const initialState: IinitialState = {
-  users: [],
+  isAuthorized: false,
+  authorizationError: false,
 };
 
 const userSlice = createSlice({
@@ -38,6 +40,12 @@ const userSlice = createSlice({
     logoutUsers: (state) => {},
     registerUsers: (state, action: PayloadAction<IRegisterUser>) => {},
     verifyUsers: (state) => {},
+    setAutherization: (state, action: PayloadAction<boolean>) => {
+      state.isAuthorized = action.payload;
+    },
+    setAuthorizationError: (state, action: PayloadAction<boolean>) => {
+      state.authorizationError = action.payload;
+    },
   },
 });
 
@@ -48,6 +56,8 @@ export const {
   logoutUsers,
   registerUsers,
   verifyUsers,
+  setAutherization,
+  setAuthorizationError,
 } = userSlice.actions;
 
 export default userSlice.reducer;
