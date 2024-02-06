@@ -13,10 +13,8 @@ import {
 import React, { useState } from "react";
 import styled from "@mui/system/styled";
 import "@fontsource/roboto";
-import VisibilityIcon from "@mui/icons-material/Visibility";
-import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
-import isPasswordValid from "../../utility/passwordValidator";
-import MessageCard from "../../components/Cards/MessageCard";
+import { loginUser } from "../../redux/user/slice";
+import { useDispatch, useSelector } from "react-redux";
 
 const StyledContainer = styled(Container)`
   &&& {
@@ -98,6 +96,7 @@ const StyledBottomButton = styled(Button)`
 `;
 
 const LoginPage = () => {
+  const dispatch = useDispatch();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [emailMissing, setEmailMissing] = useState(false);
@@ -122,6 +121,9 @@ const LoginPage = () => {
     }
     if (password.trim() === "") {
       setPasswordMissing(true);
+    }
+    if (email.trim() !== "" && password.trim() !== "") {
+      dispatch(loginUser({ email, password }));
     }
   };
 

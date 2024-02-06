@@ -17,7 +17,8 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import isPasswordValid from "../../utility/passwordValidator";
 import MessageCard from "../../components/Cards/MessageCard";
-
+import { createPassword } from "../../redux/user/slice";
+import { useDispatch } from "react-redux";
 const StyledContainer = styled(Container)`
   &&& {
     width: auto;
@@ -84,6 +85,7 @@ const StyledButton = styled(Button)`
 `;
 
 const NewPasswordPage = () => {
+  const dispatch = useDispatch();
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [passwordMissing, setPasswordMissing] = useState(false);
@@ -131,6 +133,10 @@ const NewPasswordPage = () => {
     }
     if (password !== confirmPassword) {
       setPasswordMissMatch(true);
+    }
+    const token = window.location.pathname.split("/").pop();
+    if (token) {
+      dispatch(createPassword({ password, token }));
     }
     setSuccessMessageCardModal(true);
   };

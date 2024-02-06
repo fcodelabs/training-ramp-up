@@ -22,9 +22,9 @@ export class UserController {
   static async createPassword(req: Request, res: Response) {
     const { password } = req.body;
     const token = req.params.token;
-
+    console.log("req.body", req.body, "token", token);
     const result = await UserService.createPassword(password, token);
-
+    console.log("result", result);
     if (result.error) {
       return res.status(401).json({ error: result.error });
     }

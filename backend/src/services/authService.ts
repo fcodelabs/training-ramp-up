@@ -35,7 +35,7 @@ export class AuthService {
     try {
       const userRepo = AppDataSource.getRepository(User);
       const selectedUser = await userRepo.findOne({ where: { email } });
-
+      console.log("selectedUser", selectedUser);
       if (!selectedUser) {
         return { error: "Invalid email" };
       }

@@ -17,7 +17,8 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import isPasswordValid from "../../utility/passwordValidator";
 import MessageCard from "../../components/Cards/MessageCard";
-import Mailchecker from "mailchecker";
+//import Mailchecker from "mailchecker";
+import { validateEmail } from "../../utility/emailValidator";
 import { useDispatch, useSelector } from "react-redux";
 import { registerUser } from "../../redux/user/slice";
 import { RootState } from "../../redux/store";
@@ -176,7 +177,7 @@ const RegisterPage = () => {
     if (username.trim() === "") {
       setUsernameMissing(true);
     }
-    if (!Mailchecker.isValid(email)) {
+    if (validateEmail(email) === false) {
       console.log("email", email);
       setEmailInvalid(true);
     } else if (password === confirmPassword) {

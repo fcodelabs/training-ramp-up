@@ -1,6 +1,7 @@
 import { takeLatest, call, put } from "redux-saga/effects";
 import axios from "axios";
 import {
+  IUser,
   ICreatePassword,
   ILoginCredentials,
   IRegisterUser,
@@ -8,6 +9,7 @@ import {
   loginUser,
   registerUser,
   setUsers,
+  addUser,
 } from "../user/slice";
 import { PayloadAction } from "@reduxjs/toolkit";
 
@@ -19,8 +21,28 @@ const apiUrlAuth = "http://localhost:5000/auth";
 console.log("apiUrl", apiUrl);
 console.log("apiUrlAuth", apiUrlAuth);
 
+function* watchCreateUser(
+  action: PayloadAction<IUser>
+): Generator<any, any, any> {
+  const newUser = {
+    email: action.payload.email,
+    name: action.payload.name,
+    role: action.payload.role,
+    //password: action.payload.password,
+  };
+  console.log("newUser create", newUser);
+  try {
+    yield call(axios.post<IUser>, `${apiUrl}/create`, newUser, {
+      withCredentials: true,
+    });
+  } catch (error: any) {
+    return error;
+  }
+}
+
 function* watchCreatePassword(action: PayloadAction<ICreatePassword>) {
   const { password, token } = action.payload;
+  console.log("watch create password", action.payload);
   try {
     yield call(
       axios.post,
@@ -35,25 +57,23 @@ function* watchCreatePassword(action: PayloadAction<ICreatePassword>) {
   }
 }
 
-function* watchLoginUser(action: PayloadAction<ILoginCredentials>) {
-  function* watchLoginUser(
-    action: PayloadAction<ILoginCredentials>
-  ): Generator<any, void, any> {
+function* watchLoginUser(
+  action: PayloadAction<ILoginCredentials>
+): Generator<any, void, any> {
+  try {
     const { email, password } = action.payload;
-    try {
-      // Call API to login
-      const response = yield call(
-        axios.post,
-        `${apiUrlAuth}/login`,
-        { email, password },
-        { withCredentials: true }
-      );
-      // Handle response and update state if necessary
-      // For example, store user information in the state
-      // yield put(setLoggedInUser(response.data));
-    } catch (error: any) {
-      console.error("Error logging in:", error);
-    }
+    const response = yield call(
+      axios.post,
+      `${apiUrlAuth}/login`,
+      { email, password },
+      { withCredentials: true }
+    );
+    console.log("response", response);
+    // Handle response and update state if necessary
+    // For example, store user information in the state
+    // yield put(setLoggedInUser(response.data));
+  } catch (error: any) {
+    console.error("Error logging in:", error);
   }
 }
 
@@ -77,6 +97,7 @@ function* watchRegisterUser(action: PayloadAction<IRegisterUser>) {
 }
 
 export function* userSaga() {
+  yield takeLatest(addUser.type, watchCreateUser);
   yield takeLatest(createPassword.type, watchCreatePassword);
   yield takeLatest(loginUser.type, watchLoginUser);
   yield takeLatest(registerUser.type, watchRegisterUser);

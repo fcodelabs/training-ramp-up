@@ -4,6 +4,7 @@ export interface IUser {
   email: string;
   name: string;
   role: string;
+  token?: string;
   password?: string;
 }
 
@@ -36,17 +37,22 @@ const userSlice = createSlice({
   reducers: {
     addUser(state, action: PayloadAction<IUser>) {
       state.users.push(action.payload);
+      console.log("addUser", action.payload);
+      console.log("state.users", state.users);
     },
     setUsers(state, action: PayloadAction<IUser[]>) {
       state.users = action.payload;
     },
     createPassword(state, action: PayloadAction<ICreatePassword>) {
       const { password, token } = action.payload;
-      const user = state.users.find((user) => user.password === token);
-      if (user) user.password = password;
+      console.log(password, token);
+      //const user = state.users.find((user) => user.token === token);
+      //console.log("user", user);
+      //if (user) user.password = password;
     },
     loginUser(state, action: PayloadAction<ILoginCredentials>) {
       // Placeholder for login action
+      console.log("login action.payload", action.payload);
     },
     logoutUser(state) {
       // Placeholder for logout action

@@ -13,6 +13,8 @@ import "@fontsource/roboto";
 import Select from "@mui/material/Select";
 // import Mailchecker from "mailchecker";
 import { validateEmail } from "../../utility/emailValidator";
+import { addUser } from "../../redux/user/slice";
+import { useDispatch, useSelector } from "react-redux";
 
 const StyledMenuBoxContainer = styled(Box)`
   &&& {
@@ -114,6 +116,7 @@ interface IUserCardProps {
 }
 
 const AddNewUserCard: React.FC<IUserCardProps> = ({ onSubmit, onCancel }) => {
+  const dispatch = useDispatch();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [role, setRole] = useState("Observer");
@@ -149,8 +152,10 @@ const AddNewUserCard: React.FC<IUserCardProps> = ({ onSubmit, onCancel }) => {
     }
     if (name !== "" && email !== "" && validateEmail(email) === true) {
       console.log("email valid");
+
       onSubmit(name, email, role);
       onCancel();
+      dispatch(addUser({ name, email, role }));
     }
   };
 

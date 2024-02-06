@@ -56,12 +56,12 @@ export class UserService {
   static async createPassword(password: string, token: string) {
     try {
       const decodedToken: any = jwt.verify(token, this.SECRET_KEY);
-
+      console.log("decodedToken", decodedToken);
       const userRepo = AppDataSource.getRepository(User);
       const selectedUser = await userRepo.findOne({
-        where: { email: decodedToken.email, token },
+        where: { email: decodedToken.email },
       });
-
+      console.log("selectedUser", selectedUser);
       if (!selectedUser) {
         return { error: "Invalid token" };
       }

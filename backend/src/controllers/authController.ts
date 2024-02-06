@@ -4,13 +4,14 @@ import { AuthService } from "../services/authService";
 export class AuthController {
   static async login(req: Request, res: Response) {
     const { email, password } = req.body;
-
+    console.log("req.body login", req.body);
     if (!email || !password) {
       return res.status(400).json({ error: "Invalid request parameters" });
     }
 
     const result = await AuthService.loginUser(email, password);
 
+    console.log("result", result);
     if (result.error) {
       return res.status(401).json({ error: result.error });
     }
