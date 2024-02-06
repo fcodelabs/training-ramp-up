@@ -222,3 +222,14 @@ export const logoutUser = async (
     res.status(401).json({ message: 'Unauthorized' });
   }
 };
+
+export const veryfyUser = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    res.status(200).json({ message: 'User is verified' });
+  } catch (error) {
+    res.status(401).json({ message: 'Unauthorized' });
+  }
+};

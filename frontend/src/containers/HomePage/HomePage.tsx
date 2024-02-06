@@ -3,22 +3,62 @@ import Header from "../../components/Header/Header";
 import AdminDataGridTable from "../../components/DataGridTable/AdminDataGridTable";
 import ObserverDataGridTable from "../../components/DataGridTable/ObserverDataGridTable";
 
-import { useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useIdleTimer } from "react-idle-timer";
+import { useDispatch } from "react-redux";
+import { logoutUsers } from "../../redux/slice/userSlice";
+import PopupMessage from "../../components/PopupMessage/PopupMessage";
 
 const HomePage = () => {
+  const [open, setOpen] = useState(false);
   const location = useLocation();
   const userRole = location.state && location.state.role;
-  useEffect(() => {}, []);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const onIdle = () => {
+    dispatch(logoutUsers());
+    navigate("/");
+  };
+
+  const onActive = () => {};
+
+  const onAction = () => {};
+  const onPrompt = () => {
+    setOpen(true);
+  };
+
+  const { start } = useIdleTimer({
+    onIdle,
+    onActive,
+    onAction,
+    onPrompt,
+    timeout: 1000 * 60 * 30,
+    promptBeforeIdle: 1000 * 60 * 20,
+    throttle: 500,
+  });
   return (
-    <Stack spacing={20} justifyContent="center" alignItems="center">
-      <Header />
-      {userRole === "Admin" ? (
-        <AdminDataGridTable />
-      ) : (
-        <ObserverDataGridTable />
+    <>
+      <Stack spacing={20} justifyContent="center" alignItems="center">
+        <Header />
+        {userRole === "Admin" ? (
+          <AdminDataGridTable />
+        ) : (
+          <ObserverDataGridTable />
+        )}
+      </Stack>
+      {open && (
+        <PopupMessage
+          open={open}
+          title="Keep Login..."
+          handleClickSecondButton={() => {
+            start();
+            setOpen(false);
+          }}
+          secondButtonName="Ok"
+        />
       )}
-    </Stack>
+    </>
   );
 };
 

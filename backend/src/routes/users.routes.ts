@@ -6,7 +6,8 @@ import {
   getAllUsers,
   loginUser,
   logoutUser,
-  registerUser
+  registerUser,
+  veryfyUser
 } from '../controllers/users.controllers';
 import { verifyToken } from '../middleware/auth';
 import { verifyAdmin } from '../middleware/verifyAdmin';
@@ -72,5 +73,19 @@ export default function userSocketRouter(
       console.error(error);
     }
   });
+  userRouter.post(
+    '/verifyAuth',
+    verifyToken,
+    async (req: Request, res: Response) => {
+      try {
+        await veryfyUser(req, res).then(() => {
+          console.log(res.statusCode);
+          io.emit('verify_user', res.statusCode);
+        });
+      } catch (error) {
+        console.error(error);
+      }
+    }
+  );
   return userRouter;
 }

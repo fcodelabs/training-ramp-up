@@ -9,6 +9,7 @@ import HomePage from "./containers/HomePage/HomePage";
 import PasswordCreationPage from "./containers/PasswordCreationPage/PasswordCreationPage";
 import ObserversRegisterPage from "./containers/ObserversRegisterPage/ObserversRegisterPage";
 import { io } from "socket.io-client";
+
 export const socket = io("http://localhost:5000");
 const routes = createBrowserRouter([
   {

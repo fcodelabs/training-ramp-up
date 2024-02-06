@@ -10,6 +10,7 @@ import {
   loginUsers,
   logoutUsers,
   registerUsers,
+  verifyUsers,
 } from "../slice/userSlice";
 import axios from "axios";
 axios.defaults.withCredentials = true;
@@ -100,10 +101,20 @@ function* watchRegisterUser(action: PayloadAction<IRegisterUser>) {
     return error;
   }
 }
+function* watchVerifyUser() {
+  try {
+    yield call(axios.post, `${apiUrl}/verifyAuth`, {
+      withCredentials: true,
+    });
+  } catch (error: any) {
+    return error;
+  }
+}
 export function* userRoleSaga() {
   yield takeLatest(addUsers, watchSendMail);
   yield takeLatest(createUsers, watchCreateUser);
   yield takeLatest(loginUsers, watchLoginUser);
   yield takeLatest(logoutUsers, watchLogoutUser);
   yield takeLatest(registerUsers, watchRegisterUser);
+  yield takeLatest(verifyUsers, watchVerifyUser);
 }

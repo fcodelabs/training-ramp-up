@@ -37,10 +37,17 @@ const userSlice = createSlice({
     loginUsers: (state, action: PayloadAction<ILoginCredentials>) => {},
     logoutUsers: (state) => {},
     registerUsers: (state, action: PayloadAction<IRegisterUser>) => {},
+    verifyUsers: (state) => {},
   },
 });
 
-export const { addUsers, createUsers, loginUsers, logoutUsers, registerUsers } =
-  userSlice.actions;
+export const {
+  addUsers,
+  createUsers,
+  loginUsers,
+  logoutUsers,
+  registerUsers,
+  verifyUsers,
+} = userSlice.actions;
 
 export default userSlice.reducer;
