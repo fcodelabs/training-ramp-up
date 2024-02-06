@@ -1,5 +1,8 @@
 const nodemailer = require("nodemailer");
 
+import dotenv from "dotenv";
+dotenv.config();
+
 // Create a nodemailer transporter
 const transporter = nodemailer.createTransport({
   service: "gmail",
@@ -7,8 +10,8 @@ const transporter = nodemailer.createTransport({
   port: 587,
   secure: false,
   auth: {
-    user: "pasinduchan24@gmail.com",
-    pass: "knsx akwk isfm bfqv",
+    user: process.env.SENDER_EMAIL,
+    pass: process.env.SENDER_EMAIL_PASSWORD,
   },
 });
 
@@ -44,7 +47,7 @@ const sendEmail = async (
   // Setup email data
   console.log("sendMail", name, email, role, passwordCreationLink);
   const mailOptions = {
-    from: "pasinduchan24@gmail.com",
+    from: process.env.SENDER_EMAIL,
     to: email,
     subject: "Account Registration - Password Creation Link",
     text: createEmailContent(name, role, passwordCreationLink),

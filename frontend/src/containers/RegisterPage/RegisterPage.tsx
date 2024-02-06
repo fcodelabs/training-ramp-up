@@ -18,6 +18,9 @@ import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import isPasswordValid from "../../utility/passwordValidator";
 import MessageCard from "../../components/Cards/MessageCard";
 import Mailchecker from "mailchecker";
+import { useDispatch, useSelector } from "react-redux";
+import { registerUser } from "../../redux/user/slice";
+import { RootState } from "../../redux/store";
 
 const StyledContainer = styled(Container)`
   &&& {
@@ -99,6 +102,9 @@ const StyledBottomButton = styled(Button)`
 `;
 
 const RegisterPage = () => {
+  const dispatch = useDispatch();
+  //const { loading, error } = useSelector((state: RootState) => state.user);
+
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -174,6 +180,14 @@ const RegisterPage = () => {
       console.log("email", email);
       setEmailInvalid(true);
     } else if (password === confirmPassword) {
+      dispatch(
+        registerUser({
+          name: username,
+          email,
+          password,
+          role: "Observer",
+        })
+      );
       setSuccessMessageCardModal(true);
     }
   };

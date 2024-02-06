@@ -24,13 +24,14 @@ export class AuthController {
   }
 
   static async registerUser(req: Request, res: Response) {
-    const { username, email, password } = req.body;
-
-    if (!username || !email || !password) {
+    const { name, email, password } = req.body;
+    console.log("req.body", req.body);
+    console.log("username", name);
+    if (!name || !email || !password) {
       return res.status(400).json({ error: "Invalid request parameters" });
     }
 
-    const result = await AuthService.registerUser(username, email, password);
+    const result = await AuthService.registerUser(name, email, password);
 
     if (result.error) {
       return res.status(400).json({ error: result.error });
