@@ -4,6 +4,9 @@ import { Button, Typography, Box, Paper, Modal } from "@mui/material";
 import styled from "styled-components";
 import "@fontsource/roboto";
 import AddNewUserCard from "../../components/Cards/AddNewUserCard";
+import { useNavigate } from "react-router-dom";
+import { logoutUser } from "../../redux/user/slice";
+import { useDispatch, useSelector } from "react-redux";
 
 const StyledHeaderBox = styled(Box)`
   &&& {
@@ -76,6 +79,8 @@ const StyledAddNewUserButton = styled(Button)`
 `;
 
 function AdminPage() {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [newUserCardModal, setNewUserCardModal] = useState(false);
 
   const handleAddClick = () => {
@@ -94,11 +99,19 @@ function AdminPage() {
     console.log(name, email, role);
   };
 
+  const handleLogout = () => {
+    console.log("Logout Clicked");
+    dispatch(logoutUser());
+    navigate("/");
+  };
+
   return (
     <StyledMainDiv>
       <StyledHeaderBox>
         <StyledTypography variant="h5">Ramp Up Project</StyledTypography>
-        <StyledLoginButton variant="outlined">LOGIN</StyledLoginButton>
+        <StyledLoginButton variant="outlined" onClick={handleLogout}>
+          LOG OUT
+        </StyledLoginButton>
       </StyledHeaderBox>
       <StyledDataBox>
         <DataTable handleAddNewUserClick={handleAddClick} />

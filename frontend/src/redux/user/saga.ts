@@ -8,8 +8,9 @@ import {
   createPassword,
   loginUser,
   registerUser,
-  setUsers,
+  setCurrentUser,
   addUser,
+  logoutUser,
 } from "../user/slice";
 import { PayloadAction } from "@reduxjs/toolkit";
 
@@ -69,11 +70,25 @@ function* watchLoginUser(
       { withCredentials: true }
     );
     console.log("response", response);
+    console.log("response.data", response.data.user);
+    yield put(setCurrentUser(response.data.user));
+
     // Handle response and update state if necessary
     // For example, store user information in the state
     // yield put(setLoggedInUser(response.data));
   } catch (error: any) {
     console.error("Error logging in:", error);
+  }
+}
+
+function* watchLogoutUser() {
+  try {
+    yield call(axios.post, `${apiUrlAuth}/logout`, { withCredentials: true });
+    // Assuming logout is successful, update the state
+    // For example, clear user information from the state
+    yield put(setCurrentUser(undefined));
+  } catch (error: any) {
+    console.error("Error logging out:", error);
   }
 }
 
@@ -100,5 +115,6 @@ export function* userSaga() {
   yield takeLatest(addUser.type, watchCreateUser);
   yield takeLatest(createPassword.type, watchCreatePassword);
   yield takeLatest(loginUser.type, watchLoginUser);
+  yield takeLatest(logoutUser.type, watchLogoutUser);
   yield takeLatest(registerUser.type, watchRegisterUser);
 }

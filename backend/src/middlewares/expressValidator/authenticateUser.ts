@@ -13,7 +13,7 @@ export const authenticateUser = async (
   next: NextFunction,
 ) => {
   const token = req.cookies.token;
-
+  console.log("token", token);
   if (!token) {
     console.log("no token authenticate");
     return res.status(401).json({ error: "Unauthorized" });

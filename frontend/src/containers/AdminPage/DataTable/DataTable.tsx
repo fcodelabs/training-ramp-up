@@ -180,6 +180,7 @@ interface IEditToolbarProps {
 }
 
 function EditToolbar(props: IEditToolbarProps) {
+  const role = useSelector((state: RootState) => state.user.currentUser?.role);
   const { setRows, setRowModesModel } = props;
   const currentRows = useSelector((state: RootState) => state.student.students);
   const dispatch = useDispatch();
@@ -221,9 +222,11 @@ function EditToolbar(props: IEditToolbarProps) {
 
   return (
     <StyledButtonBox>
-      <StyledAddNewButton variant="contained" onClick={handleClick}>
-        ADD NEW
-      </StyledAddNewButton>
+      {role === "Admin" && (
+        <StyledAddNewButton variant="contained" onClick={handleClick}>
+          ADD NEW STUDENT
+        </StyledAddNewButton>
+      )}
     </StyledButtonBox>
   );
 }
@@ -233,6 +236,10 @@ export default function DataTable({
 }: {
   handleAddNewUserClick: () => void;
 }) {
+  const users = useSelector((state: RootState) => state.user);
+  console.log("users", users);
+  const role = useSelector((state: RootState) => state.user.currentUser?.role);
+  console.log("role", role);
   const temp = useSelector((state: RootState) => state.student.students);
   const [rows, setRows] = useState(temp);
 
@@ -1175,8 +1182,10 @@ export default function DataTable({
 
   return (
     <StyledDataTableBox>
-      <AddNewUser handleAddClick={handleAddNewUserClick} />
-      <StyledGridTitle variant="h4">User Details</StyledGridTitle>
+      {role === "Admin" && (
+        <AddNewUser handleAddClick={handleAddNewUserClick} />
+      )}
+      <StyledGridTitle variant="h4">Student Details</StyledGridTitle>
 
       <DataGrid
         sx={{

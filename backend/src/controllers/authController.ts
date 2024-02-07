@@ -19,9 +19,15 @@ export class AuthController {
     const token = result.token; // Declare the 'token' variable
 
     // Set the token in a cookie
-    res.cookie("token", token, { httpOnly: true });
+    // res.cookie("token", token, { httpOnly: true });
+    res.cookie("token", token, {
+      httpOnly: true,
+      maxAge: 900000, // 15 minutes in milliseconds
+    });
 
-    res.status(200).json({ message: result.message });
+    res
+      .status(200)
+      .json({ message: result.message, user: result.selectedUser });
   }
 
   static async registerUser(req: Request, res: Response) {
@@ -39,5 +45,16 @@ export class AuthController {
     }
 
     res.status(201).json({ message: result.message });
+  }
+
+  static async logout(req: Request, res: Response) {
+    console.log("logout controller");
+    try {
+      await AuthService.logout(req, res);
+      res.status(200).json({ message: "User logged out successfully" });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: "An error occurred while logging out" });
+    }
   }
 }

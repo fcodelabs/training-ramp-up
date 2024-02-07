@@ -25,10 +25,12 @@ export interface ICreatePassword {
 
 interface IUserState {
   users: IUser[];
+  currentUser?: IUser;
 }
 
 const initialState: IUserState = {
   users: [],
+  currentUser: undefined,
 };
 
 const userSlice = createSlice({
@@ -40,8 +42,10 @@ const userSlice = createSlice({
       console.log("addUser", action.payload);
       console.log("state.users", state.users);
     },
-    setUsers(state, action: PayloadAction<IUser[]>) {
-      state.users = action.payload;
+    setCurrentUser(state, action: PayloadAction<IUser | undefined>) {
+      console.log("action.payload", action.payload);
+      state.currentUser = action.payload;
+      console.log("state.users", state.currentUser);
     },
     createPassword(state, action: PayloadAction<ICreatePassword>) {
       const { password, token } = action.payload;
@@ -67,7 +71,7 @@ const userSlice = createSlice({
 
 export const {
   addUser,
-  setUsers,
+  setCurrentUser,
   createPassword,
   loginUser,
   logoutUser,

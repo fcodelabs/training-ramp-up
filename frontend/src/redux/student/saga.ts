@@ -155,13 +155,13 @@ import {
 
 import { PayloadAction } from "@reduxjs/toolkit";
 
-const BASE_URL = "https://ramp-up-backend1-epcm.onrender.com/student";
+const BASE_URL = "http://localhost:5000/student";
 
 function* getAllStudentsWorker(): Generator<any, any, any> {
   try {
     const { data } = yield call(
       axios.get<GridValidRowModel[]>,
-      "https://ramp-up-backend1-epcm.onrender.com/student/allStudents"
+      "http://localhost:5000/student/allStudents"
     );
     console.log("data", data);
     yield put(updateStudent(data));
@@ -192,7 +192,7 @@ function* addNewStudentWorker(
     console.log(newStudent);
     yield call(
       axios.post<GridValidRowModel>,
-      "https://ramp-up-backend1-epcm.onrender.com/student/add",
+      "http://localhost:5000/student/add",
       newStudent
     );
     yield put(fetchAllStudentsSuccess);
@@ -218,7 +218,7 @@ function* updateStudentWorker(action: PayloadAction<GridValidRowModel>) {
   try {
     yield call(
       axios.put<GridValidRowModel>,
-      `https://ramp-up-backend1-epcm.onrender.com/student/edit/${action.payload.id}`,
+      `http://localhost:5000/student/edit/${action.payload.id}`,
       updatedStudent
     );
     yield put(fetchAllStudentsSuccess);
@@ -233,7 +233,7 @@ function* deleteStudentWorker(action: PayloadAction<GridRowId>) {
   try {
     yield call(
       axios.delete<GridRowId>,
-      `https://ramp-up-backend1-epcm.onrender.com/student/delete/${action.payload}`
+      `http://localhost:5000/student/delete/${action.payload}`
     );
   } catch (error: any) {
     yield put(removeStudentError(error));

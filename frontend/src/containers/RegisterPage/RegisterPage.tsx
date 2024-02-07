@@ -22,6 +22,7 @@ import { validateEmail } from "../../utility/emailValidator";
 import { useDispatch, useSelector } from "react-redux";
 import { registerUser } from "../../redux/user/slice";
 import { RootState } from "../../redux/store";
+import { useNavigate } from "react-router-dom";
 
 const StyledContainer = styled(Container)`
   &&& {
@@ -103,6 +104,7 @@ const StyledBottomButton = styled(Button)`
 `;
 
 const RegisterPage = () => {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   //const { loading, error } = useSelector((state: RootState) => state.user);
 
@@ -190,11 +192,13 @@ const RegisterPage = () => {
         })
       );
       setSuccessMessageCardModal(true);
+      navigate("/login");
     }
   };
 
   const handleLogin = () => {
     console.log("Login Click");
+    navigate("/");
   };
 
   return (

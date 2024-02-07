@@ -2,6 +2,7 @@ import { AppDataSource } from "..";
 import { User } from "../models/user";
 import * as jwt from "jsonwebtoken";
 import * as bcrypt from "bcrypt";
+import { Request, Response } from "express";
 import dotenv from "dotenv";
 dotenv.config();
 
@@ -53,14 +54,14 @@ export class AuthService {
         { email: selectedUser.email, role: selectedUser.role },
         this.SECRET_KEY,
         {
-          expiresIn: "1h",
+          expiresIn: "15min",
         },
       );
 
       //   // Set the token in a cookie
       //   res.cookie('token', token, { httpOnly: true });
 
-      return { token, message: "User logged in successfully" };
+      return { token, selectedUser, message: "User logged in successfully" };
     } catch (error) {
       console.error(error);
       return { error: "An error occurred while logging in" };
@@ -90,6 +91,18 @@ export class AuthService {
     } catch (error) {
       console.error(error);
       return { error: "An error occurred while registering the user" };
+    }
+  }
+
+  static async logout(req: Request, res: Response) {
+    try {
+      // Clear the token from the client's cookies
+      res.clearCookie("token");
+
+      res.status(200).json({ message: "User logged out successfully" });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: "An error occurred while logging out" });
     }
   }
 }

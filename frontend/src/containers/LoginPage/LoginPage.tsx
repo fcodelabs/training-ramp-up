@@ -15,6 +15,7 @@ import styled from "@mui/system/styled";
 import "@fontsource/roboto";
 import { loginUser } from "../../redux/user/slice";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 const StyledContainer = styled(Container)`
   &&& {
@@ -96,6 +97,7 @@ const StyledBottomButton = styled(Button)`
 `;
 
 const LoginPage = () => {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -124,11 +126,13 @@ const LoginPage = () => {
     }
     if (email.trim() !== "" && password.trim() !== "") {
       dispatch(loginUser({ email, password }));
+      navigate("/admin");
     }
   };
 
   const handleRegister = () => {
     console.log("Register Click");
+    navigate("/register");
   };
 
   return (
