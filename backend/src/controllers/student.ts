@@ -25,6 +25,7 @@ export class StudentController {
 
   async findAll(req: Request, res: Response) {
     try {
+      console.log(req.user.role);
       const students = await StudentService.findAll();
       res.status(200).json(students);
     } catch (error) {

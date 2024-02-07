@@ -6,6 +6,7 @@ import { CreatePassword } from "./pages/CreatePassword/CreatePassword";
 import { Login } from "./pages/Login/Login";
 import { SocketContext } from "./SocketContext";
 import { SelfRegistration } from "./pages/SelfRegistration/SelfRegistration";
+import axios from "axios";
 
 const socket = io("http://localhost:5000");
 
@@ -18,6 +19,8 @@ socket.on("edit-student",(student) =>{
 socket.on("delete-student",(student) =>{
   console.log(`student deleted: ${JSON.stringify(student, null, 2)}`);
 })
+
+axios.defaults.withCredentials = true;
 
 const roter = createBrowserRouter(
   createRoutesFromElements(

@@ -1,10 +1,11 @@
 {
   "compilerOptions": {
+    "jsx": "react-jsx",
     "target": "es2018",
     "module": "commonjs",
     "outDir": "dist",
     "sourceMap": true,
   },
-  "include": ["src/**/*.ts"],
+  "include": ["src/**/*.ts", "src/routes/unprotected.tsx"],
   "exclude": ["node_modules"],
 }

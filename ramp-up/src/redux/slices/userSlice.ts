@@ -7,30 +7,31 @@ export interface IUser {
 }
 
 interface IUserState {
-  userEmails: string[];
   user: IUser | null;
 }
 
 const userSlice = createSlice({
     name: "user",
     initialState: {
-        userEmails : [],
         user: null,
     } as IUserState,
     reducers: {
-        addUserEmail: (state, action: PayloadAction<string>) => {
-            state.userEmails.push(action.payload);
-        },
         addUserRequest: (state, action: PayloadAction<IUser>) => {},
 
         addUserPasswordRequest: (state, action: PayloadAction<{token: string, password: string}>) => {},
 
         loginRequest: (state, action: PayloadAction<{email: string, password: string}>) => {},
 
+        loginSuccess: (state, action: PayloadAction<IUser>) => {
+            state.user = action.payload;
+        },
+
         selfRegisterRequest: (state, action: PayloadAction<{name: string, email: string, password: string}>) => {},
+
+        logoutRequest: (state) => {}
     }
 })
 
-export const { addUserEmail, addUserRequest, addUserPasswordRequest, loginRequest, selfRegisterRequest } = userSlice.actions;
+export const { addUserRequest, addUserPasswordRequest, loginRequest, selfRegisterRequest, loginSuccess, logoutRequest } = userSlice.actions;
 export const userReducer = userSlice.reducer;
 

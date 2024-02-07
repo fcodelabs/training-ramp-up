@@ -1,24 +1,8 @@
 import { AppDataSource } from "..";
 import { User } from "../models/user";
-import { sendEmail } from "../utility/sendMail";
 import { hashPassword, checkPassword } from "../utility/passwordFunctions";
 
 export class UserService {
-  static async create(data: Partial<User>) {
-    const repository = AppDataSource.getRepository(User);
-    const token = await sendEmail(data.email, data.name);
-    if (!token) {
-      throw new Error("Error sending email");
-    } else {
-      const newUser = repository.create({
-        ...data,
-        passwordToken: token,
-        passwordExpires: Date.now() + 3600000,
-      });
-      return await repository.save(newUser);
-    }
-  }
-
   static async selfRegister(data: Partial<User>) {
     try {
       const repository = AppDataSource.getTreeRepository(User);
