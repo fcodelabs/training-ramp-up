@@ -52,7 +52,7 @@ function* watchCreatePassword(action: PayloadAction<ICreatePassword>) {
       { withCredentials: true }
     );
     // Assuming create password is successful, update the state
-    yield put(createPassword(action.payload));
+    //yield put(createPassword(action.payload));
   } catch (error: any) {
     console.error("Error creating password:", error);
   }

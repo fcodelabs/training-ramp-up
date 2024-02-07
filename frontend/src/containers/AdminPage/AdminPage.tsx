@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import DataTable from "./DataTable/DataTable";
 import { Button, Typography, Box, Paper, Modal } from "@mui/material";
 import styled from "styled-components";
@@ -7,6 +7,7 @@ import AddNewUserCard from "../../components/Cards/AddNewUserCard";
 import { useNavigate } from "react-router-dom";
 import { logoutUser } from "../../redux/user/slice";
 import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../../redux/store";
 
 const StyledHeaderBox = styled(Box)`
   &&& {
@@ -81,7 +82,56 @@ const StyledAddNewUserButton = styled(Button)`
 function AdminPage() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const role = useSelector((state: RootState) => state.user.currentUser?.role);
+  console.log("admin page role", role);
+  if (!role) {
+    navigate("/");
+  }
   const [newUserCardModal, setNewUserCardModal] = useState(false);
+
+  const [loggedIn, setLoggedIn] = useState(true);
+
+  const checkForInactivity = () => {
+    const expireTime = localStorage.getItem("expireTime");
+
+    if (expireTime && parseInt(expireTime) < Date.now()) {
+      console.log("Session Expired");
+      setLoggedIn(false);
+      dispatch(logoutUser());
+      navigate("/");
+    }
+  };
+
+  const updateExpireTime = () => {
+    const expireTime = Date.now() + 1000 * 60 * 15; // 15 minutes
+    localStorage.setItem("expireTime", expireTime.toString());
+  };
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      checkForInactivity();
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    updateExpireTime(); // Call updateExpireTime initially
+
+    window.addEventListener("mousemove", updateExpireTime);
+    window.addEventListener("mousedown", updateExpireTime);
+    window.addEventListener("keypress", updateExpireTime);
+    window.addEventListener("scroll", updateExpireTime);
+    window.addEventListener("click", updateExpireTime);
+
+    return () => {
+      window.removeEventListener("mousemove", updateExpireTime);
+      window.removeEventListener("mousedown", updateExpireTime);
+      window.removeEventListener("keypress", updateExpireTime);
+      window.removeEventListener("scroll", updateExpireTime);
+      window.removeEventListener("click", updateExpireTime);
+    };
+  }, []); // Empty array ensures that effect is only run on mount and unmount
 
   const handleAddClick = () => {
     console.log("add new Clicked");

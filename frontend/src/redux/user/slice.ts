@@ -49,7 +49,7 @@ const userSlice = createSlice({
     },
     createPassword(state, action: PayloadAction<ICreatePassword>) {
       const { password, token } = action.payload;
-      console.log(password, token);
+      //console.log(password, token);
       //const user = state.users.find((user) => user.token === token);
       //console.log("user", user);
       //if (user) user.password = password;

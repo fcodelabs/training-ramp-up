@@ -16,7 +16,7 @@ export const authenticateUser = async (
   console.log("token", token);
   if (!token) {
     console.log("no token authenticate");
-    return res.status(401).json({ error: "Unauthorized" });
+    return res.status(401).json({ error: "user not logged in" });
   }
 
   try {
@@ -28,7 +28,7 @@ export const authenticateUser = async (
 
     if (!user) {
       console.log("no user authenticate");
-      return res.status(401).json({ error: "Unauthorized" });
+      return res.status(401).json({ error: "user does not exists" });
     }
 
     //req.user = user;
@@ -36,6 +36,6 @@ export const authenticateUser = async (
     next();
   } catch (error) {
     console.log("error authenticate", error);
-    return res.status(401).json({ error: "Unauthorized" });
+    return res.status(401).json({ error: "error while authenticating" });
   }
 };

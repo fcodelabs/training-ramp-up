@@ -97,12 +97,14 @@ export class AuthService {
   static async logout(req: Request, res: Response) {
     try {
       // Clear the token from the client's cookies
+      console.log("logout service");
+      console.log("req.cookies", req.cookies);
       res.clearCookie("token");
 
-      res.status(200).json({ message: "User logged out successfully" });
+      return 200;
     } catch (error) {
       console.error(error);
-      res.status(500).json({ error: "An error occurred while logging out" });
+      return 500;
     }
   }
 }

@@ -19,6 +19,7 @@ import isPasswordValid from "../../utility/passwordValidator";
 import MessageCard from "../../components/Cards/MessageCard";
 import { createPassword } from "../../redux/user/slice";
 import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 const StyledContainer = styled(Container)`
   &&& {
     width: auto;
@@ -86,6 +87,7 @@ const StyledButton = styled(Button)`
 
 const NewPasswordPage = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [passwordMissing, setPasswordMissing] = useState(false);
@@ -139,6 +141,7 @@ const NewPasswordPage = () => {
       dispatch(createPassword({ password, token }));
     }
     setSuccessMessageCardModal(true);
+    navigate("/");
   };
 
   return (

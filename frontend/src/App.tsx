@@ -1,7 +1,7 @@
 import React from "react";
 import logo from "./logo.svg";
 import "./App.css";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom"; // Use BrowserRouter directly
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import AdminPage from "./containers/AdminPage/AdminPage";
 import NewPasswordPage from "./containers/NewPasswordPage/NewPasswordPage";
 import LoginPage from "./containers/LoginPage/LoginPage";
@@ -13,7 +13,7 @@ function App() {
       <Routes>
         <Route path="/" element={<LoginPage />} /> // Default route
         <Route path="/admin" element={<AdminPage />} />
-        <Route path="/new-password" element={<NewPasswordPage />} />
+        <Route path="/create-password/:token" element={<NewPasswordPage />} />
         <Route path="/register" element={<RegisterPage />} />
       </Routes>
     </Router>
