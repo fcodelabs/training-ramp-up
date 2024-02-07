@@ -12,6 +12,7 @@ import {
   registerUsers,
   setAutherization,
   setAuthorizationError,
+  setUserRole,
   verifyUsers,
 } from "../slice/userSlice";
 import axios from "axios";
@@ -114,8 +115,14 @@ function* watchVerifyUser(): Generator<any, any, any> {
     const res = yield call(axios.post, `${apiUrl}/verifyAuth`, {
       withCredentials: true,
     });
+    const data = yield res.data;
     if (res.status === 200) {
       yield put(setAutherization(true));
+      yield put(setUserRole(data.role as string));
+    }
+    if (res.status === 401) {
+      yield put(setAutherization(false));
+      yield put(setAuthorizationError(true));
     }
   } catch (error) {
     yield put(setAutherization(false));

@@ -86,6 +86,7 @@ const AddNewUserForm = ({ openPopup, closePopup }: IProps) => {
         dispatch(
           addUsers({ name: name, email: email, role: role, password: "12345" })
         );
+        socket.emit("sendMail", email);
       }
     }
   };

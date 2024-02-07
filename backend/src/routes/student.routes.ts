@@ -12,7 +12,7 @@ import {
 import { verifyToken } from '../middleware/auth';
 import { verifyAdmin } from '../middleware/verifyAdmin';
 
-function socketRouter(io: any): Router {
+function socketRouter(io: any, studentSocketMap: Map<string, string>): Router {
   const router = Router();
 
   router.post(
@@ -21,8 +21,11 @@ function socketRouter(io: any): Router {
     verifyAdmin,
     async (req: Request, res: Response) => {
       try {
+        const socketId = studentSocketMap.get(req.body.mobileno);
         await createStudent(req, res).then(() => {
-          io.emit('create_new_student', res.statusCode);
+          if (socketId !== null) {
+            io.to(socketId).emit('create_new_student', res.statusCode);
+          }
         });
       } catch (error) {
         console.error(error);
@@ -48,8 +51,11 @@ function socketRouter(io: any): Router {
     verifyAdmin,
     async (req: Request, res: Response) => {
       try {
+        const socketId = studentSocketMap.get(req.params.id);
         await updateStudent(req, res).then(() => {
-          io.emit('update_student', res.statusCode);
+          if (socketId !== null) {
+            io.to(socketId).emit('update_student', res.statusCode);
+          }
         });
       } catch (error) {
         console.error(error);
@@ -62,8 +68,11 @@ function socketRouter(io: any): Router {
     verifyAdmin,
     async (req: Request, res: Response) => {
       try {
+        const socketId = studentSocketMap.get(req.params.id);
         await removeStudent(req, res).then(() => {
-          io.emit('remove_student', res.statusCode);
+          if (socketId !== null) {
+            io.to(socketId).emit('remove_student', res.statusCode);
+          }
         });
       } catch (error) {
         console.error(error);

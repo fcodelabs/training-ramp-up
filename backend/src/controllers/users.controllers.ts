@@ -247,7 +247,10 @@ export const veryfyUser = async (
         return;
       }
       req.body.role = (data as jwt.JwtPayload).user.role;
-      res.status(200).json({ message: 'User is verified' });
+      res.status(200).json({
+        message: 'User is verified',
+        role: (data as jwt.JwtPayload).user.role
+      });
     });
   } catch (error) {
     console.log(error);

@@ -10,8 +10,8 @@ import PasswordCreationPage from "./containers/PasswordCreationPage/PasswordCrea
 import ObserversRegisterPage from "./containers/ObserversRegisterPage/ObserversRegisterPage";
 import { io } from "socket.io-client";
 import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
-
-export const socket = io("http://localhost:5000");
+const backendUrl = process.env.REACT_APP_BACKEND!;
+export const socket = io(backendUrl);
 const routes = createBrowserRouter([
   {
     path: "/login",

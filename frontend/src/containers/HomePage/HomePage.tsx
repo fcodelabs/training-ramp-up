@@ -6,14 +6,16 @@ import ObserverDataGridTable from "../../components/DataGridTable/ObserverDataGr
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useIdleTimer } from "react-idle-timer";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { logoutUsers } from "../../redux/slice/userSlice";
 import PopupMessage from "../../components/PopupMessage/PopupMessage";
+import { RootState } from "../../redux/store";
 
 const HomePage = () => {
   const [open, setOpen] = useState(false);
+  const currentRole = useSelector((state: RootState) => state.user.userRole);
   const location = useLocation();
-  const userRole = location.state && location.state.role;
+  const userRole = (location.state && location.state.role) || currentRole;
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const onIdle = () => {

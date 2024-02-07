@@ -1,4 +1,4 @@
-import { Navigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -16,6 +16,7 @@ const ProtectedRoute = ({ children }: any) => {
   );
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   useEffect(() => {
     dispatch(verifyUsers());
   }, [dispatch]);
@@ -29,7 +30,7 @@ const ProtectedRoute = ({ children }: any) => {
     return children;
   } else {
     if (authorizationError === true) {
-      return <Navigate to={"/login"} />;
+      navigate("/login", { replace: true });
     }
     return <LoadingComponent />;
   }

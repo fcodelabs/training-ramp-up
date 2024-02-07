@@ -28,8 +28,11 @@ export default function userSocketRouter(
   });
   userRouter.post('/emailSend', async (req: Request, res: Response) => {
     try {
+      const socketId = userSocketMap.get(req.body.email as string);
       await emailSend(req, res).then(() => {
-        io.emit('send_email', res.statusCode);
+        if (socketId !== null) {
+          io.to(socketId).emit('send_email', res.statusCode);
+        }
       });
     } catch (error) {
       console.error(error);

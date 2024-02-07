@@ -278,6 +278,7 @@ const AdminDataGridTable = () => {
   const handleConfirmDeleteClick = (id: GridRowId) => {
     dispatch(updateStudent(initialRows.filter((row) => row.id !== id)));
     dispatch(removeStudent(id));
+    socket.emit("removeStudent", id.toString());
     idReducer();
   };
 
@@ -345,8 +346,11 @@ const AdminDataGridTable = () => {
     try {
       if ("isNew" in newRow) {
         dispatch(addStudent(student));
+        console.log(student.id.toString());
+        socket.emit("createStudent", student.mobileno);
       } else {
         dispatch(editStudent(student));
+        socket.emit("updateStudent", student.id.toString());
       }
       dispatch(
         updateStudent(
