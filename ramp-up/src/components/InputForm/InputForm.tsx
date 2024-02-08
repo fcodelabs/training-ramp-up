@@ -7,12 +7,15 @@ import {
   FormControl,
   InputLabel,
   MenuItem,
+  Modal,
+  Paper,
   Select,
   TextField,
 } from '@mui/material'
 import axios from 'axios'
 import React, { useState } from 'react'
 import DialogBox from '../DialogBox/DialogBox'
+
 
 interface ModalProps {
   openModal: boolean
@@ -26,7 +29,7 @@ function InputForm({ openModal, setOpenModal }: ModalProps) {
   const [role, setRole] = useState('')
   const [nameError, setNameError] = useState('')
   const [roleError, setRoleError] = useState('')
-  const [dialogOpen, setDialogOpen] = useState(false);
+  const [openSuccessModal, setOpenSuccessModal] = useState(false) // New state for success modal
 
 
   const FormData = {
@@ -79,8 +82,8 @@ function InputForm({ openModal, setOpenModal }: ModalProps) {
       console.log(FormData)
       axios.post('http://localhost:4000/api/users/', FormData)
       .then(({data})=>{
-          setOpenModal(false);
-          setDialogOpen(true);
+          setOpenModal(false)
+          setOpenSuccessModal(true) // Open success modal on successful submission
           console.log("success",data)
       })
       .catch((err) => {
@@ -90,7 +93,8 @@ function InputForm({ openModal, setOpenModal }: ModalProps) {
   }
 
   return (
-    <><Dialog open={openModal} onClose={() => setOpenModal(false)}>
+    <>
+    <Dialog open={openModal} onClose={() => setOpenModal(false)}>
       <DialogTitle>Add a New User</DialogTitle>
       <DialogContent>
         <div style={{ marginBottom: '20px' }}>
@@ -102,7 +106,8 @@ function InputForm({ openModal, setOpenModal }: ModalProps) {
             value={name}
             onChange={(e) => setName(e.target.value)}
             error={!!nameError}
-            helperText={nameError} />
+            helperText={nameError}
+          />
         </div>
         <div style={{ marginBottom: '20px' }}>
           <TextField
@@ -113,7 +118,8 @@ function InputForm({ openModal, setOpenModal }: ModalProps) {
             value={email}
             onChange={handleEmailChange}
             error={!!emailError}
-            helperText={emailError} />
+            helperText={emailError}
+          />
         </div>
         <div style={{ width: '500px' }}>
           <FormControl variant="outlined" fullWidth error={!!roleError}>
@@ -125,8 +131,8 @@ function InputForm({ openModal, setOpenModal }: ModalProps) {
               value={role}
               onChange={(e) => setRole(e.target.value as string)}
             >
-              <MenuItem value="admin">Admin</MenuItem>
-              <MenuItem value="observer">Observer</MenuItem>
+              <MenuItem value="Admin">Admin</MenuItem>
+              <MenuItem value="Observer">Observer</MenuItem>
             </Select>
           </FormControl>{' '}
         </div>
@@ -144,21 +150,34 @@ function InputForm({ openModal, setOpenModal }: ModalProps) {
           CANCEL
         </Button>
       </DialogActions>
-    </Dialog><>
-        
-        <DialogBox
-          open={dialogOpen}
-          onClose={() => setDialogOpen(false)}
-          dialogContent="A password creation link has been sent to the provided email address."
-          buttonLabel="OK"
-          buttonAction={() => setDialogOpen(false)}
-          secondary={false}
-          secondaryButtonLabel="DISMISS"
-          secondaryButtonAction={() => setDialogOpen(false)} />
-      </></>
+    </Dialog>
+    <Modal
+        open={openSuccessModal}
+        onClose={() => setOpenSuccessModal(false)}
+        aria-labelledby="success-modal-title"
+        aria-describedby="success-modal-description"
+      >
+        <Paper
+          style={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            borderRadius: '12px',
+          }}
+        >
+              <DialogBox
+            message="A password creation link has been sent to the provided email address."
+            primaryButton={{
+              text: 'OK',
+              onClick: () => setOpenSuccessModal(false),
+            }}
+            primaryOption="OK"
+          />
+        </Paper>
+      </Modal>
+    </>
 
   )
-
-  
 }
 export default InputForm

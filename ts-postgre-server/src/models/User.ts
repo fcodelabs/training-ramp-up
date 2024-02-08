@@ -12,7 +12,7 @@ export class User extends BaseEntity{
     @Column({unique: true})
     email: string;
 
-    @Column()
+    @Column({default:'Observer'})
     role: string;
 
     @Column({nullable: true})

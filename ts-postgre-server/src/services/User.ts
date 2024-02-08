@@ -3,6 +3,12 @@ import { User } from "../models/User";
 import nodemailer from "nodemailer";
 import jwt from "jsonwebtoken";
 import "dotenv/config";
+import bcrypt from "bcrypt";
+
+interface CreatePasswordParams {
+  token: string;
+  password: string;
+}
 
 export const createUserService = async (userData: any) => {
   const userRepository = getRepository(User);
@@ -14,7 +20,7 @@ export const createUserService = async (userData: any) => {
 
   if (existingUser) {
     throw new Error(
-      "User with this email already exists. Please choose a different email."
+      "The entered email has already been registered. "
     );
   }
 
@@ -27,24 +33,38 @@ export const createUserService = async (userData: any) => {
   await userRepository.save(newUser);
 
   // Create JWT token
-  const token = jwt.sign({ userId: newUser.id }, process.env.JWT_SECRET || "key");
+  const token = jwt.sign(
+    { userId: newUser.id },
+    process.env.JWT_SECRET || "key"
+  );
 
-  console.log(token)
+  console.log(token);
 
   // Use token in the rest of your code
   var transporter = nodemailer.createTransport({
     service: "gmail",
     auth: {
-      user: "dilinaraveen@gmail.com",
-      pass: "lyhf gbbf uman omgx",
+      user: "nethkavindya@gmail.com",
+      pass: "mzoh gaqq iqag uuhr",
     },
   });
 
   var mailOptions = {
-    from: "dilinaraveen@gmail.com",
+    from: "nethkavindya@gmail.com",
     to: email,
-    subject: "Password Confirmation",
-    text: `http://localhost:3000/create-password/${token}`,
+    subject: "Account Registration - Password Creation Link ",
+    text: `Dear Name, 
+    You have been added as an Admin to our system. Please click the following link to create your password and access your account: 
+
+    http://localhost:3000/create-password/${token}
+    
+    Please note that the password creation link is valid for one-time use only. Ensure that you use it promptly to set up your password. 
+
+Best regards, 
+[Company Name] `,
+
+
+
   };
 
   transporter.sendMail(
@@ -59,4 +79,102 @@ export const createUserService = async (userData: any) => {
   );
 
   return newUser;
+};
+
+export const createPasswordService = async ({
+  token,
+  password,
+}: CreatePasswordParams) => {
+  try {
+    const decoded: any = await jwt.verify(
+      token,
+      process.env.JWT_SECRET || "key"
+    );
+    const userId = decoded.userId;
+
+    const userRepository = getRepository(User);
+    const userToUpdate = await userRepository.findOne({
+      where: { id: userId },
+    });
+
+    if (!userToUpdate) {
+      throw new Error("User not found");
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    userToUpdate.password = hashedPassword;
+
+    await userRepository.save(userToUpdate);
+
+    return { message: "Password updated successfully" };
+  } catch (error) {
+    console.error(error);
+    throw new Error("Internal Server Error");
+  }
+};
+
+export const registerUserService = async (userData: any) => {
+  const userRepository = getRepository(User);
+  const { name, email, password } = userData;
+
+  const existingUser = await userRepository.findOne({
+    where: { email: email },
+  });
+
+  if (existingUser) {
+    throw new Error(
+      "User with this email already exists. Please choose a different email."
+    );
+  }
+
+  const hashedPassowrd = await bcrypt.hash(password, 10);
+
+  const newUser = userRepository.create({
+    name,
+    email,
+    password: hashedPassowrd,
+  });
+
+  await userRepository.save(newUser);
+
+  // Create JWT token
+  const access_token = jwt.sign(
+    { userId: newUser.id },
+    process.env.JWT_SECRET || "key"
+  );
+
+  console.log(access_token);
+
+  return {
+    access_token,
+    name: name,
+    role: newUser.role,
+  };
+};
+
+export const loginUserService = async (userData: any) => {
+  const userRepository = getRepository(User);
+  const { email, password } = userData;
+  const user = await userRepository.findOne({ where: { email } });
+
+  if (!user) {
+    throw new Error("Invalid email.");
+  }
+
+  const isPasswordValid = await bcrypt.compare(password, user.password);
+
+  if (!isPasswordValid) {
+    throw new Error("Invalid password.");
+  }
+
+  const access_token = jwt.sign(
+    { userId: user.id },
+    process.env.JWT_SECRET || "key"
+  );
+  return {
+    access_token,
+    name: user.name,
+    role: user.role,
+  };
 };

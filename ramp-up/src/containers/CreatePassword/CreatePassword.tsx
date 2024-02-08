@@ -4,7 +4,6 @@ import {
   CardActionArea,
   CardContent,
   Typography,
-  TextField,
   CardActions,
   Button,
   FormControl,
@@ -13,10 +12,13 @@ import {
   InputLabel,
   OutlinedInput,
   FormHelperText,
+  Paper,
+  Modal,
 } from '@mui/material'
 import axios from 'axios'
 import React, { useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
+import DialogBox from '../../components/DialogBox/DialogBox'
 
 export default function CreatePassword() {
   const [showPassword, setShowPassword] = React.useState(false)
@@ -24,6 +26,8 @@ export default function CreatePassword() {
   const [passwordError, setPasswordError] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
   const [confirmPasswordError, setConfirmPasswordError] = useState('')
+  const [showSuccessModal, setShowSuccessModal] = useState(false) 
+
 
   const token = useParams();
   const navigate = useNavigate();
@@ -83,7 +87,9 @@ export default function CreatePassword() {
           .then(({ data }) => {
             console.log('Password created', data)
             setConfirmPasswordError('')
-            navigate("/login");
+            setShowSuccessModal(true)
+            // navigate("/login");
+            
           })
           .catch((err) => {
             console.log(err)
@@ -181,6 +187,34 @@ export default function CreatePassword() {
           </Button>
         </CardActions>
       </Card>
+      <Modal
+        open={showSuccessModal}
+        onClose={() => setShowSuccessModal(false)}
+        aria-labelledby="success-modal-title"
+        aria-describedby="success-modal-description"
+      >
+       <Paper
+          style={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            borderRadius: '12px',
+          }}
+        >
+          <DialogBox
+            message="Your account has been successfully created."
+            primaryButton={{
+              text: 'OK',
+              onClick: () => {
+                setShowSuccessModal(false)
+                navigate("/login")
+              },
+            }}
+            primaryOption="OK"
+          />
+        </Paper>
+        </Modal>
     </div>
   )
 }

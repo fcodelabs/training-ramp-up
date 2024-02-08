@@ -29,7 +29,7 @@ import validatePhoneNumber from '../../utility/validatePhoneNumber'
 import calculateAge from '../../utility/calculateAge'
 import Modal from '@mui/material/Modal'
 import Paper from '@mui/material/Paper'
-import MessageCard from '../Cards/MessageCard'
+import DialogBox from '../DialogBox/DialogBox'
 import InputForm from '../InputForm/InputForm'
 
 import io from 'socket.io-client'
@@ -43,7 +43,7 @@ import {
   addStudentError,
   editStudentError,
   removeStudentError,
-} from '../../redux/slices/slice'
+} from '../../redux/slices/studentSlice'
 
 const StyledEditButton = styled(Button)`
   &&& {
@@ -122,6 +122,9 @@ const StyledDataTableBox = styled(Box)`
       align-items: flex-start;
       gap: 8px;
     }
+    .user-details {
+      background-color: 'rgba(33, 150, 243, 0.08)';
+    }
   }
 `
 interface IStudent {
@@ -188,14 +191,16 @@ export default function Table() {
             width: '100%',
           }}
         >
-          <Button
-            style={{ backgroundColor: '#2196F3' }}
-            variant="contained"
-            size="medium"
-            onClick={() => setOpenModal(true)}
-          >
-            ADD NEW USER
-          </Button>
+          {userRole === 'Admin' ? (
+            <Button
+              style={{ backgroundColor: '#2196F3' }}
+              variant="contained"
+              size="medium"
+              onClick={() => setOpenModal(true)}
+            >
+              ADD NEW USER
+            </Button>
+          ) : null}
         </div>
 
         <div
@@ -210,20 +215,21 @@ export default function Table() {
             style={{
               fontSize: '26px',
               fontWeight: '400',
-              fontFamily: 'Roboto,sans-serif'
+              fontFamily: 'Roboto,sans-serif',
             }}
           >
             Student Details
           </div>
-
-          <Button
-            style={{ backgroundColor: '#2196F3' }}
-            variant="contained"
-            size="small"
-            onClick={handleClick}
-          >
-            ADD NEW STUDENT
-          </Button>
+          {userRole === 'Admin' ? (
+            <Button
+              style={{ backgroundColor: '#2196F3' }}
+              variant="contained"
+              size="small"
+              onClick={handleClick}
+            >
+              ADD NEW STUDENT
+            </Button>
+          ) : null}
         </div>
       </GridToolbarContainer>
     )
@@ -299,6 +305,12 @@ export default function Table() {
       }, 500)
     })
   }, [])
+
+  const userRole = useSelector(
+    (state: RootState) => state.auth.userDetails.role
+  )
+
+  console.log('userRole', userRole)
 
   // useEffect(() => {
   //   socket.on("getstudents", (data: any) => {
@@ -1044,8 +1056,9 @@ export default function Table() {
         }
       },
     },
-
-    {
+  ]
+    if (userRole === "Admin") {
+      columns.push({
       field: 'action',
       headerName: 'Action',
       width: 195,
@@ -1115,10 +1128,12 @@ export default function Table() {
               REMOVE
             </StyledRemoveButton>
           </div>,
+          
         ]
       },
-    },
-  ]
+    });
+    }
+ 
 
   return (
     <StyledDataTableBox>
@@ -1164,7 +1179,7 @@ export default function Table() {
             borderRadius: '12px',
           }}
         >
-          <MessageCard
+          <DialogBox
             message="A new student added successfully."
             primaryButton={{
               text: 'OK',
@@ -1192,7 +1207,7 @@ export default function Table() {
               borderRadius: '12PX',
             }}
           >
-            <MessageCard
+            <DialogBox
               message="Discard changes?"
               primaryButton={{ text: 'DISMISS', onClick: handleDismissDiscard }}
               secondaryButton={{
@@ -1223,7 +1238,7 @@ export default function Table() {
               borderRadius: '12PX',
             }}
           >
-            <MessageCard
+            <DialogBox
               message="Discard changes?"
               primaryButton={{
                 text: 'DISMISS',
@@ -1259,7 +1274,7 @@ export default function Table() {
               borderRadius: '12PX',
             }}
           >
-            <MessageCard
+            <DialogBox
               message="Are you sure you want to remove this student?"
               primaryButton={{
                 text: 'DISMISS',
@@ -1298,7 +1313,7 @@ export default function Table() {
               borderRadius: '12px',
             }}
           >
-            <MessageCard
+            <DialogBox
               message="The student removed successfully."
               primaryButton={{
                 text: 'OK',
@@ -1325,7 +1340,7 @@ export default function Table() {
               borderRadius: '12px',
             }}
           >
-            <MessageCard
+            <DialogBox
               message="Student Details updated successfully."
               primaryButton={{
                 text: 'OK',
@@ -1354,7 +1369,7 @@ export default function Table() {
               borderRadius: '12px',
             }}
           >
-            <MessageCard
+            <DialogBox
               message="Mandatory fields missing."
               primaryButton={{
                 text: 'KEEP EDITING',
