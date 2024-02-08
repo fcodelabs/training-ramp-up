@@ -45,7 +45,8 @@ import {
 import AddNewUser from "../AddNewUser/AddNewUser";
 
 import io from "socket.io-client";
-const socket = io("https://ramp-up-backend1-epcm.onrender.com/");
+// const socket = io("https://ramp-up-backend1-epcm.onrender.com/");
+const socket = io("http://localhost:5000");
 console.log("Undersocket", socket);
 
 const StyledEditButton = styled(Button)`
@@ -1179,6 +1180,16 @@ export default function DataTable({
       },
     },
   ];
+  const filteredColumns = (
+    columns: GridColDef[],
+    role: string
+  ): GridColDef[] => {
+    if (role === "Admin") {
+      return columns;
+    } else {
+      return columns.filter((column) => column.field !== "action");
+    }
+  };
 
   return (
     <StyledDataTableBox>
@@ -1228,7 +1239,7 @@ export default function DataTable({
           width: "auto",
         }}
         rows={temp}
-        columns={columns}
+        columns={filteredColumns(columns, role!)}
         editMode="row"
         disableRowSelectionOnClick
         rowModesModel={rowModesModel}

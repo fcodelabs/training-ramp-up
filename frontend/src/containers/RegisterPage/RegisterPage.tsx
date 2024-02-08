@@ -10,7 +10,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "@mui/system/styled";
 import "@fontsource/roboto";
 import VisibilityIcon from "@mui/icons-material/Visibility";
@@ -23,6 +23,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { registerUser } from "../../redux/user/slice";
 import { RootState } from "../../redux/store";
 import { useNavigate } from "react-router-dom";
+
+import io from "socket.io-client";
+// const socket = io("https://ramp-up-backend1-epcm.onrender.com/");
+const socket = io("http://localhost:5000");
+console.log("Undersocket register", socket);
 
 const StyledContainer = styled(Container)`
   &&& {
@@ -124,6 +129,24 @@ const RegisterPage = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const [successMessageCardModal, setSuccessMessageCardModal] = useState(false);
+  const [newUserErrorCard, setNewUserErrorCard] = useState(false);
+
+  useEffect(() => {
+    socket.on("register", (data) => {
+      console.log("register", data);
+      if (data === 201) {
+        setSuccessMessageCardModal(true);
+        console.log("successCardModel", successMessageCardModal);
+        //dispatch(addUser({ name, email, role }));
+        navigate("/");
+      }
+      if (data === 400) {
+        console.log("error register socekrt");
+        // dispatch(addStudentError());
+        setNewUserErrorCard(true);
+      }
+    });
+  }, [dispatch]);
 
   const handleTogglePassword = () => {
     setShowPassword((prev) => !prev);
@@ -191,8 +214,8 @@ const RegisterPage = () => {
           role: "Observer",
         })
       );
-      setSuccessMessageCardModal(true);
-      navigate("/login");
+      //setSuccessMessageCardModal(true);
+      //navigate("/login");
     }
   };
 

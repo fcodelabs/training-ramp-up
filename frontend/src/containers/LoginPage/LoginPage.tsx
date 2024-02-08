@@ -10,12 +10,18 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "@mui/system/styled";
 import "@fontsource/roboto";
 import { loginUser } from "../../redux/user/slice";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import MessageCard from "../../components/Cards/MessageCard";
+
+import io from "socket.io-client";
+// const socket = io("https://ramp-up-backend1-epcm.onrender.com/");
+const socket = io("http://localhost:5000");
+console.log("Undersocket login", socket);
 
 const StyledContainer = styled(Container)`
   &&& {
@@ -103,6 +109,23 @@ const LoginPage = () => {
   const [password, setPassword] = useState("");
   const [emailMissing, setEmailMissing] = useState(false);
   const [passwordMissing, setPasswordMissing] = useState(false);
+  const [loggingSuccess, setLoggingSuccess] = useState(false);
+  const [loggingError, setLoggingError] = useState(false);
+
+  useEffect(() => {
+    socket.on("login", (data) => {
+      console.log("login", data);
+      if (data === 200) {
+        setLoggingSuccess(true);
+        //dispatch(loginUser({ email, password }));
+        navigate("/admin");
+      }
+      if (data === 401) {
+        // dispatch(addStudentError());
+        setLoggingError(true);
+      }
+    });
+  }, [dispatch]);
 
   const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const new_email = event.target.value;
@@ -126,7 +149,7 @@ const LoginPage = () => {
     }
     if (email.trim() !== "" && password.trim() !== "") {
       dispatch(loginUser({ email, password }));
-      navigate("/admin");
+      //navigate("/admin");
     }
   };
 
@@ -144,7 +167,7 @@ const LoginPage = () => {
         <StyledTextField
           label="Email"
           onChange={handleEmailChange}
-          error={emailMissing}
+          error={emailMissing || loggingError}
           helperText={emailMissing ? "Mandatory field is missing" : ""}
         >
           Email
@@ -153,8 +176,14 @@ const LoginPage = () => {
           label="Password"
           onChange={handlePasswordChange}
           type="password"
-          error={passwordMissing}
-          helperText={passwordMissing ? "Mandatory field is missing" : ""}
+          error={passwordMissing || loggingError}
+          helperText={
+            passwordMissing
+              ? "Mandatory field is missing"
+              : loggingError
+              ? "Invalid email or password"
+              : ""
+          }
         >
           Password
         </StyledTextField>

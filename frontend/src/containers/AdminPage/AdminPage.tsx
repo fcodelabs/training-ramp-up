@@ -3,11 +3,17 @@ import DataTable from "./DataTable/DataTable";
 import { Button, Typography, Box, Paper, Modal } from "@mui/material";
 import styled from "styled-components";
 import "@fontsource/roboto";
-import AddNewUserCard from "../../components/Cards/AddNewUserCard";
+import AddNewUserCard from "./AddNewUser/AddNewUserCard";
 import { useNavigate } from "react-router-dom";
 import { logoutUser } from "../../redux/user/slice";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
+
+import io from "socket.io-client";
+import MessageCard from "../../components/Cards/MessageCard";
+// const socket = io("https://ramp-up-backend1-epcm.onrender.com/");
+const socket = io("http://localhost:5000");
+console.log("Undersocket", socket);
 
 const StyledHeaderBox = styled(Box)`
   &&& {
@@ -84,12 +90,31 @@ function AdminPage() {
   const dispatch = useDispatch();
   const role = useSelector((state: RootState) => state.user.currentUser?.role);
   console.log("admin page role", role);
-  if (!role) {
-    navigate("/");
-  }
+  useEffect(() => {
+    if (!role) {
+      navigate("/");
+    }
+  }, [role, navigate]);
   const [newUserCardModal, setNewUserCardModal] = useState(false);
 
   const [loggedIn, setLoggedIn] = useState(true);
+
+  const [addUserSuccessCard, setAddUserSuccessCard] = useState(false);
+  const [addUserErrorCard, setAddUserErrorCard] = useState(false);
+
+  useEffect(() => {
+    socket.on("new-user", (data) => {
+      console.log("new-user adding", data);
+      if (data === 201) {
+        setAddUserSuccessCard(true);
+        //dispatch(addUser({ name, email, role }));
+      }
+      if (data === 400) {
+        // dispatch(addStudentError());
+        setAddUserErrorCard(true);
+      }
+    });
+  }, [dispatch]);
 
   const checkForInactivity = () => {
     const expireTime = localStorage.getItem("expireTime");
@@ -185,6 +210,60 @@ function AdminPage() {
             <AddNewUserCard
               onSubmit={handleSubmitClick}
               onCancel={handleCancelClick}
+            />
+          </Paper>
+        </Modal>
+      )}
+      {addUserSuccessCard && (
+        <Modal
+          open={addUserSuccessCard}
+          onClose={() => setAddUserSuccessCard(false)}
+          aria-labelledby="remove-success-modal-title"
+          aria-describedby="remove-success-modal-description"
+        >
+          <Paper
+            style={{
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              borderRadius: "12px",
+            }}
+          >
+            <MessageCard
+              message="A password creation link has been sent to the provided email address."
+              primaryButton={{
+                text: "OK",
+                onClick: () => setAddUserSuccessCard(false),
+              }}
+              primaryOption="OK"
+            />
+          </Paper>
+        </Modal>
+      )}
+      {addUserErrorCard && (
+        <Modal
+          open={addUserErrorCard}
+          onClose={() => setAddUserErrorCard(false)}
+          aria-labelledby="remove-success-modal-title"
+          aria-describedby="remove-success-modal-description"
+        >
+          <Paper
+            style={{
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              borderRadius: "12px",
+            }}
+          >
+            <MessageCard
+              message="Failed to send the password creation link. Please try again later."
+              primaryButton={{
+                text: "TRY AGAIN LATER",
+                onClick: () => setAddUserErrorCard(false),
+              }}
+              primaryOption="TRY AGAIN LATER"
             />
           </Paper>
         </Modal>

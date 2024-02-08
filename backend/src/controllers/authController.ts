@@ -44,7 +44,7 @@ export class AuthController {
       return res.status(400).json({ error: result.error });
     }
 
-    res.status(201).json({ message: result.message });
+    return res.status(201).json({ message: result.message });
   }
 
   static async logout(req: Request, res: Response) {

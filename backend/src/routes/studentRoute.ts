@@ -26,7 +26,7 @@ function socketRouter(io: any): Router {
     }
   });
 
-  router.get("/allStudents", authenticateUser, async (req, res) => {
+  router.get("/allStudents", async (req, res) => {
     try {
       await StudentController.getAllStudentsController(req, res).then(() => {
         io.emit("get-all-students", res.statusCode);

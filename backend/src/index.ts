@@ -14,6 +14,8 @@ import http from "http";
 import cors from "cors";
 import { User } from "./models/user";
 import cookieParser from "cookie-parser";
+import socketAuthRouter from "./routes/authRoute";
+import sockeUsertRouter from "./routes/userRoute";
 
 dotenv.config();
 
@@ -62,9 +64,9 @@ AppDataSource.initialize()
     // app.listen(port, () => {
     //   console.log(`Server running on port ${port}`);
     // });
-    server.listen(5000, () => {
-      console.log("server is running on port 5000");
-    });
+    // server.listen(5000, () => {
+    //   console.log("server is running on port 5000");
+    // });
   })
   .catch((err) => {
     console.log("Error while connecting to the database", err);
@@ -77,9 +79,13 @@ app.get("/", (req: Request, res: Response) => {
   res.send("Hello World!");
 });
 
-app.use("/auth", authRouter);
+app.use("/auth", socketAuthRouter(io));
+
+app.use("/user", sockeUsertRouter(io));
 app.use("/student", socketRouter(io));
-app.use("/user", userRouter);
+server.listen(5000, () => {
+  console.log("server is running on port 5000");
+});
 
 // app.listen(port, () => {
 //   console.log(`Server running on port ${port}`);

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Button,
@@ -7,14 +7,22 @@ import {
   Typography,
   InputLabel,
   FormControl,
+  Modal,
+  Paper,
 } from "@mui/material";
 import styled from "@mui/system/styled";
 import "@fontsource/roboto";
 import Select from "@mui/material/Select";
 // import Mailchecker from "mailchecker";
-import { validateEmail } from "../../utility/emailValidator";
-import { addUser } from "../../redux/user/slice";
+import { validateEmail } from "../../../utility/emailValidator";
+import { addUser } from "../../../redux/user/slice";
 import { useDispatch, useSelector } from "react-redux";
+import MessageCard from "../../../components/Cards/MessageCard";
+
+import io from "socket.io-client";
+// const socket = io("https://ramp-up-backend1-epcm.onrender.com/");
+const socket = io("http://localhost:5000");
+console.log("Undersocket", socket);
 
 const StyledMenuBoxContainer = styled(Box)`
   &&& {
@@ -123,6 +131,22 @@ const AddNewUserCard: React.FC<IUserCardProps> = ({ onSubmit, onCancel }) => {
   const [nameMissing, setNameMissing] = useState(false);
   const [emailMissing, setEmailMissing] = useState(false);
   const [emailInvalid, setEmailInvalid] = useState(false);
+  const [addUserSuccessCard, setAddUserSuccessCard] = useState(false);
+  const [addUserErrorCard, setAddUserErrorCard] = useState(false);
+
+  useEffect(() => {
+    socket.on("new-user", (data) => {
+      console.log("new-user adding", data);
+      if (data === 201) {
+        setAddUserSuccessCard(true);
+        //dispatch(addUser({ name, email, role }));
+      }
+      if (data === 400) {
+        // dispatch(addStudentError());
+        setAddUserErrorCard(true);
+      }
+    });
+  }, [dispatch]);
 
   const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newName = event.target.value;
@@ -222,6 +246,60 @@ const AddNewUserCard: React.FC<IUserCardProps> = ({ onSubmit, onCancel }) => {
           </StyledEditButton>
         </StyledButtonContainer>
       </StyledMenuBox>
+      {addUserSuccessCard && (
+        <Modal
+          open={addUserSuccessCard}
+          onClose={() => setAddUserSuccessCard(false)}
+          aria-labelledby="remove-success-modal-title"
+          aria-describedby="remove-success-modal-description"
+        >
+          <Paper
+            style={{
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              borderRadius: "12px",
+            }}
+          >
+            <MessageCard
+              message="A password creation link has been sent to the provided email address."
+              primaryButton={{
+                text: "OK",
+                onClick: () => setAddUserSuccessCard(false),
+              }}
+              primaryOption="OK"
+            />
+          </Paper>
+        </Modal>
+      )}
+      {addUserErrorCard && (
+        <Modal
+          open={addUserErrorCard}
+          onClose={() => setAddUserErrorCard(false)}
+          aria-labelledby="remove-success-modal-title"
+          aria-describedby="remove-success-modal-description"
+        >
+          <Paper
+            style={{
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              borderRadius: "12px",
+            }}
+          >
+            <MessageCard
+              message="Failed to send the password creation link. Please try again later."
+              primaryButton={{
+                text: "TRY AGAIN LATER",
+                onClick: () => setAddUserErrorCard(false),
+              }}
+              primaryOption="TRY AGAIN LATER"
+            />
+          </Paper>
+        </Modal>
+      )}
     </StyledMenuBoxContainer>
   );
 };

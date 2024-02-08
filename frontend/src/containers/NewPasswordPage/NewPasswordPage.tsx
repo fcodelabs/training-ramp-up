@@ -10,7 +10,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "@mui/system/styled";
 import "@fontsource/roboto";
 import VisibilityIcon from "@mui/icons-material/Visibility";
@@ -20,6 +20,12 @@ import MessageCard from "../../components/Cards/MessageCard";
 import { createPassword } from "../../redux/user/slice";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
+
+import io from "socket.io-client";
+// const socket = io("https://ramp-up-backend1-epcm.onrender.com/");
+const socket = io("http://localhost:5000");
+console.log("Undersocket register", socket);
+
 const StyledContainer = styled(Container)`
   &&& {
     width: auto;
@@ -100,6 +106,22 @@ const NewPasswordPage = () => {
 
   const [successMessageCardModal, setSuccessMessageCardModal] = useState(false);
 
+  useEffect(() => {
+    socket.on("create-password", (data) => {
+      console.log("create-password", data);
+      if (data === 201) {
+        setSuccessMessageCardModal(true);
+        console.log("successCardModel", successMessageCardModal);
+        //dispatch(addUser({ name, email, role }));
+        navigate("/");
+      }
+      if (data === 400) {
+        console.log("error password socekrt");
+        // dispatch(addStudentError());
+      }
+    });
+  }, [dispatch]);
+
   const handleTogglePassword = () => {
     setShowPassword((prev) => !prev);
   };
@@ -140,8 +162,8 @@ const NewPasswordPage = () => {
     if (token) {
       dispatch(createPassword({ password, token }));
     }
-    setSuccessMessageCardModal(true);
-    navigate("/");
+    //setSuccessMessageCardModal(true);
+    //navigate("/");
   };
 
   return (
