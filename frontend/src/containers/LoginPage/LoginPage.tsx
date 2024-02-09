@@ -13,7 +13,7 @@ import {
 import React, { useEffect, useState } from "react";
 import styled from "@mui/system/styled";
 import "@fontsource/roboto";
-import { loginUser } from "../../redux/user/slice";
+import { loginUser, setVerifyUser, verifyUser } from "../../redux/user/slice";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import MessageCard from "../../components/Cards/MessageCard";
@@ -118,7 +118,8 @@ const LoginPage = () => {
       if (data === 200) {
         setLoggingSuccess(true);
         //dispatch(loginUser({ email, password }));
-        navigate("/admin");
+        dispatch(setVerifyUser(true));
+        navigate("/");
       }
       if (data === 401) {
         // dispatch(addStudentError());

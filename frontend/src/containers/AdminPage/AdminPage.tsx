@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 import { logoutUser } from "../../redux/user/slice";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
+import { verifyUser } from "../../redux/user/slice";
 
 import io from "socket.io-client";
 import MessageCard from "../../components/Cards/MessageCard";
@@ -89,12 +90,8 @@ function AdminPage() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const role = useSelector((state: RootState) => state.user.currentUser?.role);
-  console.log("admin page role", role);
-  useEffect(() => {
-    if (!role) {
-      navigate("/");
-    }
-  }, [role, navigate]);
+  const verify = useSelector((state: RootState) => state.user.isVerified);
+
   const [newUserCardModal, setNewUserCardModal] = useState(false);
 
   const [loggedIn, setLoggedIn] = useState(true);
@@ -123,7 +120,7 @@ function AdminPage() {
       console.log("Session Expired");
       setLoggedIn(false);
       dispatch(logoutUser());
-      navigate("/");
+      navigate("/login");
     }
   };
 
@@ -177,7 +174,7 @@ function AdminPage() {
   const handleLogout = () => {
     console.log("Logout Clicked");
     dispatch(logoutUser());
-    navigate("/");
+    navigate("/login");
   };
 
   return (

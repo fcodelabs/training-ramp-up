@@ -44,6 +44,16 @@ function socketAuthRouter(io: any): Router {
     }
   });
 
+  router.post("/verify", async (req, res) => {
+    try {
+      await AuthController.verifyUser(req, res).then(() => {
+        io.emit("verify", res.statusCode);
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  });
+
   return router;
 }
 

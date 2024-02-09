@@ -6,6 +6,7 @@ export interface IUser {
   role: string;
   token?: string;
   password?: string;
+  isVerified?: boolean;
 }
 
 export interface ILoginCredentials {
@@ -26,11 +27,13 @@ export interface ICreatePassword {
 interface IUserState {
   users: IUser[];
   currentUser?: IUser;
+  isVerified: boolean;
 }
 
 const initialState: IUserState = {
   users: [],
   currentUser: undefined,
+  isVerified: false,
 };
 
 const userSlice = createSlice({
@@ -66,6 +69,11 @@ const userSlice = createSlice({
       console.log("newUser", newUser);
       state.users.push(newUser);
     },
+    verifyUser(state) {},
+    setVerifyUser(state, action: PayloadAction<boolean>) {
+      console.log("setverifyuser", action.payload);
+      state.isVerified = action.payload;
+    },
   },
 });
 
@@ -76,6 +84,8 @@ export const {
   loginUser,
   logoutUser,
   registerUser,
+  verifyUser,
+  setVerifyUser,
 } = userSlice.actions;
 
 export default userSlice.reducer;

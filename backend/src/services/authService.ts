@@ -107,4 +107,19 @@ export class AuthService {
       return 500;
     }
   }
+
+  static async verifyUser(req: Request, res: Response) {
+    try {
+      const token = req.cookies.token;
+      if (!token) {
+        return { status: 401, user: null };
+      }
+      const decodedToken: any = jwt.verify(token, this.SECRET_KEY);
+      console.log("decodedToken", decodedToken);
+      return { status: 200, user: decodedToken };
+    } catch (error) {
+      console.error(error);
+      return { status: 500, user: null };
+    }
+  }
 }

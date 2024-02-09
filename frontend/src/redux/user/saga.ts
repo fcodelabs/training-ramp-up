@@ -11,6 +11,8 @@ import {
   setCurrentUser,
   addUser,
   logoutUser,
+  verifyUser,
+  setVerifyUser,
 } from "../user/slice";
 import { PayloadAction } from "@reduxjs/toolkit";
 
@@ -87,6 +89,7 @@ function* watchLogoutUser() {
     // Assuming logout is successful, update the state
     // For example, clear user information from the state
     yield put(setCurrentUser(undefined));
+    yield put(setVerifyUser(false));
   } catch (error: any) {
     console.error("Error logging out:", error);
   }
@@ -111,10 +114,24 @@ function* watchRegisterUser(action: PayloadAction<IRegisterUser>) {
   }
 }
 
+function* watchVerifyUser(): Generator<any, void, any> {
+  try {
+    const response = yield call(axios.post, `${apiUrlAuth}/verify`, {
+      withCredentials: true,
+    });
+    console.log("response verify", response);
+    yield put(setVerifyUser(response.status === 200));
+    yield put(setCurrentUser(response.data.user));
+  } catch (error: any) {
+    console.error("Error verifying user:", error);
+  }
+}
+
 export function* userSaga() {
   yield takeLatest(addUser.type, watchCreateUser);
   yield takeLatest(createPassword.type, watchCreatePassword);
   yield takeLatest(loginUser.type, watchLoginUser);
   yield takeLatest(logoutUser.type, watchLogoutUser);
   yield takeLatest(registerUser.type, watchRegisterUser);
+  yield takeLatest(verifyUser.type, watchVerifyUser);
 }

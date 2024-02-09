@@ -12,11 +12,21 @@ export class UserController {
 
     const result = await UserService.createUser(name, email, role);
 
-    if (result.error) {
-      return res.status(400).json({ error: result.error });
+    if (result) {
+      if (result.error) {
+        console.log(
+          "result.error create user",
+          result.error,
+          "res.status",
+          res.status,
+        );
+        return res.status(400).json({ error: result.error });
+      }
+      res.status(201).json({ message: result.message });
     }
-
-    res.status(201).json({ message: result.message });
+    res
+      .status(401)
+      .json({ error: "An error occurred while creating the user" });
   }
 
   static async createPassword(req: Request, res: Response) {
@@ -25,10 +35,12 @@ export class UserController {
     console.log("req.body", req.body, "token", token);
     const result = await UserService.createPassword(password, token);
     console.log("result", result);
-    if (result.error) {
-      return res.status(401).json({ error: result.error });
+    if (result) {
+      if (result.error) {
+        return res.status(400).json({ error: result.error });
+      }
+      res.status(200).json({ message: result.message });
     }
-
-    res.status(200).json({ message: result.message });
+    return res.status(401).json({ error: "An error occurred" });
   }
 }

@@ -138,7 +138,7 @@ const RegisterPage = () => {
         setSuccessMessageCardModal(true);
         console.log("successCardModel", successMessageCardModal);
         //dispatch(addUser({ name, email, role }));
-        navigate("/");
+        navigate("/login");
       }
       if (data === 400) {
         console.log("error register socekrt");
@@ -221,7 +221,7 @@ const RegisterPage = () => {
 
   const handleLogin = () => {
     console.log("Login Click");
-    navigate("/");
+    navigate("/login");
   };
 
   return (

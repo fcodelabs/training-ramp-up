@@ -28,7 +28,7 @@ describe("AuthController", () => {
           selectedUser: {
             name: "Test User",
             email: "test@example.com",
-            role: "user",
+            role: "Admin",
           },
           message: "User logged in successfully",
         });

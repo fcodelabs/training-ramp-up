@@ -63,4 +63,27 @@ export class AuthController {
       res.status(500).json({ error: "An error occurred while logging out" });
     }
   }
+
+  static async verifyUser(req: Request, res: Response) {
+    try {
+      const result = await AuthService.verifyUser(req, res);
+      if (result.status === 200) {
+        res
+          .status(200)
+          .json({ message: "User verified successfully", user: result.user });
+      } else {
+        res
+          .status(401)
+          .json({ error: "User verification failed", user: result.user });
+      }
+    } catch (error) {
+      console.error(error);
+      res
+        .status(500)
+        .json({
+          error: "An error occurred while verifying the user",
+          user: null,
+        });
+    }
+  }
 }
