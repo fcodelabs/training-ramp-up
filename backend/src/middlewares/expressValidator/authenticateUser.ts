@@ -12,11 +12,19 @@ export const authenticateUser = async (
   res: Response,
   next: NextFunction,
 ) => {
+  console.log("authenticateUser");
   const token = req.cookies.token;
+  const refreshToken = req.cookies.refreshToken;
+  console.log("refreshToken", refreshToken);
   console.log("token", token);
-  if (!token) {
+  if (!token && !refreshToken) {
     console.log("no token authenticate");
     return res.status(401).json({ error: "user not logged in" });
+  }
+
+  if (!token && refreshToken) {
+    console.log("forbidden");
+    return res.status(403).json({ error: "forbidden" });
   }
 
   try {

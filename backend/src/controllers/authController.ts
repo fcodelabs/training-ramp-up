@@ -17,12 +17,19 @@ export class AuthController {
     }
 
     const token = result.token; // Declare the 'token' variable
+    const refreshToken = result.refreshTokenJWT; // Declare the 'refreshToken' variable
 
     // Set the token in a cookie
     // res.cookie("token", token, { httpOnly: true });
     res.cookie("token", token, {
       httpOnly: true,
-      maxAge: 900000, // 15 minutes in milliseconds
+      maxAge: 1000 * 60 * 15,
+    });
+
+    // Set the refresh token in a cookie
+    res.cookie("refreshToken", refreshToken, {
+      httpOnly: true,
+      maxAge: 86400000, // 24 hours in milliseconds
     });
 
     res
@@ -71,19 +78,47 @@ export class AuthController {
         res
           .status(200)
           .json({ message: "User verified successfully", user: result.user });
-      } else {
-        res
-          .status(401)
-          .json({ error: "User verification failed", user: result.user });
+      }
+      if (result.status === 403) {
+        console.log("forbidden user", result.user);
+        res.status(403).json({ error: "forbidden user", user: result.user });
+      }
+      if (result.status === 401) {
+        res.status(401).json({
+          error: "User not verified successfully",
+          user: null,
+        });
+      }
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({
+        error: "An error occurred while verifying the user",
+        user: null,
+      });
+    }
+  }
+
+  static async refreshToken(req: Request, res: Response) {
+    try {
+      console.log("refreshToken controller");
+      const refreshToken = req.cookies.refreshToken;
+      const result = await AuthService.refreshToken(refreshToken);
+      if (result.status === 200) {
+        res.cookie("token", result.token, {
+          httpOnly: true,
+          maxAge: 1000 * 10,
+        });
+        res.status(200).json({ message: "Token refreshed successfully" });
+      }
+
+      if (result.status === 401) {
+        res.status(401).json({ error: "User not verified successfully" });
       }
     } catch (error) {
       console.error(error);
       res
         .status(500)
-        .json({
-          error: "An error occurred while verifying the user",
-          user: null,
-        });
+        .json({ error: "An error occurred while refreshing the token" });
     }
   }
 }

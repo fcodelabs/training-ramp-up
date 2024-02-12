@@ -88,8 +88,6 @@ const MessageCard: React.FC<IMessageCardProps> = ({
   message,
   primaryButton,
   secondaryButton = { text: "", onClick: () => {} }, // Default values
-  primaryOption,
-  secondaryOption = "",
 }) => {
   const isSingleButton = !secondaryButton.text; // Check if secondary button is not provided
 

@@ -3,6 +3,7 @@ import { User } from "../models/user";
 import * as jwt from "jsonwebtoken";
 import * as bcrypt from "bcrypt";
 import { Request, Response } from "express";
+import crypto from "crypto";
 import dotenv from "dotenv";
 dotenv.config();
 
@@ -58,10 +59,21 @@ export class AuthService {
         },
       );
 
+      const refreshToken = crypto.randomBytes(64).toString("hex");
+
+      const refreshTokenJWT = jwt.sign({ refreshToken }, this.SECRET_KEY, {
+        expiresIn: "1d",
+      });
+
       //   // Set the token in a cookie
       //   res.cookie('token', token, { httpOnly: true });
 
-      return { token, selectedUser, message: "User logged in successfully" };
+      return {
+        token,
+        refreshTokenJWT,
+        selectedUser,
+        message: "User logged in successfully",
+      };
     } catch (error) {
       console.error(error);
       return { error: "An error occurred while logging in" };
@@ -100,6 +112,7 @@ export class AuthService {
       console.log("logout service");
       console.log("req.cookies", req.cookies);
       res.clearCookie("token");
+      res.clearCookie("refreshToken");
 
       return 200;
     } catch (error) {
@@ -111,15 +124,54 @@ export class AuthService {
   static async verifyUser(req: Request, res: Response) {
     try {
       const token = req.cookies.token;
-      if (!token) {
+      const refreshToken = req.cookies.refreshToken;
+      if (!token && !refreshToken) {
+        console.log("no token & refresh token");
         return { status: 401, user: null };
       }
+
+      if (!token && refreshToken) {
+        return { status: 403, user: null };
+      }
+
       const decodedToken: any = jwt.verify(token, this.SECRET_KEY);
       console.log("decodedToken", decodedToken);
       return { status: 200, user: decodedToken };
     } catch (error) {
       console.error(error);
       return { status: 500, user: null };
+    }
+  }
+
+  static async refreshToken(refreshToken: string) {
+    try {
+      console.log("refrsh token");
+      const decodedRefreshToken: any = jwt.verify(
+        refreshToken,
+        this.SECRET_KEY,
+      );
+      console.log("decodedRefreshToken", decodedRefreshToken);
+
+      // Create a JWT token for authentication
+      const token = jwt.sign(
+        { email: decodedRefreshToken.email, role: decodedRefreshToken.role },
+        this.SECRET_KEY,
+        {
+          expiresIn: "10s",
+        },
+      );
+      console.log("token", token);
+
+      //  set the token in a cookie
+
+      return {
+        status: 200,
+        token,
+        message: "Refresh token verified successfully",
+      };
+    } catch (error) {
+      console.error(error);
+      return { status: 401, message: "Invalid refresh token" };
     }
   }
 }
