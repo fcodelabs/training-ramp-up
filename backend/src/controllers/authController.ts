@@ -13,4 +13,16 @@ export class AuthController {
         .json({ message: "An error occurred while creating the user." });
     }
   }
+
+  static async authCheck(req: Request, res: Response) {
+    try {
+      if (req.user) {
+        const user = await AuthService.authCheck(req.user.email);
+        res.status(200).json(user);
+      }
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: "An error occurred while logging in." });
+    }
+  }
 }

@@ -14,6 +14,7 @@ export class UserController {
     try {
       const user = await UserService.selfRegister(req.body);
       res.status(201).json(user);
+      console.log(user);
     } catch (error) {
       console.error(error);
       res

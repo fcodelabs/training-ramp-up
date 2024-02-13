@@ -215,8 +215,9 @@ function DataTable() {
     data.map((item) => ({ ...item, isNew: false, sortId: item.id })),
   );
 
-  const user = useSelector((state: RootState) => state.user.user);
-  console.log(user?.role);
+  const user = useSelector((state: RootState) => state.user.userState.user);
+
+  console.log(user);
   const [rowModesModel, setRowModesModel] = React.useState<GridRowModesModel>(
     {},
   );

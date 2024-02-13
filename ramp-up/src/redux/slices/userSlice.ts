@@ -6,14 +6,26 @@ export interface IUser {
   role: string;
 }
 
+export interface IUserStates{
+  user: IUser | null;
+  isAuthorized : boolean;
+  authError: Error | null;
+}
+
 interface IUserState {
   user: IUser | null;
+  userState : IUserStates;
 }
 
 const userSlice = createSlice({
     name: "user",
     initialState: {
         user: null,
+        userState: {
+            user: null,
+            isAuthorized: false,
+            authError: null
+        },
     } as IUserState,
     reducers: {
         addUserRequest: (state, action: PayloadAction<IUser>) => {},
@@ -28,10 +40,33 @@ const userSlice = createSlice({
 
         selfRegisterRequest: (state, action: PayloadAction<{name: string, email: string, password: string}>) => {},
 
-        logoutRequest: (state) => {}
+        logoutRequest: (state) => {},
+
+        authCheckRequest: (state) => {},
+
+        authCheckSuccess: (state, action: PayloadAction<IUser>) => {
+            state.userState.user = action.payload;
+            state.userState.isAuthorized = true;
+            state.userState.authError = null;
+        },
+        
+        authCheckFailure : (state, action: PayloadAction<Error>) => {
+            state.userState.user = null;
+            state.userState.isAuthorized = false;
+            state.userState.authError = action.payload;
+        }
     }
 })
 
-export const { addUserRequest, addUserPasswordRequest, loginRequest, selfRegisterRequest, loginSuccess, logoutRequest } = userSlice.actions;
+export const { addUserRequest, 
+               addUserPasswordRequest, 
+               loginRequest, 
+               selfRegisterRequest, 
+               loginSuccess, 
+               logoutRequest, 
+               authCheckRequest,
+               authCheckSuccess,
+               authCheckFailure
+              } = userSlice.actions;
 export const userReducer = userSlice.reducer;
 

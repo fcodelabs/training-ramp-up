@@ -3,7 +3,11 @@ import { addUserRequest,
          loginRequest, 
          selfRegisterRequest, 
          loginSuccess, 
-         logoutRequest } from "../slices/userSlice";
+         logoutRequest ,
+         authCheckRequest,
+            authCheckSuccess,
+            authCheckFailure
+        } from "../slices/userSlice";
 import { call, takeLatest, put } from 'redux-saga/effects';
 import axios from 'axios';
 import { IUser } from "../slices/userSlice";
@@ -37,9 +41,12 @@ function* loginSaga(action: PayloadAction<{email: string, password: string}>) {
             role: user.data.role
         
         };
-        localStorage.setItem('currentUser', JSON.stringify(currentUser));
+        // localStorage.setItem('currentUser', JSON.stringify(currentUser));
         yield put(loginSuccess(currentUser));
+        yield put(authCheckSuccess(currentUser));
+        // console.log(JSON.parse(localStorage.getItem('currentUser')))
     } catch (error) {
+        yield put(authCheckFailure(new Error('User not authorized')));  
         console.log(error);
     }
 
@@ -48,6 +55,7 @@ function* loginSaga(action: PayloadAction<{email: string, password: string}>) {
 function* selfRegisterSaga(action: PayloadAction<{name: string, email: string, password: string}>) {
     try {
         yield call(axios.post, `http://localhost:5000/users/selfRegister`, action.payload, {withCredentials: true});
+        console.log(action.payload);
     } catch (error) {
         console.log(error);
     }
@@ -56,11 +64,33 @@ function* selfRegisterSaga(action: PayloadAction<{name: string, email: string, p
 function* logoutSaga() {
     try {
         yield call(axios.post, `http://localhost:5000/users/logout`, null, {withCredentials: true});
-        localStorage.removeItem('currentUser');
+        yield put(loginSuccess(null));
+        yield put(authCheckFailure(new Error('User not authorized')));
+        // localStorage.removeItem('currentUser');
     } catch (error) {
         console.log(error);
     }
 }
+
+function* authCheckSaga() {
+    try {
+        const user = yield call(axios.get, `http://localhost:5000/auth`, {withCredentials: true});
+        const currentUser: IUser = {
+            name: user.data.name,
+            email: user.data.email,
+            role: user.data.role
+        };
+        if (user) {
+            yield put(authCheckSuccess(currentUser));
+            console.log(currentUser)
+        }
+        else {
+            yield put(authCheckFailure(new Error('User not authorized')));
+        } 
+    }catch (error) {
+        console.log(error);
+        }
+    }
 
 export function* userSaga() {
     yield takeLatest(addUserRequest, addUserSaga)
@@ -68,4 +98,5 @@ export function* userSaga() {
     yield takeLatest(loginRequest, loginSaga)
     yield takeLatest(selfRegisterRequest, selfRegisterSaga)
     yield takeLatest(logoutRequest, logoutSaga)
+    yield takeLatest(authCheckRequest, authCheckSaga)
 }

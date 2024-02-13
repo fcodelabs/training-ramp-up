@@ -56,14 +56,15 @@ app.use(cookieParser());
 
 export const AppDataSource = new DataSource({
   type: "postgres",
-  host: "localhost",
-  port: 5432,
-  username: "postgres",
-  password: "27090",
-  database: "Ramp-up",
+  url: process.env.URL,
   entities: ["src/models/**/*.ts"],
-  synchronize: false,
+  synchronize: true,
   logging: false,
+  ssl: {
+    rejectUnauthorized: false,
+  },
+  migrations: [],
+  subscribers: [],
 });
 const startServer = async () => {
   try {

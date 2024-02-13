@@ -9,6 +9,10 @@ import { useDispatch } from "react-redux";
 import { logoutRequest } from "../../redux/slices/userSlice";
 import { useNavigate } from "react-router-dom";
 import ErrorModal from "../../components/ErrorModal/ErrorModal";
+import { useEffect } from "react";
+import { authCheckRequest } from "../../redux/slices/userSlice";
+import ProtectedRoutes from "../../routes/protectedRoutes";
+
 
 const CustomButton = styled(Button)({
   padding: "6px 16px",
@@ -81,15 +85,26 @@ const styles = {
 };
 
 function Home() {
+
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const user = useSelector((state : RootState) => state.user.user);
+  const user = useSelector((state : RootState) => state.user.userState.user);
 
   const [isPressedLogout, setIsPressedLogout] = React.useState(false);
 
+  // useEffect(()=>{
+  //   if(!user){
+  //     const storedUser = localStorage.getItem("currentUser");
+  //     if(storedUser){
+  //       navigate("/home");
+  //     } else
+  //     navigate("/")
+  //   }
+  // },[user, dispatch, navigate])
+
   const handleLogout = () => {
     dispatch(logoutRequest());
-    navigate("/");
+    navigate("/", { replace: true });
   }
 
   const handleButtonClick = () => {
@@ -97,6 +112,7 @@ function Home() {
   }
 
   return (
+    <ProtectedRoutes>
     <div style={styles.page}>
       <ErrorModal
         open={isPressedLogout}
@@ -132,6 +148,7 @@ function Home() {
         <DataTable />
       </Card>
     </div>
+     </ProtectedRoutes>
   );
 }
 

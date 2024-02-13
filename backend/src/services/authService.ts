@@ -17,4 +17,13 @@ export class AuthService {
       return await repository.save(newUser);
     }
   }
+
+  static async authCheck(email: string) {
+    const repository = AppDataSource.getRepository(User);
+    const user = await repository.findOne({ where: { email: email } });
+    if (!user) {
+      throw new Error("User not found");
+    }
+    return user;
+  }
 }

@@ -10,7 +10,7 @@ export class UserService {
       const newData = {
         ...data,
         password: password,
-        role: process.env.OBSERVER,
+        role: process.env.ADMIN,
       };
       const newUser = repository.create(newData);
       return await repository.save(newUser);
