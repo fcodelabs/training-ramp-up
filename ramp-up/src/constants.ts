@@ -3,4 +3,4 @@ export const userRoles = {
     observer: "Observer",
 }
 
-export const backendURL = "https://backend.rampup3.me"
+export const backendURL = "http://backend.rampup3.me"
