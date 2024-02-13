@@ -40,19 +40,19 @@ io.on("connection", (socket) => {
 
 export const AppDataSource = new DataSource({
   type: "postgres",
-  host: process.env.LOCALHOST,
+  //host: process.env.LOCALHOST,
   port: 5432,
-  username: process.env.DB_USERNAME,
-  password: process.env.PASSWORD,
-  database: process.env.DATABASE,
-  synchronize: true,
+  //username: process.env.DB_USERNAME,
+  //password: process.env.PASSWORD,
+  //database: process.env.DATABASE,
+  //synchronize: true,
 
-  // url: process.env.DEPLOYED_URL,
+  url: process.env.DEPLOYED_URL,
   logging: true,
   entities: [Student, User],
-  // ssl: {
-  //   rejectUnauthorized: false,
-  // },
+  ssl: {
+    rejectUnauthorized: false,
+  },
   migrations: [],
   subscribers: [],
 });
