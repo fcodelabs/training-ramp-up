@@ -16,9 +16,17 @@ import { User } from "./models/user";
 import cookieParser from "cookie-parser";
 import socketAuthRouter from "./routes/authRoute";
 import sockeUsertRouter from "./routes/userRoute";
+import crypto from "crypto";
 
 dotenv.config();
 
+const generateRandomSecretKey = (length: any) => {
+  return crypto.randomBytes(length).toString("hex");
+};
+
+// Usage example
+const secretKey = generateRandomSecretKey(64); // Generate a 256-bit (32 bytes) secret key
+console.log("Random Secret Key:", secretKey);
 const app: express.Application = express();
 app.use(cors({ origin: "http://localhost:3000", credentials: true }));
 const port = process.env.PORT || 8000;
