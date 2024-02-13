@@ -12,11 +12,12 @@ import { call, takeLatest, put } from 'redux-saga/effects';
 import axios from 'axios';
 import { IUser } from "../slices/userSlice";
 import { PayloadAction } from "@reduxjs/toolkit";
+import { backendURL } from "../../constants";
 
 
 function* addUserSaga(action: PayloadAction<IUser>) {
     try {
-        yield call(axios.post, 'http://localhost:5000/auth', action.payload, {withCredentials: true});
+        yield call(axios.post, `${backendURL}/auth`, action.payload, {withCredentials: true});
     } catch (error) {
         console.log(error);
     }
@@ -25,7 +26,7 @@ function* addUserSaga(action: PayloadAction<IUser>) {
 function* addUserPasswordSaga(action: PayloadAction<{token: string, password: string}>) {
     try {
         console.log(action.payload);
-        const user = yield call(axios.patch, `http://localhost:5000/users`, action.payload, {withCredentials: true});
+        const user = yield call(axios.patch, `${backendURL}/users`, action.payload, {withCredentials: true});
         console.log(user);
     } catch (error) {
         console.log(error);
@@ -34,7 +35,7 @@ function* addUserPasswordSaga(action: PayloadAction<{token: string, password: st
 
 function* loginSaga(action: PayloadAction<{email: string, password: string}>) {
     try {
-        const user = yield call(axios.post, `http://localhost:5000/users/login`, action.payload, {withCredentials: true});
+        const user = yield call(axios.post, `${backendURL}/users/login`, action.payload, {withCredentials: true});
         const currentUser: IUser = {
             name: user.data.name,
             email: user.data.email,
@@ -54,7 +55,7 @@ function* loginSaga(action: PayloadAction<{email: string, password: string}>) {
 
 function* selfRegisterSaga(action: PayloadAction<{name: string, email: string, password: string}>) {
     try {
-        yield call(axios.post, `http://localhost:5000/users/selfRegister`, action.payload, {withCredentials: true});
+        yield call(axios.post, `${backendURL}/users/selfRegister`, action.payload, {withCredentials: true});
         console.log(action.payload);
     } catch (error) {
         console.log(error);
@@ -63,7 +64,7 @@ function* selfRegisterSaga(action: PayloadAction<{name: string, email: string, p
 
 function* logoutSaga() {
     try {
-        yield call(axios.post, `http://localhost:5000/users/logout`, null, {withCredentials: true});
+        yield call(axios.post, `${backendURL}/users/logout`, null, {withCredentials: true});
         yield put(loginSuccess(null));
         yield put(authCheckFailure(new Error('User not authorized')));
         // localStorage.removeItem('currentUser');
@@ -74,7 +75,7 @@ function* logoutSaga() {
 
 function* authCheckSaga() {
     try {
-        const user = yield call(axios.get, `http://localhost:5000/auth`, {withCredentials: true});
+        const user = yield call(axios.get, `${backendURL}/auth`, {withCredentials: true});
         const currentUser: IUser = {
             name: user.data.name,
             email: user.data.email,

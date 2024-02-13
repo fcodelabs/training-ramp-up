@@ -11,8 +11,9 @@ import axios from "axios";
 import { useDispatch } from "react-redux";
 import { authCheckRequest } from "./redux/slices/userSlice";
 import { useEffect } from "react";
+import { backendURL } from "./constants";
 
-const socket = io("http://localhost:5000");
+const socket = io(`${backendURL}`);
 
 socket.on("add-student", (student) =>{
   console.log(`new student added: ${JSON.stringify(student, null, 2)}`);

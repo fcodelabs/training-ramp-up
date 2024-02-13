@@ -30,7 +30,7 @@ const app: Express = express();
 export const server = createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: "http://localhost:3000",
+    origin: process.env.CLIENT_URL,
   },
 });
 app.use(bodyParser.json()); // To recognize the req obj as a json obj
@@ -47,7 +47,7 @@ const port = process.env.PORT || 5000;
 
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: process.env.CLIENT_URL,
     credentials: true,
   }),
 );
