@@ -1,11 +1,16 @@
 import React from "react";
 import Home from "./pages/home/Home";
 import io from "socket.io-client";
+// import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { createBrowserRouter , Route, createRoutesFromElements, RouterProvider } from 'react-router-dom';
 import { CreatePassword } from "./pages/CreatePassword/CreatePassword";
 import { Login } from "./pages/Login/Login";
 import { SocketContext } from "./SocketContext";
 import { SelfRegistration } from "./pages/SelfRegistration/SelfRegistration";
+import axios from "axios";
+import { useDispatch } from "react-redux";
+import { authCheckRequest } from "./redux/slices/userSlice";
+import { useEffect } from "react";
 
 const socket = io("http://localhost:5000");
 
@@ -31,6 +36,7 @@ const roter = createBrowserRouter(
 )
 
 function App() {
+ 
   return (
     <SocketContext.Provider value={socket}>
     <RouterProvider router={roter}/>

@@ -101,10 +101,11 @@ export function SelfRegistration() {
               const data =  {name: name, email: email, password: password}
               console.log(data);
               dispatch(selfRegisterRequest(data));
-              setPassword("");
-              setConfirmPassword("");
-              setName("");
-              setEmail("");
+              setIsSubmit(false);
+            //   setPassword("");
+            //   setConfirmPassword("");
+            //   setName("");
+            //   setEmail("");
             } catch (error) {
               console.log(error);
             }

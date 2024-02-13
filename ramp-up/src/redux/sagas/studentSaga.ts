@@ -17,7 +17,7 @@ export interface INewStudent {
 
 function* addStudentSaga(action: PayloadAction<IStudent>) {
   try {
-    const student = yield call(axios.post, 'http://localhost:5000/students', action.payload);
+    const student = yield call(axios.post, 'http://localhost:5000/students', action.payload, {withCredentials: true});
     yield put(addStudent(student.data));
   } catch (error) {
     console.log(error);
@@ -26,7 +26,7 @@ function* addStudentSaga(action: PayloadAction<IStudent>) {
 
 function* getStudentsSaga() {
   try {
-    const response: AxiosResponse<IStudent[]> = yield call(axios.get, 'http://localhost:5000/students');
+    const response: AxiosResponse<IStudent[]> = yield call(axios.get, 'http://localhost:5000/students', {withCredentials: true});
     yield put(storeStudents(response.data)); 
   } catch (error) {
     console.log(error);
@@ -35,7 +35,7 @@ function* getStudentsSaga() {
 
 function* editStudentSaga(action: PayloadAction<IEditStudentPayload>) {
   try {
-    yield call(axios.patch, `http://localhost:5000/students/${action.payload.id}`, action.payload.student);
+    yield call(axios.patch, `http://localhost:5000/students/${action.payload.id}`, action.payload.student, {withCredentials: true});
   } catch (error) {
     console.log(error);
   }
@@ -43,7 +43,7 @@ function* editStudentSaga(action: PayloadAction<IEditStudentPayload>) {
 
 function* deleteStudentSaga(action: PayloadAction<number>) {
   try {
-    yield call(axios.delete, `http://localhost:5000/students/${action.payload}`);
+    yield call(axios.delete, `http://localhost:5000/students/${action.payload}`, {withCredentials: true});
     yield put(removeStudent(action.payload));
   } catch (error) {
     console.log(error);

@@ -16,6 +16,7 @@ import ErrorModal from "../../components/ErrorModal/ErrorModal";
 import { useParams } from "react-router-dom";
 import { addUserPasswordRequest } from "../../redux/slices/userSlice";
 import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 const styles = {
     box:{
@@ -42,9 +43,10 @@ const styles = {
 }
 
 export function CreatePassword() {
-
+    const navigate = useNavigate();
     const dispatch = useDispatch();  
     const { token } = useParams<{token: string}>();
+    console.log(token);
 
     const [showPassword, setShowPassword] = React.useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = React.useState(false);
@@ -63,16 +65,17 @@ export function CreatePassword() {
 
     const handleCloseErrorModal = () => {
         setIsOpenErrorModal(false);
+        navigate("/");
     }
     
     const handleSubmit = () => {
         if(validatePassword(password) && password === confirmPassword){
           if(token){
             try{
-              dispatch(addUserPasswordRequest({password, token}));
-              setIsOpenErrorModal(true);
+              dispatch(addUserPasswordRequest({token: token, password: password}));
               setPassword("");
               setConfirmPassword("");
+              setIsOpenErrorModal(true);
             } catch (error) {
               console.log(error);
             }

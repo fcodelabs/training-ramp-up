@@ -6,31 +6,67 @@ export interface IUser {
   role: string;
 }
 
-interface IUserState {
-  userEmails: string[];
+export interface IUserStates{
   user: IUser | null;
+  isAuthorized : boolean;
+  authError: Error | null;
+}
+
+interface IUserState {
+  user: IUser | null;
+  userState : IUserStates;
 }
 
 const userSlice = createSlice({
     name: "user",
     initialState: {
-        userEmails : [],
         user: null,
+        userState: {
+            user: null,
+            isAuthorized: false,
+            authError: null
+        },
     } as IUserState,
     reducers: {
-        addUserEmail: (state, action: PayloadAction<string>) => {
-            state.userEmails.push(action.payload);
-        },
         addUserRequest: (state, action: PayloadAction<IUser>) => {},
 
         addUserPasswordRequest: (state, action: PayloadAction<{token: string, password: string}>) => {},
 
         loginRequest: (state, action: PayloadAction<{email: string, password: string}>) => {},
 
+        loginSuccess: (state, action: PayloadAction<IUser>) => {
+            state.user = action.payload;
+        },
+
         selfRegisterRequest: (state, action: PayloadAction<{name: string, email: string, password: string}>) => {},
+
+        logoutRequest: (state) => {},
+
+        authCheckRequest: (state) => {},
+
+        authCheckSuccess: (state, action: PayloadAction<IUser>) => {
+            state.userState.user = action.payload;
+            state.userState.isAuthorized = true;
+            state.userState.authError = null;
+        },
+        
+        authCheckFailure : (state, action: PayloadAction<Error>) => {
+            state.userState.user = null;
+            state.userState.isAuthorized = false;
+            state.userState.authError = action.payload;
+        }
     }
 })
 
-export const { addUserEmail, addUserRequest, addUserPasswordRequest, loginRequest, selfRegisterRequest } = userSlice.actions;
+export const { addUserRequest, 
+               addUserPasswordRequest, 
+               loginRequest, 
+               selfRegisterRequest, 
+               loginSuccess, 
+               logoutRequest, 
+               authCheckRequest,
+               authCheckSuccess,
+               authCheckFailure
+              } = userSlice.actions;
 export const userReducer = userSlice.reducer;
 

@@ -3,6 +3,16 @@ import { AppBar, Toolbar, Button, Card } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import DataTable from "./DataGrid/DataTable";
 import AddUser from "./AddUser/AddUser";
+import { useSelector } from "react-redux";
+import { RootState } from "../../redux/store";
+import { useDispatch } from "react-redux";
+import { logoutRequest } from "../../redux/slices/userSlice";
+import { useNavigate } from "react-router-dom";
+import ErrorModal from "../../components/ErrorModal/ErrorModal";
+import { useEffect } from "react";
+import { authCheckRequest } from "../../redux/slices/userSlice";
+import ProtectedRoutes from "../../routes/protectedRoutes";
+
 
 const CustomButton = styled(Button)({
   padding: "6px 16px",
@@ -75,8 +85,43 @@ const styles = {
 };
 
 function Home() {
+
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const user = useSelector((state : RootState) => state.user.userState.user);
+
+  const [isPressedLogout, setIsPressedLogout] = React.useState(false);
+
+  // useEffect(()=>{
+  //   if(!user){
+  //     const storedUser = localStorage.getItem("currentUser");
+  //     if(storedUser){
+  //       navigate("/home");
+  //     } else
+  //     navigate("/")
+  //   }
+  // },[user, dispatch, navigate])
+
+  const handleLogout = () => {
+    dispatch(logoutRequest());
+    navigate("/", { replace: true });
+  }
+
+  const handleButtonClick = () => {
+    setIsPressedLogout(true);
+  }
+
   return (
+    <ProtectedRoutes>
     <div style={styles.page}>
+      <ErrorModal
+        open={isPressedLogout}
+        onClose={() => setIsPressedLogout(false)}
+        message="Are you sure you want to logout"
+        dismiss={true}
+        buttonName="Confirm"
+        onClick={handleLogout}
+        />
       <AppBar
         position="fixed"
         color="transparent"
@@ -88,16 +133,22 @@ function Home() {
       >
         <Toolbar sx={styles.toolbar}>
           <h5 style={styles.toolbarTitle}>Ramp Up Project</h5>
-          <CustomButton variant="outlined">Login</CustomButton>
+          <CustomButton 
+          variant="outlined"
+          onClick={handleButtonClick}
+          >
+            Logout
+          </CustomButton>
         </Toolbar>
       </AppBar>
 
       <Card sx={styles.card}>
-        <AddUser/>
+        {user?.role === "Admin" && <AddUser/>}
         <div style={styles.cardTitle}>User Details</div>
         <DataTable />
       </Card>
     </div>
+     </ProtectedRoutes>
   );
 }
 

@@ -12,6 +12,11 @@ import { useDispatch } from "react-redux";
 import { useContext } from "react";
 import { SocketContext } from "../../SocketContext";
 import { useNavigate } from 'react-router-dom';
+import { useSelector } from "react-redux";
+import { useEffect } from "react";
+import { loginSuccess } from "../../redux/slices/userSlice";
+import { authCheckRequest } from "../../redux/slices/userSlice";
+import { RootState } from "../../redux/store";
 
 const styles = {
     box:{
@@ -60,19 +65,44 @@ const styles = {
 export function Login() {
     const navigate = useNavigate();
 
-    const dispatch = useDispatch();  
+    const dispatch = useDispatch(); 
+    const isAuthorized = useSelector((state: RootState) => state.user.userState.isAuthorized);
 
-    const socket = useContext(SocketContext);
 
-    socket?.on("user-logging",(success) =>{
-        if(!success){
-            setIsInValidLogin(true);
-        }
-        else{
-            setIsInValidLogin(false);
+    useEffect(()=>{
+        if(isAuthorized){
             navigate("/home");
         }
-    })
+    },[isAuthorized,navigate])
+
+    useEffect(()=> {
+        dispatch(authCheckRequest());
+    },[dispatch])
+
+    
+    const user = useSelector((state: any) => state.user.user);
+
+    // useEffect(( )=> {
+    //     if(!user){
+    //         const storedUser = localStorage.getItem("currentUser");
+    //         if(storedUser){
+    //             navigate("/home");
+    //         } else{
+    //             navigate("/");
+    //         }
+    //     }
+    // },[user, dispatch, navigate])
+
+    // const socket = useContext(SocketContext);
+
+    // socket?.on("user-logging",(success) =>{
+    //     if(!success){
+    //         setIsInValidLogin(true);
+    //     }
+    //     else{
+    //         setIsInValidLogin(false);
+    //     }
+    // })
 
     const [password, setPassword] = React.useState("");
     const [email, setEmail] = React.useState("");
@@ -83,6 +113,7 @@ export function Login() {
         setIsLogin(true);
         if(email !== "" && password !== ""){
             dispatch(loginRequest({email, password}));
+            navigate("/home");
         }
       }
 

@@ -27,6 +27,7 @@ import {
   GridRowEditStopReasons,
   GridRenderCellParams,
 } from "@mui/x-data-grid";
+import { IUser } from "../../../redux/slices/userSlice";
 
 const styles = {
   validateError: {
@@ -213,6 +214,10 @@ function DataTable() {
   const [rows, setRows] = useState(
     data.map((item) => ({ ...item, isNew: false, sortId: item.id })),
   );
+
+  const user = useSelector((state: RootState) => state.user.userState.user);
+
+  console.log(user);
   const [rowModesModel, setRowModesModel] = React.useState<GridRowModesModel>(
     {},
   );
@@ -286,7 +291,7 @@ function DataTable() {
             sx={styles.addNewButton}
             onClick={handleClick}
           >
-            Add new
+            Add new student
           </Button>
         </div>
       </GridToolbarContainer>
@@ -595,135 +600,140 @@ function DataTable() {
         ];
       },
     },
+   
+  ];
 
-    {
-      field: "actions",
-      type: "actions",
-      headerName: "Action",
-      width: 200,
-      cellClassName: "actions",
-      getActions: (params) => {
-        const isInEditMode =
-          rowModesModel[params.id]?.mode === GridRowModes.Edit;
-        if (isInEditMode) {
-          if (params.row.isNew) {
-            return [
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "flex-start",
-                  flexDirection: "column",
-                  gap: "9px",
-                }}
-              >
-                <ThemeProvider theme={theme}>
-                  <Button
-                    sx={{
-                      width: "47px",
-                    }}
-                    variant="outlined"
-                    onClick={handleAddUpdate(params.row)}
-                  >
-                    add
-                  </Button>
-                </ThemeProvider>
-
-                <ThemeProvider theme={theme}>
-                  <Button
-                    variant="outlined"
-                    color="error"
-                    onClick={showErrorModel(
-                      true,
-                      "Discard changes?",
-                      handleDiscardChanges(params.id),
-                      "Discard",
-                    )}
-                  >
-                    discard changes
-                  </Button>
-                </ThemeProvider>
-              </div>,
-            ];
+  if (user?.role === "Admin") {
+    columns.push(
+      {
+        field: "actions",
+        type: "actions",
+        headerName: "Action",
+        width: 200,
+        cellClassName: "actions",
+        getActions: (params) => {
+          const isInEditMode =
+            rowModesModel[params.id]?.mode === GridRowModes.Edit;
+          if (isInEditMode) {
+            if (params.row.isNew) {
+              return [
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "flex-start",
+                    flexDirection: "column",
+                    gap: "9px",
+                  }}
+                >
+                  <ThemeProvider theme={theme}>
+                    <Button
+                      sx={{
+                        width: "47px",
+                      }}
+                      variant="outlined"
+                      onClick={handleAddUpdate(params.row)}
+                    >
+                      add
+                    </Button>
+                  </ThemeProvider>
+  
+                  <ThemeProvider theme={theme}>
+                    <Button
+                      variant="outlined"
+                      color="error"
+                      onClick={showErrorModel(
+                        true,
+                        "Discard changes?",
+                        handleDiscardChanges(params.id),
+                        "Discard",
+                      )}
+                    >
+                      discard changes
+                    </Button>
+                  </ThemeProvider>
+                </div>,
+              ];
+            } else {
+              return [
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    gap: "9px",
+                  }}
+                >
+                  <ThemeProvider theme={theme}>
+                    <Button
+                      variant="outlined"
+                      onClick={handleAddUpdate(params.row)}
+                    >
+                      update
+                    </Button>
+                  </ThemeProvider>
+  
+                  <ThemeProvider theme={theme}>
+                    <Button
+                      variant="outlined"
+                      color="error"
+                      onClick={showErrorModel(
+                        true,
+                        "Discard changes?",
+                        handleCancelClick(params.id),
+                        "Discard",
+                      )}
+                    >
+                      cancel
+                    </Button>
+                  </ThemeProvider>
+                </div>,
+              ];
+            }
           } else {
             return [
               <div
                 style={{
                   display: "flex",
                   flexDirection: "row",
-                  gap: "9px",
+                  gap: "32px",
                 }}
               >
                 <ThemeProvider theme={theme}>
                   <Button
                     variant="outlined"
-                    onClick={handleAddUpdate(params.row)}
+                    onClick={() => {
+                      setRowModesModel({
+                        ...rowModesModel,
+                        [params.id]: { mode: GridRowModes.Edit },
+                      });
+                    }}
                   >
-                    update
+                    edit
                   </Button>
                 </ThemeProvider>
-
+  
                 <ThemeProvider theme={theme}>
                   <Button
                     variant="outlined"
                     color="error"
-                    onClick={showErrorModel(
-                      true,
-                      "Discard changes?",
-                      handleCancelClick(params.id),
-                      "Discard",
-                    )}
+                    onClick={() => {
+                      showErrorModel(
+                        true,
+                        "Are you sure you want to remove this student?",
+                        handleRemoveClick(params.id),
+                        "confirm",
+                      )();
+                    }}
                   >
-                    cancel
+                    remove
                   </Button>
                 </ThemeProvider>
               </div>,
             ];
           }
-        } else {
-          return [
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "row",
-                gap: "32px",
-              }}
-            >
-              <ThemeProvider theme={theme}>
-                <Button
-                  variant="outlined"
-                  onClick={() => {
-                    setRowModesModel({
-                      ...rowModesModel,
-                      [params.id]: { mode: GridRowModes.Edit },
-                    });
-                  }}
-                >
-                  edit
-                </Button>
-              </ThemeProvider>
-
-              <ThemeProvider theme={theme}>
-                <Button
-                  variant="outlined"
-                  color="error"
-                  onClick={() => {
-                    showErrorModel(
-                      true,
-                      "Are you sure you want to remove this student?",
-                      handleRemoveClick(params.id),
-                      "confirm",
-                    )();
-                  }}
-                >
-                  remove
-                </Button>
-              </ThemeProvider>
-            </div>,
-          ];
-        }
+        },
       },
-    },
-  ];
+    )
+  }
 
   const handleSaveClick = (id: GridRowId) => () => {
     setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.View } });
@@ -901,7 +911,7 @@ function DataTable() {
           },
           columns:{
             columnVisibilityModel:{
-              sortId:false
+              sortId:false,
             },
           },
           sorting:{
@@ -922,7 +932,8 @@ function DataTable() {
         onRowEditStop={handleRowEditStop}
         processRowUpdate={processRowUpdate}
         slots={{
-          toolbar: EditToolbar,
+          
+          toolbar: user?.role === "Admin" ? EditToolbar : null,
         }}
         slotProps={{
           toolbar: { setRows, setRowModesModel },
