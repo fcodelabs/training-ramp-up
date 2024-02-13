@@ -31,6 +31,7 @@ export const server = createServer(app);
 const io = new Server(server, {
   cors: {
     origin: process.env.CLIENT_URL,
+    methods: ["GET", "POST"],
   },
 });
 app.use(bodyParser.json()); // To recognize the req obj as a json obj
