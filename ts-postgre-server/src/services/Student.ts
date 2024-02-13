@@ -1,5 +1,7 @@
+import 'reflect-metadata';
 import { getRepository } from 'typeorm';
 import { Student } from '../models/Student';
+
 
 export const getStudentsService = async () => {
     const studentRepo = getRepository(Student);

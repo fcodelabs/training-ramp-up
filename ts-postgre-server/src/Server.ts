@@ -5,8 +5,9 @@ import { Server } from 'socket.io';
 import StudentRoutes from './routes/Student';
 import UserRoutes from './routes/User';
 import { connectDatabase } from './config/dataSource';
+//import { AppDataSource } from './config/dataSource';
 
-const app = express();
+export const app = express();  
 const server = http.createServer(app);
 const io = new Server(server, {
     cors: {
@@ -18,16 +19,23 @@ export { io };
 const port = process.env.PORT || 4000;
 
 io.on('connection', () => {
-    // console.log('A user connected');
-    // Additional connection-related logic here
+    console.log('A user connected');
+   
 });
 
 const startServer = async () => {
-    await connectDatabase();
+await connectDatabase();
+
+//    try {
+//     await AppDataSource.initialize();
+//     console.log("Data Source has been initialized!");
+// } catch (err) {
+//     console.error("Error during Data Source initialization", err);
+// }
 
     app.use(express.json());
 
-    // Apply CORS middleware before routes
+    
     app.use(cors());
 
     app.use('/api/students', StudentRoutes);

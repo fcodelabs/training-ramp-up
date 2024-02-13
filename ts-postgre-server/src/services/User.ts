@@ -170,10 +170,18 @@ export const loginUserService = async (userData: any) => {
 
   const access_token = jwt.sign(
     { userId: user.id },
-    process.env.JWT_SECRET || "key"
-  );
+    process.env.JWT_SECRET || "key",
+    { expiresIn: "1h"}
+    );
+
+    const refresh_token = jwt.sign(
+      { userId: user.id },
+      process.env.JWT_SECRET || "key",
+      { expiresIn: "7d"}
+    );
   return {
     access_token,
+    refresh_token,
     name: user.name,
     role: user.role,
   };

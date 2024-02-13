@@ -9,16 +9,16 @@ export class Student extends BaseEntity{
     @Column({nullable: false})
     name: string;
 
-    @Column()
+    @Column({ type: 'varchar' })
     gender: string;
 
-    @Column()
+    @Column({ type: 'varchar' })
     address: string;
 
-    @Column()
+    @Column({ type: 'varchar' })
     mobile: string;
 
-    @Column()
+    @Column({ type: 'varchar' })
     dob: string;
 
     @Column()

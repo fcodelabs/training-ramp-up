@@ -23,7 +23,7 @@ import { useEffect, useState } from 'react'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 import { DatePicker } from '@mui/x-date-pickers/DatePicker'
-import dayjs, { Dayjs } from 'dayjs'
+import dayjs from 'dayjs'
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo'
 import validatePhoneNumber from '../../utility/validatePhoneNumber'
 import calculateAge from '../../utility/calculateAge'
@@ -993,7 +993,7 @@ export default function Table() {
           params.row.id in rowModesModel &&
           rowModesModel[params.row.id]?.mode === GridRowModes.Edit
         ) {
-          // Render a text field when in edit mode
+        
           return (
             <div style={{ display: 'flex', flexDirection: 'column' }}>
               <TextField
