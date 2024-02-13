@@ -6,6 +6,7 @@
     "module": "commonjs",
     "outDir": "dist",
     "sourceMap": true,
+    "types": ["node"]
   },
   "include": ["src/**/*.ts", "src/routes/unprotected.tsx", "src/utility/redirectLogged.tsx"],
   "exclude": ["node_modules"],
