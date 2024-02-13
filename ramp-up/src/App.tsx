@@ -12,6 +12,7 @@ import { useDispatch } from "react-redux";
 import { authCheckRequest } from "./redux/slices/userSlice";
 import { useEffect } from "react";
 import { backendURL } from "./constants";
+import ProtectedRoutes from "./routes/protectedRoutes";
 
 const socket = io(`${backendURL}`);
 
