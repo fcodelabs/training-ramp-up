@@ -24,7 +24,7 @@ const ProtectedRoute = ({ children }: any) => {
   if (isAuthorized === true) {
     return children;
   } else {
-    if (isAuthorized === false) {
+    if (isAuthorized === false || !isAuthorized) {
       navigate("/login", { replace: true });
     }
     return <LoadingSpinner />;
