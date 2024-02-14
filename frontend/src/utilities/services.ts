@@ -1,6 +1,5 @@
 import axios from "axios";
 import { GridValidRowModel } from "@mui/x-data-grid";
-const LocalstorageId = `${process.env.REACT_APP_API_URL}`;
 const url = process.env.REACT_APP_API_URL;
 
 const axiosInstance = axios.create({
@@ -21,7 +20,7 @@ axiosInstance.interceptors.response.use(
       originalRequest._retry = true;
 
       try {
-        const response = await axios.post(
+        await axios.post(
           `${url}/users/refreshtoken`,
           {},
           {
@@ -30,14 +29,6 @@ axiosInstance.interceptors.response.use(
         );
 
         console.log("Token refreshed successfully");
-
-        originalRequest.headers["Authorization"] =
-          `Bearer ${response.data.accessToken}`;
-
-        console.log(
-          "Retrying original request with new token:",
-          originalRequest
-        );
 
         return axios(originalRequest);
       } catch (refreshError) {
@@ -53,9 +44,6 @@ export const fetchStudentsAsync = async () => {
   try {
     const response = await axiosInstance.get(`${url}/students`, {
       withCredentials: true,
-      headers: {
-        "Content-Type": "application/json",
-      },
     });
     return response.data;
   } catch (error) {
@@ -69,9 +57,6 @@ export const addStudentsAsync = async (data: GridValidRowModel) => {
       `${url}/students/${data.socketId}`,
       data.editedRow,
       {
-        headers: {
-          "Content-Type": "application/json",
-        },
         withCredentials: true,
       }
     );
@@ -87,9 +72,6 @@ export const updateStudentAsync = async (data: GridValidRowModel) => {
       `${url}/students/${data.editedRow.id}/${data.socketId}`,
       data.editedRow,
       {
-        headers: {
-          "Content-Type": "application/json",
-        },
         withCredentials: true,
       }
     );
@@ -104,9 +86,6 @@ export const deleteStudentAsync = async (data: any) => {
     const response = await axiosInstance.delete(
       `${url}/students/${data.id}/${data.socketId}`,
       {
-        headers: {
-          "Content-Type": "application/json",
-        },
         withCredentials: true,
       }
     );
@@ -119,9 +98,6 @@ export const deleteStudentAsync = async (data: any) => {
 export const loginAsync = async (newuser: any) => {
   try {
     const response: any = await axios.post(`${url}/users/login`, newuser, {
-      headers: {
-        "Content-Type": "application/json",
-      },
       withCredentials: true,
     });
     console.log("response", response);
@@ -144,9 +120,6 @@ export const addUsersAsync = async (data: any) => {
       `${url}/users/email/${data.socketId}`,
       newuser,
       {
-        headers: {
-          "Content-Type": "application/json",
-        },
         withCredentials: true,
       }
     );
@@ -162,9 +135,6 @@ export const asyncAuthenticateUser = async () => {
       token: "token",
     };
     const response = await axiosInstance.post(`${url}/users/verify`, temp, {
-      headers: {
-        "Content-Type": "application/json",
-      },
       withCredentials: true,
     });
     return response.data;
@@ -179,11 +149,7 @@ export const signupUsersAsync = async (data: any) => {
       token: data.token,
       password: data.password,
     };
-    const response = await axios.post(`${url}/users/signup`, body, {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await axios.post(`${url}/users/signup`, body, {});
     console.log("response", response);
     return response.data;
   } catch (error) {
@@ -211,9 +177,6 @@ export const logoutAsync = async () => {
       {},
       {
         withCredentials: true,
-        headers: {
-          "Content-Type": "application/json",
-        },
       }
     );
     console.log("response", response.data);
