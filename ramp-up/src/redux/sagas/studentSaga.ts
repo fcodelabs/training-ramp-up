@@ -26,7 +26,9 @@ export function* studentSaga() {
 
 function* getAllStudentsWorker(): Generator<any, any, any> {
   try {
-    const { data } = yield call(axios.get, "http://localhost:4000/api/students");
+    const { data } = yield call(axios.get,
+       //"http://localhost:4000/api/students");
+       `${process.env.DPY_URL}/api/students`);
     yield put(updateStudent(data));
     yield put(fetchAllStudentsSuccess);
   } catch (error: any) {
@@ -37,7 +39,10 @@ function* getAllStudentsWorker(): Generator<any, any, any> {
 function* addNewStudentWorker(action: PayloadAction<GridValidRowModel>) {
   const newStudent = { ...action.payload };
   try {
-    yield call(axios.post, "http://localhost:4000/api/students", newStudent);
+    yield call(axios.post,
+       //"http://localhost:4000/api/students", newStudent);
+       `${process.env.DPY_URL}/api/students`, newStudent);
+
     yield put(addStudentSuccess(action.payload));
     yield put(fetchAllStudentsSuccess());
   } catch (error: any) {
@@ -50,7 +55,8 @@ function* updateStudentWorker(action: PayloadAction<GridValidRowModel>) {
   try {
     yield call(
       axios.put,
-      `http://localhost:4000/api/students/${action.payload.id}`,
+      `${process.env.DPY_URL}/api/students/${action.payload.id}`,
+      //`http://localhost:4000/api/students/${action.payload.id}`,
       updatedStudent
     );
     yield put(editStudentSuccess);
@@ -62,7 +68,9 @@ function* updateStudentWorker(action: PayloadAction<GridValidRowModel>) {
 
 function* deleteStudentWorker(action: PayloadAction<GridRowId>) {
   try {
-    yield call(axios.delete, `http://localhost:4000/api/students/${action.payload}`);
+    yield call(axios.delete, 
+      `${process.env.DPY_URL}/api/students/${action.payload}`);
+     // `http://localhost:4000/api/students/${action.payload}`);
     yield put(removeStudentSuccess);
   } catch (error: any) {
     yield put(removeStudentError(error));
