@@ -77,9 +77,9 @@ export default function CreatePassword() {
         setConfirmPasswordError('Please make sure your passwords match!')
       } else {
         console.log(token.token)
-        console.log('http://localhost:4000/api/users/'+token.token,)
+        console.log('https://training-ramp-up-new.onrender.com/api/users/'+token.token,)
         axios
-          .put('http://localhost:4000/api/users/'+token.token, 
+          .put('https://training-ramp-up-new.onrender.com/api/users/'+token.token, 
           {
             password: password
           }
