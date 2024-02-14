@@ -24,6 +24,7 @@ export class AuthController {
     res.cookie("token", token, {
       httpOnly: true,
       maxAge: 1000 * 60 * 15,
+      sameSite: "none",
     });
 
     // Set the refresh token in a cookie
@@ -107,6 +108,7 @@ export class AuthController {
         res.cookie("token", result.token, {
           httpOnly: true,
           maxAge: 1000 * 10,
+          sameSite: "none",
         });
         res.status(200).json({ message: "Token refreshed successfully" });
       }
