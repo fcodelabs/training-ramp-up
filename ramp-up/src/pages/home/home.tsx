@@ -111,6 +111,46 @@ function Home() {
     setIsPressedLogout(true);
   }
 
+  const checkInactivity = () => {
+    const expireTImeString = localStorage.getItem("expireTime") as string;
+    const expireTIme = new Date(expireTImeString)
+
+    if (expireTIme.getTime() < Date.now()){
+      dispatch(logoutRequest());
+      navigate("/", { replace: true });
+    }
+  }
+
+  const updateTime = () => {
+    const expireTime = Date.now() + 10000;
+    const expireTimeString = new Date(expireTime).toISOString();
+    localStorage.setItem("expireTime", expireTimeString);
+  }
+
+  useEffect(() => {
+    const interval = setInterval(()=>{
+      checkInactivity();
+    },1000);
+
+    return () => {clearInterval(interval)}
+  })
+
+  useEffect(()=>{
+    updateTime();
+
+    window.addEventListener("mousemove", updateTime);
+    window.addEventListener("keypress", updateTime);
+    window.addEventListener("click", updateTime);
+    window.addEventListener("scroll", updateTime);
+
+    return () => {
+      window.removeEventListener("mousemove", updateTime);
+      window.removeEventListener("keypress", updateTime);
+      window.removeEventListener("click", updateTime);
+      window.removeEventListener("scroll", updateTime);
+    }
+  },[])
+
   return (
     <ProtectedRoutes>
     <div style={styles.page}>

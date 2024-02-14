@@ -93,16 +93,16 @@ export function Login() {
     //     }
     // },[user, dispatch, navigate])
 
-    // const socket = useContext(SocketContext);
+    const socket = useContext(SocketContext);
 
-    // socket?.on("user-logging",(success) =>{
-    //     if(!success){
-    //         setIsInValidLogin(true);
-    //     }
-    //     else{
-    //         setIsInValidLogin(false);
-    //     }
-    // })
+    socket?.on("user-logging",(success) =>{
+        if(!success){
+            setIsInValidLogin(true);
+        }
+        else{
+            setIsInValidLogin(false);
+        }
+    })
 
     const [password, setPassword] = React.useState("");
     const [email, setEmail] = React.useState("");
