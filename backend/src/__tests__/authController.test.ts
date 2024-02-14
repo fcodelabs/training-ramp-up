@@ -38,6 +38,8 @@ describe("AuthController", () => {
       expect(res.cookie).toHaveBeenCalledWith("token", "testToken", {
         httpOnly: true,
         maxAge: 900000,
+        sameSite: "none",
+        secure: true,
       });
       expect(res.status).toHaveBeenCalledWith(200);
       expect(res.json).toHaveBeenCalledWith({
