@@ -17,7 +17,7 @@ export class UserService {
   private static TEMP_PASSWORD =
     "84a16c1d2bdeb0474693e7bf00f0e167e819dca14059f61cd5b08b2e05fa2bfc";
   private static passwordCreationLink =
-    "https://training-ramp-up.web.app/create-password/:token";
+    "https://frontend.ramp-up-epcm.me/create-password/:token";
 
   static async createUser(name: string, email: string, role: string) {
     try {

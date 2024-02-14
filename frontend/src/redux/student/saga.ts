@@ -156,7 +156,8 @@ import {
 import { PayloadAction } from "@reduxjs/toolkit";
 
 //const BASE_URL = "http://localhost:5000/student";
-const BASE_URL = "https://ramp-up-backend-epcm.onrender.com/student";
+//const BASE_URL = "https://ramp-up-backend-epcm.onrender.com/student";
+const BASE_URL = "https://backend.ramp-up-epcm.me/student";
 
 function* getAllStudentsWorker(): Generator<any, any, any> {
   try {

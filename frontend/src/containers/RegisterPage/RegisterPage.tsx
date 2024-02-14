@@ -25,7 +25,7 @@ import { RootState } from "../../redux/store";
 import { useNavigate } from "react-router-dom";
 
 import io from "socket.io-client";
-const DEPLOYED_URL = "https://ramp-up-backend-epcm.onrender.com";
+const DEPLOYED_URL = "https://backend.ramp-up-epcm.me";
 const LOCAL = "http://localhost:5000";
 const socket = io(DEPLOYED_URL);
 //const socket = io("http://localhost:5000");
