@@ -186,3 +186,18 @@ export const loginUserService = async (userData: any) => {
     role: user.role,
   };
 };
+
+export const deleteAllUsersService = async () => {
+  const userRepo = getRepository(User);
+
+  const allUsers = await userRepo.find({});
+
+  if (allUsers.length === 0) {
+      throw new Error('No students found');
+  }
+
+  await userRepo.remove(allUsers);
+
+  return 'All students deleted successfully';
+};
+

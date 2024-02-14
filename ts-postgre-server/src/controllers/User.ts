@@ -47,3 +47,13 @@ export const loginUser =async (req: Request, res: Response) => {
     return res.status(500).json({ error: error.message || 'Internal Server Error' });
   }
 }
+
+export const deleteAllUsers = async (req: Request, res: Response) => {
+  try {
+      const message = await userService.deleteAllUsersService();
+
+      return res.status(200).json({ message });
+  } catch (error) {
+      return res.status(500).json({ error: error.message || 'Internal Server Error' });
+  }
+};
