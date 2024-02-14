@@ -84,6 +84,7 @@ function AddNewUserModal({
   const [role, setRole] = React.useState("")
   const [name, setName] = React.useState("")
   const [email, setEmail] = React.useState("")
+  const [emailExists, setEmailExists] = React.useState(false)
   const [isSubmit, setIsSubmit] = React.useState(false)
 
   const handleSubmit = () => {

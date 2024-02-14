@@ -18,6 +18,7 @@ import { useDispatch } from "react-redux";
 import { isValidEmail } from "../../utility";
 import { useNavigate } from "react-router-dom";
 import { SocketContext } from "../../SocketContext";
+import ErrorModal from "../../components/ErrorModal/ErrorModal";
 
 const styles = {
     box:{
@@ -88,14 +89,17 @@ export function SelfRegistration() {
     const [email, setEmail] = React.useState("");
     const [isSubmit, setIsSubmit] = React.useState(false);
     const [emailExists, setEmailExists] = React.useState(false);
+    const [openDialog, setOpenDialog] = React.useState(false);
     
     const socket = React.useContext(SocketContext);
+
 
     socket.on("user-exists", (data: boolean) => {
          if (data) {
             setEmailExists(true);
          } else {
             setEmailExists(false);
+            setOpenDialog(true);
          }
     });
 
@@ -107,6 +111,11 @@ export function SelfRegistration() {
         event.preventDefault();
       };
 
+    const onclose = () => {
+        setOpenDialog(false);
+        navigate("/");
+    }
+
     const handleSubmit = () => {
         setIsSubmit(true);
         if(validatePassword(password) && password === confirmPassword && name !== "" && isValidEmail(email) && !emailExists){
@@ -114,12 +123,11 @@ export function SelfRegistration() {
               const data =  {name: name, email: email, password: password}
               console.log(data);
               dispatch(selfRegisterRequest(data))
-                navigate("/");
               setIsSubmit(false);
-            //   setPassword("");
-            //   setConfirmPassword("");
-            //   setName("");
-            //   setEmail("");
+              setPassword("");
+              setConfirmPassword("");
+              setName("");
+              setEmail("");
             } catch (error) {
               console.log(error);
             }
@@ -128,6 +136,15 @@ export function SelfRegistration() {
 
     return(
         <Box sx={styles.box}>
+
+        <ErrorModal 
+            open={openDialog}
+            onClose={onclose}
+            message="Your account has been successfully created."
+            dismiss ={false}
+            buttonName="OK"
+            onClick={onclose}
+            />
 
         <Card
             sx={{
