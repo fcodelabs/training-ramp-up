@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import * as userService from '../services/User';
 
-// Create a new user
+
 export const createUser = async (req: Request, res: Response) => {
     try {
 
