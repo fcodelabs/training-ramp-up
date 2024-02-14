@@ -16,6 +16,7 @@ import { validatePassword } from "../../utility";
 import { selfRegisterRequest } from "../../redux/slices/userSlice";
 import { useDispatch } from "react-redux";
 import { isValidEmail } from "../../utility";
+import { useNavigate } from "react-router-dom";
 
 const styles = {
     box:{
@@ -75,6 +76,7 @@ const styles = {
 
 export function SelfRegistration() {
 
+    const navigate = useNavigate();
     const dispatch = useDispatch();  
 
     const [showPassword, setShowPassword] = React.useState(false);
@@ -100,7 +102,8 @@ export function SelfRegistration() {
             try{
               const data =  {name: name, email: email, password: password}
               console.log(data);
-              dispatch(selfRegisterRequest(data));
+              dispatch(selfRegisterRequest(data))
+                navigate("/login");
               setIsSubmit(false);
             //   setPassword("");
             //   setConfirmPassword("");
