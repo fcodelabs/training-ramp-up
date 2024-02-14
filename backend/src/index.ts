@@ -28,13 +28,15 @@ dotenv.config();
 // const secretKey = generateRandomSecretKey(32); // Generate a 256-bit (32 bytes) secret key
 // console.log("Random Secret Key:", secretKey);
 const app: express.Application = express();
-app.use(cors({ origin: "http://localhost:3000", credentials: true }));
-app.use(
-  cors({
-    origin: "https://training-ramp-up.web.app/",
-    credentials: true,
-  }),
-);
+// app.use(cors({ origin: "http://localhost:3000", credentials: true }));
+app.use(function (req, res, next) {
+  res.setHeader(
+    "Access-Control-Allow-Origin",
+    "https://training-ramp-up.web.app",
+  );
+  res.setHeader("Access-Control-Allow-Credentials", "true");
+  next();
+});
 const port = process.env.PORT || 8000;
 const server = http.createServer(app);
 
