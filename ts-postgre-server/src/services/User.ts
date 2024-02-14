@@ -10,6 +10,7 @@ interface CreatePasswordParams {
   password: string;
 }
 
+// Create a new user
 export const createUserService = async (userData: any) => {
   const userRepository = getRepository(User);
   const { name, email, role } = userData;
