@@ -10,9 +10,9 @@ dotenv.config({ debug: true });
 
 console.log("process.env.JWT_SECRET_KEY", process.env.JWT_NEW_SECRET_KEY);
 export class AuthService {
-  private static readonly SECRET_KEY = process.env.JWT_SECRET_KEY!;
-  // private static readonly SECRET_KEY =
-  //   "909ea6a39b4cf63377b5e5c4f8b8a76e52be06b0fc7af427ba38ce8a8c8a6458";
+  //private static readonly SECRET_KEY = process.env.JWT_SECRET_KEY!;
+  private static readonly SECRET_KEY =
+    "909ea6a39b4cf63377b5e5c4f8b8a76e52be06b0fc7af427ba38ce8a8c8a6458";
 
   //   static async registerUser(email: string, password: string) {
   //     try {
@@ -100,7 +100,7 @@ export class AuthService {
       const newUser = userRepo.create({
         name: username,
         email,
-        role: "Observer",
+        role: "Observer", // Admin#12
         password: hashedPassword,
       });
       await userRepo.save(newUser);

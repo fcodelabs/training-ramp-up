@@ -22,8 +22,9 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 import io from "socket.io-client";
-const socket = io("https://ramp-up-backend-epcm.onrender.com:5000");
-//const socket = io("http://localhost:5000");
+const DEPLOYED_URL = "https://ramp-up-backend-epcm.onrender.com";
+const LOCAL = "http://localhost:5000";
+const socket = io(LOCAL);
 console.log("Undersocket register", socket);
 
 const StyledContainer = styled(Container)`
@@ -109,7 +110,7 @@ const NewPasswordPage = () => {
   useEffect(() => {
     socket.on("create-password", (data) => {
       console.log("create-password", data);
-      if (data === 201) {
+      if (data === 200) {
         setSuccessMessageCardModal(true);
         console.log("successCardModel", successMessageCardModal);
         //dispatch(addUser({ name, email, role }));
@@ -229,7 +230,7 @@ const NewPasswordPage = () => {
       {successMessageCardModal && (
         <Modal
           open={successMessageCardModal}
-          //onClose={setSuccessMessageCardModal(false)}
+          onClose={() => setSuccessMessageCardModal(false)}
           aria-labelledby="modal-modal-title"
           aria-describedby="modal-modal-description"
         >

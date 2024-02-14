@@ -20,45 +20,14 @@ import sockeUsertRouter from "./routes/userRoute";
 
 dotenv.config();
 
-// const generateRandomSecretKey = (length: any) => {
-//   return crypto.randomBytes(length).toString("hex");
-// };
-
-// Usage example
-// const secretKey = generateRandomSecretKey(32); // Generate a 256-bit (32 bytes) secret key
-// console.log("Random Secret Key:", secretKey);
 const app: express.Application = express();
 // app.use(cors({ origin: "http://localhost:3000", credentials: true }));
 app.use(
-  cors({ origin: "https://training-ramp-up.web.app", credentials: true }),
+  cors({
+    credentials: true,
+    origin: ["http://localhost:3000", "https://training-ramp-up.web.app"],
+  }),
 );
-// app.use((req, res, next) => {
-//   res.header("Access-Control-Allow-Origin", "https://training-ramp-up.web.app");
-//   res.header("Access-Control-Allow-Credentials", "true");
-//   next();
-// });
-
-// Set middleware of CORS
-// app.use((req, res, next) => {
-//   res.setHeader(
-//     "Access-Control-Allow-Origin",
-//     "https://training-ramp-up.web.app",
-//   );
-//   res.setHeader(
-//     "Access-Control-Allow-Methods",
-//     "GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS,CONNECT,TRACE",
-//   );
-//   res.setHeader(
-//     "Access-Control-Allow-Headers",
-//     "Content-Type, Authorization, X-Content-Type-Options, Accept, X-Requested-With, Origin, Access-Control-Request-Method, Access-Control-Request-Headers",
-//   );
-//   res.setHeader("Access-Control-Allow-Credentials", "true");
-//   res.setHeader("Access-Control-Allow-Private-Network", "true");
-//   //  Firefox caps this at 24 hours (86400 seconds). Chromium (starting in v76) caps at 2 hours (7200 seconds). The default value is 5 seconds.
-//   res.setHeader("Access-Control-Max-Age", 7200);
-
-//   next();
-// });
 const port = process.env.PORT || 8000;
 const server = http.createServer(app);
 
@@ -66,7 +35,7 @@ const server = http.createServer(app);
 
 const io = new Server(server, {
   cors: {
-    origin: "*",
+    origin: ["http://localhost:3000", "https://training-ramp-up.web.app"],
     methods: ["GET", "POST"],
     credentials: true,
   },
@@ -103,7 +72,7 @@ AppDataSource.initialize()
     //   console.log(`Server running on port ${port}`);
     // });
     // server.listen(5000, () => {
-    //   console.log("server is running on port 5000");
+    //   console.log(`server is running on port ${port}`);
     // });
   })
   .catch((err) => {
@@ -121,13 +90,10 @@ app.use("/auth", socketAuthRouter(io));
 
 app.use("/user", sockeUsertRouter(io));
 app.use("/student", socketRouter(io));
-server.listen(5000, () => {
-  console.log("server is running on port 5000");
-});
 
-// app.listen(port, () => {
-//   console.log(`Server running on port ${port}`);
-// });
+server.listen(5000, () => {
+  console.log(`server is running on port ${port}`);
+});
 
 // app.use((err: any, req: Request, res: Response) => {
 //   const errorStatus = err.status || 500;

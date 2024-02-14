@@ -25,7 +25,9 @@ import { RootState } from "../../redux/store";
 import { useNavigate } from "react-router-dom";
 
 import io from "socket.io-client";
-const socket = io("https://ramp-up-backend-epcm.onrender.com:5000");
+const DEPLOYED_URL = "https://ramp-up-backend-epcm.onrender.com";
+const LOCAL = "http://localhost:5000";
+const socket = io(LOCAL);
 //const socket = io("http://localhost:5000");
 console.log("Undersocket register", socket);
 
@@ -135,6 +137,7 @@ const RegisterPage = () => {
     socket.on("register", (data) => {
       console.log("register", data);
       if (data === 201) {
+        console.log("successCardModel", successMessageCardModal);
         setSuccessMessageCardModal(true);
         console.log("successCardModel", successMessageCardModal);
         //dispatch(addUser({ name, email, role }));
@@ -314,7 +317,7 @@ const RegisterPage = () => {
       {successMessageCardModal && (
         <Modal
           open={successMessageCardModal}
-          //onClose={setSuccessMessageCardModal(false)}
+          onClose={() => setSuccessMessageCardModal(false)}
           aria-labelledby="modal-modal-title"
           aria-describedby="modal-modal-description"
         >

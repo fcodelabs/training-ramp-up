@@ -161,7 +161,7 @@ function* getAllStudentsWorker(): Generator<any, any, any> {
   try {
     const { data } = yield call(
       axios.get<GridValidRowModel[]>,
-      "https://ramp-up-backend1-epcm.onrender.com/student/allStudents"
+      BASE_URL + "/allStudents"
     );
     console.log("data", data);
     yield put(updateStudent(data));
@@ -190,11 +190,7 @@ function* addNewStudentWorker(
   console.log("newstudent", newStudent);
   try {
     console.log(newStudent);
-    yield call(
-      axios.post<GridValidRowModel>,
-      "https://ramp-up-backend1-epcm.onrender.com/student/add",
-      newStudent
-    );
+    yield call(axios.post<GridValidRowModel>, BASE_URL + "/add", newStudent);
     yield put(fetchAllStudentsSuccess);
   } catch (error: any) {
     console.log("hello adding error");
@@ -218,7 +214,7 @@ function* updateStudentWorker(action: PayloadAction<GridValidRowModel>) {
   try {
     yield call(
       axios.put<GridValidRowModel>,
-      `https://ramp-up-backend1-epcm.onrender.com/student/edit/${action.payload.id}`,
+      BASE_URL + `/edit/${action.payload.id}`,
       updatedStudent
     );
     yield put(fetchAllStudentsSuccess);
@@ -231,10 +227,7 @@ function* updateStudentWorker(action: PayloadAction<GridValidRowModel>) {
 
 function* deleteStudentWorker(action: PayloadAction<GridRowId>) {
   try {
-    yield call(
-      axios.delete<GridRowId>,
-      `https://ramp-up-backend1-epcm.onrender.com/student/delete/${action.payload}`
-    );
+    yield call(axios.delete<GridRowId>, BASE_URL + `/delete/${action.payload}`);
   } catch (error: any) {
     yield put(removeStudentError(error));
 

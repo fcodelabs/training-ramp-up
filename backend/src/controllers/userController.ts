@@ -24,9 +24,6 @@ export class UserController {
       }
       res.status(201).json({ message: result.message });
     }
-    res
-      .status(401)
-      .json({ error: "An error occurred while creating the user" });
   }
 
   static async createPassword(req: Request, res: Response) {
@@ -41,6 +38,5 @@ export class UserController {
       }
       res.status(200).json({ message: result.message });
     }
-    return res.status(401).json({ error: "An error occurred" });
   }
 }

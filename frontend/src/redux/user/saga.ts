@@ -17,10 +17,10 @@ import {
 import { PayloadAction } from "@reduxjs/toolkit";
 
 axios.defaults.withCredentials = true;
-//const apiUrl = process.env.REACT_APP_API_USERS as string;
-const apiUrl = "https://ramp-up-backend1-epcm.onrender.com/user";
-//const apiUrlAuth = process.env.REACT_APP_API_AUTH as string;
-const apiUrlAuth = "https://ramp-up-backend1-epcm.onrender.com/auth";
+const apiUrl = "http://localhost:5000/user";
+//const apiUrl = "https://ramp-up-backend1-epcm.onrender.com/user";
+const apiUrlAuth = "http://localhost:5000/auth";
+//const apiUrlAuth = "https://ramp-up-backend1-epcm.onrender.com/auth";
 console.log("apiUrl", apiUrl);
 console.log("apiUrlAuth", apiUrlAuth);
 
