@@ -31,7 +31,7 @@ const app: express.Application = express();
 app.use(cors({ origin: "http://localhost:3000", credentials: true }));
 app.use(
   cors({
-    origin: "https://ramp-up-backend1-epcm.onrender.com/",
+    origin: "https://training-ramp-up.web.app/",
     credentials: true,
   }),
 );

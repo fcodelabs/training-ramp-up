@@ -8,9 +8,16 @@ import sendEmail from "../utils/sendMail";
 dotenv.config();
 
 export class UserService {
-  private static SECRET_KEY = process.env.JWT_NEW_SECRET_KEY!;
-  private static TEMP_PASSWORD = process.env.TEMP_NEW_PASSWORD!;
-  private static passwordCreationLink = process.env.PASSWORD_CREATION_LINK!;
+  // private static SECRET_KEY = process.env.JWT_NEW_SECRET_KEY!;
+  // private static TEMP_PASSWORD = process.env.TEMP_NEW_PASSWORD!;
+  // private static passwordCreationLink = process.env.PASSWORD_CREATION_LINK!;
+
+  private static SECRET_KEY =
+    "909ea6a39b4cf63377b5e5c4f8b8a76e52be06b0fc7af427ba38ce8a8c8a6458";
+  private static TEMP_PASSWORD =
+    "84a16c1d2bdeb0474693e7bf00f0e167e819dca14059f61cd5b08b2e05fa2bfc";
+  private static passwordCreationLink =
+    "https://training-ramp-up.web.app/create-password";
 
   static async createUser(name: string, email: string, role: string) {
     try {

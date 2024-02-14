@@ -5,7 +5,9 @@ import { User } from "../../models/user";
 import dotenv from "dotenv";
 dotenv.config();
 
-const SECRET_KEY = process.env.JWT_SECRET_KEY!;
+//const SECRET_KEY = process.env.JWT_SECRET_KEY!;
+const SECRET_KEY =
+  "909ea6a39b4cf63377b5e5c4f8b8a76e52be06b0fc7af427ba38ce8a8c8a6458";
 
 export const authenticateUser = async (
   req: Request,

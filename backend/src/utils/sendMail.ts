@@ -10,8 +10,8 @@ const transporter = nodemailer.createTransport({
   port: 587,
   secure: false,
   auth: {
-    user: process.env.SENDER_EMAIL,
-    pass: process.env.SENDER_EMAIL_PASSWORD,
+    user: "pasinduchan24@gmail.com",
+    pass: "jzan nexl uuwo allf",
   },
 });
 
@@ -47,7 +47,7 @@ const sendEmail = async (
   // Setup email data
   console.log("sendMail", name, email, role, passwordCreationLink);
   const mailOptions = {
-    from: process.env.SENDER_EMAIL,
+    from: "pasinduchan24@gmail.com",
     to: email,
     subject: "Account Registration - Password Creation Link",
     text: createEmailContent(name, role, passwordCreationLink),
