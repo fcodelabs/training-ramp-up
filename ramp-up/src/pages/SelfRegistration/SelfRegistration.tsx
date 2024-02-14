@@ -17,6 +17,7 @@ import { selfRegisterRequest } from "../../redux/slices/userSlice";
 import { useDispatch } from "react-redux";
 import { isValidEmail } from "../../utility";
 import { useNavigate } from "react-router-dom";
+import { SocketContext } from "../../SocketContext";
 
 const styles = {
     box:{
@@ -86,7 +87,17 @@ export function SelfRegistration() {
     const [name, setName] = React.useState("");
     const [email, setEmail] = React.useState("");
     const [isSubmit, setIsSubmit] = React.useState(false);
+    const [emailExists, setEmailExists] = React.useState(false);
     
+    const socket = React.useContext(SocketContext);
+
+    socket.on("user-exists", (data: boolean) => {
+         if (data) {
+            setEmailExists(true);
+         } else {
+            setEmailExists(false);
+         }
+    });
 
     const handleClickShowPassword = () => setShowPassword((show) => !show);
 
@@ -98,12 +109,12 @@ export function SelfRegistration() {
 
     const handleSubmit = () => {
         setIsSubmit(true);
-        if(validatePassword(password) && password === confirmPassword && name !== "" && isValidEmail(email)){
+        if(validatePassword(password) && password === confirmPassword && name !== "" && isValidEmail(email) && !emailExists){
             try{
               const data =  {name: name, email: email, password: password}
               console.log(data);
               dispatch(selfRegisterRequest(data))
-                navigate("/login");
+                navigate("/");
               setIsSubmit(false);
             //   setPassword("");
             //   setConfirmPassword("");
@@ -137,12 +148,16 @@ export function SelfRegistration() {
                 onChange={(event) => setName(event.target.value)}
             />
             <TextField
-                error = {email === '' && isSubmit || !isValidEmail(email) && isSubmit}
-                helperText={email === '' && isSubmit ? 'Mandatory fields missing' : (!isValidEmail(email) && isSubmit ? 'Invalid email address' : '')}
+                error = {email === '' && isSubmit || !isValidEmail(email) && isSubmit || emailExists}
+                helperText={email === '' && isSubmit ? 'Mandatory fields missing' : (!isValidEmail(email) && isSubmit ? 'Invalid email address' : emailExists ? 'Email already exists' : '')}
                 sx={styles.inputProps}
                 label="Email"
                 value={email}
-                onChange={(event) => setEmail(event.target.value)}
+                onChange={(event) => {
+                    setEmail(event.target.value)
+                    setEmailExists(false)
+                    }
+                }
             />
             <FormControl 
                 sx={{ m: 1, width: '520px', maxWidth: "100%" }} 
