@@ -1,7 +1,7 @@
 import { createConnection, ConnectionOptions } from 'typeorm';
 
 const connectionOptions: ConnectionOptions = {
-   url: process.env.DATABASE_URL,
+   url:'postgres://neth:E18OpZU8ZnJ5eUsYDwFERHg2j8VNasP7@dpg-cn5d8col5elc73e63lm0-a.oregon-postgres.render.com/ramp_up_u7zu' ,
 
     ssl: {
         rejectUnauthorized: false,
