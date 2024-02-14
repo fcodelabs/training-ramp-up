@@ -100,6 +100,7 @@ function AdminPage() {
 
   const [addUserSuccessCard, setAddUserSuccessCard] = useState(false);
   const [addUserErrorCard, setAddUserErrorCard] = useState(false);
+  const [logoutCardModal, setLogoutCardModal] = useState(false);
 
   useEffect(() => {
     socket.on("new-user", (data) => {
@@ -174,9 +175,10 @@ function AdminPage() {
   };
 
   const handleLogout = () => {
-    console.log("Logout Clicked");
-    dispatch(logoutUser());
-    navigate("/login");
+    // console.log("Logout Clicked");
+    // dispatch(logoutUser());
+    // navigate("/login");
+    setLogoutCardModal(true);
   };
 
   return (
@@ -263,6 +265,41 @@ function AdminPage() {
                 onClick: () => setAddUserErrorCard(false),
               }}
               primaryOption="TRY AGAIN LATER"
+            />
+          </Paper>
+        </Modal>
+      )}
+      {logoutCardModal && (
+        <Modal
+          open={logoutCardModal}
+          onClose={() => setLogoutCardModal(false)}
+          aria-labelledby="remove-success-modal-title"
+          aria-describedby="remove-success-modal-description"
+        >
+          <Paper
+            style={{
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              borderRadius: "12px",
+            }}
+          >
+            <MessageCard
+              message="Are you sure you want to logout?"
+              primaryButton={{
+                text: "LOGOUT",
+                onClick: () => {
+                  dispatch(logoutUser());
+                  navigate("/login");
+                },
+              }}
+              secondaryButton={{
+                text: "CANCEL",
+                onClick: () => setLogoutCardModal(false),
+              }}
+              primaryOption="LOGOUT"
+              secondaryOption="CANCEL"
             />
           </Paper>
         </Modal>
