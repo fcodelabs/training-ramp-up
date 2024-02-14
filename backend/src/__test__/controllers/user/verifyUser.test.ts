@@ -12,7 +12,7 @@ describe('verifyUser', () => {
 
   beforeEach(() => {
     req = {
-      headers: { cookie: 'token=validToken' },
+      cookies: { accessToken: 'validToken' },
       body: {}
     };
     res = {

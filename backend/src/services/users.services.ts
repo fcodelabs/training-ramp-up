@@ -249,7 +249,6 @@ export const veryfyUser = async (
 
     const decoded = jwt.verify(token, SECRET_KEY, (error, data) => {
       if (error !== null) {
-        console.log(error);
         res.status(401).json({ message: 'Token is not valid' });
         return;
       }
@@ -262,7 +261,6 @@ export const veryfyUser = async (
       }
     });
   } catch (error) {
-    console.error(error);
     res.status(500).json({ message: 'Internel server Error' });
   }
 };
