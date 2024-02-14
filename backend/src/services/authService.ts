@@ -5,10 +5,14 @@ import * as bcrypt from "bcrypt";
 import { Request, Response } from "express";
 import crypto from "crypto";
 import dotenv from "dotenv";
-dotenv.config();
+//dotenv.config();
+dotenv.config({ debug: true });
 
+console.log("process.env.JWT_SECRET_KEY", process.env.JWT_NEW_SECRET_KEY);
 export class AuthService {
   private static readonly SECRET_KEY = process.env.JWT_SECRET_KEY!;
+  // private static readonly SECRET_KEY =
+  //   "909ea6a39b4cf63377b5e5c4f8b8a76e52be06b0fc7af427ba38ce8a8c8a6458";
 
   //   static async registerUser(email: string, password: string) {
   //     try {
@@ -50,6 +54,9 @@ export class AuthService {
         return { error: "Invalid password" };
       }
 
+      if (!this.SECRET_KEY) {
+        throw new Error("JWT secret key not found");
+      }
       // Create a JWT token for authentication
       const token = jwt.sign(
         { email: selectedUser.email, role: selectedUser.role },
@@ -58,19 +65,18 @@ export class AuthService {
           expiresIn: "15min",
         },
       );
+      console.log("token authservice", token);
+      //const refreshToken = crypto.randomBytes(64).toString("hex");
 
-      const refreshToken = crypto.randomBytes(64).toString("hex");
-
-      const refreshTokenJWT = jwt.sign({ refreshToken }, this.SECRET_KEY, {
-        expiresIn: "1d",
-      });
+      // const refreshTokenJWT = jwt.sign({ refreshToken }, this.SECRET_KEY, {
+      //   expiresIn: "1d",
+      // });
 
       //   // Set the token in a cookie
       //   res.cookie('token', token, { httpOnly: true });
 
       return {
         token,
-        refreshTokenJWT,
         selectedUser,
         message: "User logged in successfully",
       };

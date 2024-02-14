@@ -17,7 +17,7 @@ export class AuthController {
     }
 
     const token = result.token; // Declare the 'token' variable
-    const refreshToken = result.refreshTokenJWT; // Declare the 'refreshToken' variable
+    //const refreshToken = result.refreshTokenJWT; // Declare the 'refreshToken' variable
 
     // Set the token in a cookie
     // res.cookie("token", token, { httpOnly: true });
@@ -27,10 +27,10 @@ export class AuthController {
     });
 
     // Set the refresh token in a cookie
-    res.cookie("refreshToken", refreshToken, {
-      httpOnly: true,
-      maxAge: 86400000, // 24 hours in milliseconds
-    });
+    // res.cookie("refreshToken", refreshToken, {
+    //   httpOnly: true,
+    //   maxAge: 86400000, // 24 hours in milliseconds
+    // });
 
     res
       .status(200)

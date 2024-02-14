@@ -8,8 +8,8 @@ import sendEmail from "../utils/sendMail";
 dotenv.config();
 
 export class UserService {
-  private static SECRET_KEY = process.env.JWT_SECRET_KEY!;
-  private static TEMP_PASSWORD = process.env.TEMP_PASSWORD!;
+  private static SECRET_KEY = process.env.JWT_NEW_SECRET_KEY!;
+  private static TEMP_PASSWORD = process.env.TEMP_NEW_PASSWORD!;
   private static passwordCreationLink = process.env.PASSWORD_CREATION_LINK!;
 
   static async createUser(name: string, email: string, role: string) {

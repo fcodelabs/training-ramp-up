@@ -12,8 +12,8 @@ import { verifyUser } from "../../redux/user/slice";
 
 import io from "socket.io-client";
 import MessageCard from "../../components/Cards/MessageCard";
-// const socket = io("https://ramp-up-backend1-epcm.onrender.com/");
-const socket = io("http://localhost:5000");
+const socket = io("https://ramp-up-backend1-epcm.onrender.com/");
+//const socket = io("http://localhost:5000");
 console.log("Undersocket", socket);
 
 const StyledHeaderBox = styled(Box)`
