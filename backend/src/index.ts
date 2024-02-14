@@ -25,8 +25,8 @@ const app: express.Application = express();
 app.use(
   cors({
     credentials: true,
-    methods: "*",
-    origin: "*",
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    origin: ["http://localhost:3000", "https://training-ramp-up.web.app/login"],
   }),
 );
 const port = process.env.PORT || 8000;
