@@ -4,19 +4,19 @@ import { hashPassword, checkPassword } from "../utility/passwordFunctions";
 
 export class UserService {
   static async selfRegister(data: Partial<User>) {
-    try {
-      const repository = AppDataSource.getTreeRepository(User);
-      const password = await hashPassword(data.password);
-      const newData = {
-        ...data,
-        password: password,
-        role: process.env.OBSERVER,
-      };
-      const newUser = repository.create(newData);
-      return await repository.save(newUser);
-    } catch (error) {
-      console.error("Error self registering:", error);
+    const repository = AppDataSource.getTreeRepository(User);
+    const password = await hashPassword(data.password);
+    const user = await repository.findOne({ where: { email: data.email } });
+    if (user) {
+      throw new Error("User already exists");
     }
+    const newData = {
+      ...data,
+      password: password,
+      role: process.env.OBSERVER,
+    };
+    const newUser = repository.create(newData);
+    return await repository.save(newUser);
   }
 
   static async findAll() {

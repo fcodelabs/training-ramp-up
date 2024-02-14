@@ -10,13 +10,18 @@ export class UserController {
     this.io = io;
   }
 
-  static async selfRegister(req: Request, res: Response) {
+  async selfRegister(req: Request, res: Response) {
     try {
       const user = await UserService.selfRegister(req.body);
       res.status(201).json(user);
       console.log(user);
     } catch (error) {
       console.error(error);
+      if (error.message === "User already exists") {
+        this.io.emit("user-exists", true);
+      } else {
+        this.io.emit("user-exists", false);
+      }
       res
         .status(500)
         .json({ message: "An error occurred while self registering." });
