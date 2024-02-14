@@ -5,7 +5,6 @@ import * as userService from '../services/User';
 export const createUser = async (req: Request, res: Response) => {
     try {
 
-        
         const newUser = await userService.createUserService(req.body);
 
         return res.status(200).json(newUser);
@@ -49,7 +48,7 @@ export const loginUser =async (req: Request, res: Response) => {
   }
 }
 
-export const deleteAllUsers = async (req: Request, res: Response) => {
+export const deleteAllUsers = async (_req: Request, res: Response) => {
   try {
       const message = await userService.deleteAllUsersService();
 
