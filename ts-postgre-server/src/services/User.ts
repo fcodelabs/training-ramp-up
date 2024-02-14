@@ -56,7 +56,7 @@ export const createUserService = async (userData: any) => {
     text: `Dear Name, 
     You have been added as an Admin to our system. Please click the following link to create your password and access your account: 
 
-    http://localhost:3000/create-password/${token}
+    https://ramp-up-99ab1.web.app/create-password/${token}
     
     Please note that the password creation link is valid for one-time use only. Ensure that you use it promptly to set up your password. 
 

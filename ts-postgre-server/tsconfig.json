@@ -6,6 +6,8 @@
     "skipLibCheck": true,
     "sourceMap": true,
     "outDir": "./dist",
+    "types": ["jest", "node"],
+    "typeRoots": ["./node_modules/@types", "./types"],
     "moduleResolution": "node",
     "removeComments": true,
     "noImplicitAny": true,
