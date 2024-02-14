@@ -14,7 +14,7 @@ import io from "socket.io-client";
 import MessageCard from "../../components/Cards/MessageCard";
 const DEPLOYED_URL = "https://ramp-up-backend-epcm.onrender.com";
 const LOCAL = "http://localhost:5000";
-const socket = io(LOCAL);
+const socket = io(DEPLOYED_URL);
 //const socket = io("http://localhost:5000");
 console.log("Undersocket", socket);
 

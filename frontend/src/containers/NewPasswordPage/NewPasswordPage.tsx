@@ -24,7 +24,7 @@ import { useNavigate } from "react-router-dom";
 import io from "socket.io-client";
 const DEPLOYED_URL = "https://ramp-up-backend-epcm.onrender.com";
 const LOCAL = "http://localhost:5000";
-const socket = io(LOCAL);
+const socket = io(DEPLOYED_URL);
 console.log("Undersocket register", socket);
 
 const StyledContainer = styled(Container)`
