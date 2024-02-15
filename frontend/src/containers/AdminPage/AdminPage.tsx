@@ -101,6 +101,7 @@ function AdminPage() {
   const [addUserSuccessCard, setAddUserSuccessCard] = useState(false);
   const [addUserErrorCard, setAddUserErrorCard] = useState(false);
   const [logoutCardModal, setLogoutCardModal] = useState(false);
+  const [emailExistsError, setEmailExistsError] = useState(false);
 
   useEffect(() => {
     socket.on("new-user", (data) => {
@@ -109,9 +110,12 @@ function AdminPage() {
         setAddUserSuccessCard(true);
         //dispatch(addUser({ name, email, role }));
       }
-      if (data === 400) {
+      if (data === 500) {
         // dispatch(addStudentError());
         setAddUserErrorCard(true);
+      }
+      if (data === 401) {
+        setEmailExistsError(true);
       }
     });
   }, [dispatch]);

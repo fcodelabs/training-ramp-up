@@ -1194,7 +1194,7 @@ export default function DataTable({
           ...column,
           editable: false,
         }))
-        .filter((column) => column.field !== "actions");
+        .filter((column) => column.field !== "action");
     }
   };
 

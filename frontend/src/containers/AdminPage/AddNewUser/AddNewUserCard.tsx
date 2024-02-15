@@ -20,9 +20,10 @@ import { useDispatch, useSelector } from "react-redux";
 import MessageCard from "../../../components/Cards/MessageCard";
 
 import io from "socket.io-client";
-const DEPLOYED_URL = "https://ramp-up-backend-epcm.onrender.com";
+import { on } from "events";
+const DEPLOYED_URL = "https://backend.ramp-up-epcm.me";
 const LOCAL = "http://localhost:5000";
-const socket = io(LOCAL);
+const socket = io(DEPLOYED_URL);
 //const socket = io("http://localhost:5000");
 console.log("Undersocket", socket);
 
@@ -135,6 +136,7 @@ const AddNewUserCard: React.FC<IUserCardProps> = ({ onSubmit, onCancel }) => {
   const [emailInvalid, setEmailInvalid] = useState(false);
   const [addUserSuccessCard, setAddUserSuccessCard] = useState(false);
   const [addUserErrorCard, setAddUserErrorCard] = useState(false);
+  const [emailExistsError, setEmailExistsError] = useState(false);
 
   useEffect(() => {
     socket.on("new-user", (data) => {
@@ -143,9 +145,12 @@ const AddNewUserCard: React.FC<IUserCardProps> = ({ onSubmit, onCancel }) => {
         setAddUserSuccessCard(true);
         //dispatch(addUser({ name, email, role }));
       }
-      if (data === 400) {
+      if (data === 500) {
         // dispatch(addStudentError());
         setAddUserErrorCard(true);
+      }
+      if (data === 401) {
+        setEmailExistsError(true);
       }
     });
   }, [dispatch]);
@@ -179,9 +184,13 @@ const AddNewUserCard: React.FC<IUserCardProps> = ({ onSubmit, onCancel }) => {
     if (name !== "" && email !== "" && validateEmail(email) === true) {
       console.log("email valid");
 
-      onSubmit(name, email, role);
-      onCancel();
+      //onSubmit(name, email, role);
+      // onCancel();
       dispatch(addUser({ name, email, role }));
+      if (emailExistsError === false) {
+        onSubmit(name, email, role);
+        onCancel();
+      }
     }
   };
 
@@ -210,12 +219,14 @@ const AddNewUserCard: React.FC<IUserCardProps> = ({ onSubmit, onCancel }) => {
           placeholder=""
           value={email}
           onChange={handleEmailChange}
-          error={emailMissing || emailInvalid}
+          error={emailMissing || emailInvalid || emailExistsError}
           helperText={
             emailMissing
               ? "Mandatory fields missing."
               : emailInvalid
               ? "Invalid email address."
+              : emailExistsError
+              ? "Email already exists."
               : ""
           }
         />
