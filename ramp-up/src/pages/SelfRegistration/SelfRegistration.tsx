@@ -104,6 +104,12 @@ export function SelfRegistration() {
          }
     });
 
+    socket.on("user-registered", (data: boolean) => {
+        if (data === true) {
+            setOpenDialog(true);
+        }
+    });
+
     const handleClickShowPassword = () => setShowPassword((show) => !show);
 
     const handleClickShowConfirmPassword = () => setShowConfirmPassword((show) => !show);

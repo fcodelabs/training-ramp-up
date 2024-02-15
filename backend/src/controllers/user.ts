@@ -14,7 +14,7 @@ export class UserController {
     try {
       const user = await UserService.selfRegister(req.body);
       res.status(201).json(user);
-      console.log(user);
+      this.io.emit("user-registered", true);
     } catch (error) {
       console.error(error);
       if (error.message === "User already exists") {
