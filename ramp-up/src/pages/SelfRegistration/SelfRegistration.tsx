@@ -95,9 +95,10 @@ export function SelfRegistration() {
 
 
     socket.on("user-exists", (data: boolean) => {
-         if (data) {
+         if (data === true) {
             setEmailExists(true);
          } else {
+            console.log("success")
             setEmailExists(false);
             setOpenDialog(true);
          }
@@ -116,7 +117,7 @@ export function SelfRegistration() {
         navigate("/");
     }
 
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
         setIsSubmit(true);
         if(validatePassword(password) && password === confirmPassword && name !== "" && isValidEmail(email) && !emailExists){
             try{
@@ -233,6 +234,7 @@ export function SelfRegistration() {
               </InputAdornment>
             }
             label="confirm password"
+            value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
           />
          {(password !== confirmPassword && confirmPassword !== "") && <FormHelperText>please make sure your passwords match</FormHelperText>}
