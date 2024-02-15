@@ -108,10 +108,8 @@ function AdminPage() {
       console.log("new-user adding", data);
       if (data === 201) {
         setAddUserSuccessCard(true);
-        //dispatch(addUser({ name, email, role }));
       }
       if (data === 500) {
-        // dispatch(addStudentError());
         setAddUserErrorCard(true);
       }
       if (data === 401) {

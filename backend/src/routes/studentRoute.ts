@@ -1,5 +1,5 @@
 import express, { Router } from "express";
-import StudentController from "../controllers/studentController";
+import { StudentController } from "../controllers/studentController";
 import { authenticateUser } from "../middlewares/expressValidator/authenticateUser";
 import { authAdmin } from "../middlewares/roleValidator/authAdmin";
 
@@ -18,7 +18,7 @@ function socketRouter(io: any): Router {
 
   router.post("/add", authenticateUser, authAdmin, async (req, res) => {
     try {
-      await StudentController.addNewStudentController(req, res).then(() => {
+      await StudentController.addNewStudent(req, res).then(() => {
         io.emit("new-student", res.statusCode);
       });
     } catch (error) {
@@ -28,7 +28,7 @@ function socketRouter(io: any): Router {
 
   router.get("/allStudents", async (req, res) => {
     try {
-      await StudentController.getAllStudentsController(req, res).then(() => {
+      await StudentController.getAllStudents(req, res).then(() => {
         io.emit("get-all-students", res.statusCode);
       });
     } catch (error) {
@@ -38,7 +38,7 @@ function socketRouter(io: any): Router {
 
   router.put("/edit/:id", authenticateUser, authAdmin, async (req, res) => {
     try {
-      await StudentController.editStudentController(req, res).then(() => {
+      await StudentController.editStudent(req, res).then(() => {
         io.emit("edit-student", res.statusCode);
       });
     } catch (error) {
@@ -52,7 +52,7 @@ function socketRouter(io: any): Router {
     authAdmin,
     async (req, res) => {
       try {
-        await StudentController.deleteStudentController(req, res).then(() => {
+        await StudentController.deleteStudent(req, res).then(() => {
           io.emit("delete-student", res.statusCode);
         });
       } catch (error) {

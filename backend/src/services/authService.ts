@@ -14,29 +14,6 @@ export class AuthService {
   private static readonly SECRET_KEY =
     "909ea6a39b4cf63377b5e5c4f8b8a76e52be06b0fc7af427ba38ce8a8c8a6458";
 
-  //   static async registerUser(email: string, password: string) {
-  //     try {
-  //       const userRepo = AppDataSource.getRepository(User);
-  //       const selectedUser = await userRepo.findOne({ where: { email } });
-
-  //       if (selectedUser) {
-  //         return { error: "Email already exists" };
-  //       }
-
-  //       const hashedPassword = await bcrypt.hash(password, 10);
-  //       const newUser = userRepo.create({
-  //         email,
-  //         password: hashedPassword,
-  //       });
-  //       await userRepo.save(newUser);
-
-  //       return { message: "User registered successfully" };
-  //     } catch (error) {
-  //       console.error(error);
-  //       return { error: "An error occurred while registering the user" };
-  //     }
-  //   }
-
   static async loginUser(email: string, password: string) {
     try {
       const userRepo = AppDataSource.getRepository(User);
@@ -72,9 +49,6 @@ export class AuthService {
       //   expiresIn: "1d",
       // });
 
-      //   // Set the token in a cookie
-      //   res.cookie('token', token, { httpOnly: true });
-
       return {
         token,
         selectedUser,
@@ -100,7 +74,7 @@ export class AuthService {
       const newUser = userRepo.create({
         name: username,
         email,
-        role: "Observer", // Admin#12
+        role: "Observer",
         password: hashedPassword,
       });
       await userRepo.save(newUser);
@@ -167,8 +141,6 @@ export class AuthService {
         },
       );
       console.log("token", token);
-
-      //  set the token in a cookie
 
       return {
         status: 200,

@@ -13,7 +13,6 @@ import {
 import styled from "@mui/system/styled";
 import "@fontsource/roboto";
 import Select from "@mui/material/Select";
-// import Mailchecker from "mailchecker";
 import { validateEmail } from "../../../utility/emailValidator";
 import { addUser } from "../../../redux/user/slice";
 import { useDispatch, useSelector } from "react-redux";

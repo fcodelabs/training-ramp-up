@@ -55,8 +55,6 @@ function* watchCreatePassword(action: PayloadAction<ICreatePassword>) {
       { password },
       { withCredentials: true }
     );
-    // Assuming create password is successful, update the state
-    //yield put(createPassword(action.payload));
   } catch (error: any) {
     console.error("Error creating password:", error);
   }
@@ -76,10 +74,6 @@ function* watchLoginUser(
     console.log("response", response);
     console.log("response.data", response.data.user);
     yield put(setCurrentUser(response.data.user));
-
-    // Handle response and update state if necessary
-    // For example, store user information in the state
-    // yield put(setLoggedInUser(response.data));
   } catch (error: any) {
     console.error("Error logging in:", error);
   }
@@ -107,10 +101,6 @@ function* watchRegisterUser(action: PayloadAction<IRegisterUser>) {
       { name, email, password },
       { withCredentials: true }
     );
-    // Assuming registration is successful, update the state
-    // For example, fetch updated user list and set it in the state
-    // const users = yield call(fetchUsers);
-    // yield put(setUsers(users));
   } catch (error: any) {
     console.error("Error registering user:", error);
   }

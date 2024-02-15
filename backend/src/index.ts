@@ -4,8 +4,8 @@ import express, { Express, Request, Response } from "express";
 import { DataSource } from "typeorm";
 
 import socketRouter from "./routes/studentRoute";
-import userRouter from "./routes/userRoute";
-import authRouter from "./routes/authRoute";
+import socketAuthRouter from "./routes/authRoute";
+import sockeUsertRouter from "./routes/userRoute";
 
 import dotenv from "dotenv";
 import { Student } from "./models/student";
@@ -14,14 +14,11 @@ import http from "http";
 import cors from "cors";
 import { User } from "./models/user";
 import cookieParser from "cookie-parser";
-import socketAuthRouter from "./routes/authRoute";
-import sockeUsertRouter from "./routes/userRoute";
-// import crypto from "crypto";
 
 dotenv.config();
 
 const app: express.Application = express();
-// app.use(cors({ origin: "http://localhost:3000", credentials: true }));
+
 app.use(
   cors({
     credentials: true,
@@ -35,8 +32,6 @@ app.use(
 );
 const port = process.env.PORT || 8000;
 const server = http.createServer(app);
-
-// const io = new Server(server);
 
 const io = new Server(server, {
   cors: {
@@ -77,12 +72,6 @@ console.log("process.env.DEPLOYED_URL", process.env.DEPLOYED_URL);
 AppDataSource.initialize()
   .then(() => {
     console.log("Database connected");
-    // app.listen(port, () => {
-    //   console.log(`Server running on port ${port}`);
-    // });
-    // server.listen(5000, () => {
-    //   console.log(`server is running on port ${port}`);
-    // });
   })
   .catch((err) => {
     console.log("Error while connecting to the database", err);
@@ -103,14 +92,3 @@ app.use("/student", socketRouter(io));
 server.listen(5000, () => {
   console.log(`server is running on port ${port}`);
 });
-
-// app.use((err: any, req: Request, res: Response) => {
-//   const errorStatus = err.status || 500;
-//   const errorMessage = err.message || "something went wrong!";
-//   return res.status(errorStatus).json({
-//       success: false,
-//       status: errorStatus,
-//       message: errorMessage,
-//       stack: err.stack,
-//   });
-// });

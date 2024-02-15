@@ -3,57 +3,60 @@ import { AuthService } from "../services/authService";
 
 export class AuthController {
   static async login(req: Request, res: Response) {
-    const { email, password } = req.body;
-    console.log("req.body login", req.body);
-    if (!email || !password) {
-      return res.status(400).json({ error: "Invalid request parameters" });
+    try {
+      const { email, password } = req.body;
+      console.log("req.body login", req.body);
+      if (!email || !password) {
+        return res.status(400).json({ error: "Invalid request parameters" });
+      }
+
+      const result = await AuthService.loginUser(email, password);
+
+      console.log("result", result);
+      if (result.error) {
+        return res.status(401).json({ error: result.error });
+      }
+
+      const token = result.token; // Declare the 'token' variable
+
+      res.cookie("token", token, {
+        httpOnly: true,
+        maxAge: 1000 * 60 * 15,
+        sameSite: "none",
+        secure: true,
+      });
+
+      res
+        .status(200)
+        .json({ message: result.message, user: result.selectedUser });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: "An error occurred while logging in" });
     }
-
-    const result = await AuthService.loginUser(email, password);
-
-    console.log("result", result);
-    if (result.error) {
-      return res.status(401).json({ error: result.error });
-    }
-
-    const token = result.token; // Declare the 'token' variable
-    //const refreshToken = result.refreshTokenJWT; // Declare the 'refreshToken' variable
-
-    // Set the token in a cookie
-    // res.cookie("token", token, { httpOnly: true });
-    res.cookie("token", token, {
-      httpOnly: true,
-      maxAge: 1000 * 60 * 15,
-      sameSite: "none",
-      secure: true,
-    });
-
-    // Set the refresh token in a cookie
-    // res.cookie("refreshToken", refreshToken, {
-    //   httpOnly: true,
-    //   maxAge: 86400000, // 24 hours in milliseconds
-    // });
-
-    res
-      .status(200)
-      .json({ message: result.message, user: result.selectedUser });
   }
 
   static async registerUser(req: Request, res: Response) {
-    const { name, email, password } = req.body;
-    console.log("req.body", req.body);
-    console.log("username", name);
-    if (!name || !email || !password) {
-      return res.status(400).json({ error: "Invalid request parameters" });
+    try {
+      const { name, email, password } = req.body;
+      console.log("req.body", req.body);
+      console.log("username", name);
+      if (!name || !email || !password) {
+        return res.status(400).json({ error: "Invalid request parameters" });
+      }
+
+      const result = await AuthService.registerUser(name, email, password);
+
+      if (result.error) {
+        return res.status(400).json({ error: result.error });
+      }
+
+      return res.status(201).json({ message: result.message });
+    } catch (error) {
+      console.error(error);
+      res
+        .status(500)
+        .json({ error: "An error occurred while registering user" });
     }
-
-    const result = await AuthService.registerUser(name, email, password);
-
-    if (result.error) {
-      return res.status(400).json({ error: result.error });
-    }
-
-    return res.status(201).json({ message: result.message });
   }
 
   static async logout(req: Request, res: Response) {
@@ -66,7 +69,6 @@ export class AuthController {
       } else {
         res.status(500).json({ error: "An error occurred while logging out" });
       }
-      //res.status(200).json({ message: "User logged out successfully" });
     } catch (error) {
       console.error(error);
       res.status(500).json({ error: "An error occurred while logging out" });

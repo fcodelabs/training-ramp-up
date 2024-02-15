@@ -17,7 +17,7 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import isPasswordValid from "../../utility/passwordValidator";
 import MessageCard from "../../components/Cards/MessageCard";
-//import Mailchecker from "mailchecker";
+
 import { validateEmail } from "../../utility/emailValidator";
 import { useDispatch, useSelector } from "react-redux";
 import { registerUser } from "../../redux/user/slice";

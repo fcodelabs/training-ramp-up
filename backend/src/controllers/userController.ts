@@ -26,16 +26,23 @@ export class UserController {
   }
 
   static async createPassword(req: Request, res: Response) {
-    const { password } = req.body;
-    const token = req.params.token;
-    console.log("req.body", req.body, "token", token);
-    const result = await UserService.createPassword(password, token);
-    console.log("result", result);
-    if (result) {
-      if (result.error) {
-        return res.status(400).json({ error: result.error });
+    try {
+      const { password } = req.body;
+      const token = req.params.token;
+      console.log("req.body", req.body, "token", token);
+      const result = await UserService.createPassword(password, token);
+      console.log("result", result);
+      if (result) {
+        if (result.error) {
+          return res.status(400).json({ error: result.error });
+        }
+        res.status(200).json({ message: result.message });
       }
-      res.status(200).json({ message: result.message });
+    } catch (error) {
+      console.error(error);
+      res
+        .status(500)
+        .json({ error: "An error occurred while creating password" });
     }
   }
 }

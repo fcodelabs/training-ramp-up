@@ -34,19 +34,7 @@ const LoadingSpinner: React.FC<LoadingSpinnerProps> = () => {
   useEffect(() => {
     updateExpireTime(); // Call updateExpireTime initially
 
-    // window.addEventListener("mousemove", updateExpireTime);
-    // window.addEventListener("mousedown", updateExpireTime);
-    // window.addEventListener("keypress", updateExpireTime);
-    // window.addEventListener("scroll", updateExpireTime);
-    // window.addEventListener("click", updateExpireTime);
-
-    return () => {
-      //   window.removeEventListener("mousemove", updateExpireTime);
-      //   window.removeEventListener("mousedown", updateExpireTime);
-      //   window.removeEventListener("keypress", updateExpireTime);
-      //   window.removeEventListener("scroll", updateExpireTime);
-      //   window.removeEventListener("click", updateExpireTime);
-    };
+    return () => {};
   }, []); // Empty array ensures that effect is only run on mount and unmount
   return (
     <div className="loading-spinner">

@@ -1,16 +1,6 @@
 import express, { Router } from "express";
 import { AuthController } from "../controllers/authController";
 
-// const authRouter = express.Router();
-// console.log("hello in auth router");
-
-// // Create a new student
-// authRouter.post("/login", AuthController.login);
-// authRouter.post("/register", AuthController.registerUser);
-// authRouter.post("/logout", AuthController.logout);
-
-// export default authRouter;
-
 function socketAuthRouter(io: any): Router {
   const router = Router();
 

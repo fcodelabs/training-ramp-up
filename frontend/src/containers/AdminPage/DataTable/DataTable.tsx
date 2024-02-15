@@ -191,15 +191,6 @@ function EditToolbar(props: IEditToolbarProps) {
   const handleClick = () => {
     const id = generateId();
     console.log("id", id);
-    // Add the new row only once
-    // setRows((oldRows) => [
-    //   { id, name: "", address: "", mobile: "", isNew: true },
-    //   ...oldRows,
-    // ]);
-    // setRows((currentRows) => [
-    //   { id, name: "", address: "", mobile: "", isNew: true },
-    //   ...currentRows,
-    // ]);
 
     dispatch(
       updateStudent([
@@ -247,9 +238,6 @@ export default function DataTable({
   const [rows, setRows] = useState(temp);
 
   console.log("temp", temp);
-  // const initialRows: GridRowsProp = useSelector(
-  //   (state: RootState) => state.student.students
-  // );
 
   const loadState: boolean = useSelector(
     (state: RootState) => state.student.isLoading
@@ -436,17 +424,6 @@ export default function DataTable({
     setMode("Add");
     setShowSuccessModal(true);
     setAttemptedToAdd(false); // Reset attemptedToAdd after adding
-    // dispatch(
-    //   addStudent({
-    //     id: generateId(),
-    //     name: editedFields.name,
-    //     gender: editedFields.gender,
-    //     address: editedFields.address,
-    //     mobile: editedFields.mobile,
-    //     dob: editedFields.dob.toISOString(),
-    //     age: ageValues[id],
-    //   })
-    // );
 
     dispatch(
       addStudentSuccess({
@@ -508,17 +485,7 @@ export default function DataTable({
       mobile: "",
       dob: dayjs(new Date()),
     });
-    // dispatch(
-    //   addStudent({
-    //     id: generateId(),
-    //     name: editedFields.name,
-    //     gender: editedFields.gender,
-    //     address: editedFields.address,
-    //     mobile: editedFields.mobile,
-    //     dob: editedFields.dob.toISOString(),
-    //     age: ageValues[id],
-    //   })
-    // );
+
     dispatch(
       editStudentSuccess({
         id: id,
@@ -668,19 +635,6 @@ export default function DataTable({
     );
     return { ...updatedRow, isNew: false } as IStudent;
   };
-
-  // const processRowUpdate = (newRow: GridRowModel) => {
-  //   const { id, isNew, ...updatedRow } = newRow as IStudent;
-
-  //   // Exclude the most recently added row from the oldRows
-  //   setRows((oldRows) =>
-  //     oldRows
-  //       .filter((row) => row.id !== id) // Exclude the row with the corresponding id
-  //       .map((row) => (row.id === id ? { ...row, ...updatedRow } : row))
-  //   );
-
-  //   return { ...updatedRow, isNew: false } as IStudent;
-  // };
 
   const handleRowModesModelChange = (newRowModesModel: GridRowModesModel) => {
     setRowModesModel(newRowModesModel);
@@ -871,10 +825,6 @@ export default function DataTable({
         const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
           const newValue = event.target.value;
           console.log("newValue", newValue);
-          // Check if the entered phone number is valid
-          //const isValidPhoneNumber = validatePhoneNumber(newValue);
-
-          // Update the cell value if the phone number is valid
 
           params.api.setEditCellValue({
             id: params.id,
