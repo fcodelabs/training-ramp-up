@@ -30,8 +30,8 @@ const app: Express = express();
 export const server = createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: process.env.CLIENT_URL,
-    methods: ["GET", "POST"],
+    origin: [process.env.CLIENT_URL, "https://ramp-up-812d5.web.app"],
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
   },
 });
 app.use(bodyParser.json()); // To recognize the req obj as a json obj
