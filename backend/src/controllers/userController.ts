@@ -10,19 +10,18 @@ export class UserController {
       return res.status(400).json({ error: "Invalid request parameters" });
     }
 
-    const result = await UserService.createUser(name, email, role);
+    try {
+      const result = await UserService.createUser(name, email, role);
 
-    if (result) {
-      if (result.error == "Email already exists") {
-        console.log(
-          "result.error create user",
-          result.error,
-          "res.status",
-          res.status,
-        );
+      if (result && result.error === "Email already exists") {
+        console.log("result.error create user", result.error);
         return res.status(401).json({ error: result.error });
       }
-      res.status(201).json({ message: result.message });
+
+      return res.status(201).json({ message: result?.message });
+    } catch (error) {
+      console.error("Error creating user:", error);
+      return res.status(500).json({ error: "Internal server error" });
     }
   }
 
