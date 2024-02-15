@@ -144,7 +144,6 @@ export const getVerifiedUser = async (req: Request, res: Response): Promise<void
   }
 };
 
-
 export const registerUser = async (req: Request, res: Response): Promise<void> => {
   const { email, password, name, role, active } = req.body;
   try {
@@ -179,4 +178,3 @@ export const logout = async (req: Request, res: Response): Promise<void> => {
     res.status(500).json({ message: 'Error logging out' });
   }
 };
-
