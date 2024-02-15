@@ -93,6 +93,16 @@ export function SelfRegistration() {
     
     const socket = React.useContext(SocketContext);
 
+    socket?.on("user-registered",(success) =>{
+        if(success){
+            setOpenDialog(true);
+            console.log(openDialog)
+        }
+        else{
+            setOpenDialog(false);
+        }
+    })
+
 
     socket.on("user-exists", (data: boolean) => {
          if (data === true) {
@@ -104,11 +114,6 @@ export function SelfRegistration() {
          }
     });
 
-    socket.on("user-registered", (data: boolean) => {
-        if (data === true) {
-            setOpenDialog(true);
-        }
-    });
 
     const handleClickShowPassword = () => setShowPassword((show) => !show);
 
