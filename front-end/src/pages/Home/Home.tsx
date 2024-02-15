@@ -39,7 +39,7 @@ const Home = () => {
 
   const {  } = useIdleTimer({
     onIdle,
-    timeout: 1000 * 60 * 10,
+    timeout: 1000 * 60 * 15,
   });
 
   return (
