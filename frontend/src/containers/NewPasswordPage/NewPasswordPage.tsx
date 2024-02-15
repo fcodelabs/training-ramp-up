@@ -114,7 +114,7 @@ const NewPasswordPage = () => {
         setSuccessMessageCardModal(true);
         console.log("successCardModel", successMessageCardModal);
         //dispatch(addUser({ name, email, role }));
-        navigate("/");
+        navigate("/login");
       }
       if (data === 400) {
         console.log("error password socekrt");

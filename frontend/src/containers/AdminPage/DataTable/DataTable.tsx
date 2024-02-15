@@ -1189,7 +1189,12 @@ export default function DataTable({
     if (role === "Admin") {
       return columns;
     } else {
-      return columns.filter((column) => column.field !== "action");
+      return columns
+        .map((column) => ({
+          ...column,
+          editable: false,
+        }))
+        .filter((column) => column.field !== "actions");
     }
   };
 

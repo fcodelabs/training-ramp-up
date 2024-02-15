@@ -13,14 +13,14 @@ export class UserController {
     const result = await UserService.createUser(name, email, role);
 
     if (result) {
-      if (result.error) {
+      if (result.error == "Email already exists") {
         console.log(
           "result.error create user",
           result.error,
           "res.status",
           res.status,
         );
-        return res.status(400).json({ error: result.error });
+        return res.status(401).json({ error: result.error });
       }
       res.status(201).json({ message: result.message });
     }
