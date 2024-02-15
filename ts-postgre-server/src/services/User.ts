@@ -54,7 +54,7 @@ export const createUserService = async (userData: any) => {
     from: "nethkavindya@gmail.com",
     to: email,
     subject: "Account Registration - Password Creation Link ",
-    text: `Dear Name, 
+    text: `Dear ${name}, 
     You have been added as an Admin to our system. Please click the following link to create your password and access your account: 
 
     https://ramp-up-99ab1.web.app/create-password/${token}

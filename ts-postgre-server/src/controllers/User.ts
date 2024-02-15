@@ -31,7 +31,12 @@ export const registerUser = async (req: Request, res: Response) => {
     try {
         const newUser = await userService.registerUserService(req.body);
 
-        return res.status(200).json(newUser);
+        //return res.status(200).json(newUser);
+        return res.status(201).json({
+          success: true,
+          data: newUser,
+          message: 'User created successfully',
+        });
         
     } catch (error) {
         return res.status(500).json({ error: error.message || 'Internal Server Error' });

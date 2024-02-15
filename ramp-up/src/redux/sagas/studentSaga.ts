@@ -28,7 +28,7 @@ function* getAllStudentsWorker(): Generator<any, any, any> {
   try {
     const { data } = yield call(axios.get,
        //"http://localhost:4000/api/students");
-       `${process.env.DPY_URL}/api/students`);
+       'https://training-ramp-up-new.onrender.com/api/students/');
     yield put(updateStudent(data));
     yield put(fetchAllStudentsSuccess);
   } catch (error: any) {
@@ -41,7 +41,7 @@ function* addNewStudentWorker(action: PayloadAction<GridValidRowModel>) {
   try {
     yield call(axios.post,
        //"http://localhost:4000/api/students", newStudent);
-       `${process.env.DPY_URL}/api/students`, newStudent);
+       `https://training-ramp-up-new.onrender.com/api/students`, newStudent);
 
     yield put(addStudentSuccess(action.payload));
     yield put(fetchAllStudentsSuccess());
@@ -55,7 +55,7 @@ function* updateStudentWorker(action: PayloadAction<GridValidRowModel>) {
   try {
     yield call(
       axios.put,
-      `${process.env.DPY_URL}/api/students/${action.payload.id}`,
+      `https://training-ramp-up-new.onrender.com/api/students/${action.payload.id}`,
       //`http://localhost:4000/api/students/${action.payload.id}`,
       updatedStudent
     );
@@ -69,7 +69,7 @@ function* updateStudentWorker(action: PayloadAction<GridValidRowModel>) {
 function* deleteStudentWorker(action: PayloadAction<GridRowId>) {
   try {
     yield call(axios.delete, 
-      `${process.env.DPY_URL}/api/students/${action.payload}`);
+      `https://training-ramp-up-new.onrender.com/api/students/${action.payload}`);
      // `http://localhost:4000/api/students/${action.payload}`);
     yield put(removeStudentSuccess);
   } catch (error: any) {

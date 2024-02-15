@@ -64,31 +64,44 @@ function InputForm({ openModal, setOpenModal }: ModalProps) {
   }
 
   const handleSubmit = () => {
-    let isValid = true
+    let isValid = true;
     if (!name) {
       setNameError('Name is required')
-      isValid = false
+      isValid = false;
     }
     if (!email) {
       setEmailError('Email is required')
-      isValid = false
+      isValid = false;
     }
     if (!role) {
       setRoleError('Role is required')
-      isValid = false
+      isValid = false;
     }
 
     if (isValid) {
       console.log(FormData)
-      axios.post('http://localhost:4000/api/users/', FormData)
-      .then(({data})=>{
-          setOpenModal(false)
-          setOpenSuccessModal(true) // Open success modal on successful submission
-          console.log("success",data)
+      axios.post('https://training-ramp-up-new.onrender.com/api/users/', FormData)
+      // .then(({data})=>{
+      //     setOpenModal(false)
+      //     setOpenSuccessModal(true) // Open success modal on successful submission
+      //     console.log("success",data)
+      // })
+      // .catch((err) => {
+      //     console.log(err)
+      // })
+      .then((response) => {
+        const { data } = response;
+        if (data.success) {
+          setOpenModal(false);
+          setOpenSuccessModal(true); // Open success modal on successful submission
+          console.log("success", data.message);
+        } else {
+          console.log(data.message);
+        }
       })
       .catch((err) => {
-          console.log(err)
-      })
+        console.log(err);
+      });
     }
   }
 
