@@ -27,30 +27,19 @@ const Home = () => {
     console.log(role);
   }
 
-  // useEffect(() => {
-  //   if (user === null) {
-  //     navigate("/login");
-  //   }
-  // }, [user]);
-
-  if (user !== null) {
-    return (
-      <Box>
-        <TopBar />
-        <StyledCard sx={{ maxWidth: role === "Admin" ? "1152px" : "955px" }}>
-          {role === "Admin" && (
-            <AddNewBox sx={{ backgroundColor: "rgba(33, 150, 243, 0.08)" }}>
-              <AddNewUserDialog />
-            </AddNewBox>
-          )}
-          <DataTable role={role} />
-        </StyledCard>
-      </Box>
-    );
-  } else {
-    navigate("/login");
-    return <></>;
-  }
+ return (
+   <Box>
+     <TopBar />
+     <StyledCard sx={{ maxWidth: role === "Admin" ? "1152px" : "955px" }}>
+       {role === "Admin" && (
+         <AddNewBox sx={{ backgroundColor: "rgba(33, 150, 243, 0.08)" }}>
+           <AddNewUserDialog />
+         </AddNewBox>
+       )}
+       <DataTable role={role} />
+     </StyledCard>
+   </Box>
+ );
 };
 
 export default Home;

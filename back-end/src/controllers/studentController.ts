@@ -83,7 +83,7 @@ export const update = async (request: Request, response: Response): Promise<void
 
   try {
     const studentRepository = dataSource.getRepository(Student);
-    const newStudent = Object.assign(new Student(), {
+    const updatedStudent = Object.assign(new Student(), {
       id,
       name,
       gender,
@@ -92,8 +92,8 @@ export const update = async (request: Request, response: Response): Promise<void
       dateofbirth,
       age
     });
-    await studentRepository.save(newStudent);
-    response.status(201).json(newStudent);
+    await studentRepository.save(updatedStudent);
+    response.status(201).json(updatedStudent);
   } catch (error) {
     console.log('Error updating student:', error);
     response.status(500).json({ message: 'Error updating student' });

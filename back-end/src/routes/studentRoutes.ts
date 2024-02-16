@@ -1,11 +1,13 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import { all, one, save, remove, update } from '../controllers/studentController';
 import { Router, type Request, type Response } from 'express';
+import { verifyToken } from '../middleware/verifyToken';
+import { verifyAdmin } from '../middleware/verifyAdmin';
 
 export const studentRoutes = (io: any, sockets: Map<string, string>): Router => {
   const router = Router();
 
-  router.get('/students', async (request: Request, response: Response) => {
+  router.get('/students', verifyToken, async (request: Request, response: Response) => {
     try {
       await all(request, response).then(() => {
         io.emit('fetchAll', response.statusCode);
@@ -15,7 +17,7 @@ export const studentRoutes = (io: any, sockets: Map<string, string>): Router => 
     }
   });
 
-  router.get('/students/:id', async (request: Request, response: Response) => {
+  router.get('/students/:id', verifyToken, async (request: Request, response: Response) => {
     try {
       await one(request, response).then(() => {
         io.emit('fetchOne', response.statusCode);
@@ -25,7 +27,7 @@ export const studentRoutes = (io: any, sockets: Map<string, string>): Router => 
     }
   });
 
-  router.post('/students', async (request: Request, response: Response) => {
+  router.post('/students', verifyToken, verifyAdmin, async (request: Request, response: Response) => {
     try {
       await save(request, response).then(() => {
         io.emit('add', response.statusCode);
@@ -35,7 +37,7 @@ export const studentRoutes = (io: any, sockets: Map<string, string>): Router => 
     }
   });
 
-  router.delete('/students/:id', async (request: Request, response: Response) => {
+  router.delete('/students/:id', verifyToken, verifyAdmin, async (request: Request, response: Response) => {
     try {
       await remove(request, response).then(() => {
         io.emit('remove', response.statusCode);
@@ -45,7 +47,7 @@ export const studentRoutes = (io: any, sockets: Map<string, string>): Router => 
     }
   });
 
-  router.put('/students', async (request: Request, response: Response) => {
+  router.put('/students', verifyToken, verifyAdmin, async (request: Request, response: Response) => {
     try {
       await update(request, response).then(() => {
         io.emit('edit', response.statusCode);

@@ -8,16 +8,19 @@ import {
   registeredEmailCheck,
   createPassword,
   login,
-  verifyToken,
+  getVerifiedUser,
+  // verifyToken,
   refreshtoken,
   registerUser
 } from '../controllers/userController';
 import { Router, type Request, type Response } from 'express';
+import { verifyToken } from '../middleware/verifyToken';
+import { verifyAdmin } from '../middleware/verifyAdmin';
 
 export const userRoutes = (io: any, sockets: Map<string, string>): Router => {
   const router = Router();
 
-  router.post('/users/adduser', async (request: Request, response: Response) => {
+  router.post('/users/adduser', verifyToken, verifyAdmin, async (request: Request, response: Response) => {
     try {
       await createUser(request, response).then(() => {
         io.emit('addUser', response.statusCode);
@@ -57,9 +60,9 @@ export const userRoutes = (io: any, sockets: Map<string, string>): Router => {
     }
   });
 
-  router.get('/users/verify', async (request: Request, response: Response) => {
+  router.get('/users/verify', verifyToken, async (request: Request, response: Response) => {
     try {
-      await verifyToken(request, response).then(() => {});
+      await getVerifiedUser(request, response).then(() => {});
     } catch (error) {
       console.log(error);
     }
@@ -85,7 +88,7 @@ export const userRoutes = (io: any, sockets: Map<string, string>): Router => {
     }
   });
 
-  router.get('/users', async (request: Request, response: Response) => {
+  router.get('/users', verifyToken, async (request: Request, response: Response) => {
     try {
       await allUsers(request, response).then(() => {
         io.emit('getUsers', response.statusCode);
@@ -95,7 +98,7 @@ export const userRoutes = (io: any, sockets: Map<string, string>): Router => {
     }
   });
 
-  router.get('/users/:id', async (request: Request, response: Response) => {
+  router.get('/users/:id', verifyToken, async (request: Request, response: Response) => {
     try {
       await oneUser(request, response).then(() => {
         io.emit('getOneUser', response.statusCode);
@@ -105,7 +108,7 @@ export const userRoutes = (io: any, sockets: Map<string, string>): Router => {
     }
   });
 
-  router.delete('/users/:id', async (request: Request, response: Response) => {
+  router.delete('/users/:id', verifyToken, verifyAdmin, async (request: Request, response: Response) => {
     try {
       await removeUser(request, response).then(() => {
         io.emit('removeUser', response.statusCode);
@@ -115,7 +118,7 @@ export const userRoutes = (io: any, sockets: Map<string, string>): Router => {
     }
   });
 
-  router.put('/users/:id', async (request: Request, response: Response) => {
+  router.put('/users/:id', verifyToken, verifyAdmin, async (request: Request, response: Response) => {
     try {
       await updateUser(request, response).then(() => {
         io.emit('editUser', response.statusCode);

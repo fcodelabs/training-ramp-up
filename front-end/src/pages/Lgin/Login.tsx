@@ -49,12 +49,13 @@ const Login = () => {
     } else {
       socket.emit("login", email);
       dispatch(login({ email, password }));
+      
     }
   };
 
   useEffect(() => {
     if (user !== null) {
-      navigate("/home");
+      navigate("/");
     }
   }, [user, navigate]);
 
