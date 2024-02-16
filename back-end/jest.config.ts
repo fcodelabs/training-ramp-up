@@ -6,8 +6,3 @@ const config: Config.InitialOptions = {
 };
 
 export default config;
-
-// module.exports = {
-//   preset: 'ts-jest',
-//   testEnvironment: 'node'
-// };

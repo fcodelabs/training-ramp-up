@@ -2,11 +2,14 @@
 import 'reflect-metadata';
 import * as bodyParser from 'body-parser';
 import { studentRoutes } from './routes/studentRoutes';
+import { userRoutes } from './routes/userRoutes';
 import cors from 'cors';
 import http from 'http';
 import { Server } from 'socket.io';
 import express from 'express';
+import dotenv from 'dotenv';
 
+dotenv.config();
 const app = express();
 app.use(cors());
 app.use(bodyParser.json());
@@ -22,8 +25,11 @@ io.on('connection', (socket: any) => {
   socket.emit('newSocket', socket.id);
 });
 
-app.use(studentRoutes(io));
+app.use(studentRoutes(io), userRoutes(io));
 
 export { app };
 
-server.listen(3000);
+const port = process.env.PORT;
+server.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
+});

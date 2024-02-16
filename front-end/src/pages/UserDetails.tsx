@@ -1,28 +1,25 @@
 import TopBar from "../components/TopBar/TopBar";
 import DataTable from "../components/DataTable/DataTable";
-import { Card } from "@mui/material";
-import { styled } from "@mui/system";
-
-const StyledCard = styled(Card)(({ theme }) => ({
-  width: "calc(100% - 40px)",
-  maxWidth: "1152px",
-  margin: "0 auto",
-  "& .MuiTypography-root": {
-    padding: "16px",
-    fontSize: "24px",
-    fontWeight: 400,
-    color: "#000",
-  },
-}));
+import { Box } from "@mui/material";
+import {
+  AddNewBox,
+  StyledCard,
+} from "../components/StyledComponents/StyledComponents";
+import AddNewUserDialog from "../components/AddNewUserDialog/AddNewUserDialog";
 
 const UserDetails = () => {
   return (
-    <div>
+    <Box>
       <TopBar />
+
       <StyledCard>
+        <AddNewBox sx={{ backgroundColor: "rgba(33, 150, 243, 0.08)" }}>
+          <AddNewUserDialog/>
+        </AddNewBox>
+
         <DataTable />
       </StyledCard>
-    </div>
+    </Box>
   );
 };
 

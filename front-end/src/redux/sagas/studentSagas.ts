@@ -6,7 +6,7 @@ import {
   removeStudent,
   replaceStudents,
   fetchStudents,
-} from "../studentsSlice/stdentsSlice";
+} from "../slices/stdentsSlice";
 import { GridRowId, GridValidRowModel } from "@mui/x-data-grid";
 import { PayloadAction } from "@reduxjs/toolkit";
 

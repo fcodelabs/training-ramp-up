@@ -1,7 +1,6 @@
 import * as React from "react";
 import { useEffect } from "react";
 import {
-  styled,
   Button,
   Box,
   TextField,
@@ -9,6 +8,11 @@ import {
   MenuItem,
   Typography,
 } from "@mui/material";
+import {
+  StyledDataGrid,
+  AddNewBox,
+  StyledButton,
+} from "../StyledComponents/StyledComponents";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
@@ -21,12 +25,11 @@ import {
   addStudent,
   editStudent,
   removeStudent,
-} from "../../redux/studentsSlice/stdentsSlice";
+} from "../../redux/slices/stdentsSlice";
 import {
   GridRowsProp,
   GridRowModesModel,
   GridRowModes,
-  DataGrid,
   GridColDef,
   GridActionsCellItem,
   GridEventListener,
@@ -38,53 +41,6 @@ import {
 import { calculateAge, validateMobileNumber } from "../../utility";
 import AlertDialog from "../AlertDialog/AlertDialog";
 import { io } from "socket.io-client";
-
-const StyledDataGrid = styled(DataGrid)(({ theme }) => ({
-  borderRadius: "0",
-  "& .MuiDataGrid-columnHeader": {
-    backgroundColor: "rgba(33, 150, 243, 0.08)",
-  },
-  "& .MuiDataGrid-colomnHeader-Cell": {
-    padding: "6px 16px",
-  },
-  "& .MuiDataGrid-cell": {
-    padding: "6px 16px",
-  },
-  "& .MuiDataGrid-row.Mui-selected": {
-    boxShadow: "none",
-  },
-  "& .MuiDataGrid-coloumnHeaderTitleContainer": {
-    justifyContent: "space-between",
-  },
-  "& .MuiDataGrid-columnHeader .MuiDataGrid-iconButtonContainer": {
-    width: "auto",
-    visibility: "visible",
-  },
-  "& .MuiDataGrid-columnHeader:not(.MuiDataGrid-columnHeader--sorted) .MuiDataGrid-sortIcon":
-    {
-      opacity: 0.5,
-    },
-}));
-
-const AddNewBox = styled(Box)(({ theme }) => ({
-  height: "36px",
-  display: "flex",
-  alignItems: "center",
-  padding: "16px",
-  position: "relative",
-  "& .MuiButton-root": {
-    position: "absolute",
-    right: "0",
-    margin: "16px",
-    backgroundColor: "#2196F3",
-  },
-}));
-
-const StyledButton = styled(Button)(({ theme }) => ({
-  borderRadius: "4px",
-  border: "1px solid",
-  padding: "4px 10px",
-}));
 
 interface EditToolbarProps {
   lastId: number;
@@ -132,11 +88,11 @@ function EditToolbar(props: EditToolbarProps) {
   return (
     <>
       <Box>
-        <Typography>User Details</Typography>
+        <Typography>Student Details</Typography>
       </Box>
       <AddNewBox>
         <Button variant="contained" onClick={handleAddNewClick}>
-          ADD NEW
+          ADD NEW STUDENT
         </Button>
       </AddNewBox>
     </>
@@ -150,7 +106,9 @@ export default function DataTable() {
   }, [dispatch]);
   const socket = io(`${process.env.REACT_APP_API_URL}/`, {});
   const currentStudents = useSelector((state: RootState) => state.students);
-  const [rowModesModel, setRowModesModel] = React.useState<GridRowModesModel>({});
+  const [rowModesModel, setRowModesModel] = React.useState<GridRowModesModel>(
+    {}
+  );
   const [numbervalidateError, setNumberValidateError] = React.useState(false);
   const [agevalidateError, setAgeValidateError] = React.useState(false);
   const [keepEditingIsOpen, setKeepEditingIsOpen] = React.useState(false);
@@ -292,6 +250,7 @@ export default function DataTable() {
     setBirthdayIsEmpty(false);
     if (name === "") {
       setNameIsEmpty(true);
+      console.log("nameIsEmpty:", nameIsEmpty);
     }
     if (gender === "") {
       setGenderIsEmpty(true);
