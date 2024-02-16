@@ -1,15 +1,10 @@
-import { Stack } from "@mui/material";
-
-import Header from "./components/Header/Header";
-import DataGridTable from "./components/DataGridTable/DataGridTable";
+import HomePage from "./containers/HomePage/HomePage";
+// import LoginPage from "./containers/LoginPage/LoginPage";
+// import PasswordCreationPage from "./containers/PasswordCreationPage/PasswordCreationPage";
+// import ObserversRegisterPage from "./containers/ObserversRegisterPage/ObserversRegisterPage";
 
 function App() {
-  return (
-    <Stack spacing={20} justifyContent="center" alignItems="center">
-      <Header />
-      <DataGridTable />
-    </Stack>
-  );
+  return <HomePage />;
 }
 
 export default App;

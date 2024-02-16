@@ -56,7 +56,9 @@ import { validatePhoneNumber } from "../../utility/validatePhoneNumber";
 import { dataGridStyles } from "../../styles/dataGridStyles";
 import PopupMessage from "../PopupMessage/PopupMessage";
 import io from "socket.io-client";
-const socket = io("https://ramp-up-backend.onrender.com");
+import AddNewUserForm from "../AddNewUserForm/AddNewUserForm";
+// const socket = io("https://ramp-up-backend.onrender.com");
+const socket = io("http://localhost:5000");
 
 let idValue = 0;
 
@@ -74,6 +76,7 @@ interface IEditToolbarProps {
   setRowModesModel: (
     newModel: (oldModel: GridRowModesModel) => GridRowModesModel
   ) => void;
+  setOpenAddNewUser: (value: boolean) => void;
 }
 
 function EditToolbar(props: IEditToolbarProps) {
@@ -84,7 +87,11 @@ function EditToolbar(props: IEditToolbarProps) {
   const currentRows = useSelector((state: RootState) => state.student.students);
   const dispatch = useDispatch();
   const isMobile = useMediaQuery("(max-width: 400px)");
-  const { setRowModesModel } = props;
+  const { setRowModesModel, setOpenAddNewUser } = props;
+
+  const handleOpenAddNewUser = () => {
+    setOpenAddNewUser(true);
+  };
 
   const handleClick = () => {
     const id = uniqueIdGenerator();
@@ -110,14 +117,42 @@ function EditToolbar(props: IEditToolbarProps) {
   };
 
   return (
-    <GridToolbarContainer>
-      <Typography
-        padding="12px"
-        sx={{ fontSize: "24px", fontWeight: 400, fontFamily: "Roboto" }}
-      >
-        User Details
-      </Typography>
-
+    <GridToolbarContainer sx={{ padding: "0px" }}>
+      <Grid sx={{ width: "100%" }}>
+        <Grid
+          item
+          sx={{
+            backgroundColor: "rgba(33, 150, 243, 0.4)",
+            borderRadius: "4px 4px 0px 0px",
+          }}
+        >
+          <Grid
+            container={isMobile ? false : true}
+            justifyContent="flex-end"
+            alignItems="flex-end"
+            padding="12px"
+          >
+            <Grid item>
+              <Button
+                size="small"
+                variant="contained"
+                onClick={handleOpenAddNewUser}
+                sx={{ backgroundColor: "rgba(33, 150, 243, 1)" }}
+              >
+                Add New User
+              </Button>
+            </Grid>
+          </Grid>
+        </Grid>
+        <Grid item>
+          <Typography
+            padding="12px"
+            sx={{ fontSize: "24px", fontWeight: 400, fontFamily: "Roboto" }}
+          >
+            User Details
+          </Typography>
+        </Grid>
+      </Grid>
       <Grid
         container={isMobile ? false : true}
         justifyContent="flex-end"
@@ -170,6 +205,9 @@ const DataGridTable = () => {
   const [deletePopup, setDeletePopup] = useState(false);
   const [currentRowId, setCurrentRowId] = useState<GridRowId | null>(null);
   const [rowModesModel, setRowModesModel] = useState<GridRowModesModel>({});
+  const [openAddNewuser, setOpenAddNewUser] = useState(false);
+  const [emailSentSuccesfully, setEmailSentSuccesfully] = useState(false);
+  const [emailSendFailed, setEmailSendFailed] = useState(false);
 
   useEffect(() => {
     dispatch(fetchAllStudents());
@@ -204,6 +242,13 @@ const DataGridTable = () => {
       }
       if (data === 500) {
         dispatch(removeStudentError());
+      }
+    });
+    socket.on("send_email", (data) => {
+      if (data === 200) {
+        setEmailSentSuccesfully(true);
+      } else if (data === 400 || data === 500) {
+        setEmailSendFailed(true);
       }
     });
   }, []);
@@ -632,10 +677,20 @@ const DataGridTable = () => {
       headerName: "Action",
       width: 215,
       cellClassName: "actions",
+
       getActions: ({ id }) => {
         const isInEditMode = rowModesModel[id]?.mode === GridRowModes.Edit;
         const editedRow = initialRows.find((row) => row.id === id);
-
+        if (tableState) {
+          return [
+            <Box>
+              <Stack direction="row" spacing={1} paddingY="10px">
+                <Skeleton animation="wave" height={30} width={50} />
+                <Skeleton animation="wave" height={30} width={60} />
+              </Stack>
+            </Box>,
+          ];
+        }
         if (isInEditMode) {
           if (editedRow!.isNew) {
             return [
@@ -743,7 +798,7 @@ const DataGridTable = () => {
               toolbar: EditToolbar,
             }}
             slotProps={{
-              toolbar: { setRowModesModel },
+              toolbar: { setRowModesModel, setOpenAddNewUser },
             }}
             sx={dataGridStyles.gridStyles}
             initialState={{
@@ -858,6 +913,40 @@ const DataGridTable = () => {
           }}
           firstButtonName="Dismiss"
           secondButtonName="Confirm"
+        />
+      )}
+      {openAddNewuser && (
+        <AddNewUserForm
+          openPopup={openAddNewuser}
+          closePopup={() => {
+            setOpenAddNewUser(false);
+          }}
+        />
+      )}
+      {emailSentSuccesfully && (
+        <PopupMessage
+          open={emailSentSuccesfully}
+          title={
+            "A password creation link has been sent to the provided email address."
+          }
+          handleClickSecondButton={() => {
+            setEmailSentSuccesfully(false);
+            setOpenAddNewUser(false);
+          }}
+          secondButtonName="Ok"
+        />
+      )}
+      {emailSendFailed && (
+        <PopupMessage
+          open={emailSendFailed}
+          title={
+            "Failed to send the password creation link. Please try again later."
+          }
+          handleClickSecondButton={() => {
+            setEmailSendFailed(false);
+            setOpenAddNewUser(false);
+          }}
+          secondButtonName="Try again later"
         />
       )}
     </>
