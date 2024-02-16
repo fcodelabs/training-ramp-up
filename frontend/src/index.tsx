@@ -1,18 +1,47 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
-import { Provider } from 'react-redux';
-import store from './redux/store';
+import React from "react";
+import ReactDOM from "react-dom/client";
+import "./index.css";
+import App from "./App";
+import reportWebVitals from "./reportWebVitals";
+import { Provider } from "react-redux";
+import { store } from "./redux/store";
+import { RouterProvider, createBrowserRouter } from "react-router-dom";
+import AdminPage from "./containers/AdminPage/AdminPage";
+import LoginPage from "./containers/LoginPage/LoginPage";
+import RegisterPage from "./containers/RegisterPage/RegisterPage";
+import NewPasswordPage from "./containers/NewPasswordPage/NewPasswordPage";
+import ProtectedRoute from "./routes/ProtectedRoutes";
+
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: (
+      <ProtectedRoute>
+        <AdminPage />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/login",
+    element: <LoginPage />,
+  },
+  {
+    path: "/register",
+    element: <RegisterPage />,
+  },
+  {
+    path: "/create-password/:token",
+    element: <NewPasswordPage />,
+  },
+]);
 
 const root = ReactDOM.createRoot(
-  document.getElementById('root') as HTMLElement
+  document.getElementById("root") as HTMLElement
 );
 root.render(
   <React.StrictMode>
     <Provider store={store}>
-      <App />
+      <RouterProvider router={router} />
     </Provider>
   </React.StrictMode>
 );
