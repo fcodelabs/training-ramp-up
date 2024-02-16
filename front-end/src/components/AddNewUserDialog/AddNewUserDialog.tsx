@@ -150,7 +150,8 @@ export default function AddNewUserDialog() {
               variant="outlined"
               label="Email"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e) => {setEmail(e.target.value);
+              dispatch(registedEmailCheck(e.target.value));}}
               error={emailIsEmpty || isEmailInvalid || isEmailRegistered}
               helperText={
                 emailIsEmpty

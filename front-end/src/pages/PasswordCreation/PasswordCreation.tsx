@@ -11,10 +11,16 @@ import {
   Typography,
 } from "@mui/material";
 import { validatePassword } from "../../utility/index";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import AlertDialog from "../../components/AlertDialog/AlertDialog";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { createPassword } from "../../redux/slices/userSlice";
+import { io } from "socket.io-client";
 
 const PasswordCreation = () => {
+  const socket = io(`${process.env.REACT_APP_API_URL}/`, {});
+  const dispatch = useDispatch();
   const [password, setPassword] = useState("");
   const [passwordError, setPasswordError] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -22,9 +28,20 @@ const PasswordCreation = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [confirmPasswordError, setConfirmPasswordError] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [confirmPasswordHelperText, setConfirmPasswordHelperText] =
-    useState("");
+  const [confirmPasswordHelperText, setConfirmPasswordHelperText] = useState("");
   const [isSuccessOpen, setIsSuccessOpen] = useState(false);
+  const URLParams = new URLSearchParams(useLocation().search);
+  const token = URLParams.get("token");
+  const navigate = useNavigate();
+
+
+  useEffect(() => {
+    socket.on("createPassword", (message) => {
+      if(message === 201){
+        setIsSuccessOpen(true);
+      }
+    });
+  }, [socket]);
 
   const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setPasswordError(false);
@@ -73,7 +90,7 @@ const PasswordCreation = () => {
       !passwordError &&
       !confirmPasswordError
     ) {
-      setIsSuccessOpen(true);
+      dispatch(createPassword({ token: token as string, password: password }));
     }
   };
 
@@ -219,8 +236,10 @@ const PasswordCreation = () => {
         isOpen={isSuccessOpen}
         handleClickSecondButton={() => {
           setIsSuccessOpen(false);
+          navigate("/login");
           setPassword("");
           setConfirmPassword("");
+          
         }}
       />
     </>

@@ -8,7 +8,7 @@ export class User {
   @Column({ type: 'varchar' })
   name!: string;
 
-  @Column({ type: 'varchar' })
+  @Column({ type: 'varchar', unique: true })
   email!: string;
 
   @Column({ type: 'varchar', length: 10 })
@@ -19,4 +19,7 @@ export class User {
 
   @Column({ type: 'bool', default: false })
   active!: boolean;
+
+  @Column({ type: 'varchar', default: false })
+  token!: string;
 }

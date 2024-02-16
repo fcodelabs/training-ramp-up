@@ -5,7 +5,8 @@ import {
   oneUser,
   removeUser,
   updateUser,
-  registeredEmailCheck
+  registeredEmailCheck,
+  createPassword
 } from '../controllers/userController';
 import { Router, type Request, type Response } from 'express';
 
@@ -25,6 +26,16 @@ export const userRoutes = (io: any): Router => {
   router.get('/users/check/:email', async (request: Request, response: Response) => {
     try {
       await registeredEmailCheck(request, response).then(() => {});
+    } catch (error) {
+      console.log(error);
+    }
+  });
+
+  router.post('/users/createpassword', async (request: Request, response: Response) => {
+    try {
+      await createPassword(request, response).then(() => {
+        io.emit('createPassword', response.statusCode);
+      });
     } catch (error) {
       console.log(error);
     }

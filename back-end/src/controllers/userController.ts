@@ -4,18 +4,84 @@ import dataSource from '../config/dataSource';
 import { User } from '../models/user';
 import transporter from '../config/mailer';
 import type nodemailer from 'nodemailer';
+import * as jwt from 'jsonwebtoken';
+import * as bcrypt from 'bcrypt';
 
 export const createUser = async (request: Request, response: Response): Promise<void> => {
   try {
+    const { name, email, role } = request.body;
     const userRepository = dataSource.getRepository(User);
-    const newUser = userRepository.create(request.body);
-    const email = request.body.email;
-    await sendPaasswordCreationEmail(email);
-    await userRepository.save(newUser);
-    response.status(201).json(newUser);
+    const existingUser = await userRepository.findOne({ where: { email } });
+    if (existingUser !== null) {
+      response.status(400).json({ message: 'Email already registered' });
+    } else {
+      const token = jwt.sign({ email, role }, process.env.JWT_SECRET ?? '', { expiresIn: '1h' });
+      const newUser = userRepository.create({ name, email, role, token });
+      await sendPaasswordCreationEmail(email, token);
+      await userRepository.save(newUser);
+      response.status(201).json(newUser);
+    }
   } catch (error) {
     console.log('Error saving user:', error);
     response.status(500).json({ message: 'Error saving user' });
+  }
+};
+
+export async function registeredEmailCheck(req: Request, res: Response): Promise<void> {
+  try {
+    const userRepository = dataSource.getRepository(User);
+    const email = req.params.email;
+    const existingUser = await userRepository.findOne({ where: { email } });
+    if (existingUser === null) {
+      res.status(200).json({ registeredEmail: false });
+    } else {
+      res.status(200).json({ registeredEmail: true });
+    }
+  } catch (error) {
+    console.error('Error checking email:', error);
+    res.status(500).json({ message: 'Error checking email registration' });
+  }
+}
+
+async function sendPaasswordCreationEmail(email: string, token: string): Promise<void> {
+  const frontendUrl = process.env.FRONTEND_URL;
+  const mailOptions: nodemailer.SendMailOptions = {
+    from: 'rampup@rampup.com',
+    to: email,
+    subject: 'Create your password',
+    html: `<p>Hi to finish setting up your Ramp-Up acoount, click the link to create a password</p>
+    <a href="${frontendUrl}/password-creation?token=${token}">Click here</a>`
+  };
+
+  try {
+    await transporter.sendMail(mailOptions);
+  } catch (error) {
+    console.error('Error sending email:', error);
+    throw error;
+  }
+}
+
+export const createPassword = async (req: Request, res: Response): Promise<void> => {
+  const { token, password } = req.body;
+  try {
+    const decodedToken: any = jwt.verify(token, process.env.JWT_SECRET ?? '');
+    const email = decodedToken.email;
+    console.log(email);
+    const userRepository = dataSource.getRepository(User);
+    const user = await userRepository.findOne({ where: { email, token } });
+    if (user === null) {
+      res.status(404).json({ message: 'User not found' });
+    } else {
+      const salt = await bcrypt.genSalt(10);
+      user.password = await bcrypt.hash(password, salt);
+      user.active = true;
+      user.token = '';
+      await userRepository.save(user);
+      res.status(201).json({ message: 'Password created' });
+    }
+  } catch (error) {
+    console.error('Error creating password:', error);
+    res.status(500).json({ message: 'Error creating password' });
   }
 };
 
@@ -45,22 +111,6 @@ export const oneUser = async (request: Request, response: Response): Promise<voi
     response.status(500).json({ message: 'Error retrieving user dtails' });
   }
 };
-
-export async function registeredEmailCheck(req: Request, res: Response): Promise<void> {
-  try {
-    const userRepository = dataSource.getRepository(User);
-    const email = req.params.email;
-    const existingUser = await userRepository.findOne({ where: { email } });
-    if (existingUser === null) {
-      res.status(200).json({ registeredEmail: false });
-    } else {
-      res.status(200).json({ registeredEmail: true });
-    }
-  } catch (error) {
-    console.error('Error checking email:', error);
-    res.status(500).json({ message: 'Error checking email registration' });
-  }
-}
 
 export const removeUser = async (request: Request, response: Response): Promise<void> => {
   const id = parseInt(request.params.id);
@@ -107,19 +157,3 @@ export const updateUser = async (request: Request, response: Response): Promise<
     response.status(500).json({ message: 'Error updating user details' });
   }
 };
-
-async function sendPaasswordCreationEmail(email: string): Promise<void> {
-  const mailOptions: nodemailer.SendMailOptions = {
-    from: 'rampup@rampup.com',
-    to: email,
-    subject: 'Create your password',
-    text: `Hi to finish setting up your Ramp-Up acoount, click the link to create a password`
-  };
-
-  try {
-    await transporter.sendMail(mailOptions);
-  } catch (error) {
-    console.error('Error sending email:', error);
-    throw error;
-  }
-}

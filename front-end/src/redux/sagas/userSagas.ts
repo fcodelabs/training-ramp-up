@@ -9,6 +9,7 @@ import {
   addUser,
   registedEmailCheck,
   setRegistedEmail,
+  createPassword,
 } from "../slices/userSlice";
 
 function* addUserSaga(
@@ -29,7 +30,7 @@ function* registedEmailCheckSaga(
   action: PayloadAction<string>
 ): Generator<any, any, any> {
   try {
-    const { data: response, status: s } = yield call(
+    const { data: response } = yield call(
       axios.get<any>,
       `${process.env.REACT_APP_API_URL}/users/check/${action.payload}`
     );
@@ -39,7 +40,23 @@ function* registedEmailCheckSaga(
   }
 }
 
+function* createPasswordSaga(
+  action: PayloadAction<{ token: string; password: string }>
+): Generator<any, any, any> {
+  console.log(action.payload, "createPasswordSaga");
+  try {
+    yield call(
+      axios.post<any>,
+      `${process.env.REACT_APP_API_URL}/users/createpassword`,
+      action.payload
+    );
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 export default function* watchUserSaga() {
   yield takeLatest(addUser.type, addUserSaga);
   yield takeLatest(registedEmailCheck.type, registedEmailCheckSaga);
+  yield takeLatest(createPassword.type, createPasswordSaga);
 }
