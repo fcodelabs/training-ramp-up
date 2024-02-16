@@ -9,6 +9,14 @@ interface UserState {
   registedEmail: boolean;
 }
 
+export interface IregisterUser {
+  email: string;
+  password: string;
+  name: string;
+  role: string;
+  active: boolean;
+}
+
 const userSlice = createSlice({
   name: "user",
   initialState: {
@@ -19,17 +27,23 @@ const userSlice = createSlice({
     addUser: (state, action: PayloadAction<newUser>) => {
       // add user
     },
-  
+
     registedEmailCheck: (state, action: PayloadAction<string>) => {
       // check if email is registered
     },
     setRegistedEmail: (state, action: PayloadAction<boolean>) => {
       state.registedEmail = action.payload;
     },
-    createPassword: (state, action: PayloadAction<{ token: string; password: string }>) => {
+    createPassword: (
+      state,
+      action: PayloadAction<{ token: string; password: string }>
+    ) => {
       // create password
     },
-    login: (state, action: PayloadAction<{ email: string; password: string }>) => {
+    login: (
+      state,
+      action: PayloadAction<{ email: string; password: string }>
+    ) => {
       // login
     },
     setUserDetails: (state, action: PayloadAction<User | null>) => {
@@ -37,6 +51,9 @@ const userSlice = createSlice({
     },
     verifyToken: (state) => {
       // verify token
+    },
+    registerUser: (state, action: PayloadAction<IregisterUser>) => {
+      // register user
     },
   },
 });
@@ -49,5 +66,6 @@ export const {
   createPassword,
   login,
   verifyToken,
+  registerUser,
 } = userSlice.actions;
 export default userSlice.reducer;

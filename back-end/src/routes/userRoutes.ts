@@ -8,7 +8,8 @@ import {
   registeredEmailCheck,
   createPassword,
   login,
-  verifyToken
+  verifyToken,
+  registerUser
 } from '../controllers/userController';
 import { Router, type Request, type Response } from 'express';
 
@@ -48,7 +49,6 @@ export const userRoutes = (io: any, sockets: Map<string, string>): Router => {
       await login(request, response).then(() => {
         const email = request.body.email as string;
         const socketId = sockets.get(email);
-        console.log(socketId);
         io.to(socketId).emit('loginStatus', response.statusCode);
       });
     } catch (error) {
@@ -59,6 +59,18 @@ export const userRoutes = (io: any, sockets: Map<string, string>): Router => {
   router.get('/users/verify', async (request: Request, response: Response) => {
     try {
       await verifyToken(request, response).then(() => {});
+    } catch (error) {
+      console.log(error);
+    }
+  });
+
+  router.post('/users/registerUser', async (request: Request, response: Response) => {
+    try {
+      await registerUser(request, response).then(() => {
+        const email = request.body.email as string;
+        const socketId = sockets.get(email);
+        io.to(socketId).emit('registerUser', response.statusCode);
+      });
     } catch (error) {
       console.log(error);
     }

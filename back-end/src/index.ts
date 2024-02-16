@@ -32,6 +32,9 @@ io.on('connection', (socket: any) => {
   socket.on('logout', (email: string) => {
     sockets.delete(email);
   });
+  socket.on('register', (email: string) => {
+    sockets.set(email, socket.id);
+  });
 });
 
 app.use(studentRoutes(io, sockets), userRoutes(io, sockets));

@@ -143,6 +143,25 @@ export const verifyToken = async (req: Request, res: Response): Promise<void> =>
   }
 };
 
+export const registerUser = async (req: Request, res: Response): Promise<void> => {
+  const { email, password, name, role, active } = req.body;
+  try {
+    const userRepository = dataSource.getRepository(User);
+    const existingUser = await userRepository.findOne({ where: { email } });
+    if (existingUser !== null) {
+      res.status(400).json({ message: 'Email already registered' });
+    } else {
+      const hashedPassword = await bcrypt.hash(password, 10);
+      const newUser = userRepository.create({ email, password: hashedPassword, name, role, active });
+      await userRepository.save(newUser);
+      res.status(201).json(newUser);
+    }
+  } catch (error) {
+    console.error('Error registering user:', error);
+    res.status(500).json({ message: 'Error registering user' });
+  }
+};
+
 export const oneUser = async (request: Request, response: Response): Promise<void> => {
   const id = parseInt(request.params.id);
   try {

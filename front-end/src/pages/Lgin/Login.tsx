@@ -116,7 +116,7 @@ const Login = () => {
             <FormControl fullWidth>
               <InputLabel
                 size="small"
-                htmlFor="outlined-confirm-password"
+                htmlFor="outlined-password"
                 color={isEmailEmpty ? "error" : "primary"}
               >
                 Email
