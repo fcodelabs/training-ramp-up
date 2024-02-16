@@ -8,6 +8,6 @@
     "sourceMap": true,
     "types": ["node"]
   },
-  "include": ["src/**/*.ts", "src/routes/unprotected.tsx", "src/utility/redirectLogged.tsx"],
+  "include": ["src/**/*.ts", "src/routes/unprotected.tsx", "src/utility/redirectLogged.tsx", "src/axios.tsx"],
   "exclude": ["node_modules"],
 }

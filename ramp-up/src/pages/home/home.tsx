@@ -122,7 +122,7 @@ function Home() {
   }
 
   const updateTime = () => {
-    const expireTime = Date.now() + 10000;
+    const expireTime = Date.now() + 900000;
     const expireTimeString = new Date(expireTime).toISOString();
     localStorage.setItem("expireTime", expireTimeString);
   }
@@ -130,7 +130,7 @@ function Home() {
   useEffect(() => {
     const interval = setInterval(()=>{
       checkInactivity();
-    },1000);
+    },60000);
 
     return () => {clearInterval(interval)}
   })

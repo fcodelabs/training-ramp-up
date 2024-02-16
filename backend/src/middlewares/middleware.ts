@@ -6,7 +6,6 @@ export function authenticate() {
   return function (req: Request, res: Response, next: NextFunction) {
     try {
       const token = req.cookies.jwt;
-      console.log(token);
       if (!token) {
         return res.status(401).json({ message: "Token not found" });
       }
