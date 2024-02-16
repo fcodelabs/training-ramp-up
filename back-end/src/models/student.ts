@@ -18,7 +18,7 @@ export class Student {
   mobileNumber!: string;
 
   @Column({ type: 'date' })
-  birthday!: string;
+  dateofbirth!: string;
 
   @Column()
   age!: number;

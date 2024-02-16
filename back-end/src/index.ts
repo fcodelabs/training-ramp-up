@@ -3,11 +3,13 @@ import 'reflect-metadata';
 import dataSource from './config/dataSource';
 import * as bodyParser from 'body-parser';
 import { studentRoutes } from './routes/studentRoutes';
+import cors from 'cors';
 
 dataSource
   .initialize()
   .then(async () => {
     const app = express();
+    app.use(cors());
     app.use(bodyParser.json());
 
     studentRoutes.forEach((route) => {
