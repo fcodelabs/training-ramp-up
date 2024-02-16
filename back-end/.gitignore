@@ -1,0 +1,16 @@
+# Node.js
+node_modules/
+
+# TypeScript
+*.tsbuildinfo
+
+# IDE/Editor specific
+.vscode/
+.idea/
+
+# Logs
+logs/
+*.log
+
+# Build output
+dist/
