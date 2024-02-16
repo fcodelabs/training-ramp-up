@@ -1,7 +1,7 @@
 import { Entity, BaseEntity, Column, PrimaryColumn } from 'typeorm';
 
 @Entity('student')
-export class student extends BaseEntity {
+export class Student extends BaseEntity {
   @PrimaryColumn({
     unique: true
   })
