@@ -68,6 +68,10 @@ export function Login() {
     const dispatch = useDispatch(); 
     const isAuthorized = useSelector((state: RootState) => state.user.userState.isAuthorized);
 
+    const [password, setPassword] = React.useState("");
+    const [email, setEmail] = React.useState("");
+    const [isLogin, setIsLogin] = React.useState(false);
+    const [isInValidLogin, setIsInValidLogin] = React.useState(false);
 
     useEffect(()=>{
         if(isAuthorized){
@@ -78,9 +82,6 @@ export function Login() {
     useEffect(()=> {
         dispatch(authCheckRequest());
     },[dispatch])
-
-    
-    const user = useSelector((state: any) => state.user.user);
 
     // useEffect(( )=> {
     //     if(!user){
@@ -104,11 +105,6 @@ export function Login() {
         }
     })
 
-    const [password, setPassword] = React.useState("");
-    const [email, setEmail] = React.useState("");
-    const [isLogin, setIsLogin] = React.useState(false);
-    const [isInValidLogin, setIsInValidLogin] = React.useState(false);
-    
     const handleLogin = () => {
         setIsLogin(true);
         if(email !== "" && password !== ""){
