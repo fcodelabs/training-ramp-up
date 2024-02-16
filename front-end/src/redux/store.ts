@@ -1,7 +1,7 @@
-import { configureStore } from '@reduxjs/toolkit';
-import studentReducer from './studentsSlice/stdentsSlice';
+import { configureStore } from "@reduxjs/toolkit";
+import studentReducer from "./studentsSlice/stdentsSlice";
 import createSagaMiddleware from "redux-saga";
-import watchStudentSage from './sagas/studentSagas';
+import watchStudentSage from "./sagas/studentSagas";
 
 const sagaMiddleware = createSagaMiddleware();
 const middleware: any[] = [sagaMiddleware];

@@ -19,4 +19,12 @@ const AppDataSource: DataSourceOptions = {
 
 const dataSource = new DataSource(AppDataSource);
 
+dataSource
+  .initialize()
+  .then(() => {
+    console.log('connected..');
+  })
+  .catch((error) => {
+    console.error(error, 'unable to connect..');
+  });
 export default dataSource;
