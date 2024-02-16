@@ -33,7 +33,10 @@ const validateUser = (user: GridRowModel, requiredFields: string[]) => {
 }
 
 const validateName = (name: Date | string | number) => {
-    if (name === '') {
+    if (/\d/.test(String(name))) {
+        return false
+    }
+    if (name === '' ) {
         return false
     }
     return true

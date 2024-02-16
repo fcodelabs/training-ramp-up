@@ -16,42 +16,42 @@ type initialDataType = {
     isLoading: boolean
     rows: User[]
 }
-
 const initialState: initialDataType = {
     isLoading: false,
     rows: [
         {
             id: 1,
             uid: 1,
-            name: 'thambara',
+            name: 'UserA',
             gender: 'Male',
-            address: 'kk,ksksd,sdsa',
-            mobile: '0716272786',
+            address: '123 Main St, Cityville, Country',
+            mobile: '0123456789',
             birthday: randomCreatedDate(),
-            age: 20,
+            age: 25,
         },
         {
             id: 2,
             uid: 2,
-            name: 'sahass',
-            gender: 'Male',
-            address: 'kk,ksksd,sdsa',
-            mobile: '0716272787',
+            name: 'UserB',
+            gender: 'Female',
+            address: '456 Oak St, Townsville, Country',
+            mobile: '0987654321',
             birthday: randomCreatedDate(),
             age: 30,
         },
         {
             id: 3,
             uid: 3,
-            name: 'sahasaka',
-            gender: 'Male',
-            address: 'kksassaf,ksksd,sdsa',
-            mobile: '0716272787',
+            name: 'UserC',
+            gender: 'Other',
+            address: '789 Pine St, Villageton, Country',
+            mobile: '0555123456',
             birthday: randomCreatedDate(),
-            age: 30,
+            age: 22,
         },
     ],
 }
+
 
 const userSlice = createSlice({
     name: 'user',
@@ -69,11 +69,6 @@ const userSlice = createSlice({
         discardUser: (state, action: PayloadAction<number>) => {
             state.rows = state.rows.filter(
                 (user) => user.uid !== action.payload
-            )
-        },
-        saveUser: (state, action: PayloadAction<User>) => {
-            state.rows = state.rows.map((user) =>
-                user.uid === action.payload.uid ? action.payload : user
             )
         },
         updateUser: (
@@ -94,7 +89,6 @@ export const {
     fetchUsersFailure,
     addUser,
     discardUser,
-    saveUser,
     updateUser,
 } = userSlice.actions
 
