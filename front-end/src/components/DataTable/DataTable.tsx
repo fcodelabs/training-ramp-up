@@ -50,6 +50,14 @@ const StyledDataGrid = styled(DataGrid)(({ theme }) => ({
   "& .MuiDataGrid-coloumnHeaderTitleContainer": {
     justifyContent: "space-between",
   },
+  "& .MuiDataGrid-columnHeader .MuiDataGrid-iconButtonContainer": {
+    width: "auto",
+    visibility: "visible",
+  },
+  "& .MuiDataGrid-columnHeader:not(.MuiDataGrid-columnHeader--sorted) .MuiDataGrid-sortIcon":
+    {
+      opacity: 0.5,
+    },
 }));
 
 const AddNewBox = styled(Box)(({ theme }) => ({
@@ -458,6 +466,7 @@ export default function DataTable() {
               <DatePicker
                 value={dateValue}
                 defaultValue={dayjs()}
+                disableFuture={true}
                 onChange={(newValue) => {
                   params.api.setEditCellValue({
                     id: params.id,
@@ -537,7 +546,7 @@ export default function DataTable() {
     {
       field: "actions",
       type: "actions",
-      headerName: "Actions",
+      headerName: "Action",
       width: 195,
       cellClassName: "actions",
       getActions: ({ id }) => {
