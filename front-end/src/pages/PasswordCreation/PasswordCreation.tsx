@@ -16,10 +16,9 @@ import AlertDialog from "../../components/AlertDialog/AlertDialog";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { createPassword } from "../../redux/slices/userSlice";
-import { io } from "socket.io-client";
+import { socket } from "../../index";
 
 const PasswordCreation = () => {
-  const socket = io(`${process.env.REACT_APP_API_URL}/`, {});
   const dispatch = useDispatch();
   const [password, setPassword] = useState("");
   const [passwordError, setPasswordError] = useState(false);
@@ -30,6 +29,7 @@ const PasswordCreation = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [confirmPasswordHelperText, setConfirmPasswordHelperText] = useState("");
   const [isSuccessOpen, setIsSuccessOpen] = useState(false);
+  const [isLinkExpiredOpen, setIsLinkExpiredOpen] = useState(false);
   const URLParams = new URLSearchParams(useLocation().search);
   const token = URLParams.get("token");
   const navigate = useNavigate();
@@ -39,6 +39,8 @@ const PasswordCreation = () => {
     socket.on("createPassword", (message) => {
       if(message === 201){
         setIsSuccessOpen(true);
+      }else{
+        setIsLinkExpiredOpen(true);
       }
     });
   }, [socket]);
@@ -240,6 +242,15 @@ const PasswordCreation = () => {
           setPassword("");
           setConfirmPassword("");
           
+        }}
+      />
+      <AlertDialog
+        title="The link has expired."
+        buttonText2="OK"
+        isOpen={isLinkExpiredOpen}
+        handleClickSecondButton={() => {
+          setIsLinkExpiredOpen(false);
+          navigate("/login");
         }}
       />
     </>

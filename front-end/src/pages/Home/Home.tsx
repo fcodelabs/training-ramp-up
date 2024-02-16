@@ -6,21 +6,43 @@ import {
   StyledCard,
 } from "../../components/StyledComponents/StyledComponents";
 import AddNewUserDialog from "../../components/AddNewUserDialog/AddNewUserDialog";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { verifyToken } from "../../redux/slices/userSlice";
+import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const Home = () => {
-  return (
-    <Box>
-      <TopBar />
 
-      <StyledCard>
-        <AddNewBox sx={{ backgroundColor: "rgba(33, 150, 243, 0.08)" }}>
-          <AddNewUserDialog />
-        </AddNewBox>
-
-        <DataTable />
-      </StyledCard>
-    </Box>
-  );
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(verifyToken());
+  }, []);
+  const navigate = useNavigate();
+  const user = useSelector((state: any) => state.user.user);
+  useEffect(() => {
+    if (user === null) {
+      navigate("/login");
+    }
+  }, []);
+  
+    if (user !== null) {
+      return (
+        <Box>
+          <TopBar />
+          <StyledCard>
+            <AddNewBox>
+              <AddNewUserDialog />
+            </AddNewBox>
+            <DataTable />
+          </StyledCard>
+        </Box>
+      );
+    } else {
+      return <></>;
+    }
+  
+   
 };
 
 export default Home;

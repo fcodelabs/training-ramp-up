@@ -10,7 +10,11 @@ import {
   registedEmailCheck,
   setRegistedEmail,
   createPassword,
+  login,
+  setUserDetails,
+  verifyToken,
 } from "../slices/userSlice";
+axios.defaults.withCredentials = true;
 
 function* addUserSaga(
   action: PayloadAction<newUser>
@@ -55,8 +59,37 @@ function* createPasswordSaga(
   }
 }
 
+function* loginSaga(
+  action: PayloadAction<{ email: string; password: string }>
+): Generator<any, any, any> {
+  try {
+    const { data: response } = yield call(
+      axios.post<any>,
+      `${process.env.REACT_APP_API_URL}/users/login`,
+      action.payload
+    );
+    yield put(setUserDetails(response.userDetails));
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+function* verifyTokenSaga(): Generator<any, any, any> {
+  try {
+    const { data: response } = yield call(
+      axios.get<any>,
+      `${process.env.REACT_APP_API_URL}/users/verify`
+    );
+    yield put(setUserDetails(response.userDetails));
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 export default function* watchUserSaga() {
   yield takeLatest(addUser.type, addUserSaga);
   yield takeLatest(registedEmailCheck.type, registedEmailCheckSaga);
   yield takeLatest(createPassword.type, createPasswordSaga);
+  yield takeLatest(login.type, loginSaga);
+  yield takeLatest(verifyToken.type, verifyTokenSaga);
 }

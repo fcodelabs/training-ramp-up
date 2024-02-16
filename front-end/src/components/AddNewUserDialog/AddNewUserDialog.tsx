@@ -16,7 +16,7 @@ import { validateEmail } from "../../utility/index";
 import AlertDialog from "../AlertDialog/AlertDialog";
 import { addUser } from "../../redux/slices/userSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { io } from "socket.io-client";
+import { socket } from "../../index";
 import { useEffect } from "react";
 import { registedEmailCheck } from "../../redux/slices/userSlice";
 import { RootState } from "../../redux/store";
@@ -37,7 +37,6 @@ export interface newUser {
 
 export default function AddNewUserDialog() {
   const dispatch = useDispatch();
-  const socket = io(`${process.env.REACT_APP_API_URL}/`, {});
   const [open, setOpen] = React.useState(false);
   const [nameIsEmpty, setNameIsEmpty] = React.useState(false);
   const [emailIsEmpty, setEmailIsEmpty] = React.useState(false);
@@ -52,6 +51,7 @@ export default function AddNewUserDialog() {
   const registeredEmail = useSelector(
     (state: RootState) => state.user.registedEmail
   );
+  const user = useSelector((state: RootState) => state.user.user);
 
   useEffect(() => {
     socket.on("addUser", (message) => {
@@ -64,6 +64,7 @@ export default function AddNewUserDialog() {
   }, []);
 
   const handleClickOpen = () => {
+    console.log(user);
     setOpen(true);
   };
   const handleClose = () => {

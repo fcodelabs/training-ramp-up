@@ -40,7 +40,7 @@ import {
 } from "@mui/x-data-grid";
 import { calculateAge, validateMobileNumber } from "../../utility";
 import AlertDialog from "../AlertDialog/AlertDialog";
-import { io } from "socket.io-client";
+import { socket } from "../../index";
 
 interface EditToolbarProps {
   lastId: number;
@@ -104,7 +104,6 @@ export default function DataTable() {
   useEffect(() => {
     dispatch(fetchStudents());
   }, [dispatch]);
-  const socket = io(`${process.env.REACT_APP_API_URL}/`, {});
   const currentStudents = useSelector((state: RootState) => state.students);
   const [rowModesModel, setRowModesModel] = React.useState<GridRowModesModel>(
     {}

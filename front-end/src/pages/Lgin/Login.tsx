@@ -10,10 +10,14 @@ import {
   OutlinedInput,
   Typography,
 } from "@mui/material";
-import { useState,  } from "react";
+import { useEffect, useState,  } from "react";
 import { useNavigate } from "react-router-dom";
+import { login } from "../../redux/slices/userSlice";
+import { useDispatch, useSelector } from "react-redux"; 
+import { socket } from "../../index";
 
 const Login = () => {
+  const dispatch = useDispatch();
   const [password, setPassword] = useState("");
   const [passwordError, setPasswordError] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -22,6 +26,7 @@ const Login = () => {
   const [isEmailEmpty, setIsEmailEmpty] = useState(false);
   const [emailHelperText, setEmailHelperText] = useState("");
   const navigate = useNavigate();
+  const user = useSelector((state: any) => state.user.user);
 
   const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setPasswordError(false);
@@ -43,22 +48,23 @@ const Login = () => {
     if (email === "") {
       setIsEmailEmpty(true);
       setEmailHelperText("Mandotary fields missing");
-    }
-    if (password !== "correct password") {
-      setPasswordError(true);
-      setPasswordHelperText("Invalid email or password");
-    }
-
-    if (
-      email !== "" &&
-      password === "correct password" &&
-      !passwordError &&
-      !isEmailEmpty
-    ) {
-        console.log("Logged in");
-        navigate("/home");
+    }else{
+      socket.emit("login", email);
+      dispatch(login({email, password}));
     }
   };
+
+  useEffect(() => {
+    socket.on("loginStatus", (data: any) => {
+      if (data === 200) {
+        console.log(user);
+        navigate("/home");
+      } else {
+        setPasswordError(true);
+        setPasswordHelperText("Invalid email or password");
+      }
+    });
+  }, [navigate]);
 
   return (
     <>

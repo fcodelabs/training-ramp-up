@@ -2,7 +2,7 @@
 import { all, one, save, remove, update } from '../controllers/studentController';
 import { Router, type Request, type Response } from 'express';
 
-export const studentRoutes = (io: any): Router => {
+export const studentRoutes = (io: any, sockets: Map<string, string>): Router => {
   const router = Router();
 
   router.get('/students', async (request: Request, response: Response) => {

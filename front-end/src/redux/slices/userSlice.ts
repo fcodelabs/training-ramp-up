@@ -29,22 +29,25 @@ const userSlice = createSlice({
     createPassword: (state, action: PayloadAction<{ token: string; password: string }>) => {
       // create password
     },
-    fetchUserDetails: (state, action: PayloadAction<string>) => {
-      // fetch user details
+    login: (state, action: PayloadAction<{ email: string; password: string }>) => {
+      // login
     },
-    setUserDetails: (state: UserState, action: PayloadAction<User | null>) => {
+    setUserDetails: (state, action: PayloadAction<User | null>) => {
       state.user = action.payload;
     },
-
+    verifyToken: (state) => {
+      // verify token
+    },
   },
 });
 
 export const {
-  fetchUserDetails,
   setUserDetails,
   addUser,
   registedEmailCheck,
   setRegistedEmail,
   createPassword,
+  login,
+  verifyToken,
 } = userSlice.actions;
 export default userSlice.reducer;

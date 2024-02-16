@@ -6,11 +6,13 @@ import {
   removeUser,
   updateUser,
   registeredEmailCheck,
-  createPassword
+  createPassword,
+  login,
+  verifyToken
 } from '../controllers/userController';
 import { Router, type Request, type Response } from 'express';
 
-export const userRoutes = (io: any): Router => {
+export const userRoutes = (io: any, sockets: Map<string, string>): Router => {
   const router = Router();
 
   router.post('/users/adduser', async (request: Request, response: Response) => {
@@ -36,6 +38,27 @@ export const userRoutes = (io: any): Router => {
       await createPassword(request, response).then(() => {
         io.emit('createPassword', response.statusCode);
       });
+    } catch (error) {
+      console.log(error);
+    }
+  });
+
+  router.post('/users/login', async (request: Request, response: Response) => {
+    try {
+      await login(request, response).then(() => {
+        const email = request.body.email as string;
+        const socketId = sockets.get(email);
+        console.log(socketId);
+        io.to(socketId).emit('loginStatus', response.statusCode);
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  });
+
+  router.get('/users/verify', async (request: Request, response: Response) => {
+    try {
+      await verifyToken(request, response).then(() => {});
     } catch (error) {
       console.log(error);
     }
