@@ -19,9 +19,18 @@ export class AuthController {
 
       const token = result.token; // Declare the 'token' variable
 
+      const refreshToken = result.refreshToken; // Declare the 'refreshToken' variable
+
       res.cookie("token", token, {
         httpOnly: true,
-        maxAge: 1000 * 60 * 15,
+        maxAge: 1000 * 15,
+        sameSite: "none",
+        secure: true,
+      });
+
+      res.cookie("refreshToken", refreshToken, {
+        httpOnly: true,
+        maxAge: 1000 * 60 * 60 * 24 * 30,
         sameSite: "none",
         secure: true,
       });
@@ -67,7 +76,7 @@ export class AuthController {
       if (result === 200) {
         res.status(200).json({ message: "User logged out successfully" });
       } else {
-        res.status(500).json({ error: "An error occurred while logging out" });
+        res.status(400).json({ error: "User logging out failed" });
       }
     } catch (error) {
       console.error(error);
@@ -104,7 +113,7 @@ export class AuthController {
 
   static async refreshToken(req: Request, res: Response) {
     try {
-      console.log("refreshToken controller");
+      console.log("refreshToken controller here i come");
       const refreshToken = req.cookies.refreshToken;
       const result = await AuthService.refreshToken(refreshToken);
       if (result.status === 200) {

@@ -44,12 +44,15 @@ export class UserService {
       });
 
       // Send email with signup link
-      await sendEmail(
+      const emailSuccess = await sendEmail(
         newUser.name,
         newUser.email,
         newUser.role,
         this.passwordCreationLink + newUser.token,
       );
+      if (!emailSuccess) {
+        return { error: "An error occurred while sending the email" };
+      }
       await userRepo.save(newUser);
 
       return { message: "User created successfully" };

@@ -43,14 +43,19 @@ export class AuthService {
         },
       );
       console.log("token authservice", token);
-      //const refreshToken = crypto.randomBytes(64).toString("hex");
+      const refreshToken = crypto.randomBytes(64).toString("hex");
 
-      // const refreshTokenJWT = jwt.sign({ refreshToken }, this.SECRET_KEY, {
-      //   expiresIn: "1d",
-      // });
+      const refreshTokenJWT = jwt.sign(
+        { refreshToken, email: selectedUser.email, role: selectedUser.role },
+        this.SECRET_KEY,
+        {
+          expiresIn: "1d",
+        },
+      );
 
       return {
         token,
+        refreshToken: refreshTokenJWT,
         selectedUser,
         message: "User logged in successfully",
       };
@@ -97,7 +102,7 @@ export class AuthService {
       return 200;
     } catch (error) {
       console.error(error);
-      return 500;
+      return 400;
     }
   }
 
@@ -105,6 +110,8 @@ export class AuthService {
     try {
       const token = req.cookies.token;
       const refreshToken = req.cookies.refreshToken;
+      console.log("token", token);
+      console.log("refreshToken", refreshToken);
       if (!token && !refreshToken) {
         console.log("no token & refresh token");
         return { status: 401, user: null };
@@ -131,6 +138,7 @@ export class AuthService {
         this.SECRET_KEY,
       );
       console.log("decodedRefreshToken", decodedRefreshToken);
+      console.log("decodedRefreshToken.email", decodedRefreshToken.email);
 
       // Create a JWT token for authentication
       const token = jwt.sign(
@@ -140,7 +148,7 @@ export class AuthService {
           expiresIn: "10s",
         },
       );
-      console.log("token", token);
+      console.log("token refreshtoken api", token);
 
       return {
         status: 200,

@@ -44,6 +44,17 @@ function socketAuthRouter(io: any): Router {
     }
   });
 
+  router.post("/refresh", async (req, res) => {
+    console.log("refresh route");
+    try {
+      await AuthController.refreshToken(req, res).then(() => {
+        io.emit("refresh", res.statusCode);
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  });
+
   return router;
 }
 

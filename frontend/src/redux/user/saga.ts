@@ -16,13 +16,15 @@ import {
 } from "../user/slice";
 import { PayloadAction } from "@reduxjs/toolkit";
 
+import axiosInstance from "../../utility/interceptors";
+
 axios.defaults.withCredentials = true;
-//const apiUrl = "http://localhost:5000/user";
+const apiUrl = "http://localhost:5000/user";
 //const apiUrl = "https://ramp-up-backend-epcm.onrender.com/user";
-const apiUrl = "https://backend.ramp-up-epcm.me/user";
-//const apiUrlAuth = "http://localhost:5000/auth";
+//const apiUrl = "https://backend.ramp-up-epcm.me/user";
+const apiUrlAuth = "http://localhost:5000/auth";
 //const apiUrlAuth = "https://ramp-up-backend-epcm.onrender.com/auth";
-const apiUrlAuth = "https://backend.ramp-up-epcm.me/auth";
+//const apiUrlAuth = "https://backend.ramp-up-epcm.me/auth";
 console.log("apiUrl", apiUrl);
 console.log("apiUrlAuth", apiUrlAuth);
 
@@ -108,9 +110,7 @@ function* watchRegisterUser(action: PayloadAction<IRegisterUser>) {
 
 function* watchVerifyUser(): Generator<any, void, any> {
   try {
-    const response = yield call(axios.post, `${apiUrlAuth}/verify`, {
-      withCredentials: true,
-    });
+    const response = yield call(axiosInstance.post, `${apiUrlAuth}/verify`);
     console.log("response verify", response);
     yield put(setVerifyUser(response.status === 200));
     yield put(setCurrentUser(response.data.user));
