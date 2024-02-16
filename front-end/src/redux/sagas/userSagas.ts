@@ -1,6 +1,6 @@
 import { PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
-import { call, put, takeLatest } from "redux-saga/effects";
+import { call, put, takeEvery, takeLatest } from "redux-saga/effects";
 import { newUser } from "../../components/AddNewUserDialog/AddNewUserDialog";
 import {
   addUser,
@@ -12,6 +12,7 @@ import {
   verifyToken,
   registerUser,
   IregisterUser,
+  logOut,
 } from "../slices/userSlice";
 axios.defaults.withCredentials = true;
 
@@ -100,11 +101,23 @@ function* registerUserSaga(
   }
 }
 
+function* logOutSaga(): Generator<any, any, any> {
+  try {
+    const response = yield call(axios.post<any>, `${process.env.REACT_APP_API_URL}/users/logout`);
+    if (response.status === 200) {
+      yield put(setUserDetails(null));
+    }
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 export default function* watchUserSaga() {
   yield takeLatest(addUser.type, addUserSaga);
   yield takeLatest(registedEmailCheck.type, registedEmailCheckSaga);
   yield takeLatest(createPassword.type, createPasswordSaga);
   yield takeLatest(login.type, loginSaga);
-  yield takeLatest(verifyToken.type, verifyTokenSaga);
+  yield takeEvery(verifyToken.type, verifyTokenSaga);
   yield takeLatest(registerUser.type, registerUserSaga);
+  yield takeLatest(logOut.type, logOutSaga);
 }

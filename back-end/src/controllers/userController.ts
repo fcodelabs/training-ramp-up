@@ -214,6 +214,19 @@ export const registerUser = async (req: Request, res: Response): Promise<void> =
   }
 };
 
+export const logout = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const cookies = req.cookies;
+    for (const name in cookies) {
+      res.clearCookie(name, { path: '/' });
+    }
+    res.status(200).json({ message: 'Logged out' });
+  } catch (error) {
+    console.error('Error logging out:', error);
+    res.status(500).json({ message: 'Error logging out' });
+  }
+};
+
 export const oneUser = async (request: Request, response: Response): Promise<void> => {
   const id = parseInt(request.params.id);
   try {

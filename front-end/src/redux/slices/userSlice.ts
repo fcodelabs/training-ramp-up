@@ -55,6 +55,7 @@ const userSlice = createSlice({
     registerUser: (state, action: PayloadAction<IregisterUser>) => {
       // register user
     },
+    logOut: (state) => {},
   },
 });
 
@@ -67,5 +68,6 @@ export const {
   login,
   verifyToken,
   registerUser,
+  logOut,
 } = userSlice.actions;
 export default userSlice.reducer;

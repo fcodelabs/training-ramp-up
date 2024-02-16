@@ -20,11 +20,15 @@ const Home = () => {
     dispatch(verifyToken());
   }, []);
 
-  let role = "";
+  useEffect(() => {
+    if (user === null) {
+      navigate("/");
+    }
+  }, [user]);
 
+  let role = "";
   if (user !== null) {
     role = user.role;
-    console.log(role);
   }
 
  return (

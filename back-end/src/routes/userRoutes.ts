@@ -9,9 +9,9 @@ import {
   createPassword,
   login,
   getVerifiedUser,
-  // verifyToken,
   refreshtoken,
-  registerUser
+  registerUser,
+  logout
 } from '../controllers/userController';
 import { Router, type Request, type Response } from 'express';
 import { verifyToken } from '../middleware/verifyToken';
@@ -83,6 +83,14 @@ export const userRoutes = (io: any, sockets: Map<string, string>): Router => {
         const socketId = sockets.get(email);
         io.to(socketId).emit('registerUser', response.statusCode);
       });
+    } catch (error) {
+      console.log(error);
+    }
+  });
+
+  router.post('/users/logout', async (request: Request, response: Response) => {
+    try {
+      await logout(request, response).then(() => {});
     } catch (error) {
       console.log(error);
     }
