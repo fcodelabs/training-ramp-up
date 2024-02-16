@@ -3,17 +3,28 @@ import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
-import { updateStudent } from "../../redux/slice/studentSlice";
 import {
+  addStudent,
+  editStudent,
+  fetchAllStudents,
+  removeStudent,
+  setIsLoading,
+  setUserAddingError,
+  setUserUpdatingError,
+  updateStudent,
+} from "../../redux/slice/studentSlice";
+import {
+  Box,
   Button,
   Container,
   Grid,
   MenuItem,
   Paper,
   Select,
+  Skeleton,
   Stack,
   TextField,
   Typography,
@@ -31,13 +42,13 @@ import {
   GridRowModesModel,
   GridRowsProp,
   GridToolbarContainer,
+  GridValidRowModel,
 } from "@mui/x-data-grid";
 import { formatPhoneNumber } from "../../utility/formatPhoneNumber";
 import { ageCalculator } from "../../utility/ageCalculator";
 import { validatePhoneNumber } from "../../utility/validatePhoneNumber";
-import SingleButtonPopupMessage from "../SingleButtonPopupMessage/SingleButtonPopupMessage";
-import DoubleButtonPopupMessage from "../DoubleButtonPopupMessage/DoubleButtonPopupMessage";
 import { dataGridStyles } from "../../styles/dataGridStyles";
+import PopupMessage from "../PopupMessage/PopupMessage";
 
 let idValue = 0;
 
@@ -77,7 +88,7 @@ function EditToolbar(props: IEditToolbarProps) {
           gender: "",
           address: "",
           mobileno: "",
-          dateofbirth: dayjs(new Date()),
+          dateofbirth: dayjs(new Date()).toISOString().slice(0, 10),
           age: "",
           isNew: true,
         },
@@ -124,19 +135,34 @@ const DataGridTable = () => {
   const initialRows: GridRowsProp = useSelector(
     (state: RootState) => state.student.students
   );
+  const tableState: boolean = useSelector(
+    (state: RootState) => state.student.isLoading
+  );
+  const studentAddingError: boolean = useSelector(
+    (state: RootState) => state.student.userAddingError
+  );
+  const studentUpdatingError: boolean = useSelector(
+    (state: RootState) => state.student.userUpdatingError
+  );
+  // const studentRemovingError: boolean = useSelector(
+  //   (state: RootState) => state.student.removeStudentError
+  // );
   const dispatch = useDispatch();
   const [numbervalidateError, setNumberValidateError] = useState(false);
   const [agevalidateError, setAgeValidateError] = useState(false);
   const [keepEditingPopup, setKeepEditingPopup] = useState(false);
   const [addedSuccessfullyPopup, setAddedSuccessfullyPopup] = useState(false);
   const [editedSuccessfullyPopup, setEditedSuccessfullyPopup] = useState(false);
-  const [unableToAddPopup, setUnableToAdd] = useState(false);
-  const [unableToEditPopup, setUnableToEdit] = useState(false);
   const [discardChangesPopup, setDiscardChangesPopup] = useState(false);
   const [deletePopup, setDeletePopup] = useState(false);
   const [currentRowId, setCurrentRowId] = useState<GridRowId | null>(null);
 
   const [rowModesModel, setRowModesModel] = useState<GridRowModesModel>({});
+
+  useEffect(() => {
+    dispatch(fetchAllStudents());
+  }, [dispatch]);
+
   const handleRowEditStop: GridEventListener<"rowEditStop"> = (
     params,
     event
@@ -161,6 +187,7 @@ const DataGridTable = () => {
 
   const handleConfirmDeleteClick = (id: GridRowId) => {
     dispatch(updateStudent(initialRows.filter((row) => row.id !== id)));
+    dispatch(removeStudent(id));
     idReducer();
   };
 
@@ -183,7 +210,26 @@ const DataGridTable = () => {
   };
 
   const processRowUpdate = (newRow: GridRowModel) => {
-    const updatedRow = { ...newRow, isNew: false };
+    const student: GridValidRowModel = {
+      id: newRow.id,
+      name: newRow.name,
+      gender: newRow.gender,
+      address: newRow.address,
+      mobileno: newRow.mobileno,
+      dateofbirth:
+        typeof newRow.dateofbirth === "string"
+          ? newRow.dateofbirth
+          : newRow.dateofbirth.toISOString().slice(0, 10),
+      age: newRow.age,
+    };
+    const updatedRow = {
+      ...newRow,
+      dateofbirth:
+        typeof newRow.dateofbirth === "string"
+          ? newRow.dateofbirth
+          : newRow.dateofbirth.toISOString(),
+      isNew: false,
+    };
     const isPhoneNumberValid = validatePhoneNumber(newRow.mobileno);
     const isAgeValid = newRow.age > 18;
 
@@ -205,7 +251,13 @@ const DataGridTable = () => {
       setAgeValidateError(true);
       return {};
     }
+
     try {
+      if ("isNew" in newRow) {
+        dispatch(addStudent(student));
+      } else {
+        dispatch(editStudent(student));
+      }
       dispatch(
         updateStudent(
           initialRows.map((row) => (row.id === newRow.id ? updatedRow : row))
@@ -219,11 +271,6 @@ const DataGridTable = () => {
         setEditedSuccessfullyPopup(true);
       }
     } catch (error) {
-      if (newRow!.isNew) {
-        setUnableToAdd(true);
-      } else {
-        setUnableToEdit(true);
-      }
       console.error(error);
       return {};
     }
@@ -243,6 +290,16 @@ const DataGridTable = () => {
       width: 60,
       disableColumnMenu: true,
       sortable: false,
+      renderCell: (params) => {
+        if (tableState) {
+          return (
+            <Box>
+              <Skeleton animation="wave" height={15} width={30} />
+            </Box>
+          );
+        }
+        return params.value;
+      },
       valueFormatter: (params) => {
         const id = Number(params.value);
         const formattedId = id.toString().padStart(2, "0");
@@ -258,7 +315,16 @@ const DataGridTable = () => {
       sortable: true,
       editable: true,
       disableColumnMenu: true,
-
+      renderCell: (params) => {
+        if (tableState) {
+          return (
+            <Box>
+              <Skeleton animation="wave" height={15} width={50} />
+            </Box>
+          );
+        }
+        return params.value;
+      },
       renderEditCell: (params: GridRenderCellParams<any, string>) => (
         <TextField
           size="small"
@@ -285,6 +351,16 @@ const DataGridTable = () => {
       sortable: false,
       disableColumnMenu: true,
       editable: true,
+      renderCell: (params) => {
+        if (tableState) {
+          return (
+            <Box>
+              <Skeleton animation="wave" height={15} width={50} />
+            </Box>
+          );
+        }
+        return params.value;
+      },
       renderEditCell: (params: GridRenderCellParams<any, string>) => (
         <Select
           size="small"
@@ -314,6 +390,16 @@ const DataGridTable = () => {
       sortable: false,
       disableColumnMenu: true,
       editable: true,
+      renderCell: (params) => {
+        if (tableState) {
+          return (
+            <Box>
+              <Skeleton animation="wave" height={15} width={60} />
+            </Box>
+          );
+        }
+        return params.value;
+      },
       renderEditCell: (params: GridRenderCellParams<any, string>) => (
         <TextField
           size="small"
@@ -340,6 +426,16 @@ const DataGridTable = () => {
       editable: true,
       valueFormatter: (params) => {
         return formatPhoneNumber(params.value);
+      },
+      renderCell: (params) => {
+        if (tableState) {
+          return (
+            <Box>
+              <Skeleton animation="wave" height={15} width={80} />
+            </Box>
+          );
+        }
+        return params.value;
       },
       renderEditCell: (params: GridRenderCellParams<any, string>) => (
         <TextField
@@ -381,13 +477,22 @@ const DataGridTable = () => {
       align: "left",
       type: "date",
       valueFormatter: (params) => {
-        const date = dayjs(new Date(params.value));
+        const date = dayjs(params.value);
         return date.format("ddd MMM DD YYYY");
       },
       sortable: true,
       disableColumnMenu: true,
       editable: true,
       width: 205,
+      renderCell: (params) => {
+        if (tableState) {
+          return (
+            <Box>
+              <Skeleton animation="wave" height={15} width={100} />
+            </Box>
+          );
+        }
+      },
       renderEditCell: (
         params: GridRenderCellParams<any, dayjs.Dayjs | null>
       ) => {
@@ -435,6 +540,16 @@ const DataGridTable = () => {
       disableColumnMenu: true,
       sortable: false,
       width: 100,
+      renderCell: (params) => {
+        if (tableState) {
+          return (
+            <Box>
+              <Skeleton animation="wave" height={15} width={50} />
+            </Box>
+          );
+        }
+        return params.value;
+      },
       renderEditCell: (params: GridRenderCellParams<any, string>) => (
         <TextField
           size="small"
@@ -578,6 +693,7 @@ const DataGridTable = () => {
             onRowModesModelChange={handleRowModesModelChange}
             onRowEditStop={handleRowEditStop}
             processRowUpdate={processRowUpdate}
+            onProcessRowUpdateError={(error) => console.error(error)}
             slots={{
               toolbar: EditToolbar,
             }}
@@ -598,47 +714,53 @@ const DataGridTable = () => {
         </Paper>
       </Container>
       {keepEditingPopup && (
-        <SingleButtonPopupMessage
+        <PopupMessage
           open={keepEditingPopup}
           title={"Mandatory fields are missing."}
-          handleClick={() => setKeepEditingPopup(false)}
-          buttonName="Keep Editing"
+          handleClickSecondButton={() => setKeepEditingPopup(false)}
+          secondButtonName="Keep Editing"
         />
       )}
       {addedSuccessfullyPopup && (
-        <SingleButtonPopupMessage
+        <PopupMessage
           open={addedSuccessfullyPopup}
           title={"A new student added successfully."}
-          handleClick={() => setAddedSuccessfullyPopup(false)}
-          buttonName="Ok"
+          handleClickSecondButton={() => setAddedSuccessfullyPopup(false)}
+          secondButtonName="Ok"
         />
       )}
-      {unableToAddPopup && (
-        <SingleButtonPopupMessage
-          open={unableToAddPopup}
+      {studentAddingError && (
+        <PopupMessage
+          open={studentAddingError}
           title={"Unable to add a new student.Please try again later"}
-          handleClick={() => setUnableToAdd(false)}
-          buttonName="Try again"
+          handleClickSecondButton={() => {
+            dispatch(setIsLoading(false));
+            dispatch(setUserAddingError(false));
+          }}
+          secondButtonName="Try again"
         />
       )}
       {editedSuccessfullyPopup && (
-        <SingleButtonPopupMessage
+        <PopupMessage
           open={editedSuccessfullyPopup}
           title={"Student detailes updated successfully."}
-          handleClick={() => setEditedSuccessfullyPopup(false)}
-          buttonName="Ok"
+          handleClickSecondButton={() => setEditedSuccessfullyPopup(false)}
+          secondButtonName="Ok"
         />
       )}
-      {unableToEditPopup && (
-        <SingleButtonPopupMessage
-          open={unableToEditPopup}
+      {studentUpdatingError && (
+        <PopupMessage
+          open={studentUpdatingError}
           title={"Cannot update student details.Please try again later"}
-          handleClick={() => setUnableToEdit(false)}
-          buttonName="Try again"
+          handleClickSecondButton={() => {
+            dispatch(setIsLoading(false));
+            dispatch(setUserUpdatingError(false));
+          }}
+          secondButtonName="Try again"
         />
       )}
       {discardChangesPopup && (
-        <DoubleButtonPopupMessage
+        <PopupMessage
           open={discardChangesPopup}
           title={"Discard changes?"}
           handleClickFirstButton={() => setDiscardChangesPopup(false)}
@@ -651,7 +773,7 @@ const DataGridTable = () => {
         />
       )}
       {deletePopup && (
-        <DoubleButtonPopupMessage
+        <PopupMessage
           open={deletePopup}
           title={"Are you sure you want to remove this student?"}
           handleClickFirstButton={() => setDeletePopup(false)}

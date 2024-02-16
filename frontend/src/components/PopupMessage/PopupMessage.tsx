@@ -3,15 +3,19 @@ import { Button, Dialog, DialogActions, DialogTitle } from "@mui/material";
 interface IProps {
   open: boolean;
   title: string;
-  handleClick: () => void;
-  buttonName: string;
+  handleClickFirstButton?: () => void;
+  handleClickSecondButton: () => void;
+  firstButtonName?: string;
+  secondButtonName: string;
 }
 
-const SingleButtonPopupMessage = ({
+const PopupMessage = ({
   open,
   title,
-  handleClick,
-  buttonName,
+  handleClickFirstButton,
+  handleClickSecondButton,
+  firstButtonName,
+  secondButtonName,
 }: IProps) => {
   return (
     <>
@@ -27,16 +31,29 @@ const SingleButtonPopupMessage = ({
           {title}
         </DialogTitle>
         <DialogActions>
+          {firstButtonName && (
+            <Button
+              size="small"
+              onClick={handleClickFirstButton}
+              sx={{
+                fontSize: "14px",
+                fontWeight: 500,
+                color: "rgba(156, 39, 176, 1)",
+              }}
+            >
+              {firstButtonName}
+            </Button>
+          )}
           <Button
             size="small"
-            onClick={handleClick}
+            onClick={handleClickSecondButton}
             sx={{
               fontSize: "14px",
               fontWeight: 500,
               color: "rgba(33, 150, 243, 1)",
             }}
           >
-            {buttonName}
+            {secondButtonName}
           </Button>
         </DialogActions>
       </Dialog>
@@ -44,4 +61,4 @@ const SingleButtonPopupMessage = ({
   );
 };
 
-export default SingleButtonPopupMessage;
+export default PopupMessage;
