@@ -3,6 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 
 interface IinitialState {
+  userFetchingError: boolean;
   userAddingError: boolean;
   userUpdatingError: boolean;
   removeStudentError: boolean;
@@ -11,6 +12,7 @@ interface IinitialState {
 }
 
 const initialState: IinitialState = {
+  userFetchingError: false,
   userAddingError: false,
   userUpdatingError: false,
   removeStudentError: false,
@@ -87,7 +89,8 @@ export const studentSlice = createSlice({
       //get all students
     },
     fetchStudentsError: (state) => {
-      state.isLoading = false;
+      state.isLoading = true;
+      state.userFetchingError = true;
     },
     addStudent: (state, action: PayloadAction<GridValidRowModel>) => {
       //add a new student to the database
@@ -122,6 +125,9 @@ export const studentSlice = createSlice({
     setUserUpdatingError: (state, action: PayloadAction<boolean>) => {
       state.userUpdatingError = action.payload;
     },
+    setUserFetchingError: (state, action: PayloadAction<boolean>) => {
+      state.userFetchingError = action.payload;
+    },
   },
 });
 
@@ -139,6 +145,7 @@ export const {
   setUserAddingError,
   setRemoveStudentError,
   setUserUpdatingError,
+  setUserFetchingError,
 } = studentSlice.actions;
 
 export default studentSlice.reducer;

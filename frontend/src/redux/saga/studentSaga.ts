@@ -18,11 +18,12 @@ function* watchGetAllStudents(): Generator<any, any, any> {
   try {
     const { data } = yield call(
       axios.get<GridValidRowModel[]>,
-      "http://localhost:5000/students/getAllStudents"
+      "https://ramp-up-backend.onrender.com/students/getAllStudents"
     );
     yield put(updateStudent(data));
   } catch (error: any) {
     yield put(fetchStudentsError(error));
+    yield put(fetchAllStudents());
     console.log(error);
   }
 }
@@ -42,11 +43,12 @@ function* watchAddNewStudent(
   try {
     yield call(
       axios.post<GridValidRowModel>,
-      "http://localhost:5000/students/newStudent",
+      "https://ramp-up-backend.onrender.com/students/newStudent",
       newStudent
     );
   } catch (error: any) {
     yield put(addStudentError());
+    yield put(fetchAllStudents());
     return error;
   }
 }
@@ -63,11 +65,12 @@ function* watchUpdateStudent(action: PayloadAction<GridValidRowModel>) {
   try {
     yield call(
       axios.put<GridValidRowModel>,
-      `http://localhost:5000/students/updateStudent/${action.payload.id}`,
+      `https://ramp-up-backend.onrender.com/students/updateStudent/${action.payload.id}`,
       updatedStudent
     );
   } catch (error: any) {
     yield put(updateStudentError(error));
+    yield put(fetchAllStudents());
     return error;
   }
 }
@@ -76,10 +79,11 @@ function* watchRemoveStudent(action: PayloadAction<GridRowId>) {
   try {
     yield call(
       axios.delete,
-      `http://localhost:5000/students/removeStudent/${action.payload}`
+      `https://ramp-up-backend.onrender.com/students/removeStudent/${action.payload}`
     );
   } catch (error: any) {
     yield put(removeStudentError(error));
+    yield put(fetchAllStudents());
     return error;
   }
 }
