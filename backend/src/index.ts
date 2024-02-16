@@ -14,3 +14,18 @@ app.get("/", (req: Request, res: Response) => {
 app.listen(port, () => {
   console.log(`[server]: Server is running at http://localhost:${port}`);
 });
+
+const { Client } = require("pg");
+
+const client = new Client({
+  user: "postgres",
+  host: "localhost",
+  database: "ramp-up",
+  password: "epcm",
+  port: 5432,
+});
+
+client.connect(function(err: Error) {
+  if (err) throw err;
+  console.log("Connected!");
+});
