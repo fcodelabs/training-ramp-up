@@ -14,7 +14,7 @@ function* fetchStudentsSaga(): Generator<any, any, any> {
   try {
     const { data: students } = yield call(
       axios.get<GridValidRowModel[]>,
-      "http://localhost:3000/students/"
+      `${process.env.REACT_APP_API_URL}/students/`
     );
 
     yield put(replaceStudents(students));
@@ -29,7 +29,7 @@ function* addStudentSaga(
   try {
     const { data: student } = yield call(
       axios.post<GridValidRowModel>,
-      "http://localhost:3000/students/",
+      `${process.env.REACT_APP_API_URL}/students/`,
       action.payload
     );
   } catch (error) {
@@ -43,7 +43,7 @@ function* editStudentSaga(
   try {
     const { data: student } = yield call(
       axios.put<GridValidRowModel>,
-      "http://localhost:3000/students/",
+      `${process.env.REACT_APP_API_URL}/students/`,
       action.payload
     );
   } catch (error) {
@@ -57,7 +57,7 @@ function* removeStudentSaga(
   try {
     const { data: student } = yield call(
       axios.delete,
-      `http://localhost:3000/students/${action.payload}`
+      `${process.env.REACT_APP_API_URL}/students/${action.payload}`
     );
   } catch (error) {
     console.log(error);

@@ -22,9 +22,9 @@ const dataSource = new DataSource(AppDataSource);
 dataSource
   .initialize()
   .then(() => {
-    console.log('connected..');
+    console.log('connected to database');
   })
   .catch((error) => {
-    console.error(error, 'unable to connect..');
+    console.error(error, 'unable to connect to database');
   });
 export default dataSource;

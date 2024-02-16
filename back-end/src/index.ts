@@ -24,4 +24,6 @@ io.on('connection', (socket: any) => {
 
 app.use(studentRoutes(io));
 
+export { app };
+
 server.listen(3000);
