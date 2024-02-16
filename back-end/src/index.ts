@@ -1,21 +1,30 @@
-import express from 'express';
-import { createConnection } from 'typeorm';
+import express, { type Request, type Response } from 'express';
 import 'reflect-metadata';
-import AppDataSource from './config/dataSource';
+import dataSource from './config/dataSource';
+import * as bodyParser from 'body-parser';
+import { studentRoutes } from './routes/studentRoutes';
 
-const app = express();
-const port = 3000;
+dataSource
+  .initialize()
+  .then(async () => {
+    const app = express();
+    app.use(bodyParser.json());
 
-createConnection(AppDataSource)
-  .then((connection) => {
-    console.log('Connected to database');
-
-    app.get('/', (req, res) => {
-      res.send('Hello from Express + TypeScript!');
+    studentRoutes.forEach((route) => {
+      (app as any)[route.method](route.route, async (req: Request, res: Response, next: () => void) => {
+        const result = new (route.controller as any)()[route.action](req, res, next);
+        if (result instanceof Promise) {
+          await result.then((result) => (result !== null && result !== undefined ? res.send(result) : undefined));
+        } else if (result !== null && result !== undefined) {
+          res.json(result);
+        }
+      });
     });
-  })
-  .catch((error) => console.log(error));
 
-app.listen(port, () => {
-  console.log(`Server listening on port ${port}`);
-});
+    app.listen(3000);
+
+    console.log('Express server has started on port 3000. Open http://localhost:3000/students to see results');
+  })
+  .catch((error) => {
+    console.log(error);
+  });

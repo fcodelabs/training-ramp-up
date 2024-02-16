@@ -28,8 +28,9 @@ import {
   GridRowEditStopReasons,
   GridRenderCellParams,
 } from "@mui/x-data-grid";
-import calculateAge from "../../utility/calculateAge/calculateAge";
-import validateMobileNumber from "../../utility/validateMobilwNumber/validateMobileNumber";
+import { calculateAge, validateMobileNumber } from "../../utility";
+// import calculateAge from "../../utility/calculateAge/calculateAge";
+// import validateMobileNumber from "../../utility/validateMobilwNumber/validateMobileNumber";
 import OneButtonDialog from "../OneButtonDialog/OneButtonDialog";
 import TwoButtonDialog from "../TwoButtonDialog/TwoButtonDialog";
 

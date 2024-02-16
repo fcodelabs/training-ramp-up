@@ -1,25 +1,25 @@
-import{ Entity, Column, PrimaryColumn} from "typeorm"
+import { Entity, Column, PrimaryColumn } from 'typeorm';
 
 @Entity()
 export class Student {
-    @PrimaryColumn()
-    id!: number;
+  @PrimaryColumn()
+  id!: number;
 
-    @Column()
-    name!: string;
+  @Column()
+  name!: string;
 
-    @Column()
-    gender!: string;
+  @Column()
+  gender!: string;
 
-    @Column()
-    address!: string;
+  @Column()
+  address!: string;
 
-    @Column()
-    mobileNumber!: string;
+  @Column()
+  mobileNumber!: string;
 
-    @Column()
-    birthday!: Date;
+  @Column({ type: 'date' })
+  birthday!: string;
 
-    @Column()
-    age!: number;
+  @Column()
+  age!: number;
 }

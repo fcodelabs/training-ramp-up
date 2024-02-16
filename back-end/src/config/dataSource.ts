@@ -1,4 +1,4 @@
-import { DataSourceOptions } from 'typeorm';
+import { type DataSourceOptions, DataSource } from 'typeorm';
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -11,10 +11,12 @@ const AppDataSource: DataSourceOptions = {
   password: process.env.TYPEORM_PASSWORD,
   database: process.env.TYPEORM_DATABASE,
   synchronize: true,
-  logging: true,
+  logging: false,
   entities: ['src/models/**/*.ts'],
   migrations: [],
-  subscribers: [],
+  subscribers: []
 };
 
-export default AppDataSource;
+const dataSource = new DataSource(AppDataSource);
+
+export default dataSource;
