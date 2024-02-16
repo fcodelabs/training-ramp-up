@@ -1,26 +1,13 @@
 {
   "compilerOptions": {
-    "target": "es5",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
-    "allowJs": true,
-    "skipLibCheck": true,
     "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-    "strict": true,
-    "forceConsistentCasingInFileNames": true,
-    "noFallthroughCasesInSwitch": true,
-    "module": "esnext",
-    "moduleResolution": "node",
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "noEmit": true,
-    "jsx": "react-jsx"
+    "jsx": "react-jsx",
+    "target": "es2018",
+    "module": "commonjs",
+    "outDir": "dist",
+    "sourceMap": true,
+    "types": ["node"]
   },
-  "include": [
-    "src"
-  ]
+  "include": ["src/**/*.ts", "src/routes/unprotected.tsx", "src/utility/redirectLogged.tsx", "src/axios.tsx"],
+  "exclude": ["node_modules"],
 }
