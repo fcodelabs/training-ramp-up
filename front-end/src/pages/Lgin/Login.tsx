@@ -10,10 +10,10 @@ import {
   OutlinedInput,
   Typography,
 } from "@mui/material";
-import { useEffect, useState,  } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { login } from "../../redux/slices/userSlice";
-import { useDispatch, useSelector } from "react-redux"; 
+import { useDispatch, useSelector } from "react-redux";
 import { socket } from "../../index";
 
 const Login = () => {
@@ -37,9 +37,7 @@ const Login = () => {
     setShowPassword(!showPassword);
   };
 
-  const handleEmailChange = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(event.target.value);
     setIsEmailEmpty(false);
   };
@@ -48,18 +46,21 @@ const Login = () => {
     if (email === "") {
       setIsEmailEmpty(true);
       setEmailHelperText("Mandotary fields missing");
-    }else{
+    } else {
       socket.emit("login", email);
-      dispatch(login({email, password}));
+      dispatch(login({ email, password }));
     }
   };
 
   useEffect(() => {
+    if (user !== null) {
+      navigate("/home");
+    }
+  }, [user, navigate]);
+
+  useEffect(() => {
     socket.on("loginStatus", (data: any) => {
-      if (data === 200) {
-        console.log(user);
-        navigate("/home");
-      } else {
+      if (data !== 200) {
         setPasswordError(true);
         setPasswordHelperText("Invalid email or password");
       }
@@ -185,7 +186,6 @@ const Login = () => {
         <Box sx={{ display: "flex", justifyContent: "center" }}>
           <Typography
             sx={{
-                
               fontSize: "13px",
               fontWeight: "600",
               color: "rgba(0, 0, 0, 0.6)",
@@ -199,8 +199,8 @@ const Login = () => {
             sx={{
               padding: "0 2px",
               textTransform: "none",
-                fontWeight: "600",
-                fontSize: "13px",
+              fontWeight: "600",
+              fontSize: "13px",
               color: "rgba(33, 150, 243, 1)",
             }}
           >

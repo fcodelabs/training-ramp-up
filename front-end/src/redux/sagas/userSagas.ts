@@ -79,6 +79,7 @@ function* verifyTokenSaga(): Generator<any, any, any> {
       axios.get<any>,
       `${process.env.REACT_APP_API_URL}/users/verify`
     );
+    console.log(response.userDetails, "verifyTokenSaga");
     yield put(setUserDetails(response.userDetails));
   } catch (error) {
     console.log(error);

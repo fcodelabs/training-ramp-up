@@ -100,14 +100,16 @@ export const login = async (req: Request, res: Response): Promise<void> => {
     } else {
       const validPassword = await bcrypt.compare(password, user.password);
       if (validPassword && user.active) {
-        const token = jwt.sign({ email, role: user.role }, process.env.JWT_SECRET ?? '', { expiresIn: '1h' });
+        const token = jwt.sign({ email, role: user.role }, process.env.JWT_SECRET ?? '', { expiresIn: '61m' });
+        console.log('in login controller token:', token);
         res.cookie(user.email, token, {
           path: '/',
-          expires: new Date(Date.now() + 3600000),
+          expires: new Date(Date.now() + 1000 * 60 * 60),
           httpOnly: true,
           sameSite: 'lax'
         });
         const userDetails = { id: user.id, name: user.name, email: user.email, role: user.role, active: user.active };
+        console.log('in login controller User logged in:', userDetails);
         res.status(200).json({ userDetails });
       } else {
         res.status(401).json({ userDetails: null });
@@ -120,13 +122,14 @@ export const login = async (req: Request, res: Response): Promise<void> => {
 };
 
 export const verifyToken = async (req: Request, res: Response): Promise<void> => {
-  const cookie = req.headers.cookie as string;
-  const token = cookie.split('=')[1];
-  if (token === null) {
-    res.status(401).json({ userDetails: null });
-  } else {
-    let email = '';
-    try {
+  try {
+    const cookie = req.headers.cookie as string;
+    const token = cookie.split('=')[1];
+    console.log('in verifyToken controller token:', token);
+    if (token === null) {
+      res.status(401).json({ userDetails: null });
+    } else {
+      let email = '';
       const decodedToken: any = jwt.verify(token, process.env.JWT_SECRET ?? '');
       email = decodedToken.email;
       const userRepository = dataSource.getRepository(User);
@@ -137,9 +140,42 @@ export const verifyToken = async (req: Request, res: Response): Promise<void> =>
         const { password, token, ...userDetails } = user;
         res.status(200).json({ userDetails });
       }
-    } catch (error) {
-      res.status(401).json({ userDetails: null });
     }
+  } catch (error) {
+    res.status(401).json({ userDetails: null });
+  }
+};
+
+export const refreshtoken = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const cookie = req.headers.cookie as string;
+    const prevToken = cookie.split('=')[1];
+    if (prevToken === null) {
+      res.status(401).json({ message: 'No token' });
+    }
+    const decodedToken: any = jwt.verify(prevToken, process.env.JWT_SECRET ?? '');
+    const email = decodedToken.email;
+    res.clearCookie(email);
+    req.cookies[email] = '';
+    const userRepository = dataSource.getRepository(User);
+    const user = await userRepository.findOne({ where: { email } });
+    if (user === null) {
+      res.status(404).json({ message: 'User not found' });
+    } else {
+      const token = jwt.sign({ email, role: user.role }, process.env.JWT_SECRET ?? '', { expiresIn: '61m' });
+      console.log('in refresh token controller token:', token);
+      res.cookie(user.email, token, {
+        path: '/',
+        expires: new Date(Date.now() + 1000 * 60 * 60),
+        httpOnly: true,
+        sameSite: 'lax'
+      });
+      const userDetails = { id: user.id, name: user.name, email: user.email, role: user.role, active: user.active };
+      res.status(200).json({ userDetails });
+    }
+  } catch (error) {
+    console.error('Error refreshing token:', error);
+    res.status(500).json({ message: 'Error refreshing token' });
   }
 };
 
@@ -151,8 +187,9 @@ export const registerUser = async (req: Request, res: Response): Promise<void> =
     if (existingUser !== null) {
       res.status(400).json({ message: 'Email already registered' });
     } else {
+      console.log(email, password, name, role, active);
       const hashedPassword = await bcrypt.hash(password, 10);
-      const newUser = userRepository.create({ email, password: hashedPassword, name, role, active });
+      const newUser = userRepository.create({ email, password: hashedPassword, name, role, active, token: '' });
       await userRepository.save(newUser);
       res.status(201).json(newUser);
     }

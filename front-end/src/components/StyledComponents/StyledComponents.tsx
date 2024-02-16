@@ -6,6 +6,7 @@ export const StyledDataGrid = styled(DataGrid)(({ theme }) => ({
   borderRadius: "0",
   border: "none",
   "& .MuiDataGrid-columnHeader": {
+    display: "flex",
     backgroundColor: "rgba(33, 150, 243, 0.08)",
   },
   "& .MuiDataGrid-colomnHeader-Cell": {

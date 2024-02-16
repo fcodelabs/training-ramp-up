@@ -13,36 +13,44 @@ import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 const Home = () => {
-
   const dispatch = useDispatch();
-  useEffect(() => {
-    dispatch(verifyToken());
-  }, []);
   const navigate = useNavigate();
   const user = useSelector((state: any) => state.user.user);
   useEffect(() => {
-    if (user === null) {
-      navigate("/login");
-    }
+    dispatch(verifyToken());
   }, []);
-  
-    if (user !== null) {
-      return (
-        <Box>
-          <TopBar />
-          <StyledCard>
-            <AddNewBox>
+
+  let role = "";
+
+  if (user !== null) {
+    role = user.role;
+    console.log(role);
+  }
+
+  // useEffect(() => {
+  //   if (user === null) {
+  //     navigate("/login");
+  //   }
+  // }, [user]);
+
+  if (user !== null) {
+    return (
+      <Box>
+        <TopBar />
+        <StyledCard sx={{ maxWidth: role === "Admin" ? "1152px" : "955px" }}>
+          {role === "Admin" && (
+            <AddNewBox sx={{ backgroundColor: "rgba(33, 150, 243, 0.08)" }}>
               <AddNewUserDialog />
             </AddNewBox>
-            <DataTable />
-          </StyledCard>
-        </Box>
-      );
-    } else {
-      return <></>;
-    }
-  
-   
+          )}
+          <DataTable role={role} />
+        </StyledCard>
+      </Box>
+    );
+  } else {
+    navigate("/login");
+    return <></>;
+  }
 };
 
 export default Home;

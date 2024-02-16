@@ -9,6 +9,7 @@ import {
   createPassword,
   login,
   verifyToken,
+  refreshtoken,
   registerUser
 } from '../controllers/userController';
 import { Router, type Request, type Response } from 'express';
@@ -59,6 +60,14 @@ export const userRoutes = (io: any, sockets: Map<string, string>): Router => {
   router.get('/users/verify', async (request: Request, response: Response) => {
     try {
       await verifyToken(request, response).then(() => {});
+    } catch (error) {
+      console.log(error);
+    }
+  });
+
+  router.get('/users/refreshtoken', async (request: Request, response: Response) => {
+    try {
+      await refreshtoken(request, response).then(() => {});
     } catch (error) {
       console.log(error);
     }

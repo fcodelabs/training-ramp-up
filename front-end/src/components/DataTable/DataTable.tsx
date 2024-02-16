@@ -43,6 +43,7 @@ import AlertDialog from "../AlertDialog/AlertDialog";
 import { socket } from "../../index";
 
 interface EditToolbarProps {
+  role: string;
   lastId: number;
   setRows: (newRows: (oldRows: GridRowsProp) => GridRowsProp) => void;
   setRowModesModel: (
@@ -51,6 +52,7 @@ interface EditToolbarProps {
 }
 
 function EditToolbar(props: EditToolbarProps) {
+  const { role } = props;
   const dispatch = useDispatch();
   const { setRowModesModel } = props;
   const currentStudents = useSelector((state: RootState) => state.students);
@@ -90,16 +92,22 @@ function EditToolbar(props: EditToolbarProps) {
       <Box>
         <Typography>Student Details</Typography>
       </Box>
-      <AddNewBox>
-        <Button variant="contained" onClick={handleAddNewClick}>
-          ADD NEW STUDENT
-        </Button>
-      </AddNewBox>
+      {role === "Admin" && (
+        <AddNewBox>
+          <Button variant="contained" onClick={handleAddNewClick}>
+            ADD NEW STUDENT
+          </Button>
+        </AddNewBox>
+      )}
     </>
   );
 }
 
-export default function DataTable() {
+interface DataTableProps {
+  role: string;
+}
+
+export default function DataTable({ role }: DataTableProps) {
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(fetchStudents());
@@ -671,12 +679,20 @@ export default function DataTable() {
     },
   ];
 
+  let filteredColumns: GridColDef[] = [];
+  if (role === "Admin") {
+    filteredColumns = columns;
+  } else if (role === "Observer") {
+    console.log("role:", role);
+    filteredColumns = columns.filter((column) => column.field !== "actions");
+  }
+
   return (
     <>
       <div style={{ height: "auto", width: "100%" }}>
         <StyledDataGrid
           rows={currentStudents}
-          columns={columns}
+          columns={filteredColumns}
           initialState={{
             pagination: {
               paginationModel: { page: 0, pageSize: 5 },
@@ -695,7 +711,7 @@ export default function DataTable() {
             toolbar: EditToolbar,
           }}
           slotProps={{
-            toolbar: { setRowModesModel },
+            toolbar: { setRowModesModel, role },
           }}
         />
       </div>
