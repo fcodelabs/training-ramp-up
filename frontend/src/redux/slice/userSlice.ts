@@ -11,12 +11,25 @@ export interface IPasswordToken {
   password: string;
   token: string;
 }
+export interface ILoginCredentials {
+  email: string;
+  password: string;
+}
+export interface IRegisterUser {
+  name: string;
+  email: string;
+  password: string;
+}
 interface IinitialState {
-  users: IUsers[];
+  isAuthorized: boolean;
+  authorizationError: boolean;
+  userRole: string;
 }
 
 const initialState: IinitialState = {
-  users: [],
+  isAuthorized: false,
+  authorizationError: false,
+  userRole: "",
 };
 
 const userSlice = createSlice({
@@ -25,9 +38,31 @@ const userSlice = createSlice({
   reducers: {
     addUsers: (state, action: PayloadAction<IUsers>) => {},
     createUsers: (state, action: PayloadAction<IPasswordToken>) => {},
+    loginUsers: (state, action: PayloadAction<ILoginCredentials>) => {},
+    logoutUsers: (state) => {},
+    registerUsers: (state, action: PayloadAction<IRegisterUser>) => {},
+    verifyUsers: (state) => {},
+    setAutherization: (state, action: PayloadAction<string>) => {
+      state.isAuthorized = true;
+      state.authorizationError = false;
+      state.userRole = action.payload;
+    },
+    setUnautherization: (state) => {
+      state.isAuthorized = false;
+      state.authorizationError = true;
+    },
   },
 });
 
-export const { addUsers,createUsers } = userSlice.actions;
+export const {
+  addUsers,
+  createUsers,
+  loginUsers,
+  logoutUsers,
+  registerUsers,
+  verifyUsers,
+  setAutherization,
+  setUnautherization,
+} = userSlice.actions;
 
 export default userSlice.reducer;

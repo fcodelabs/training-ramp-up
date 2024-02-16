@@ -1,6 +1,11 @@
-import { takeLatest, put, call, takeLeading } from "redux-saga/effects";
+import {
+  takeLatest,
+  put,
+  call,
+  takeLeading,
+  takeEvery,
+} from "redux-saga/effects";
 import { GridRowId, GridValidRowModel } from "@mui/x-data-grid";
-import axios from "axios";
 import {
   addStudent,
   addStudentError,
@@ -13,19 +18,23 @@ import {
   updateStudentError,
 } from "../slice/studentSlice";
 import { PayloadAction } from "@reduxjs/toolkit";
-
-const apiUrl = process.env.REACT_APP_API_URL;
+import { axiosInstance } from "../../utility/axiosInstance";
+axiosInstance.defaults.withCredentials = true;
+const apiUrl = process.env.REACT_APP_BACKEND as string;
 
 function* watchGetAllStudents(): Generator<any, any, any> {
   try {
     const { data } = yield call(
-      axios.get<GridValidRowModel[]>,
-      `${apiUrl}/getAllStudents`
+      axiosInstance.get<GridValidRowModel[]>,
+      `${apiUrl}/students/getAllStudents`,
+      {
+        withCredentials: true,
+      }
     );
     yield put(updateStudent(data));
   } catch (error: any) {
     yield put(fetchStudentsError(error));
-    yield put(fetchAllStudents());
+
     console.log(error);
   }
 }
@@ -44,13 +53,15 @@ function* watchAddNewStudent(
   };
   try {
     yield call(
-      axios.post<GridValidRowModel>,
-      `${apiUrl}/newStudent`,
-      newStudent
+      axiosInstance.post<GridValidRowModel>,
+      `${apiUrl}/students/newStudent`,
+      newStudent,
+      {
+        withCredentials: true,
+      }
     );
   } catch (error: any) {
     yield put(addStudentError());
-    yield put(fetchAllStudents());
     return error;
   }
 }
@@ -66,29 +77,36 @@ function* watchUpdateStudent(action: PayloadAction<GridValidRowModel>) {
   };
   try {
     yield call(
-      axios.put<GridValidRowModel>,
-      `${apiUrl}/updateStudent/${action.payload.id}`,
-      updatedStudent
+      axiosInstance.put<GridValidRowModel>,
+      `${apiUrl}/students/updateStudent/${action.payload.id}`,
+      updatedStudent,
+      {
+        withCredentials: true,
+      }
     );
   } catch (error: any) {
     yield put(updateStudentError(error));
-    yield put(fetchAllStudents());
     return error;
   }
 }
 
 function* watchRemoveStudent(action: PayloadAction<GridRowId>) {
   try {
-    yield call(axios.delete, `${apiUrl}/removeStudent/${action.payload}`);
+    yield call(
+      axiosInstance.delete,
+      `${apiUrl}/students/removeStudent/${action.payload}`,
+      {
+        withCredentials: true,
+      }
+    );
   } catch (error: any) {
     yield put(removeStudentError(error));
-    yield put(fetchAllStudents());
     return error;
   }
 }
 
 export function* userSaga(): Generator<any, any, any> {
-  yield takeLatest(fetchAllStudents, watchGetAllStudents);
+  yield takeEvery(fetchAllStudents, watchGetAllStudents);
   yield takeLatest(addStudent.type, watchAddNewStudent);
   yield takeLeading(editStudent.type, watchUpdateStudent);
   yield takeLeading(removeStudent, watchRemoveStudent);

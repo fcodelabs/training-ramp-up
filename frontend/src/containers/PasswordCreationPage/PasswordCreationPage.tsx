@@ -17,9 +17,9 @@ import { useDispatch } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 import validator from "validator";
 import { createUsers } from "../../redux/slice/userSlice";
-import { io } from "socket.io-client";
 import PopupMessage from "../../components/PopupMessage/PopupMessage";
-const socket = io("http://localhost:5000");
+
+import { socket } from "../..";
 const PasswordCreationPage = () => {
   const isMobile = useMediaQuery("(max-width: 600px)");
   const [password, setPassword] = useState("");
@@ -88,8 +88,6 @@ const PasswordCreationPage = () => {
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setConfirmPasswordError(false);
-    setPasswordError(false);
 
     if (password === "") {
       setPasswordError(true);
@@ -102,17 +100,17 @@ const PasswordCreationPage = () => {
 
     if (confirmPassword && password) {
       if (confirmPassword !== password) {
-        setPasswordHelperText("");
         setConfirmPasswordHelperText("Please make sure your passwords match!");
         setConfirmPasswordError(true);
-        setPasswordError(true);
       } else {
-        dispatch(
-          createUsers({
-            password: password,
-            token: query.get("token") as string,
-          })
-        );
+        if (passwordError === false) {
+          dispatch(
+            createUsers({
+              password: password,
+              token: query.get("token") as string,
+            })
+          );
+        }
       }
     }
   };
@@ -235,7 +233,7 @@ const PasswordCreationPage = () => {
           title={"Your account has been successfully created."}
           handleClickSecondButton={() => {
             setSuccessMessage(false);
-            navigate("/");
+            navigate("/login");
           }}
           secondButtonName="Ok"
         />

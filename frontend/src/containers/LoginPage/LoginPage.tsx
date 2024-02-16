@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import {
   Box,
   Button,
@@ -8,7 +9,12 @@ import {
   Typography,
   useMediaQuery,
 } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { loginUsers, setAutherization } from "../../redux/slice/userSlice";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+
+import { socket } from "../..";
 
 const LoginPage = () => {
   const isMobile = useMediaQuery("(max-width: 600px)");
@@ -16,7 +22,26 @@ const LoginPage = () => {
   const [password, setPassword] = useState("");
   const [emailError, setEmailError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
+  const [emailHelperText, setEmailHelperText] = useState("");
+  const [passwordHelperText, setPasswordHelperText] = useState("");
 
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    socket.on("login_user", (data) => {
+      if (data.statusCode === 200) {
+        dispatch(setAutherization(data.role as string));
+        navigate("/", { state: { role: data.role } });
+      }
+      if (data.statusCode === 401) {
+        setEmailHelperText("");
+        setPasswordHelperText("Invalid email or password");
+        setEmailError(true);
+        setPasswordError(true);
+      }
+    });
+  }, [navigate]);
   const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     event.preventDefault();
     setEmail(event.target.value);
@@ -32,13 +57,16 @@ const LoginPage = () => {
 
     if (email === "") {
       setEmailError(true);
+      setEmailHelperText("Mandotary fields missing");
     }
     if (password === "") {
       setPasswordError(true);
+      setPasswordHelperText("Mandotary fields missing");
     }
 
     if (email && password) {
-      console.log(email, password);
+      dispatch(loginUsers({ email, password }));
+      socket.emit("login", email);
     }
   };
 
@@ -71,7 +99,7 @@ const LoginPage = () => {
                 type="email"
                 value={email}
                 error={emailError}
-                helperText={emailError ? "Mandatory field is missing" : null}
+                helperText={emailError ? emailHelperText : null}
                 sx={{ marginBottom: "10px" }}
               />
               <TextField
@@ -83,7 +111,7 @@ const LoginPage = () => {
                 type="password"
                 value={password}
                 error={passwordError}
-                helperText={passwordError ? "Mandatory field is missing" : null}
+                helperText={passwordError ? passwordHelperText : null}
                 sx={{ marginBottom: "10px" }}
               />
               <Button
@@ -108,6 +136,9 @@ const LoginPage = () => {
                 padding: "0px",
                 textTransform: "none",
                 color: "rgba(33, 150, 243, 1)",
+              }}
+              onClick={() => {
+                navigate("/register");
               }}
             >
               Register now

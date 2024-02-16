@@ -1,26 +1,29 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
-import { type Request, type Response, Router } from 'express';
-import { createUser, emailSend } from '../controllers/users.controllers';
+import { Router } from 'express';
+import {
+  getAllUsers,
+  refreshToken,
+  veryfyUser
+} from '../services/users.services';
+import { verifyToken } from '../middleware/auth';
+import { verifyAdmin } from '../middleware/verifyAdmin';
+import {
+  createUserController,
+  emailSendController,
+  loginUserController,
+  logoutUserController,
+  registerUserController
+} from '../controllers/users.controller';
 
-export default function userSocketRouter(io: any): Router {
+export default function userSocketRouter(): Router {
   const userRouter = Router();
-  userRouter.post('/newUser', async (req: Request, res: Response) => {
-    try {
-      await createUser(req, res).then(() => {
-        io.emit('create_new_user', res.statusCode);
-      });
-    } catch (error) {
-      console.error(error);
-    }
-  });
-  userRouter.post('/emailSend', async (req: Request, res: Response) => {
-    try {
-      await emailSend(req, res).then(() => {
-        io.emit('send_email', res.statusCode);
-      });
-    } catch (error) {
-      console.error(error);
-    }
-  });
+  userRouter.post('/newUser', createUserController);
+  userRouter.post('/emailSend', emailSendController);
+  userRouter.post('/registerUser', registerUserController);
+  userRouter.post('/loginUser', loginUserController);
+  userRouter.get('/getUsers', verifyToken, verifyAdmin, getAllUsers);
+  userRouter.post('/logoutUser', logoutUserController);
+  userRouter.post('/verifyAuth', veryfyUser);
+  userRouter.post('/refreshtoken', refreshToken);
   return userRouter;
 }
